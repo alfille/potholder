@@ -34,7 +34,7 @@ const cacheList = [
     "/js/replicate_mod.js",
     "/js/flatpickr.min.js",
     "/js/qrenc-4.0.0.min.js",
-    "/js/pouchdb-8.0.1.min.js",
+    "/js/pouchdb-9.0.0.min.js",
     "/js/elasticlunr.min.js",
     "/js/jszip.min.js",
     "/js/pptxgen.min.js",
