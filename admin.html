@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>eMission System</title>
+        <link rel="shortcut icon" type="image/png" href="images/emission_64x64.png"/>
+        <link rel="stylesheet" href="style/base.css">
+        <link rel="manifest" href="manifest.json" />
+    </head>
+    <body>
+        <header class="work_screen">
+            <div id="headerbox">
+                <div class="headerboxlink mainOnly"><img src="images/emission11-web-white.jpg"></div>
+                <div id="buttonheader">
+                    <!-- top: SuperUser DatabaseInfo SendUser PrintYourself -->
+                    <div class= "SuperUser DatabaseInfo SendUser PrintYourself topButtons pageOverlay">
+                        <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/DCTOHC11.jpg"></div>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
+                    </div>
+                    <!-- top: Administration -->
+                    <div class= "Administration topButtons pageOverlay">
+                        <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/DCTOHC11.jpg"></div>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'MainMenu' )" title="Show main menu">Return</button>
+                    </div>
+                    <!-- top: UserList -->
+                    <div class="UserList topButtons pageOverlay">
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'UserNew' )" title="Add a new database user">Add User</button>
+                    </div>
+                    <!-- top: MissionMembers  -->
+                    <div class="MissionMembers topButtons pageOverlay">
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'UserNew' )" title="Add a new database user">Add User</button>
+                    </div>
+                    <!-- top: SuperUser -->
+                    <div class="PatientData SuperUser topButtons pageOverlay">
+                        <button type="button" class="divbutton edit_data">Edit</button>
+                        <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Discard changes">Cancel</button>
+                    </div>
+                    <!-- top: UserNew -->
+                    <div class="PatientData UserNew topButtons pageOverlay">
+                        <button type="button" class="divbutton edit_data">Edit</button>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
+                    </div>
+                    <!-- top: UserEdit -->
+                    <div class="PatientData UserEdit topButtons pageOverlay">
+                        <button type="button" class="divbutton edit_data">Edit</button>
+                        <button type="button" class="divbutton delete" onclick="User.del()">Delete User</button>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
+                    </div>
+                    <!-- top: ErrorLog -->
+                    <div class="ErrorLog topButtons pageOverlay">
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
+                        <button type="button" class="divbutton delete" onclick="objectLog.clear()">Erase Log</button>
+                    </div>
+                    <!-- top: EditMode (for any of the PatientData derivatives -->
+                    <div class="patientDataEdit pageOverlay">
+                        <button type="button" class="divbutton edit_data" disabled>Edit</button>
+                        <button type="button" class="divbutton savedata">Save Changes</button>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
+                        <button type="button" class="divbutton Qmark"><B>?</B></button>
+                        <button type="button" class="divbutton missionButton"><img src="/style/NoPhoto.png" class="missionButtonImage mainOnly"></button>
+                    </div>
+                    <!-- top: PatientMerge -->
+                    <div class="PatientMerge pageOverlay">
+                        <button type="button" class="divbutton delete" id="patientMergeButton" onclick="PatientMerge.merge()" disabled>Merge Patient Records</button>
+                        <button type="button" class="divbutton return" onclick="PatientMerge.leave()">Return</button>
+                    </div>
+                    <!-- top: RemoteDatabaseInput -->
+                    <div class="RemoteDatabaseInput topButtons pageOverlay">
+                        <button type="button" class="divbutton edit_data">Edit</button>
+                        <button type="button" class="divbutton" onClick="objectPage.show( 'PrintYourself' )" title="Print current credentials for storage">Print Your Credentials</button>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
+                    </div>
+                </div>
+            </div>
+                <div id="titlebox">
+            </div>
+        </header>
+        <div id="emissionbody" class="work_screen">
+            <!-- body: Administration -->
+            <div class="Administration pageOverlay">
+                <div id="AdministrationContent" class="buttonmenu" >
+                    <button type="button" class="divbutton" onclick="objectPage.show( 'SuperUser','UserList' )">User Management</button>
+                    <button type="button" class="divbutton" onclick="objectPage.show( 'SuperUser','MissionMembers' )">Mission Members</button>
+                    <button type="button" class="divbutton"  style="visibility:hidden"> </button>
+                    <button type="button" class="divbutton" onClick="objectRemote.link()" hint="Open Couchdb Fauxton console">Database Console</button>
+                    <button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>
+                    <button type="button" class="divbutton" onclick="objectPage.show( 'PatientMerge' )">Merge Patient Records</button>
+                </div>
+            </div>
+            <!-- body: UserList MissionMembers -->
+            <div class="UserList MissionMembers pageOverlay">
+                <div id="UserListContent" >
+                    <table id="UserList"></table>
+                </div>
+            </div>
+            <!-- body: DatabaseInfo SuperUser UserNew UserEdit RemoteDatabaseInput -->
+            <div class="PatientData DatabaseInfo SuperUser UserNew UserEdit RemoteDatabaseInput pageOverlay">
+                <div id="PatientDataContent" ></div>
+            </div>
+            <!-- body: SendUser PrintYourself -->
+            <div class="SendUser PrintYourself pageOverlay">
+                <div id="SendUserContent" class="buttonmenu" >
+                    <div><canvas id="SendUserQR" height=180 width=180>QR code</canvas></div>
+                    <div><laMarkbel>User email:<input type="text" readonly="true" id="SendUserEmail"></label></div>
+                    <div><label>User eMission link:<input type="text" readonly="true" id="SendUserLink"></label></div>
+                    <div><a target="_blank" rel="noopener noreferrer" href="" id="SendUserMail">Mail link</a></div>
+                    <div><button type="button" class="divbutton" id="SendUserPrint">Print for sending</button></div>
+                </div>
+            </div>
+            <!-- body: PatientMerge -->
+            <div class="PatientMerge pageOverlay">
+                <div id="PatientMergeContent" class="buttonmenu" >
+                    <div id="frameholder">
+                        <fieldset id="fromfieldset">
+                            <div class="framesource">
+                                <legend>Choose FROM patient</legend>
+                                <label id="fromlabel"></label>
+                                <iframe name="fromframe" id="fromframe"></iframe>
+                            </div>
+                        </fieldset>
+                        <fieldset id="tofieldset">
+                            <div class="framesource">
+                                <legend>Choose To patient</legend>
+                                <label id="tolabel"></label>
+                                <iframe name="toframe" id="toframe"></iframe>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <!-- body: ErrorLog -->
+            <div class="ErrorLog pageOverlay">
+                <div id="ErrorLogContent"></div>
+            </div>
+            <!-- body: FloatPicture -->
+            <img class="FloatPicture pageOverlay" onclick="ImageImbedded.hideBigPicture(this)">
+        </div>
+        <!-- copyable parts -->
+        <!-- copyable parts -->
+        <div id="templates" class="pageOverlay">
+           <div class="notelabel"><button class="edit_note libutton" type="button">Edit</button> <input type="text" class="flatpickr flatpickr-input" name="dummy" readonly><div class="inly"></div></div>
+            <!-- Image display -->
+            <div class="imagetemplate">
+                <img class="entryfield_image">
+            </div>
+            <!-- Image edit -->
+            <div class="imagetemplate_edit">
+                <img class="entryfield_image">
+                <div class="editToolbar">
+                    <button type="button" class="imageGet" title="Get image"><span><B>&#128247;</B></span></button>            
+                    <button type="button" class="imageRemove" title="Remove image"><span><B>&#128473;&#128247;</B></span></button>
+                    <input type="file" accept="image/*" class="imageBar" capture="environment">
+                </div>
+            </div>
+            <!-- Quick Photo -->
+            <div class="imagetemplate_quick">
+                <img class="entryfield_image">
+                <div class="photoToolbar">
+                    <button type="button" class="imageGet" title="Get image"><span><B>&#128247;</B></span></button>            
+                    <input type="file" accept="image/*" class="imageBar" capture="environment">
+                </div>
+            </div>
+            <!-- Note display -->
+            <div class="notetemplate">
+                <img class="entryfield_image">
+                <div class="titlediv">
+                    <label>Title: <div class="entryfield_title choice" contenteditable></div></label>
+                    <label class="selectdiv">Type
+                        <select disabled name="dummy1">
+                            <option>Uncategorized</option>
+                            <option>Pre Op</option>
+                            <option>Anesthesia</option>
+                            <option>Op Note</option>
+                            <option>Post Op</option>
+                            <option>Followup</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="entryfield_text"></div>
+            </div>
+            <!-- Note edit -->
+            <div class="notetemplate_edit">
+                <img class="entryfield_image">
+                <div class="editToolbar">
+                    <button type="button" class="imageSave" title="Save this note"><span><B>Save</B></span></button>
+                    <button type="button" class="imageCancel" title="Do not save any changes"><span><B>Cancel</B></span></button>
+                    <button type="button" class="imageGet" title="Get image"><span><B>&#128247;</B></span></button>            
+                    <button type="button" class="imageRemove" title="Remove image"><span><B>&#128473;&#128247;</B></span></button>
+                    <button type="button" class="imageDelete delete" title="Delete this note"><span><B>Delete</B></span></button>
+                    <input type="file" accept="image/*" class="imageBar" capture="environment">
+                </div>
+                <div class="titlediv">
+                    <label>Title: <div class="entryfield_title choice" contenteditable></div></label>
+                    <label class="selectdiv">Type
+                        <select name="dummy2">
+                            <option>Uncategorized</option>
+                            <option>Pre Op</option>
+                            <option>Anesthesia</option>
+                            <option>Op Note</option>
+                            <option>Post Op</option>
+                            <option>Followup</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="entryfield_text" contenteditable></div>
+            </div>
+            <!-- New Note edit -->
+            <div class="newnotetemplate_edit">
+                <img class="entryfield_image">
+                <div class="editToolbar choice">
+                    <button type="button" class="imageSave" title="Save this note"><span><B>Save</B></span></button>
+                    <button type="button" class="imageCancel" title="Do not save any changes"><span><B>Cancel</B></span></button>
+                    <button type="button" class="imageGet" title="Get image"><span><B>&#128247;</B></span></button>            
+                    <button type="button" class="imageRemove" title="Remove image"><span><B>&#128473;&#128247;</B></span></button>
+                    <input type="file" accept="image/*" class="imageBar" capture="environment">
+                </div>
+                <div class="titlediv">
+                    <label>Title: <div class="entryfield_title choice" contenteditable></div></label>
+                    <label class="selectdiv">Type
+                        <select name="dummy3">
+                            <option>Uncategorized</option>
+                            <option>Pre Op</option>
+                            <option>Anesthesia</option>
+                            <option>Op Note</option>
+                            <option>Post Op</option>
+                            <option>Followup</option>
+                        </select>
+                </div>
+                <div class="entryfield_text choice" contenteditable></div>
+            </div>
+            <fieldset class="dataFieldset"><legend><button type="button" value="show" onclick="objectPatientData.fsclick(this)">&#10134;</button></legend></fieldset>
+            <fieldset class="noteFieldset">
+                <legend>
+                    <button type="button" class="triggerbutton">&#10134;</button>
+                    <span class="yearspan">Year</span>
+                    <span class="yearnumber"># notes</span>
+                </legend>
+            </fieldset>
+            <span class="emptynotelist">
+                <br>
+                <center>Add a note, or picture, or drag an image here</center>
+                <br>
+            </span>
+            <!-- more top buttons -->
+            <div id="moreTop">
+                <button type="button" class="divbutton Qmark">Help</button>
+                <button type="button" class="divbutton missionButton"><img src="/style/NoPhoto.png" class="missionButtonImage mainOnly"></button>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="work_screen mainOnly">
+            <div id="footerflex">
+                <div><label>User:<input type="text" readonly id="userstatus"></label></div>
+                <div ><label>Sync status:<input type="text" readonly id="syncstatus" onclick="objectPage.show( 'ErrorLog' )"></label></div>
+            </div>
+        </footer>
+        <!-- User print -->
+        <div class="print_user">
+            <div id="printUser">
+                <div id="printCardButtons">
+                    <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Did not print">Back</button>
+                </div>
+                Simple QR code link:
+                
+                <center>
+                    <div><canvas class="qrUser" height=180 width=180></canvas></div>
+                </center>
+                <div id="printUserText"></div>
+            </div>
+        </div>
+        <!-- Splash screen -->
+        <div id="splash_screen">
+            <b><center>
+            <h1>eMission System</h1>
+            <img src="images/emission_t_square.png" alt="eMission System medical patient database">
+            <hr>
+                If the application does not appear, contact:.<br>
+                <a href="mailto:palfille@partners.org?subject=eMission System error">eMission System team</a>
+            <hr>
+            </center></b>
+        </div>
+        
+        <!-- scripts -->
+        <!-- pouchdb --> <script src="js/pouchdb-8.0.1.min.js"></script>
+        <!-- qr --> <script src="js/qrenc-4.0.0.min.js"></script>
+        <!-- new data-time --> <script src="js/flatpickr.min.js"></script>
+        <!-- application code --> <script type="module" src="js/globals_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/image_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/id_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/cookie_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/sorttable_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/patientdata_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/log_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/simple_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/replicate_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/adminapp.js"></script>
+        <!-- print --> <script src="js/print.min.js"></script>
+    </body>
+</html>
