@@ -2,6 +2,8 @@
 
 Display buttons at top -- try to be consistent.
 
+## Constant elements
+
 ### Logo (Upper left)
 
 * Pothold logo for list pages
@@ -13,6 +15,10 @@ Display buttons at top -- try to be consistent.
 
 ### Quick pic
 
+### Artist
+
+## Varying
+
 ### "Back"
 * out of edit
 * out of filter
@@ -21,3 +27,4 @@ Display buttons at top -- try to be consistent.
 ### New
 * pot
 * item
+
