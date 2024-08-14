@@ -5,17 +5,20 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>eMission System</title>
-        <link rel="shortcut icon" type="image/png" href="images/emission_64x64.png"/>
         <link rel="stylesheet" href="style/base.css">
         <link rel="manifest" href="manifest.json" />
+		<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+		<link rel="manifest" href="images/site.webmanifest">
     </head>
     <body>
         <header class="work_screen">
             <div id="headerbox">
-                <div class="headerboxlink mainOnly"><img src="images/emission11-web-white.jpg"></div>
+                <div class="headerboxlink mainOnly"><img class="potholderLogo" src="images/potholder.png"></div>
                 <div id="buttonheader">
-                    <!-- top: SuperUser DatabaseInfo SendUser PrintYourself -->
-                    <div class= "SuperUser DatabaseInfo SendUser PrintYourself topButtons pageOverlay">
+                    <!-- top: DatabaseInfo SendUser PrintYourself -->
+                    <div class= "DatabaseInfo SendUser PrintYourself topButtons pageOverlay">
                         <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/DCTOHC11.jpg"></div>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                     </div>
@@ -23,32 +26,6 @@
                     <div class= "Administration topButtons pageOverlay">
                         <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/DCTOHC11.jpg"></div>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'MainMenu' )" title="Show main menu">Return</button>
-                    </div>
-                    <!-- top: UserList -->
-                    <div class="UserList topButtons pageOverlay">
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'UserNew' )" title="Add a new database user">Add User</button>
-                    </div>
-                    <!-- top: MissionMembers  -->
-                    <div class="MissionMembers topButtons pageOverlay">
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'UserNew' )" title="Add a new database user">Add User</button>
-                    </div>
-                    <!-- top: SuperUser -->
-                    <div class="PatientData SuperUser topButtons pageOverlay">
-                        <button type="button" class="divbutton edit_data">Edit</button>
-                        <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Discard changes">Cancel</button>
-                    </div>
-                    <!-- top: UserNew -->
-                    <div class="PatientData UserNew topButtons pageOverlay">
-                        <button type="button" class="divbutton edit_data">Edit</button>
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
-                    </div>
-                    <!-- top: UserEdit -->
-                    <div class="PatientData UserEdit topButtons pageOverlay">
-                        <button type="button" class="divbutton edit_data">Edit</button>
-                        <button type="button" class="divbutton delete" onclick="User.del()">Delete User</button>
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                     </div>
                     <!-- top: ErrorLog -->
                     <div class="ErrorLog topButtons pageOverlay">
@@ -62,11 +39,6 @@
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                         <button type="button" class="divbutton Qmark"><B>?</B></button>
                         <button type="button" class="divbutton missionButton"><img src="/style/NoPhoto.png" class="missionButtonImage mainOnly"></button>
-                    </div>
-                    <!-- top: PatientMerge -->
-                    <div class="PatientMerge pageOverlay">
-                        <button type="button" class="divbutton delete" id="patientMergeButton" onclick="PatientMerge.merge()" disabled>Merge Patient Records</button>
-                        <button type="button" class="divbutton return" onclick="PatientMerge.leave()">Return</button>
                     </div>
                     <!-- top: RemoteDatabaseInput -->
                     <div class="RemoteDatabaseInput topButtons pageOverlay">
@@ -83,22 +55,13 @@
             <!-- body: Administration -->
             <div class="Administration pageOverlay">
                 <div id="AdministrationContent" class="buttonmenu" >
-                    <button type="button" class="divbutton" onclick="objectPage.show( 'SuperUser','UserList' )">User Management</button>
-                    <button type="button" class="divbutton" onclick="objectPage.show( 'SuperUser','MissionMembers' )">Mission Members</button>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                     <button type="button" class="divbutton" onClick="objectRemote.link()" hint="Open Couchdb Fauxton console">Database Console</button>
                     <button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>
-                    <button type="button" class="divbutton" onclick="objectPage.show( 'PatientMerge' )">Merge Patient Records</button>
                 </div>
             </div>
-            <!-- body: UserList MissionMembers -->
-            <div class="UserList MissionMembers pageOverlay">
-                <div id="UserListContent" >
-                    <table id="UserList"></table>
-                </div>
-            </div>
-            <!-- body: DatabaseInfo SuperUser UserNew UserEdit RemoteDatabaseInput -->
-            <div class="PatientData DatabaseInfo SuperUser UserNew UserEdit RemoteDatabaseInput pageOverlay">
+            <!-- body: DatabaseInfo RemoteDatabaseInput -->
+            <div class="PatientData DatabaseInfo RemoteDatabaseInput pageOverlay">
                 <div id="PatientDataContent" ></div>
             </div>
             <!-- body: SendUser PrintYourself -->
@@ -109,27 +72,6 @@
                     <div><label>User eMission link:<input type="text" readonly="true" id="SendUserLink"></label></div>
                     <div><a target="_blank" rel="noopener noreferrer" href="" id="SendUserMail">Mail link</a></div>
                     <div><button type="button" class="divbutton" id="SendUserPrint">Print for sending</button></div>
-                </div>
-            </div>
-            <!-- body: PatientMerge -->
-            <div class="PatientMerge pageOverlay">
-                <div id="PatientMergeContent" class="buttonmenu" >
-                    <div id="frameholder">
-                        <fieldset id="fromfieldset">
-                            <div class="framesource">
-                                <legend>Choose FROM patient</legend>
-                                <label id="fromlabel"></label>
-                                <iframe name="fromframe" id="fromframe"></iframe>
-                            </div>
-                        </fieldset>
-                        <fieldset id="tofieldset">
-                            <div class="framesource">
-                                <legend>Choose To patient</legend>
-                                <label id="tolabel"></label>
-                                <iframe name="toframe" id="toframe"></iframe>
-                            </div>
-                        </fieldset>
-                    </div>
                 </div>
             </div>
             <!-- body: ErrorLog -->
@@ -275,11 +217,11 @@
         <!-- Splash screen -->
         <div id="splash_screen">
             <b><center>
-            <h1>eMission System</h1>
-            <img src="images/emission_t_square.png" alt="eMission System medical patient database">
+            <h1>PotHolder</h1>
+            <img src="images/potholder.png" class="splashImg" alt="PotHolder &mdash; Ceramic Project Tracker">
             <hr>
                 If the application does not appear, contact:.<br>
-                <a href="mailto:palfille@partners.org?subject=eMission System error">eMission System team</a>
+                <a href="mailto:palfille@partners.org?subject=Potholder error">PotHolder team</a>
             <hr>
             </center></b>
         </div>

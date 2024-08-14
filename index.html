@@ -4,19 +4,22 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>eMission System</title>
-        <link rel="shortcut icon" type="image/png" href="images/emission_64x64.png"/>
+        <title>PotHolder &mdash; Ceramic Production Tracker</title>
         <link rel="stylesheet" href="style/base.css">
         <link rel="manifest" href="manifest.json" />
+		<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+		<link rel="manifest" href="images/site.webmanifest">
     </head>
     <body>
         <header class="work_screen">
             <div id="headerbox">
-                <div class="headerboxlink mainOnly"><img src="images/emission11-web-white.jpg"></div>
+                <div class="headerboxlink mainOnly"><img class="potholderLogo" src="images/potholder.png"></div>
                 <div id="buttonheader">
                     <!-- top: MainMenu FirstTime -->
                     <div class="MainMenu FirstTime topButtons pageOverlay">
-                        <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/DCTOHC11.jpg"></div>
+                        <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/potholder.png"></div>
                     </div>
                     <!-- top: PatientPhoto -->
                     <div class= "PatientPhoto topButtons pageOverlay">
@@ -58,16 +61,9 @@
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
                     </div>
-                    <!-- top: SuperUser -->
-                    <div class="PatientData topButtons pageOverlay">
-                        <button type="button" class="divbutton edit_data">Edit</button>
-                        <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Discard changes">Cancel</button>
-                    </div>
                     <!-- top: MissionInfo -->
                     <div class="PatientData MissionInfo topButtons pageOverlay">
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'MissionList')">Mission Notes</button>
                         <button type="button" class="divbutton edit_data">Edit</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'DBTable' )">Switch Mission</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                     </div>
                     <!-- top: PatientDemographics PatientMedical -->
@@ -105,7 +101,6 @@
                     </div>
                     <!-- top: MissionList -->
                     <div class="MissionList topButtons pageOverlay">
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'MissionInfo')">Mission Info</button>
                         <button class="create_note libutton divbutton" type="button" onclick="objectPage.show( 'NoteNew' )">New Note</button>
                         <button class="createtheimage libutton divbutton Qphoto" type="button">&#128247;</button>
                         <button class="returnfromnote libutton divbutton return" type="button" onclick="objectPage.show( 'back' )">Return</button>
@@ -131,12 +126,10 @@
                     <div class="PatientProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPatients' )">Patients</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllOperations' )">Operations</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'MissionInfo' )">Mission</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
                     </div>
                     <div class="PatientProcButtons">
-                        <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'DBTable' )">Switch Mission</button>
                         <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
                         <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
                         <button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
@@ -149,17 +142,13 @@
             <div class="FirstTime pageOverlay">
                 <div id="FirstTimeContent" class="buttonmenu">
                     <h2>
-                        Welcome to eMission Medical Mission Database
+                        Welcome to PotHolder &mdash; Ceramic Production Tracker
                     </h2>
                     <p>
                         It looks like this is your first time using the software on this device. Please choose an option:
                     </p>
-                    <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">eMission Instructions</button>
-                    <a href="https://emissionsystem.org/?address=https%3A%2F%2Femissionsystem.org%3A6984&database=testdb&password=TheShire&username=Hobbit">Try it out in a fantasy database</a>
-                    <button type="button" class="divbutton" onclick="objectPage.show( 'RemoteDatabaseInput' )">Manually enter your credentials</button>
-                    <p><i>
-                        Note that if you are part of a medical mission, your leader will usually send you a direct link or  QR code to access the database automatically.
-                    </i></p>
+                    <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">PotHolder Instructions</button>
+                    <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'RemoteDatabaseInput' )">Setup</button>
                 </div>
             </div>
             <!-- body: AllPatients -->
@@ -435,11 +424,11 @@
         <div id="splash_screen">
             <a href="?reset=true">Reset everything (local data and credentials)</a><hr>
             <b><center>
-            <h1>eMission System</h1>
-            <img src="images/emission_t_square.png" alt="eMission System medical patient database">
+            <h1>PotHolder</h1>
+            <img src="images/potholder.png" class="splashImg" alt="PotHolder &mdash; Ceramic Project Tracker">
             <hr>
                 If the application does not appear, contact:.<br>
-                <a href="mailto:palfille@partners.org?subject=eMission System error">eMission System team</a>
+                <a href="mailto:palfille@partners.org?subject=Potholder error">PotHolder team</a>
             <hr>
             </center></b>
         </div>

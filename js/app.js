@@ -389,7 +389,7 @@ class Search { // singleton class
     }
 
     addDoc( doc ) {
-        if ( ! in_frame && (doc?.type in this.fieldlist) ) {
+        if ( doc?.type in this.fieldlist ) {
             this.index[doc.type].addDoc(
                 this.fieldlist[doc.type]
                 .concat("_id")
@@ -400,19 +400,13 @@ class Search { // singleton class
 
     removeDocById( doc_id ) {
         // we don't have full doc. Could figure type from ID, but easier (and more general) to remove from all.
-        if ( ! in_frame ) {
-            this.types.forEach( ty => this.index[ty].removeDocByRef( doc_id ) );
-        }
+		this.types.forEach( ty => this.index[ty].removeDocByRef( doc_id ) );
     }
 
     fill() {
-        if ( in_frame ) {
-            return Promise.resolve(true) ;
-        } else {
-            // adds docs to index
-            return db.allDocs( { include_docs: true, } )
-            .then( docs => docs.rows.forEach( r => this.addDoc( r.doc ) ));
-        }
+		// adds docs to index
+		return db.allDocs( { include_docs: true, } )
+		.then( docs => docs.rows.forEach( r => this.addDoc( r.doc ) ));
     }
 
     search( text="" ) {
@@ -553,11 +547,11 @@ class Patient extends SimplePatient { // convenience class
             let pdoc;
             let ndocs;
             let odocs;
-            this.getRecordIdPix(patientId)
+            this.getRecordIdPix(potId)
             .then( (doc) => pdoc = doc ) // patient
-            .then( _ => objectNote.getRecordsIdDoc(patientId) ) // notes
+            .then( _ => objectNote.getRecordsIdDoc(potId) ) // notes
             .then( (docs) => ndocs = docs.rows ) // get notes
-            .then( _ => objectOperation.getRecordsIdDoc(patientId) ) // operations
+            .then( _ => objectOperation.getRecordsIdDoc(potId) ) // operations
             .then( (docs) => {
                 // get operations
                 odocs = docs.rows;
@@ -601,18 +595,18 @@ class Patient extends SimplePatient { // convenience class
         return db.allDocs(doc);
     }
 
-    select( pid = patientId ) {
-        if ( patientId != pid ) {
+    select( pid = potId ) {
+        if ( potId != pid ) {
             // change patient -- notes dont apply
             objectNote.unselect();
             objectNoteList.category = 'Uncategorized' ;
         }
 
-        patientId = pid ;
+        potId = pid ;
         if ( pid == missionId ) {
             Mission.select() ;
         } else {
-            objectCookie.set( "patientId", pid );
+            objectCookie.set( "potId", pid );
             // Check patient existence
             db.query("Pid2Name",{key:pid})
             .then( (doc) => {
@@ -630,8 +624,8 @@ class Patient extends SimplePatient { // convenience class
     }
 
     unselect() {
-        patientId = null;
-        objectCookie.del ( "patientId" );
+        potId = null;
+        objectCookie.del ( "potId" );
         objectNote.unselect();
         objectNoteList.category = 'Uncategorized' ;
         objectOperation.unselect();
@@ -674,18 +668,18 @@ class Patient extends SimplePatient { // convenience class
     
     printCard() {
         objectPage.next("PrintCard"); // fake page
-        if ( patientId == null ) {
+        if ( potId == null ) {
             objectLog.err("No patient to print");
             return objectPage.show( "back" );
         }
         let card = document.getElementById("printCard");
         let t = card.getElementsByTagName("table");
-        this.getRecordIdPix(patientId,true)
+        this.getRecordIdPix(potId,true)
         .then( (doc) => {
             let img = new ImageImbedded( card, doc, NoPhoto ) ;
             img.display_image();
             let link = new URL(window.location.href);
-            link.searchParams.append( "patientId", patientId );
+            link.searchParams.append( "potId", potId );
             link.searchParams.append( "database", remoteCouch.database );
 
             new QR(
@@ -702,9 +696,9 @@ class Patient extends SimplePatient { // convenience class
             t[0].rows[5].cells[1].innerText = doc.Weight+" kg"??"";
             t[0].rows[6].cells[1].innerText = ""; // equipment
             }) 
-        .then( _ => db.query("Pid2Name",{key:patientId}) )
+        .then( _ => db.query("Pid2Name",{key:potId}) )
         .then( (doc) => t[0].rows[0].cells[1].innerText = doc.rows[0].value[0] )
-        .then( _ => objectOperation.getRecordsIdDoc(patientId) )
+        .then( _ => objectOperation.getRecordsIdDoc(potId) )
         .then( (docs) => {
             let oleng = docs.rows.length;
             switch(oleng) {
@@ -749,7 +743,7 @@ class Note extends SimpleNote { // convenience class
         // Check patient existence
         db.get(nid)
         .then( doc => {
-            if ( doc.patient_id != patientId ) {
+            if ( doc.patient_id != potId ) {
                 objectPatient.select( doc.patient_id);
             }
             objectCookie.set( "noteId", nid );
@@ -805,7 +799,7 @@ class Note extends SimpleNote { // convenience class
                             });
                     reader.readAsDataURL(file); // start reading the file data.
                     }))
-                    .then( () => this.getRecordsId(patientId) ) // refresh the list
+                    .then( () => this.getRecordsId(potId) ) // refresh the list
                     .catch( err => objectLog.err(err,"Photo drop") )
                     .finally( () => {
                         if (objectNoteList.category=='Uncategorized') {
@@ -828,7 +822,7 @@ class Note extends SimpleNote { // convenience class
             author: remoteCouch.username,
             type: "note",
             category: category,
-            patient_id: patientId,
+            patient_id: potId,
             date: new Date().toISOString(),
         };
     }
@@ -842,7 +836,7 @@ class Note extends SimpleNote { // convenience class
             img.handleImage();
             img.save(doc);
             db.put(doc)
-            .then( () => this.getRecordsId(patientId) ) // to try to prime the list
+            .then( () => this.getRecordsId(potId) ) // to try to prime the list
             .catch( err => objectLog.err(err) )
             .finally( objectPage.show( null ) );
         }
@@ -859,7 +853,7 @@ class Operation extends SimpleOperation { // convenience class
         operationId=oid ;
         db.get(oid)
         .then( doc => {
-            if ( doc.patient_id != patientId ) {
+            if ( doc.patient_id != potId ) {
                 objectPatient.select( doc.patient_id);
             }
             objectCookie.set ( "operationId", oid  );
@@ -932,7 +926,7 @@ objectOperation = new Operation() ;
 class Mission { // convenience class
     static select() {
         objectPatient.unselect();
-        patientId = missionId;
+        potId = missionId;
         Mission.getRecordId()
         .then( doc => TitleBox([doc.Mission,doc.Organization],"MissionInfo") ) ;
     }
@@ -1026,13 +1020,7 @@ class Administration extends Pagelist {
 class DatabaseInfo extends Administration {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
-class MissionMembers extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-}
 class PrintYourself extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-}
-class PatientMerge extends Administration {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
 class RemoteDatabaseInput extends Administration {
@@ -1041,19 +1029,6 @@ class RemoteDatabaseInput extends Administration {
 class SendUser extends Administration {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
-class SuperUser extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-}
-class UserEdit extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-}
-class UserList extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-}
-class UserNew extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-}
-
 class Help extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
@@ -1105,7 +1080,7 @@ class AllPatients extends Pagelist {
             docs.rows.forEach( r => Object.assign( r.doc, o2pid[r.id]) );
             objectTable.fill(docs.rows );
             if ( objectPatient.isSelected() ) {
-                objectPatient.select( patientId );
+                objectPatient.select( potId );
             } else {
                 objectPatient.unselect();
             }
@@ -1208,7 +1183,7 @@ class MissionList extends Pagelist {
     static subshow(extra="") {
         Mission.select() ;
         Mission.getRecordId()
-        .then( () => objectNote.getRecordsIdPix(patientId,true) )
+        .then( () => objectNote.getRecordsIdPix(potId,true) )
         .then( notelist => objectNoteList = new NoteLister(notelist,'Uncategorized') )
         .catch( ()=> objectPage.show( "MissionInfo" ) ) ;
     }
@@ -1219,7 +1194,7 @@ class NoteListCategory extends Pagelist {
 
     static subshow(extra="") {
         if ( objectPatient.isSelected() ) {
-            objectNote.getRecordsIdPix(patientId,true)
+            objectNote.getRecordsIdPix(potId,true)
             .then( notelist => objectNoteList = new NoteLister(notelist,extra) )
             .catch( (err) => {
                 objectLog.err(err,`Notelist (${extra})`);
@@ -1235,7 +1210,7 @@ class NoteList extends NoteListCategory {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() || (patientId == missionId) ) {
+        if ( objectPatient.isSelected() || (potId == missionId) ) {
             super.subshow('Uncategorized');
         } else {
             objectNote.unselect();
@@ -1248,7 +1223,7 @@ class NoteNew extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() || (patientId == missionId) ) {
+        if ( objectPatient.isSelected() || (potId == missionId) ) {
             // New note only
             objectNote.unselect();
             objectNote.create();
@@ -1280,7 +1255,7 @@ class OperationEdit extends Pagelist {
             {
                 _id: Id_operation.makeId(),
                 type: "operation",
-                patient_id: patientId,
+                patient_id: potId,
                 author: remoteCouch.username,
             } , structOperation );
         }
@@ -1293,7 +1268,7 @@ class OperationList extends Pagelist {
     static subshow(extra="") {
         if ( objectPatient.isSelected() ) {
             objectTable = new OperationTable();
-            objectOperation.getRecordsIdDoc(patientId)
+            objectOperation.getRecordsIdDoc(potId)
             .then( (docs) => objectTable.fill(docs.rows ) )
             .catch( (err) => objectLog.err(err) );
         } else {
@@ -1320,7 +1295,7 @@ class PatientDemographics extends Pagelist {
 
     static subshow(extra="") {
         if ( objectPatient.isSelected() ) {
-            objectPatient.getRecordIdPix(patientId,true)
+            objectPatient.getRecordIdPix(potId,true)
             .then( (doc) => objectPatientData = new PatientData( doc, structDemographics ) )
             .catch( (err) => {
                 objectLog.err(err);
@@ -1340,7 +1315,7 @@ class PatientMedical extends Pagelist {
             let args;
             objectPatient.getRecordId()
             .then( (doc) => args = [doc,structMedical] )
-            .then( _ => objectOperation.getRecordsIdDoc(patientId) )
+            .then( _ => objectOperation.getRecordsIdDoc(potId) )
             .then( ( olist ) => {
                 olist.rows.forEach( (r) => args.push( r.doc, structOperation ) );
                 objectPatientData = new PatientData( ...args );
@@ -1373,14 +1348,14 @@ class PatientPhoto extends Pagelist {
 
     static subshow(extra="") {
         if ( objectPatient.isSelected() ) {
-            objectPatient.select( patientId );
+            objectPatient.select( potId );
             let pdoc;
             let onum ;
-            objectPatient.getRecordIdPix(patientId,true)
+            objectPatient.getRecordIdPix(potId,true)
             .then( (doc) => pdoc = doc )
-            .then( _ => objectOperation.getRecordsIdDoc(patientId) )
+            .then( _ => objectOperation.getRecordsIdDoc(potId) )
             .then ( (doclist) => onum = doclist.rows.filter( r=> ! objectOperation.nullOp(r.doc) ).length )
-            .then( _ => objectNote.getRecordsIdDoc(patientId) )
+            .then( _ => objectNote.getRecordsIdDoc(potId) )
             .then ( (notelist) => objectPatient.menu( pdoc, notelist, onum ) )
             .catch( (err) => {
                 objectLog.err(err);
@@ -1398,7 +1373,7 @@ class QuickPhoto extends Pagelist {
 
     static subshow(extra="") {
         objectPage.forget(); // don't return here!
-        if ( patientId ) { // patient or Mission!
+        if ( potId ) { // patient or Mission!
             objectNote.quickPhoto(this.extra);
         } else {
             objectPage.show( "back" );
@@ -1541,11 +1516,7 @@ class Page { // singleton class
 
         this.next(page) ; // place in reversal list
 
-        if ( in_frame ) { // imbedded, only show SelectPatient
-            if ( page != "SelectPatient" ) {
-                this.show("SelectPatient") ;
-            }
-        } else if ( this.current() == "SelectPatient" ) {
+        if ( this.current() == "SelectPatient" ) {
             this.show("MainMenu");
         }
 
@@ -1601,7 +1572,7 @@ class PatientTable extends SortTable {
     }
 
     selectId() {
-        return patientId;
+        return potId;
     }
 
     selectFunc(id) {
@@ -1633,11 +1604,6 @@ class SelectPatientTable extends SortTable {
 
     selectFunc(id) {
         this.pid = id
-        db.get(id)
-        .then( doc => window.top.postMessage({
-            frame: frame_name,
-            doc: doc,
-        },"*"));
     }
 
     editpage() {
@@ -1815,7 +1781,7 @@ class SearchTable extends SortTable {
                         objectPage.show( 'OperationEdit' );
                         break ;
                     case 'note':
-                        if ( doc.patientId == missionId ) {
+                        if ( doc.potId == missionId ) {
                             Mission.select();
                         } else {
                             objectPatient.select( doc.patient_id );
@@ -2054,15 +2020,12 @@ function URLparse() {
     objectRemote.start( qline ) ;
     
     // first try the search field
-    if ( qline && ( "patientId" in qline ) ) {
-        objectPatient.select( qline.patientId );
+    if ( qline && ( "potId" in qline ) ) {
+        objectPatient.select( qline.potId );
         objectPage.next("PatientPhoto");
     }
 
-    // frame
-    if ( qline && ( "frame" in qline ) ) {
-        frame_name = qline.frame;
-    } else if ( Object.keys(qline).length > 0 ) {
+    if ( Object.keys(qline).length > 0 ) {
         // reload without search params -- placed in Cookies
         window.location.href = "/index.html" ;
     }
@@ -2075,10 +2038,6 @@ window.onload = () => {
     objectPage = new Page();
     
     setButtons(); // load some common html elements
-
-    if ( window.frameElement ) {
-        in_frame = true ;
-    }
 
     // Stuff into history to block browser BACK button
     window.history.pushState({}, '');
@@ -2115,31 +2074,27 @@ window.onload = () => {
                     objectSearch.addDoc(change.doc);
                 }
                 // update screen display
-                if ( in_frame ) {
-                    objectPage.show("SelectPatient");
-                } else {
-                    switch ( change?.doc?.type ) {
-                        case "patient":
-                            if ( objectPage.test("AllPatients") ) {
-                                objectPage.show("AllPatients");
-                            }
-                            break;
-                        case "note":
-                            if ( objectPage.test("NoteList") && change.doc?.patient_id==patientId ) {
-                                objectPage.show("NoteList");
-                            } else if ( objectPage.test("MissionList") && change.doc?.patient_id==missionId ) {
-                                objectPage.show("MissionList");
-                            }
-                            break;
-                        case "operation":
-                            if ( objectPage.test("OperationList") && change.doc?.patient_id==patientId ) {
-                                objectPage.show("OperationList");
-                            } else if ( objectPage.test("AllOperations") && change.doc?.patient_id==patientId ) {
-                                objectPage.show("AllOperations");
-                            }
-                            break;
-                    }
-                }
+				switch ( change?.doc?.type ) {
+					case "patient":
+						if ( objectPage.test("AllPatients") ) {
+							objectPage.show("AllPatients");
+						}
+						break;
+					case "note":
+						if ( objectPage.test("NoteList") && change.doc?.patient_id==potId ) {
+							objectPage.show("NoteList");
+						} else if ( objectPage.test("MissionList") && change.doc?.patient_id==missionId ) {
+							objectPage.show("MissionList");
+						}
+						break;
+					case "operation":
+						if ( objectPage.test("OperationList") && change.doc?.patient_id==potId ) {
+							objectPage.show("OperationList");
+						} else if ( objectPage.test("AllOperations") && change.doc?.patient_id==potId ) {
+							objectPage.show("AllOperations");
+						}
+						break;
+				}
                 })
             )
         .catch( err => objectLog.err(err,"Initial search database") );

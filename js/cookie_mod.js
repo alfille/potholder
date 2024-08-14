@@ -13,13 +13,10 @@ export {
 class Cookie { //convenience class
     set( cname, value ) {
         // From https://www.tabnine.com/academy/javascript/how-to-set-cookies-javascript/
-        if ( ! in_frame ) {
-            // Don't store values for in-frame instances -- it gets too confusing
-            globalThis[cname] = value;
-            let date = new Date();
-            date.setTime(date.getTime() + (400 * 24 * 60 * 60 * 1000)); // > 1year
-            document.cookie = `${cname}=${encodeURIComponent(JSON.stringify(value))}; expires=${date.toUTCString()}; SameSite=None; Secure; path=/`;
-        }
+		globalThis[cname] = value;
+		let date = new Date();
+		date.setTime(date.getTime() + (400 * 24 * 60 * 60 * 1000)); // > 1year
+		document.cookie = `${cname}=${encodeURIComponent(JSON.stringify(value))}; expires=${date.toUTCString()}; SameSite=None; Secure; path=/`;
     }
 
     del( cname ) {
@@ -43,11 +40,11 @@ class Cookie { //convenience class
     }
 
     initialGet() {
-        [ "patientId", "noteId", "operationId", "remoteCouch", "displayState" ].forEach( c => this.get(c) );
+        [ "potId", "noteId", "operationId", "remoteCouch", "displayState" ].forEach( c => this.get(c) );
     }
 
     clear() {
-        [ "patientId", "noteId", "operationId", "remoteCouch", "displayState" ].forEach( c => this.del(c) );
+        [ "potId", "noteId", "operationId", "remoteCouch", "displayState" ].forEach( c => this.del(c) );
     }
 }
 objectCookie = new Cookie() ;

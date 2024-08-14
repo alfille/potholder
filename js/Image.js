@@ -212,7 +212,7 @@ class ImageNote extends ImageImbedded {
     
     leave() {
         this.buttonsdisabled( false );
-        if (patientId == missionId) {
+        if (potId == missionId) {
             objectPage.show( 'MissionList');
         } else if ( objectNoteList.category == 'Uncategorized' ) {
             objectPage.show( 'NoteList');

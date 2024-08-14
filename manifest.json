@@ -5,7 +5,7 @@
     "type": "module"
   },
   "background_color": "#1c6ef2",
-  "description": "Medical mission simple database -- details, notes and pictures",
+  "description": "Pot Holder -- Ceramic Production Tracker",
   "dir": "ltr",
   "display": "browser",
   "display_override": [
@@ -14,9 +14,9 @@
     "minimal-ui",
     "window-controls-overlay"
   ],
-  "name": "eMission",
+  "name": "PotHolder",
   "handle_links": "auto",
-  "id":"eMission",
+  "id":"potholder",
   "orientation": "natural",
   "offline_enabled": true,
   "permissions": [
@@ -25,11 +25,11 @@
     "unlimitedstorage"
   ],
   "scope": "/",
-  "short_name": "eMission",
+  "short_name": "potholder",
   "start_url": "/index.html",
   "theme_color": "#45d1d3",
   "categories": [
-    "medical"
+    "ceramics"
   ],
   "screenshots": [
     {
@@ -53,19 +53,6 @@
       "type": "image/png"
     }
   ],
-  "icons": [
-    {
-      "src": "images/emission_64x64.png",
-      "type": "image/png",
-      "sizes": "64x64",
-      "purpose":"any"
-    },
-    {
-      "src": "images/emission_512x512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
   "shortcuts": [
     {
       "name": "Admin",
@@ -77,6 +64,18 @@
       "url": "/download.html",
       "description": "Download choices"
     }
+  ],
+  "icons": [
+     {
+		 "src":"images/android-chrome-192x192.png",
+		 "sizes":"192x192",
+		 "type":"image/png"
+	 },
+	 {
+		 "src":"images/android-chrome-512x512.png",
+		 "sizes":"512x512",
+		 "type":"image/png"
+	 }
   ],
   "lang": "en",
   "prefer_related_applications": false,

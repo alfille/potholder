@@ -7,7 +7,7 @@
  * */
 
 // globals cookie backed
-globalThis. patientId = null ;
+globalThis. potId = null ;
 globalThis. noteId = null ;
 globalThis. operationId = null ;
 globalThis. displayState = null ;
@@ -15,8 +15,6 @@ globalThis. remoteCouch = null ;
 
 // other globals
 globalThis. credentialList = ["database", "username", "password", "address" ] ;
-globalThis. in_frame = false ;
-globalThis. frame_name = "" ;
 
 // singleton class instances
 globalThis. objectPage = null ;
@@ -41,7 +39,6 @@ globalThis. objectCollation = null;
 
 // admin only
 globalThis. security_db = null ;
-globalThis. objectSecurity = null;
 globalThis. objectUser = null;
 
 // download only

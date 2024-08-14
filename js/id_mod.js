@@ -56,7 +56,7 @@ class Id {
         return this.joinId( obj );
     }
     
-    static makeId( pid=patientId ) { // Make a new Id for a note or operation using current time as the last field
+    static makeId( pid=potId ) { // Make a new Id for a note or operation using current time as the last field
         return this.makeIdKey(pid);
     }
     
@@ -68,11 +68,11 @@ class Id {
         return [this.type, this.end].join(";");
     }
 
-    static patStart( pid=patientId ) { // Search just this patient's records
+    static patStart( pid=potId ) { // Search just this patient's records
         return this.makeIdKey( pid, this.start ) ;
     }    
 
-    static patEnd( pid=patientId ) { // Search just this patient's records
+    static patEnd( pid=potId ) { // Search just this patient's records
         return this.makeIdKey( pid, this.end ) ;
     }    
 }
@@ -89,7 +89,7 @@ class Id_patient extends Id{
             (doc.DOB??"").replace(/;/g,"_")
             ].join(";");
     }
-    static splitId( id=patientId ) {
+    static splitId( id=potId ) {
         return super.splitId(id);
     }
 }

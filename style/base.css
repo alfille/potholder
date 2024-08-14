@@ -422,9 +422,6 @@ legend {
   text-align: center;
   font-size: 12px;
 }
-#toframe,#fromframe {
-  width:350px;
-}
 #footerflex {
   display: flex;
   color: white;
@@ -448,15 +445,19 @@ legend {
   flex-flow:column wrap;
   justify-content:stretch;
 }
-#fromlabel, #tolabel {
-  background: yellow;
-  width: 100%;
-}
 .nowrap {
   white-space:nowrap;
 }
+.potholderLogo {
+  height:100px;
+  width:auto;
+}
 .missionLogo {
   height:50px;
+  width:auto;
+}
+.splashImg {
+  height:400px;
   width:auto;
 }
 

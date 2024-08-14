@@ -50,7 +50,7 @@ objectOperation = new SimpleOperation() ;
 
 class Mission { // convenience class
     static select() {
-        patientId = missionId;
+        potId = missionId;
         Mission.getRecordId()
         .then( doc => TitleBox([doc.Mission,doc.Organization],"MissionInfo") ) ;
     }

@@ -135,7 +135,6 @@ class RemoteReplicant { // convenience class
     closeRemoteDB() {
         return Promise.all( [
             objectUser.user_db ? objectUser.user_db.close() : Promise.resolve(true),
-            security_db ? security_db.close() : Promise.resolve(true),
             ]);
     }
 

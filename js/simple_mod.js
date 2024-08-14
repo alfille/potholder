@@ -25,11 +25,11 @@ import {
     } from "./id_mod.js" ;
 
 class SimplePatient { // convenience class
-    getRecordId(id=patientId ) {
+    getRecordId(id=potId ) {
         return db.get( id );
     }
 
-    getRecordIdPix(id=patientId, binary=false ) {
+    getRecordIdPix(id=potId, binary=false ) {
         return db.get( id, { attachments:true, binary:binary } );
     }
 
@@ -67,12 +67,12 @@ class SimplePatient { // convenience class
         return db.allDocs(doc);
     }
 
-    select( pid = patientId ) {
-        patientId = pid ;
+    select( pid = potId ) {
+        potId = pid ;
         if ( pid == missionId ) {
             Mission.select() ;
         } else {
-            Cookie.set( "patientId", pid );
+            Cookie.set( "potId", pid );
             // Check patient existence
             db.query("Pid2Name",{key:pid})
             .then( (doc) => {
@@ -86,7 +86,7 @@ class SimplePatient { // convenience class
     }
 
     isSelected() {
-        return ( patientId != null ) && ( patientId != missionId ) ;
+        return ( potId != null ) && ( potId != missionId ) ;
     }
 }
 
@@ -102,7 +102,7 @@ class SimpleNote { // convenience class
         return db.allDocs(doc);
     }
 
-    getRecordsId(pid=patientId) {
+    getRecordsId(pid=potId) {
         let doc = {
             startkey: Id_note.patStart(pid),
             endkey: Id_note.patEnd(pid),
@@ -110,7 +110,7 @@ class SimpleNote { // convenience class
         return db.allDocs(doc) ;
     }
 
-    getRecordsIdDoc(pid=patientId) {
+    getRecordsIdDoc(pid=potId) {
         let doc = {
             startkey: Id_note.patStart(pid),
             endkey: Id_note.patEnd(pid),
@@ -119,7 +119,7 @@ class SimpleNote { // convenience class
         return db.allDocs(doc) ;
     }
 
-    getRecordsIdPix( pid = patientId, binary=false) {
+    getRecordsIdPix( pid = potId, binary=false) {
         // Base64 encoding by default (controled by "binary")
         let doc = {
             startkey: Id_note.patStart(pid),
@@ -150,12 +150,12 @@ class SimpleOperation { // convenience class
             Laterality: "?",
             Status: "none",
             Equipment: "",
-            patient_id: patientId,
+            patient_id: potId,
         };
         return db.put( doc );
     }
     
-    getRecordsIdDoc( pid=patientId ) {
+    getRecordsIdDoc( pid=potId ) {
         let doc = {
             startkey: Id_operation.patStart(pid),
             endkey: Id_operation.patEnd(pid),
@@ -202,7 +202,7 @@ class SimpleOperation { // convenience class
         return db.allDocs(doc);
     }
 
-    getRecordsId(pid=patientId) {
+    getRecordsId(pid=potId) {
         let doc = {
             startkey: Id_operation.patStart(pid),
             endkey: Id_operation.patEnd(pid),
