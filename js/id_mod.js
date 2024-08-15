@@ -8,10 +8,8 @@
  
 export {
     Id,
-    Id_patient,
-    Id_mission,
+    Id_pot,
     Id_note,
-    Id_operation,
 } ;
 
 class Id {
@@ -96,16 +94,6 @@ class Id_pot extends Id{
 class Id_note extends Id{
     static type = "c";        
     static splitId( id=noteId ) {
-        return super.splitId(id);
-    }
-}
-
-class Id_mission extends Id_patient{
-    static type = "m";
-    static makeId() {
-        return super.makeId({});
-    }
-    static splitId( id=missionId ) {
         return super.splitId(id);
     }
 }

@@ -22,10 +22,8 @@ import {
 
 import {
     Id,
-    Id_patient,
-    Id_mission,
+    Id_pot,
     Id_note,
-    Id_operation,
     } from "./id_mod.js";
 
 import {

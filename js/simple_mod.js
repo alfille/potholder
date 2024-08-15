@@ -8,6 +8,7 @@
  
 export {
     SimplePatient,
+    SimpleNote,
     } ;
     
 import {
@@ -16,10 +17,8 @@ import {
 
 import {
     Id,
-    Id_patient,
-    Id_mission,
+    Id_pot,
     Id_note,
-    Id_operation,
     } from "./id_mod.js" ;
 
 class SimplePatient { // convenience class
@@ -33,8 +32,8 @@ class SimplePatient { // convenience class
 
     getAllId() {
         let doc = {
-            startkey: Id_patient.allStart(),
-            endkey:   Id_patient.allEnd(),
+            startkey: Id_pot.allStart(),
+            endkey:   Id_pot.allEnd(),
         };
 
         return db.allDocs(doc);
@@ -42,8 +41,8 @@ class SimplePatient { // convenience class
         
     getAllIdDoc(binary=false) {
         let doc = {
-            startkey: Id_patient.allStart(),
-            endkey:   Id_patient.allEnd(),
+            startkey: Id_pot.allStart(),
+            endkey:   Id_pot.allEnd(),
             include_docs: true,
             attachments: true,
             binary: binary,
@@ -55,8 +54,8 @@ class SimplePatient { // convenience class
     getAllIdDocPix(binary=false) {
         // Note: using base64 here
         let doc = {
-            startkey: Id_patient.allStart(),
-            endkey:   Id_patient.allEnd(),
+            startkey: Id_pot.allStart(),
+            endkey:   Id_pot.allEnd(),
             include_docs: true,
             binary: binary,
             attachments: true,
@@ -84,3 +83,48 @@ class SimplePatient { // convenience class
     }
 }
 
+class SimpleNote { // convenience class
+    getAllIdDoc() {
+        let doc = {
+            startkey: Id_note.allStart(),
+            endkey:   Id_note.allEnd(),
+            include_docs: true,
+            binary: false,
+            attachments: false,
+        };
+        return db.allDocs(doc);
+    }
+
+    getRecordsId(pid=potId) {
+        let doc = {
+            startkey: Id_note.patStart(pid),
+            endkey: Id_note.patEnd(pid),
+        };
+        return db.allDocs(doc) ;
+    }
+
+    getRecordsIdDoc(pid=potId) {
+        let doc = {
+            startkey: Id_note.patStart(pid),
+            endkey: Id_note.patEnd(pid),
+            include_docs: true,
+        };
+        return db.allDocs(doc) ;
+    }
+
+    getRecordsIdPix( pid = potId, binary=false) {
+        // Base64 encoding by default (controled by "binary")
+        let doc = {
+            startkey: Id_note.patStart(pid),
+            endkey: Id_note.patEnd(pid),
+            include_docs: true,
+            binary: binary,
+            attachments: true,
+        };
+        return db.allDocs(doc) ;
+    }
+
+    dateFromDoc( doc ) {
+        return ((doc["date"] ?? "") + Id_note.splitId(doc._id).key).substring(0,24) ;
+    }
+}

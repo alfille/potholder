@@ -24,10 +24,8 @@ import {
 
 import {
     Id,
-    Id_patient,
-    Id_mission,
+    Id_pot,
     Id_note,
-    Id_operation,
     } from "./id_mod.js";
 
 import {
@@ -48,6 +46,7 @@ import {
 
 import {
     SimplePatient,
+    SimpleNote,
     } from "./simple_mod.js" ;
     
 import {
@@ -467,7 +466,7 @@ class NewPatientData extends PatientDataEditMode {
             this.doc[0].DOB = new Date().toISOString();
         } else {
             // create new patient record
-            this.doc[0]._id = Id_patient.makeId( this.doc[0] );
+            this.doc[0]._id = Id_pot.makeId( this.doc[0] );
             this.doc[0].patient_id = this.doc[0]._id;
             db.put( this.doc[0] )
             .then( (response) => {
@@ -555,8 +554,8 @@ class Patient extends SimplePatient { // convenience class
 
     getAllIdDocPix() {
         let doc = {
-            startkey: Id_patient.allStart(),
-            endkey:   Id_patient.allEnd(),
+            startkey: Id_pot.allStart(),
+            endkey:   Id_pot.allEnd(),
             include_docs: true,
             binary: true,
             attachments: true,
@@ -1104,7 +1103,7 @@ class SelectPatient extends Pagelist {
         document.getElementById("footerflex").style.display = "none"; // make less confusing
         objectTable = new SelectPatientTable();
         let nnum = {} ;
-        objectNote.getAllIdDoc() ) // Notes
+        objectNote.getAllIdDoc() // Notes
         .then( doclist => doclist.rows
             .forEach( d => {
                 let p = d.doc.patient_id;
@@ -1631,9 +1630,6 @@ window.onload = () => {
 
         // start sync with remote database
         objectRemote.foreverSync();
-
-        // set link for mission
-        Mission.link();
 
         // Secondary indexes
         createQueries();
