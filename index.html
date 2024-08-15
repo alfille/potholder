@@ -38,44 +38,20 @@
                     </div>
                     <!-- top: SelectPatient -->
                         <!-- Nothing -->
-                    <!-- top: DBTable -->
-                    <div class="DBTable topButtons pageOverlay">
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
-                    </div>
                     <!-- top: SearchList -->
                     <div class="SearchList topButtons pageOverlay">
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'MainMenu' )">Main Menu</button>
-                    </div>
-                    <!-- top: AllOperations -->
-                    <div class="AllOperations topButtons pageOverlay">
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
-                    </div>
-                    <!-- top: OperationList -->
-                    <div class="OperationList topButtons pageOverlay">
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'OperationNew' )" title="New operation creation for this patient">Add Operation</button>
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                     </div>
                     <!-- top: PatientNew -->
                     <div class="PatientData PatientNew topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
                     </div>
-                    <!-- top: MissionInfo -->
-                    <div class="PatientData MissionInfo topButtons pageOverlay">
-                        <button type="button" class="divbutton edit_data">Edit</button>
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
-                    </div>
                     <!-- top: PatientDemographics PatientMedical -->
                     <div class="PatientData PatientDemographics PatientMedical topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
-                    </div>
-                    <!-- top: OperationEdit -->
-                    <div class="PatientData OperationEdit topButtons pageOverlay">
-                        <button type="button" class="divbutton edit_data">Edit</button>
-                        <button type="button" class="divbutton delete" onclick="objectOperation.del()">Delete Operation</button>
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                     </div>
                     <!-- top: InvalidPatient -->
                     <div class="InvalidPatient topButtons pageOverlay">
@@ -99,12 +75,6 @@
                         <button class="libutton divbutton" type="button" onclick="objectPage.show('NoteList')">All Notes</button>
                         <button class="returnfromnote libutton divbutton return" type="button" onclick="objectPage.show( 'back' )">Return</button>
                     </div>
-                    <!-- top: MissionList -->
-                    <div class="MissionList topButtons pageOverlay">
-                        <button class="create_note libutton divbutton" type="button" onclick="objectPage.show( 'NoteNew' )">New Note</button>
-                        <button class="createtheimage libutton divbutton Qphoto" type="button">&#128247;</button>
-                        <button class="returnfromnote libutton divbutton return" type="button" onclick="objectPage.show( 'back' )">Return</button>
-                    </div>
                     <!-- top: EditMode (for any of the PatientData derivatives -->
                     <div class="patientDataEdit pageOverlay">
                         <button type="button" class="divbutton edit_data" disabled>Edit</button>
@@ -125,7 +95,6 @@
                 <div id="MainMenuContent" class="MainMenuRow" >
                     <div class="PatientProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPatients' )">Patients</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllOperations' )">Operations</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
                     </div>
@@ -163,13 +132,6 @@
                     <table id="SelectPatient"></table>
                 </div>
             </div>
-            <!-- body: DBTable -->
-            <div class="DBTable pageOverlay">
-                Choose a medical mission to use:
-                <div id="DBTableContent" >
-                    <table id="DBTable"></table>
-                </div>
-            </div>
             <!-- body: SearchList -->
             <div class="SearchList pageOverlay">
                 <div id="searchbar">
@@ -180,14 +142,8 @@
                     <table id="SearchList"></table>
                 </div>
             </div>
-            <!-- body: AllOperations OperationList -->
-            <div class="AllOperations OperationList pageOverlay">
-                <div id="OperationListContent" >
-                    <table id="OperationsList"></table>
-                </div>
-            </div>
-            <!-- body: PatientNew PatientDemographics PatientMedical OperationEdit MissionInfo -->
-            <div class="PatientData PatientNew PatientDemographics PatientMedical OperationEdit MissionInfo pageOverlay">
+            <!-- body: PatientNew PatientDemographics PatientMedical -->
+            <div class="PatientData PatientNew PatientDemographics PatientMedical pageOverlay">
                 <div id="PatientDataContent" ></div>
             </div>
             <!-- body: PatientPhoto -->
@@ -199,9 +155,6 @@
                     <div class="PatientProcButtons">
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PatientDemographics' )">Demographics</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PatientMedical' )">Medical</button>
-                    </div>
-                    <div class="PatientProcButtons">
-                        <button type="button" class="divbutton" id="nOps" onclick="objectPage.show( 'OperationList' )">Operations (0)</button>
                     </div>
                 </div>
                 <div id="NoteChoiceButtons">
@@ -240,8 +193,8 @@
                     <center><button type="button" class="divbutton" onclick="objectPage.show('AllPatients')">Ok</button></center>
                 </div>
             </div>
-            <!-- body: NoteList NoteListCategory MissionList -->
-            <div class="NoteList NoteListCategory MissionList pageOverlay">
+            <!-- body: NoteList NoteListCategory -->
+            <div class="NoteList NoteListCategory pageOverlay">
                 <div id="NoteListContent"></div>
             </div>
             <!-- body: NoteNew (quick note) -->

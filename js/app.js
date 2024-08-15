@@ -48,8 +48,6 @@ import {
 
 import {
     SimplePatient,
-    SimpleNote,
-    SimpleOperation,
     } from "./simple_mod.js" ;
     
 import {
@@ -456,34 +454,6 @@ class Search { // singleton class
     }
 }
 
-class MissionData extends PatientData {
-    saveChanged ( state ) {
-        let changed = this.loadDocData();
-        if ( changed[0] ) {
-            db.put( this.doc[0] )
-            .then( _ => objectCollation.db.get( '0'+remoteCouch.database ) )
-            .then( doc => {
-                doc.dbname = remoteCouch.database;
-                doc.server = remoteCouch.address;
-                ["Organizatoin","Name","Location","StartDate","endDate","Mission","Link"].forEach(k=> doc[k]=this.doc[0][k]);
-                return doc ;
-                })
-            .then( doc => objectCollation.db.put(doc) )
-            .catch( (err) => objectLog.err(err) )
-            .finally( () => objectPage.show( state ) );
-        }
-    }
-     savePatientData() {
-        this.saveChanged( "MainMenu" );
-    }
-}    
-
-class OperationData extends PatientData {
-    savePatientData() {
-        this.saveChanged( "OperationList" );
-    }
-}
-
 class NewPatientData extends PatientDataEditMode {
     savePatientData() {
         this.loadDocData();
@@ -603,24 +573,20 @@ class Patient extends SimplePatient { // convenience class
         }
 
         potId = pid ;
-        if ( pid == missionId ) {
-            Mission.select() ;
-        } else {
-            objectCookie.set( "potId", pid );
-            // Check patient existence
-            db.query("Pid2Name",{key:pid})
-            .then( (doc) => {
-                // highlight the list row
-                if ( objectPage.test('AllPatients') ) {
-                    objectTable.highlight();
-                }
-                TitleBox([doc.rows[0].value[1]]);
-                })
-            .catch( (err) => {
-                objectLog.err(err,"patient select");
-                this.unselect();
-                });
-        }
+		objectCookie.set( "potId", pid );
+		// Check patient existence
+		db.query("Pid2Name",{key:pid})
+		.then( (doc) => {
+			// highlight the list row
+			if ( objectPage.test('AllPatients') ) {
+				objectTable.highlight();
+			}
+			TitleBox([doc.rows[0].value[1]]);
+			})
+		.catch( (err) => {
+			objectLog.err(err,"patient select");
+			this.unselect();
+			});
     }
 
     unselect() {
@@ -747,7 +713,7 @@ class Note extends SimpleNote { // convenience class
                 objectPatient.select( doc.patient_id);
             }
             objectCookie.set( "noteId", nid );
-            if ( objectPage.test("NoteList") || objectPage.test("NoteListCategory") || objectPage.test("MissionList")) {
+            if ( objectPage.test("NoteList") || objectPage.test("NoteListCategory")) {
                 objectNoteList.select() ;
             }
             })
@@ -756,7 +722,7 @@ class Note extends SimpleNote { // convenience class
 
     unselect() {
         objectCookie.del ( "noteId" );
-        if ( objectPage.test("NoteList") || objectPage.test("NoteListCategory") || objectPage.test("MissionList")) {
+        if ( objectPage.test("NoteList") || objectPage.test("NoteListCategory")) {
             document.getElementById("NoteListContent").querySelectorAll("li")
             .forEach( l => l.classList.remove('choice') );
         }
@@ -847,131 +813,6 @@ class Note extends SimpleNote { // convenience class
 }
 objectNote = new Note() ;
 
-class Operation extends SimpleOperation { // convenience class
-    select( oid=operationId ) {
-        // Check patient existence
-        operationId=oid ;
-        db.get(oid)
-        .then( doc => {
-            if ( doc.patient_id != potId ) {
-                objectPatient.select( doc.patient_id);
-            }
-            objectCookie.set ( "operationId", oid  );
-            // highlight the list row
-            if ( objectPage.test('OperationList') || objectPage.test('AllOperations')  ) {
-                objectTable.highlight();
-            }
-            })
-        .catch( err => {
-            objectLog.err(err,"operation select");
-            this.unselect();
-            });             
-    }
-
-    unselect() {
-        operationId = null;
-        objectCookie.del( "operationId" );
-        if ( objectPage.test("OperationList") ) {
-            let ot = document.getElementById("OperationsList");
-            if ( ot ) {
-                let rows = ot.rows;
-                for ( let i = 0; i < rows.length; ++i ) {
-                    rows[i].classList.remove('choice');
-                }
-            }
-        }
-    }
-
-    del() {
-        if ( operationId ) {
-            let pdoc;
-            objectPatient.getRecordId()
-            .then( (doc) => { 
-                pdoc = doc;
-                return db.get( operationId );
-                })
-            .then( (doc) => {
-                if ( confirm(`Delete operation <${doc.Procedure}>\n on patient ${pdoc.FirstName} ${pdoc.LastName} DOB: ${pdoc.DOB}.\n -- Are you sure?`) ) {
-                    return doc;
-                } else {
-                    throw "No delete";
-                }           
-                })
-            .then( (doc) =>db.remove(doc) )
-            .then( () => this.unselect() )
-            .catch( (err) => objectLog.err(err) )
-            .finally( () => objectPage.show( "back" ) );
-        }
-        return true;
-    }    
-        
-    getAllIdDocCurated() {
-        // only real cases or placeholder if no others for that paitent
-        return this.getAllIdDoc()
-        .then( doclist => {
-            const pids = new Set(
-                doclist.rows
-                .filter( r => ! this.nullOp(r.doc) )
-                .map( r => r.doc.patient_id ) 
-                );
-            return doclist.rows
-                   .filter( r => (! this.nullOp(r.doc)) || (!pids.has( r.doc.patient_id )) ) ;
-            });
-    }
-
-}
-
-objectOperation = new Operation() ;
-
-class Mission { // convenience class
-    static select() {
-        objectPatient.unselect();
-        potId = missionId;
-        Mission.getRecordId()
-        .then( doc => TitleBox([doc.Mission,doc.Organization],"MissionInfo") ) ;
-    }
-    
-    static getRecordId() {
-        // return the Mission record, or a dummy
-        // returns a promise, but can't fail!
-        return db.get( missionId, { attachments: true, binary: true } )
-        .then( doc => Promise.resolve(doc) )
-        .catch( _ => Promise.resolve({
-            EndDate:null,
-            Link:"",
-            LocalContact:"",
-            Location:"",
-            Mission:remoteCouch.database,
-            Name:remoteCouch.database,
-            Organization:"",
-            StartDate:null,
-            type:"mission",
-            _id:missionId,
-            })
-            );
-    }
-
-    static link() {
-        Mission.getRecordId()
-        .then( doc => {
-            let src = new ImageImbedded( null,doc).source();
-            document.querySelectorAll(".missionLogo")
-            .forEach( logo => {
-                logo.src=src??"images/Null.png";
-                logo.addEventListener( 'click', () => window.open(doc.Link) );
-                });
-            document.querySelectorAll(".missionButton")
-            .forEach( logo => {
-                logo.addEventListener( 'click', () => window.open(doc.Link));
-                logo.title = `Open ${doc.Mission} website`;
-                });
-            document.querySelectorAll(".missionButtonImage")
-            .forEach( logo => logo.src=src??"images/Null.png" );
-            })
-        .catch( err => objectLog.err(err,"Mission info") ) ;
-    }
-}
-
 class Pagelist {
     // list of subclasses = displayed "pages"
     // Note that these classes are never "instantiated -- only used statically
@@ -1038,29 +879,6 @@ class Help extends Pagelist {
     }
 }
 
-class AllOperations extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        objectPatient.unselect();
-        let olist;
-        objectOperation.getAllIdDocCurated()
-        .then( doclist => olist = doclist)
-        .then( _ => db.query( "Pid2Name",{keys:olist.map(r=>r.doc.patient_id),}))  
-        .then( nlist => {
-            const n2id = {} ;
-            // create an pid -> name dict
-            nlist.rows.forEach( n => n2id[n.key]=n.value[0] );
-            // Assign names, filter out empties
-            olist.forEach( r => r.doc.Name = ( r.doc.patient_id in n2id ) ? n2id[r.doc.patient_id] : "" ) ;
-            objectTable = new AllOperationTable();
-            // Default value
-            objectTable.fill(olist.filter(o=>o.doc.Name!==""));
-            })
-        .catch( err=>objectLog.err(err) );
-    }
-}
-
 class AllPatients extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
@@ -1084,23 +902,6 @@ class AllPatients extends Pagelist {
             } else {
                 objectPatient.unselect();
             }
-            })
-        .catch( (err) => objectLog.err(err) );
-    }
-}
-
-class DBTable extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        objectTable = new DatabaseTable();
-        objectCollation.db.allDocs( {
-            startkey: '0',
-            endkey:   '1',
-            include_docs: true,
-            })
-        .then( (docs) => {
-            objectTable.fill(docs.rows) ;
             })
         .catch( (err) => objectLog.err(err) );
     }
@@ -1157,38 +958,6 @@ class MainMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
 
-class MissionInfo extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        Mission.select();
-        objectPatient.getRecordIdPix(missionId,true)
-        .then( (doc) => objectPatientData = new MissionData( doc, structMission ) )
-        .catch( () => {
-            let doc = {
-                _id: missionId,
-                author: remoteCouch.username,
-                patient_id: missionId,
-                type: "mission",
-            };
-            objectPatientData = new MissionData( doc, structMission ) ;
-            })
-        .finally( () => Mission.link() );
-    }
-}
-
-class MissionList extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        Mission.select() ;
-        Mission.getRecordId()
-        .then( () => objectNote.getRecordsIdPix(potId,true) )
-        .then( notelist => objectNoteList = new NoteLister(notelist,'Uncategorized') )
-        .catch( ()=> objectPage.show( "MissionInfo" ) ) ;
-    }
-}
-
 class NoteListCategory extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
@@ -1210,7 +979,7 @@ class NoteList extends NoteListCategory {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() || (potId == missionId) ) {
+        if ( objectPatient.isSelected() ) {
             super.subshow('Uncategorized');
         } else {
             objectNote.unselect();
@@ -1223,69 +992,12 @@ class NoteNew extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() || (potId == missionId) ) {
+        if ( objectPatient.isSelected() ) {
             // New note only
             objectNote.unselect();
             objectNote.create();
         } else {
             objectPage.show( "back" );
-        }
-    }
-}
-
-class OperationEdit extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        if ( operationId ) {
-            db.get( operationId )
-            .then ( doc => {
-                objectPatient.select( doc.patient_id ); // async set title
-                return doc ;
-                })
-            .then( (doc) => objectPatientData = new OperationData( doc, structOperation ) )
-            .catch( (err) => {
-                objectLog.err(err);
-                objectPage.show( "back" );
-                });
-        } else if ( ! objectPatient.isSelected() ) {
-            objectPage.show( "back" );
-        } else {
-            objectPatientData = new OperationData(
-            {
-                _id: Id_operation.makeId(),
-                type: "operation",
-                patient_id: potId,
-                author: remoteCouch.username,
-            } , structOperation );
-        }
-    }
-}
-
-class OperationList extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        if ( objectPatient.isSelected() ) {
-            objectTable = new OperationTable();
-            objectOperation.getRecordsIdDoc(potId)
-            .then( (docs) => objectTable.fill(docs.rows ) )
-            .catch( (err) => objectLog.err(err) );
-        } else {
-            objectPage.show( "back" ) ;
-        }
-    }
-}
-
-class OperationNew extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        if ( objectPatient.isSelected() ) {
-            objectOperation.unselect();
-            objectPage.show( "OperationEdit" );
-        } else {
-            objectPage.show( "back" ) ;
         }
     }
 }
@@ -1315,11 +1027,6 @@ class PatientMedical extends Pagelist {
             let args;
             objectPatient.getRecordId()
             .then( (doc) => args = [doc,structMedical] )
-            .then( _ => objectOperation.getRecordsIdDoc(potId) )
-            .then( ( olist ) => {
-                olist.rows.forEach( (r) => args.push( r.doc, structOperation ) );
-                objectPatientData = new PatientData( ...args );
-                })
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -1353,8 +1060,6 @@ class PatientPhoto extends Pagelist {
             let onum ;
             objectPatient.getRecordIdPix(potId,true)
             .then( (doc) => pdoc = doc )
-            .then( _ => objectOperation.getRecordsIdDoc(potId) )
-            .then ( (doclist) => onum = doclist.rows.filter( r=> ! objectOperation.nullOp(r.doc) ).length )
             .then( _ => objectNote.getRecordsIdDoc(potId) )
             .then ( (notelist) => objectPatient.menu( pdoc, notelist, onum ) )
             .catch( (err) => {
@@ -1398,19 +1103,8 @@ class SelectPatient extends Pagelist {
         document.getElementById("titlebox").style.display = "none"; // make less confusing
         document.getElementById("footerflex").style.display = "none"; // make less confusing
         objectTable = new SelectPatientTable();
-        let onum= {} ;
         let nnum = {} ;
-        objectOperation.getAllIdDoc() // Operations
-        .then( doclist => doclist.rows
-            .forEach( d => {
-                let p = d.doc.patient_id;
-                if (p in onum ) {
-                    ++ onum[p];
-                } else {
-                    onum[p] = 0 ; // excludes placeholders
-                }
-                }))
-        .then( _ => objectNote.getAllIdDoc() ) // Notes
+        objectNote.getAllIdDoc() ) // Notes
         .then( doclist => doclist.rows
             .forEach( d => {
                 let p = d.doc.patient_id;
@@ -1424,7 +1118,6 @@ class SelectPatient extends Pagelist {
         .then( (docs) => {
             docs.rows
             .forEach( d => {
-                d.doc.Operations = onum[d.id]??0 ;
                 d.doc.Notes = nnum[d.id]??0 ;
             })
             objectTable.fill(docs.rows );
@@ -1587,11 +1280,10 @@ class PatientTable extends SortTable {
 class SelectPatientTable extends SortTable {
     constructor() {
         super( 
-            ["LastName", "DOB","Operations","Notes" ], 
+            ["LastName", "DOB","Notes" ], 
             "SelectPatient",
             [
                 ["LastName","Name", (doc)=> `${doc.LastName}, ${doc.FirstName}`],
-                ["Operations","Op",null],
                 ["Notes","Note",null],
             ] 
             );
@@ -1608,133 +1300,6 @@ class SelectPatientTable extends SortTable {
 
     editpage() {
         //objectPage.show("PatientPhoto");
-    }
-}
-
-class DatabaseTable extends SortTable {
-    constructor() {
-        super( 
-            ["Name","Organization","Location","file"], 
-            "DBTable" ,
-            [
-                ["file","Filename",(doc)=>doc._id.substring(1)],
-            ] 
-            );
-         // starting databaseId
-        this.databaseId = this.makeId( remoteCouch.database ) ;
-        this.loadedId = this.databaseId ;
-        // set titlebox
-        objectCollation.db.get(this.databaseId)
-        .then( (doc) => TitleBox([doc.Name,doc.Location,doc.Organization,`<I>${this.databaseId.substring(1)}</I>`],"MissionInfo") )
-        .catch( _ => Mission.select() ) ;
-        this.selectFunc( this.databaseId ) ;
-    }
-
-    makeId( db ) {
-        return '0'+db;
-    }
-
-    unselect() {
-        this.databaseId = null;
-        if ( objectPage.test("DBTable") ) {
-            let pt = document.getElementById("DBTable");
-            if ( pt ) {
-                let rows = pt.rows;
-                for ( let i = 0; i < rows.length; ++i ) {
-                    rows[i].classList.remove('choice');
-                }
-            }
-        }
-    }
-
-    selectId() {
-        return this.databaseId;
-    }
-
-    selectFunc(did) {
-        if ( this.databaseId != did ) {
-            // change database
-            this.unselect();
-        }
-        this.databaseId = did ;
-        objectCollation.db.get(did)
-        .then( (doc) => {
-            this.databaseId = did;
-            // highlight the list row
-            if ( objectPage.test('DBTable') && objectTable ) {
-                objectTable.highlight();
-            }
-            })
-        .catch( _ => this.unselect() )
-    }
-
-    editpage() {
-        // select this database and reload
-        if ( this.databaseId != this.loadedId ) {
-            // changed!
-            objectCollation.db.get(this.databaseId)
-            .then( (doc) => {
-                remoteCouch.address = doc.server ;
-                remoteCouch.database = doc.dbname ;
-                objectPatient.unselect();
-                objectCookie.set( "remoteCouch", Object.assign({},remoteCouch) ) ;
-                })
-            .catch( (err) => objectLog.err(err,"Loading patient database") )
-            .finally( () => {
-                objectPage.reset();
-                window.location.href="/index.html"; // force reload
-                }) ;
-        } else {
-            objectPage.show( "MainMenu" ) ;
-        }        
-    }
-}
-
-class AllOperationTable extends SortTable {
-    constructor() {
-        super( 
-        [ "Date-Time","Name","Procedure","Surgeon" ], 
-        "OperationsList",
-        [
-            ["Date-Time","Date",(doc)=>objectOperation.dateFromDoc(doc).substring(0,10)]
-        ]
-        );
-    }
-
-    selectId() {
-        return operationId;
-    }
-
-    selectFunc(id) {
-        objectOperation.select(id) ;
-    }
-
-    editpage() {
-        objectPage.show("OperationEdit");
-    }
-}
-
-class OperationTable extends SortTable {
-    constructor() {
-        super( 
-        [ "Date-Time","Procedure", "Surgeon" ], 
-        "OperationsList",
-        [
-            ["Date-Time","Date",(doc)=>objectOperation.dateFromDoc(doc).substring(0,10)]
-        ]
-        );
-    }
-
-    selectId() {
-        return operationId;
-    }
-
-    selectFunc(id) {
-        objectOperation.select(id) ;
-    }
-
-    editpage() {
-        objectPage.show("OperationEdit");
     }
 }
 
@@ -1760,9 +1325,6 @@ class SearchTable extends SortTable {
         let id = objectSearch.select_id;
         if ( id == null ) {
             objectPage.show( null );
-        } else if ( id == missionId ) {
-            Mission.select();
-            objectPage.show( 'MissionInfo' ) ;
         } else {
             db.get( id )
             .then( doc => {
@@ -1771,21 +1333,8 @@ class SearchTable extends SortTable {
                         objectPatient.select( id );
                         objectPage.show( 'PatientPhoto' ) ;
                         break ;
-                    case 'mission':
-                        Mission.select( id );
-                        objectPage.show( 'MissionInfo' ) ;
-                        break ;
-                    case 'operation':
-                        objectPatient.select( doc.patient_id );
-                        objectOperation.select( id );
-                        objectPage.show( 'OperationEdit' );
-                        break ;
                     case 'note':
-                        if ( doc.potId == missionId ) {
-                            Mission.select();
-                        } else {
-                            objectPatient.select( doc.patient_id );
-                        }
+                        objectPatient.select( doc.patient_id );
                         objectNote.select( id );
                         objectPage.show( 'NoteList' );
                         break ;
@@ -1983,13 +1532,6 @@ class NoteLister {
     }
 }
 
-class Collation {
-    constructor() {
-        this.db = new PouchDB( 'databases' );
-        PouchDB.sync( 'https://emissionsystem.org:6984/databases', this.db, { live:true, retry:true } ) ;
-    }
-}
-
 function parseQuery() {
     // returns a dict of keys/values or null
     let url = new URL(location.href);
@@ -2053,9 +1595,6 @@ window.onload = () => {
     // set state from URL
     URLparse() ; // look for remoteCouch and other cookies
 
-    // database list
-    objectCollation = new Collation();
-
     // Start pouchdb database       
     if ( credentialList.every( c => remoteCouch[c] !== "" ) ) {
         db = new PouchDB( remoteCouch.database, {auto_compaction: true} ); // open local copy
@@ -2083,15 +1622,6 @@ window.onload = () => {
 					case "note":
 						if ( objectPage.test("NoteList") && change.doc?.patient_id==potId ) {
 							objectPage.show("NoteList");
-						} else if ( objectPage.test("MissionList") && change.doc?.patient_id==missionId ) {
-							objectPage.show("MissionList");
-						}
-						break;
-					case "operation":
-						if ( objectPage.test("OperationList") && change.doc?.patient_id==potId ) {
-							objectPage.show("OperationList");
-						} else if ( objectPage.test("AllOperations") && change.doc?.patient_id==potId ) {
-							objectPage.show("AllOperations");
 						}
 						break;
 				}
@@ -2116,9 +1646,6 @@ window.onload = () => {
         // Set patient, operation and note -- need page shown first
         if ( objectPatient.isSelected() ) { // mission too
             objectPatient.select() ;
-        }
-        if ( operationId ) {
-            objectOperation.select(operationId) ;
         }
         if ( noteId ) {
             objectNote.select() ;

@@ -9,7 +9,6 @@
 // globals cookie backed
 globalThis. potId = null ;
 globalThis. noteId = null ;
-globalThis. operationId = null ;
 globalThis. displayState = null ;
 globalThis. remoteCouch = null ;
 
@@ -27,7 +26,6 @@ globalThis. objectRemote = null ;
 globalThis. objectLog = null ;
 globalThis. objectPatient = null ;
 globalThis. objectNote = null ;
-globalThis. objectOperation = null ;
 globalThis. objectCookie = null ;
 
 // Database handles
@@ -35,10 +33,8 @@ globalThis.db = null ; // will be Pouchdb local copy
 
 // app only
 globalThis. objectSearch = null;
-globalThis. objectCollation = null;
 
 // admin only
-globalThis. security_db = null ;
 globalThis. objectUser = null;
 
 // download only

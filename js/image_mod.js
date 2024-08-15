@@ -221,9 +221,7 @@ class ImageNote extends ImageImbedded {
     
     leave() {
         this.buttonsdisabled( false );
-        if (potId == missionId) {
-            objectPage.show( 'MissionList');
-        } else if ( objectNoteList.category == 'Uncategorized' ) {
+        if ( objectNoteList.category == 'Uncategorized' ) {
             objectPage.show( 'NoteList');
         } else {
             objectPage.show( 'NoteListCategory', objectNoteList.category);
@@ -279,25 +277,6 @@ class ImageNote extends ImageImbedded {
         doc.category = this.parent.querySelector("select").value;
     }
 
-    delete() {
-        let pdoc;
-        Patient.getRecordId()
-        .then( (doc) => {
-            pdoc = doc;
-            return db.get( noteId );
-            })
-        .then( (doc) => {
-            if ( confirm(`Delete note on patient ${pdoc.FirstName} ${pdoc.LastName} DOB: ${pdoc.DOB}.\n -- Are you sure?`) ) {
-                return doc;
-            } else {
-                throw "No delete";
-            }           
-            })
-        .then( (doc) => db.remove(doc) )
-        .then( () => objectNote.unselect() )
-        .catch( (err) => objectLog.err(err) )
-        .finally( () => this.leave() );
-    }
 }
 
 class ImageQuick extends ImageImbedded {

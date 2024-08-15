@@ -6,7 +6,8 @@ ID wll include: ";" separated
 * version
 * record type
 * artist
-* unique pot identifier (perhaps date/time)
+* unique pot identifier (Date/Time)
+* random 3 digit number
 
 Assumptions (not required)
 
@@ -18,5 +19,6 @@ Assumptions (not required)
 * artist 
   * **artist** name
 * Piece
-  * use creation date/time +/- random # to be unique
+  * use creation ISO format UTC time
+  * random 3 digit number (rough tie-breaker)
 

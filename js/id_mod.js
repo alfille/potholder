@@ -23,12 +23,11 @@ class Id {
         if ( id ) {
             const spl = id.split(";");
             return {
-                type:    spl[0] ?? null,
                 version: spl[1] ?? null, // 0 so far
-                last:    spl[2] ?? null,
-                first:   spl[3] ?? null,
-                dob:     spl[4] ?? null,
-                key:     spl[5] ?? null, // really creation date
+                type:    spl[0] ?? null,
+                artist:  spl[2] ?? null,
+                date:    spl[4] ?? null,
+                rand:    spl[5] ?? null, // really creation date
             };
         }
         return null;
@@ -36,21 +35,21 @@ class Id {
     
     static joinId( obj ) {
         return [
-            obj.type,
             obj.version,
-            obj.last,
-            obj.first,
-            obj.dob,
-            obj.key
+            obj.type,
+            obj.artist,
+            obj.date,
+            obj.rand
             ].join(";");
     }
     
     static makeIdKey( pid, key=null ) {
         let obj = this.splitId( pid ) ;
         if ( key==null ) {
-            obj.key = new Date().toISOString();
+            obj.date = new Date().toISOString();
+            obj.rand = Math.floor( Math.random() * 1000 ) ;
         } else {
-            obj.key = key;
+            obj.date = key;
         }
         obj.type = this.type;
         return this.joinId( obj );
@@ -77,16 +76,16 @@ class Id {
     }    
 }
       
-class Id_patient extends Id{
+class Id_pot extends Id{
     static type = "p";
     static makeId( doc ) {
         // remove any ';' in the name
         return [
-            this.type,
             this.version,
-            (doc.LastName??"").replace(/;/g,"_"),
-            (doc.FirstName??"").replace(/;/g,"_"),
-            (doc.DOB??"").replace(/;/g,"_")
+            this.type,
+            doc.artist??"",
+            doc.date,
+            doc.rand,
             ].join(";");
     }
     static splitId( id=potId ) {
@@ -101,13 +100,6 @@ class Id_note extends Id{
     }
 }
 
-class Id_operation extends Id{
-    static type = "o";
-    static splitId( id=operationId ) {
-        return super.splitId(id);
-    }
-}
-
 class Id_mission extends Id_patient{
     static type = "m";
     static makeId() {
@@ -117,4 +109,3 @@ class Id_mission extends Id_patient{
         return super.splitId(id);
     }
 }
-globalThis. missionId = Id_mission.makeId() ;

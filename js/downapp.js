@@ -35,8 +35,6 @@ import {
 
 import {
     SimplePatient,
-    SimpleNote,
-    SimpleOperation,
     } from "./simple_mod.js" ;
     
 import {
@@ -44,57 +42,7 @@ import {
 
 objectPatient = new SimplePatient() ;
 
-objectNote = new SimpleNote() ;
-
-objectOperation = new SimpleOperation() ;
-
-class Mission { // convenience class
-    static select() {
-        potId = missionId;
-        Mission.getRecordId()
-        .then( doc => TitleBox([doc.Mission,doc.Organization],"MissionInfo") ) ;
-    }
-    
-
-    static getRecordId(binary=false) {
-        // return the Mission record, or a dummy
-        return db.get( missionId, { attachments: true, binary: binary } )
-        .then( doc => Promise.resolve(doc) )
-        .catch( () => Promise.resolve({
-            EndDate:null,
-            Link:"",
-            LocalContact:"",
-            Location:"",
-            Mission:remoteCouch.database,
-            Name:remoteCouch.database,
-            Organization:"",
-            StartDate:null,
-            type:"mission",
-            _id:missionId,
-            })
-            );
-    }
-
-    static link() {
-        Mission.getRecordId()
-        .then( doc => {
-            let src = new ImageImbedded( null,doc).source();
-            document.querySelectorAll(".missionLogo")
-            .forEach( logo => {
-                logo.src=src??"images/Null.png";
-                logo.addEventListener( 'click', () => window.open(doc.Link) );
-                });
-            document.querySelectorAll(".missionButton")
-            .forEach( logo => {
-                logo.addEventListener( 'click', () => window.open(doc.Link));
-                logo.title = `Open ${doc.Mission} website`;
-                });
-            document.querySelectorAll(".missionButtonImage")
-            .forEach( logo => logo.src=src??"images/Null.png" );
-            })
-        .catch( err => objectLog.err(err,"Mission info") ) ;
-    }
-}
+objectNote = null ;
 
 class DownloadFile { // convenience class
     static file(contents, filename, htype ) {
@@ -146,35 +94,6 @@ class CSV { // convenience class
             });
     }
 
-    static operations() {
-        // Just real operation records
-        // Add Patient name too
-        const fields = [ "Procedure", "Surgeon", "Date-Time", "Status", "Equipment", "Complaint", "Duration", "Lateratility" ]; 
-        // First line titles 
-        let csv = ['"Patient"'].concat(fields.map( f => '"'+f+'"' )).join(',')+'\n';
-        // Add data
-        let olist = null;
-        objectOperation.getAllIdDoc()
-        .then( doclist => {
-            doclist.rows.forEach( row => row.doc["Date-List"] = objectOperation.dateFromDoc(row.doc) );
-            olist = doclist.rows.filter( r => ! objectOperation.nullOp(r.doc) ) ;
-            })
-        .then( _ => db.query( "Pid2Name", {keys:olist.map(r=>r.doc.patient_id)} ))
-        .then( nlist => {
-            const names = {};
-            nlist.rows.forEach( n => names[n.key] = n.value[0] ) ;
-            csv += olist
-                .map( row => [`"${names[row.doc.patient_id]}"`].concat(
-                        fields // per wanted field
-                        .map( f => row.doc[f] ?? "" ) // get data
-                        .map( v => typeof(v) == "number" ? v : `"${v}"` )) // data formatted
-                    .join(',')
-                    )
-                .join( '\n' );
-            CSV.download( csv, `${remoteCouch.database}Operations.csv` ); // Send to download file
-            });
-    }
-
     static all() {
         const pfields = [ "LastName", "FirstName", "DOB", "Dx", "Weight", "Height", "Sex", "Allergies", "Meds", "ASA" ]; 
         const ofields = [ "Complaint", "Procedure", "Surgeon", "Equipment", "Status", "Date-Time", "Duration", "Lateratility" ]; 
@@ -190,13 +109,6 @@ class CSV { // convenience class
             plist = doclist.rows;
             plist.forEach( p => nlist[p.id] = 0 );
             })
-        .then( _ => objectOperation.getAllIdDoc() )
-        .then( doclist =>
-            doclist.rows.forEach( row => {
-                row.doc["Date-List"] = objectOperation.dateFromDoc(row.doc) ;
-                olist[row.doc.patient_id] = row.doc ;
-                })
-            )
         .then( _ => objectNote.getAllIdDoc() )
         .then( doclist => {
             doclist.rows.forEach( row => ++nlist[row.doc.patient_id] );
@@ -326,16 +238,7 @@ class PPTX {
         // https://github.com/gitbrent/PptxGenJS/issues/1217
 
         // powerpoint object
-        Mission.getRecordId()
-        .then( doc => {
-            this.master( doc ) ;
-            this.mission( doc ) ;
-            })
-        // mission notelist
-        .then( _ => this.add_notes ? objectNote.getRecordsIdPix( missionId ) : Promise.resolve( ({ rows:[]}) ) )
-        .then( notes => this.notelist( notes ) )
-        // patient list
-        .then( _ => objectPatient.getAllIdDocPix() )
+        objectPatient.getAllIdDocPix() )
         .then( doclist => {
             this.numpats = doclist.rows.length ;
             this.pat = 0 ;
@@ -349,9 +252,6 @@ class PPTX {
                         this.pname = q.rows[0].value[0] ;
                         return this.patient( pt.doc ) ;
                         })
-                    // Get operations
-                    .then( _ => this.add_ops ? objectOperation.getRecordsIdDoc( pt.id ) : Promise.resolve( ({ rows:[]}) ) )
-                    .then( ops => this.oplist( ops ) )
                     // Get notes
                     .then( _ => this.add_notes ? objectNote.getRecordsIdPix( pt.id ) : Promise.resolve( ({ rows:[]}) ) )
                     .then( notes => this.notelist( notes ) )
@@ -363,15 +263,6 @@ class PPTX {
             return this.pptx.writeFile( { filename: `${remoteCouch.database}.pptx`, compression:true });
             })
         .then( () => {this.button.innerText = "Complete!";});
-    }
-    
-    mission( doc ) {
-        // Synchronous -- creates title slide
-        this.pptx
-        .addSlide({masterName:"Template"})
-        .addText(doc.Mission,{x:"5%",y:"45%",fontSize:60, align:"center", color:"FFFFFF"})
-        .addText(doc._id,{color:"dddddd"})
-        ;
     }
     
     patient( doc ) {
@@ -416,8 +307,6 @@ class PPTX {
             switch ( cat ) {
                 case "Uncategorized":
                     return "General Note";
-                case "Op Note":
-                    return cat ;
                 default:
                     return `${cat} Note`;
                 }
@@ -452,17 +341,6 @@ class PPTX {
         ;
     }
 
-    oplist( olist ) {
-        return PromiseSeq( 
-            olist.rows
-            .filter( r => ! objectOperation.nullOp(r.doc) )
-            .sort((a,b)=>objectOperation.dateFromDoc(a.doc).localeCompare(objectOperation.dateFromDoc(b.doc)))
-            .map( r => {
-                return _ => this.operation(r.doc) ;
-                })
-            ) ;         
-    }
-
     table( doc, fields ) {
         return fields
         .map( f => [
@@ -470,19 +348,6 @@ class PPTX {
                 (f in doc) ? doc[f]:""
             ]
             );
-    }
-
-    operation( doc ) {
-        this.pptx
-        .addSlide({masterName:"Template"})
-        .addNotes([doc?.Procedure,doc._id,doc?.author,objectOperation.dateFromDoc(doc).substring(0,10)].join("\n"))
-        .addText(this.pname,{placeholder:"title",color:"e4e444",isTextBox:true,align:"center"})
-        .addTable([["Operation"],[objectOperation.dateFromDoc(doc).substring(0,10)]],{x:6.6,y:.7,w:3.3,color:"e4e444",fontSize:28})
-        .addTable(
-            this.table(doc,["Procedure","Complaint","Surgeon","Equipment"]),
-            {x:.5,y:1,w:6,fill:"114cc6",color:"ffffff",fontSize:24})
-        ;
-        return Promise.resolve(true);
     }
 }   
 
@@ -540,7 +405,6 @@ class ZIP {
                     }) ;
             }
             })
-        .then(_=> objectNote.getRecordsIdPix(missionId,true))
         .then(notelist => notelist.rows
             .forEach( row => {
                 if ( qimg ) {
@@ -721,33 +585,20 @@ class Pagelist {
 
 class Download extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    
-    static subshow(extra="") {
-        Mission.select();
-    }
 }
 
 class DownloadCSV extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    
-    static subshow(extra="") {
-        Mission.select();
-    }
 }
 
 class DownloadJSON extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    
-    static subshow(extra="") {
-        Mission.select();
-    }
 }
 
 class DownloadPPTX extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     
     static subshow(extra="") {
-        Mission.select();
         objectPPTX = new PPTX() ;
     }
 }
@@ -756,7 +607,6 @@ class DownloadZIP extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     
     static subshow(extra="") {
-        Mission.select();
         objectZIP = new ZIP() ;
     }
 }

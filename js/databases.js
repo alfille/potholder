@@ -173,7 +173,7 @@ function check_dbs_record( db_id, doc ) {
         dbs_handle.get( db_id )
         .then( docs => {
             let changed = false ;
-            ["Organization","Name","Location","StartDate","EndDate","Mission","Link"]
+            ["Organization","Name","Location","StartDate","EndDate","Link"]
             .forEach( f => {
                 if ( docs[f] != doc[f] ) {
                     changed = true ;

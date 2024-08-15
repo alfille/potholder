@@ -40,11 +40,11 @@ class Cookie { //convenience class
     }
 
     initialGet() {
-        [ "potId", "noteId", "operationId", "remoteCouch", "displayState" ].forEach( c => this.get(c) );
+        [ "potId", "noteId", "remoteCouch", "displayState" ].forEach( c => this.get(c) );
     }
 
     clear() {
-        [ "potId", "noteId", "operationId", "remoteCouch", "displayState" ].forEach( c => this.del(c) );
+        [ "potId", "noteId", "remoteCouch", "displayState" ].forEach( c => this.del(c) );
     }
 }
 objectCookie = new Cookie() ;

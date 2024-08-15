@@ -45,11 +45,6 @@ import {
     } from "./log_mod.js" ;
 
 import {
-    SimpleNote,
-    SimpleOperation,
-    } from "./simple_mod.js" ;
-
-import {
     } from "./replicate_mod.js" ;
 
 // used to generate data entry pages "PatientData" type
