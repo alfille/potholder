@@ -193,35 +193,35 @@
 <p>And it's free and open-source!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="schema"><a class="header" href="#schema">Schema</a></h1>
 <p>The database</p>
-<div class="table-wrapper"><table><thead><tr><th>field</th><th>format</th><th>arity</th><th>Comment</th><th>searchable</th></tr></thead><tbody>
-<tr><td>id</td><td>date</td><td>1</td><td>for chronological display</td><td>no</td></tr>
-<tr><td>name</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
-<tr><td>series</td><td>text</td><td>1</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>comments</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
-<tr><td>marking</td><td>text</td><td>1</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>firing type</td><td>radio</td><td>1</td><td>ox/red/soda/raku/garbage/none</td><td>yes</td></tr>
-<tr><td>construction type</td><td>checkbox</td><td>1</td><td>wheel/slab/handbuilt/coil</td><td>yes</td></tr>
-<tr><td>images</td><td>binary attachments</td><td>multi</td><td>Any supported image type</td><td></td></tr>
-<tr><td>image-array</td><td>json</td><td>multi-link to "images"</td><td>list</td><td></td></tr>
-<tr><td>-- comments</td><td>text</td><td>array entry</td><td>free form</td><td>yes</td></tr>
-<tr><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
-<tr><td>clay-array</td><td>json</td><td>multi</td><td>list</td><td></td></tr>
-<tr><td>-- type</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
-<tr><td>process-array</td><td>json</td><td>multi</td><td>list</td><td></td></tr>
-<tr><td>-- step</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
-<tr><td>stage</td><td>text</td><td>1</td><td>computed from "process"</td><td></td></tr>
-<tr><td>glaze-array</td><td>json</td><td>multi</td><td>list</td><td></td></tr>
-<tr><td>-- glaze</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
-<tr><td>kiln-array</td><td>json</td><td>multi</td><td>list</td><td></td></tr>
-<tr><td>-- type</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
-<tr><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
-<tr><td>location</td><td>text</td><td>1</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>dimensions</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
-<tr><td>weight</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>field</th><th>format</th><th>arity</th><th>Comment</th><th>searchable</th></tr></thead><tbody>
+<tr><td>_id</td><td>id</td><td>date</td><td>1</td><td>for chronological display</td><td>no</td></tr>
+<tr><td>pot_name</td><td>name</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
+<tr><td>series</td><td>series</td><td>text</td><td>1</td><td>choice plus</td><td>yes</td></tr>
+<tr><td>type</td><td>item type</td><td>choice plus</td><td>1</td><td>pot/plate/bowl...</td><td>yes</td></tr>
+<tr><td>general_comment</td><td>comments</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
+<tr><td></td><td>mark</td><td>marking</td><td>text</td><td>1</td><td>choice plus</td></tr>
+<tr><td>firing_type</td><td>firing type</td><td>radio</td><td>1</td><td>ox/red/soda/raku/garbage/none</td><td>yes</td></tr>
+<tr><td>construction</td><td>construction type</td><td>checkbox</td><td>1</td><td>wheel/slab/handbuilt/coil</td><td>yes</td></tr>
+<tr><td>photo</td><td>images</td><td>binary attachments</td><td>multi</td><td>Any supported image type</td><td></td></tr>
+<tr><td>photo_desc</td><td>image-array</td><td>json</td><td>multi-link to "images"</td><td>list</td><td></td></tr>
+<tr><td>photo_desc.comment</td><td>-- comments</td><td>text</td><td>array entry</td><td>free form</td><td>yes</td></tr>
+<tr><td>photo_dec.date</td><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
+<tr><td>clay</td><td>clay-array</td><td>json</td><td>multi</td><td>list</td><td></td></tr>
+<tr><td>clay.type</td><td>-- type</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
+<tr><td>clay.comment</td><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
+<tr><td>process</td><td>process-array</td><td>json</td><td>multi</td><td>list</td><td></td></tr>
+<tr><td>process.step</td><td>-- step</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
+<tr><td>process.date</td><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
+<tr><td>glaze</td><td>glaze-array</td><td>json</td><td>multi</td><td>list</td><td></td></tr>
+<tr><td>glaze.type</td><td>-- glaze</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
+<tr><td>glaze.comment</td><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
+<tr><td>kiln</td><td>kiln-array</td><td>json</td><td>multi</td><td>list</td><td></td></tr>
+<tr><td>kiln.type</td><td>-- type</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
+<tr><td>kiln.date</td><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
+<tr><td>kiln.comment</td><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
+<tr><td>location</td><td>location</td><td>text</td><td>1</td><td>choice plus</td><td>yes</td></tr>
+<tr><td>dimensions</td><td></td><td>dimensions</td><td>text</td><td>1</td><td>freeform</td></tr>
+<tr><td>weight</td><td>weight</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="list-display"><a class="header" href="#list-display">List display</a></h1>
 <p>List display of pieces for selection.</p>
