@@ -140,40 +140,9 @@ class DatabaseData extends PatientDataRaw {
 
 class User { // convenience class
     constructor() {
-    this.user_db = null ; // the special user couchdb database for access control
-    this.id = null; // not cookie backed
+		this.user_db = null ; // the special user couchdb database for access control
+		this.id = null; // not cookie backed
     }
-    del() {
-        if ( this.id ) {
-            this.user_db.get( this.id )
-            .then( (doc) => {
-                if ( confirm(`Delete user ${doc.name}.\n -- Are you sure?`) ) {
-                    return this.user_db.remove(doc) ;
-                } else {
-                    throw "No delete";
-                }
-                })              
-            .then( () => this.unselect() )
-            .catch( (err) => objectLog.err(err) )
-        }
-        return true;
-    }    
-    
-    select( uid ) {
-        this.id = uid;
-    }    
-
-    unselect() {
-        this.id = null;
-    }
-
-    getAllIdDoc() {
-        let doc = {
-            include_docs: true,
-        } ;
-        return this.user_db.allDocs(doc);
-    }
-    
     simple_url() {
         let url = new URL( "/index.html", window.location.href ) ;
         if ( url.hostname == 'localhost' ) {
@@ -183,13 +152,13 @@ class User { // convenience class
         return url
     }
 
-    static make_url( user_dict ) {
+    make_url( user_dict ) {
         let url = objectUser.simple_url() ;
         credentialList.forEach( c => url.searchParams.append( c, user_dict[c] ) );
         return url ;
     }
 
-    static bodytext( user_dict ) {
+    bodytext( user_dict ) {
         return `Welcome, ${user_dict.username}, to PotHolder.
 
   PotHolder: Ceramic Project Tracker
@@ -202,14 +171,14 @@ You have an account:
      database: ${remoteCouch.database}
 
 Full link (paste into your browser address bar):
-  ${User.make_url( user_dict ).toString()}
+  ${objectUser.make_url( user_dict ).toString()}
 
 Hope this augments your artistic creation.
 `
         ;
     }
 
-    static send( doc ) {
+    send( doc ) {
         if ( 'quad' in doc ) {
             document.getElementById("SendUserMail").href = "";
             document.getElementById("SendUserPrint").onclick=null;
@@ -224,16 +193,16 @@ Hope this augments your artistic creation.
 
             let mail_url = new URL( "mailto:" + doc.email );
             mail_url.searchParams.append( "subject", "Welcome to eMission" );
-            mail_url.searchParams.append( "body", User.bodytext(doc.quad) );
+            mail_url.searchParams.append( "body", this.bodytext(doc.quad) );
             document.getElementById("SendUserMail").href = mail_url.toString();
-            document.getElementById("SendUserPrint").onclick=()=>User.printUserCard(doc.quad);
+            document.getElementById("SendUserPrint").onclick=()=>objectUser.printUserCard(doc.quad);
         }
     }
 
-    static printUserCard(user_dict) {
+    printUserCard(user_dict) {
         let card = document.getElementById("printUser");
-        let url = User.make_url(user_dict);
-        card.querySelector("#printUserText").innerText=User.bodytext( user_dict ) ;
+        let url = this.make_url(user_dict);
+        card.querySelector("#printUserText").innerText=this.bodytext( user_dict ) ;
         new QR(
             card.querySelector(".qrUser"),
             url.toString(),
@@ -433,7 +402,7 @@ class PrintYourself extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="MainMenu") {
-        User.printUserCard(remoteCouch);
+        objectUser.printUserCard(remoteCouch);
     }
 }
 
@@ -524,5 +493,4 @@ window.onload = () => {
         objectPage.reset();
         objectPage.show("FirstTime");
     }
-
 };
