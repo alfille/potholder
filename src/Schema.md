@@ -6,10 +6,11 @@ The database
 |--|--|--|--|---|-|
 |_id|id|date|1|for chronological display|no|
 |pot_name|name|text|1|freeform|yes|
-|series|series|text|1|choice plus|yes|
+|Series|series|text|1|choice plus|yes|
 |type|item type|choice plus|1|pot/plate/bowl...|yes|
 |general_comment|comments|text|1|freeform|yes||
-||mark|marking|text|1|choice plus|yes|
+|mark|marking|text|1|choice plus|yes|
+|start_date|date|1|date|no|
 |firing_type|firing type|radio|1|ox/red/soda/raku/garbage/none|yes|
 |construction|construction type|checkbox|1|wheel/slab/handbuilt/coil|yes|
 |photo|images|binary attachments|multi|Any supported image type||
@@ -20,7 +21,7 @@ The database
 |clay.type|-- type|text|array entry|choice plus|yes|
 |clay.comment|-- comment|text|array entry|freeform|yes|
 |process|process-array|json|multi|list||
-|process.step|-- step|text|array entry|choice plus|yes|
+|process.type|-- step|text|array entry|choice plus|yes|
 |process.date|-- date|date|array entry|date|no|
 |glaze|glaze-array|json|multi|list||
 |glaze.type|-- glaze|text|array entry|choice plus|yes|

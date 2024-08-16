@@ -73,6 +73,38 @@ const structNewPatient = [
         type: "date",
     },
 ];
+const structNewPot = [
+	{
+		name:  "type",
+		alias: "Type of piece",
+		hint:  "What will the piece be used for?",
+		type:  "choice",
+		salt:  ["bowl","plate","flowerpot"],
+	},
+	{
+		name:  "series",
+		alias: "Series",	
+		hint:  "Which creative wave?",
+		type:  "choice",
+	},
+	{
+		name:  "Name",
+		hint:  "Name of piece (optional)",
+		type:  "text",
+	},
+	{
+		name:  "start_date",
+		alias: "Start date",
+		type:  "date",
+		hint:  "Date work started",
+	},
+	{
+		name:  "general_comment",
+		alias: "General comments",
+		hint:  "Overall comments on piece",
+		type:  "textarea",
+	},
+];
     
 const structDemographics = [
     {
@@ -279,6 +311,60 @@ function createQueries() {
             },
         },
     },
+    {
+		_id: "_design/qGlaze",
+		version: 1,
+		views: {
+			qGlaze: {
+				map: function (doc) {
+					if (doc.glaze) {
+						doc.glaze.forEach( g => {
+							if ( "type" in g ) {
+								emit( g.type ) ;
+							}
+						})
+					}
+				}.toString(),
+				reduce: '_count',
+			},
+		},
+	},
+    {
+		_id: "_design/qClay",
+		version: 1,
+		views: {
+			qClay: {
+				map: function (doc) {
+					if (doc.clay) {
+						doc.clay.forEach( g => {
+							if ( "type" in g ) {
+								emit( g.type ) ;
+							}
+						})
+					}
+				}.toString(),
+				reduce: '_count',
+			},
+		},
+	},
+    {
+		_id: "_design/qProcess",
+		version: 1,
+		views: {
+			qProcess: {
+				map: function (doc) {
+					if (doc.process) {
+						doc.process.forEach( g => {
+							if ( "type" in g ) {
+								emit( g.type ) ;
+							}
+						})
+					}
+				}.toString(),
+				reduce: '_count',
+			},
+		},
+	},
     {
         _id: "_design/byEquipment" ,
         version: 2,
@@ -520,21 +606,13 @@ class Patient extends SimplePatient { // convenience class
             .then( (doc) => pdoc = doc ) // patient
             .then( _ => objectNote.getRecordsIdDoc(potId) ) // notes
             .then( (docs) => ndocs = docs.rows ) // get notes
-            .then( _ => objectOperation.getRecordsIdDoc(potId) ) // operations
-            .then( (docs) => {
-                // get operations
-                odocs = docs.rows;
+            .then( _ => {
                 // Confirm question
                 let c = `Delete patient \n   ${pdoc.FirstName} ${pdoc.LastName} DOB: ${pdoc.DOB}\n    `;
                 if (ndocs.length == 0 ) {
                     c += "(no associated notes on this patient) \n   ";
                 } else {
                     c += `also delete ${ndocs.length} associated notes\n   `;
-                }
-                if (odocs.length < 2 ) {
-                    c += "(no associated operations on this patient) \n   ";
-                } else {
-                    c += `also delete ${odocs.length-1} associated operations\n   `;
                 }
                 c += "Are you sure?";
                 if ( confirm(c) ) {
@@ -544,7 +622,6 @@ class Patient extends SimplePatient { // convenience class
                 }           
                 })
             .then( _ => Promise.all(ndocs.map( (doc) => db.remove(doc.doc._id,doc.doc._rev) ) ) )
-            .then( _ => Promise.all(odocs.map( (doc) => db.remove(doc.doc._id,doc.doc._rev) ) ) )
             .then( _ => db.remove(pdoc) )
             .then( _ => this.unselect() )
             .catch( (err) => objectLog.err(err) ) 
@@ -593,7 +670,6 @@ class Patient extends SimplePatient { // convenience class
         objectCookie.del ( "potId" );
         objectNote.unselect();
         objectNoteList.category = 'Uncategorized' ;
-        objectOperation.unselect();
         if ( objectPage.test("AllPatients") ) {
             let pt = document.getElementById("PatientTable");
             if ( pt ) {
@@ -663,23 +739,7 @@ class Patient extends SimplePatient { // convenience class
             }) 
         .then( _ => db.query("Pid2Name",{key:potId}) )
         .then( (doc) => t[0].rows[0].cells[1].innerText = doc.rows[0].value[0] )
-        .then( _ => objectOperation.getRecordsIdDoc(potId) )
-        .then( (docs) => {
-            let oleng = docs.rows.length;
-            switch(oleng) {
-                case 0:
-                case 1:
-                    oleng -= 1 ;
-                    break;
-                default:
-                    oleng -= 2;
-                    break;
-            }
-            if ( oleng >= 0 ) {
-                t[0].rows[1].cells[1].innerText = docs.rows[oleng].doc.Procedure??"";
-                t[0].rows[2].cells[1].innerText = docs.rows[oleng].doc.Surgeon??"";
-                t[0].rows[6].cells[1].innerText = docs.rows[oleng].doc.Equipment??"";
-            }
+        .then( _ => {
             document.getElementById("printCardButtons").style.display="block";
             objectPage.show_screen( "patient" ); // Also prints
             })
@@ -873,7 +933,7 @@ class Help extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        window.open( new URL(`/book/index.html`,location.href).toString(), '_blank' );
+        window.open( new URL(`https://alfille.github.io/potholder`,location.href).toString(), '_blank' );
         objectPage.show("back");
     }
 }
@@ -884,15 +944,7 @@ class AllPatients extends Pagelist {
     static subshow(extra="") {
         objectTable = new PatientTable();
         let o2pid = {} ; // oplist
-        objectOperation.getAllIdDocCurated()
-        .then( oplist => {
-            oplist.forEach( r => o2pid[r.doc.patient_id] = ({
-                "Procedure": r.doc["Procedure"],
-                "Date-Time": objectOperation.dateFromDoc(r.doc),
-                "Surgeon": r.doc["Surgeon"],
-                }))
-            })
-        .then( _ => objectPatient.getAllIdDoc(true) )
+        objectPatient.getAllIdDoc(true)
         .then( (docs) => {
             docs.rows.forEach( r => Object.assign( r.doc, o2pid[r.id]) );
             objectTable.fill(docs.rows );
