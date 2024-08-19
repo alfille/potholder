@@ -115,23 +115,23 @@ class DatabaseInfoData extends PotData {
 
 class DatabaseData extends PotDataRaw {
     // starts with "EDIT" clicked
-    constructor(...args) {
+    constructor(doc,struct) {
         if ( remoteCouch.database=="" ) {
             // First time
-            super(true,...args); // clicked = true
+            super(true,doc,struct); // clicked = true
             this.clickEditButtons() ;
         } else {
-            super(false,...args); // clicked = false
+            super(false,doc,struct); // clicked = false
         }
     }
 
     savePatientData() {
-        if ( this.loadDocData()[0] ) {
-            if ( this.doc[0].raw=="fixed" ) {
-                this.doc[0].address=objectRemote.SecureURLparse(this.doc[0].address); // fix up URL
+        if ( this.loadDocData() ) {
+            if ( this.doc.raw=="fixed" ) {
+                this.doc.address=objectRemote.SecureURLparse(this.doc.address); // fix up URL
             }
-            delete this.doc[0].raw ;
-            objectCookie.set ( "remoteCouch", Object.assign({},this.doc[0]) );
+            delete this.doc.raw ;
+            objectCookie.set ( "remoteCouch", Object.assign({},this.doc) );
         }
         objectPage.reset();
         location.reload(); // force reload

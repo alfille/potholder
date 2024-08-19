@@ -19,52 +19,35 @@ import {
 // data entry page type
 // except for Noteslist and some html entries, this is the main type
 class PotDataRaw { // singleton class
-    constructor(click,...args) {
+    constructor(click,doc,struct) {
+		console.log("PotDataRaw",doc,struct);
         // args is a list of "docs" to update"
         this.parent = document.getElementById("PotDataContent");
-        let fieldset = document.getElementById("templates").querySelector(".dataFieldset");
         
-        this.doc = [];
-        this.struct = [];
-        this.ul = [];
-        this.pairs = 0;
+        this.doc = doc;
+        this.struct = struct;
+        this.ul ;
+        this.pairs = 1;
         this.images={} ;
 
-        for ( let iarg = 0; iarg<args.length; ++iarg ) {
-            this.doc[this.pairs] = args[iarg];
-            ++ iarg;
-            if ( iarg == args.length ) {
-                break;
-            }
-            this.struct[this.pairs] = args[iarg];
-            ++ this.pairs;
-        } 
-        
         document.querySelectorAll(".edit_data").forEach( (e) => {
             e.disabled = false;
         });
         this.parent.innerHTML = "";
         
-        for ( let ipair = 0; ipair < this.pairs; ++ ipair ) {
-            let fs = fieldset.cloneNode( true );
-            this.ul[ipair] = this.fill( ipair, click );
-            fs.appendChild( this.ul[ipair] );
-            this.parent.appendChild( fs );
-        }
+		this.ul = this.fill( click );
+		this.parent.appendChild( this.ul );
     }
     
-    fill( ipair, click ) {
-        let doc = this.doc[ipair];
-        let struct = this.struct[ipair];
-
+    fill( click ) {
         let ul = document.createElement('ul');
         
-        struct.forEach( ( item, idx ) => {
+        this.struct.forEach( ( item, idx ) => {
             let li = document.createElement("li");
             li.setAttribute("data-index",idx);
             let lab = document.createElement("label");
             li.appendChild(lab);
-            let localname = [item.name,idx,ipair].map( x=>x+'').join("_");
+            let localname = [item.name,idx,0].map( x=>x+'').join("_");
             
             // possibly use an alias instead of database field name
             if ( "alias" in item ) {
@@ -84,16 +67,16 @@ class PotDataRaw { // singleton class
 
             // get value and make type-specific input field with filled in value
             let inp = null;
-            let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , doc ) ;
+            let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ;
             switch( item.type ) {
                 case "image":
                     inp = document.createElement("div");
                     cloneClass( ".imagetemplate", inp ) ;
-                    this.images[localname] = new ImageImbedded( inp, doc, item?.none ) ;
+                    this.images[localname] = new ImageImbedded( inp, this.doc, item?.none ) ;
                     this.images[localname].display_image() ;
                     lab.appendChild(inp);
                     if ( click ) {
-                        this.clickEditItem(ipair,li);
+                        this.clickEditItem(0,li);
                     }
                     break ;
                 case "radio":
@@ -117,7 +100,7 @@ class PotDataRaw { // singleton class
                         }))
                     .then( () => {
                         if ( click ) {
-                            this.clickEditItem(ipair,li);
+                            this.clickEditItem(0,li);
                         }
                         }); 
                     break ;
@@ -143,7 +126,7 @@ class PotDataRaw { // singleton class
                         }))
                     .then( () => {
                         if ( click ) {
-                            this.clickEditItem(ipair,li);
+                            this.clickEditItem(0,li);
                         }
                         }); 
                     break;
@@ -170,7 +153,7 @@ class PotDataRaw { // singleton class
                         }))
                     .then( () => {
                         if ( click ) {
-                            this.clickEditItem(ipair,li);
+                            this.clickEditItem(0,li);
                         }
                         }); 
                     }
@@ -183,7 +166,7 @@ class PotDataRaw { // singleton class
                     inp.readOnly = true;
                     lab.appendChild( inp );                    
                     if ( click ) {
-                        this.clickEditItem(ipair,li);
+                        this.clickEditItem(0,li);
                     }
                     break;
                 case "date":
@@ -196,7 +179,7 @@ class PotDataRaw { // singleton class
                     inp.title = "Date in format YYYY-MM-DD";
                     lab.appendChild(inp);
                     if ( click ) {
-                        this.clickEditItem(ipair,li);
+                        this.clickEditItem(0,li);
                     }
                     break;
                 case "time":
@@ -209,7 +192,7 @@ class PotDataRaw { // singleton class
                     inp.title = "Time in format HH:MM PM or HH:MM AM";
                     lab.appendChild(inp);
                     if ( click ) {
-                        this.clickEditItem(ipair,li);
+                        this.clickEditItem(0,li);
                     }
                     break;
                 default:
@@ -219,14 +202,14 @@ class PotDataRaw { // singleton class
                     inp.value = preVal??"" ;
                     lab.appendChild(inp);
                     if ( click ) {
-                        this.clickEditItem(ipair,li);
+                        this.clickEditItem(0,li);
                     }
                     break;
             }                
             
             ul.appendChild( li );
         });
-        
+        console.log("UL",ul);
         return ul;
     }
 
@@ -268,9 +251,7 @@ class PotDataRaw { // singleton class
     
     clickEdit() {
         this.clickEditButtons();
-        for ( let ipair=0; ipair<this.pairs; ++ipair ) {
-            this.ul[ipair].querySelectorAll("li").forEach( (li) => this.clickEditItem( ipair, li ) );
-        }
+		this.ul.querySelectorAll("li").forEach( (li) => this.clickEditItem( li ) );
     }
     
     clickEditButtons() {
@@ -281,14 +262,13 @@ class PotDataRaw { // singleton class
         });
     }
     
-    clickEditItem(ipair,li) {
+    clickEditItem(li) {
         let idx = li.getAttribute("data-index");
-        let struct = this.struct[ipair];
-        let localname = [struct[idx].name,idx,ipair].map(x=>x+'').join("_");
-        if ( struct[idx] ?.readonly == "true" ) {
+        let localname = [this.struct[idx].name,idx,0].map(x=>x+'').join("_");
+        if ( this.struct[idx] ?.readonly == "true" ) {
             return;
         }
-        switch ( struct[idx].type ) {
+        switch ( this.struct[idx].type ) {
             case "image":
                 cloneClass(".imagetemplate_edit",li.querySelector("div"));
                 this.images[localname].display_image();
@@ -344,67 +324,65 @@ class PotDataRaw { // singleton class
     
     loadDocData() {
         //return true if any real change
-        let changed = []; 
-        for ( let ipair=0; ipair<this.pairs; ++ipair ) {
-            let doc    = this.doc[ipair];
-            let struct = this.struct[ipair];
-            let ul     = this.ul[ipair];
-            changed[ipair] = false;
-            ul.querySelectorAll("li").forEach( (li) => {
-                let idx = li.getAttribute("data-index");
-                let postVal = "";
-                let name = struct[idx].name;
-                let localname = [struct[idx].name,idx,ipair].map(x=>x+'').join("_");
-                switch ( struct[idx].type ) {
-                    case "image":
-                        // handle separately
-                        break;
-                    case "radio":
-                        postVal = [...document.getElementsByName(localname)]
-                            .filter( i => i.checked )
-                            .map(i=>i.value)[0];
-                        break;
-                    case "datetime":
-                        try {
-                            postVal = new Date(flatpickr.parseDate(li.querySelector("input").value, "Y-m-d h:i K")).toISOString();
-                        } catch {
-                            postVal="";
-                        }
-                        break;
-                    case "checkbox":
-                        postVal = [...document.getElementsByName(localname)]
-                            .filter( i => i.checked )
-                            .map( i => i.value );
-                        break;
-                    case "textarea":
-                        postVal = li.querySelector("textarea").value;
-                        break;
-                    default:
-                        postVal = li.querySelector("input").value;
-                        break;
-                }
-                if ( struct[idx].type != "image" ) {
-                    if ( postVal != name.split(".").reduce( (arr,arg) => arr && arr[arg] , doc ) ) {
-                        changed[ipair] = true;
-                        Object.assign( doc, name.split(".").reduceRight( (x,n) => ({[n]:x}) , postVal ));
-                    }
-                } else {
-                    // image
-                    if ( this.images[localname].changed() ) {
-                        changed[ipair] = true;
-                        this.images[localname].save(doc) ;
-                    }
-                }
-            });
-        }
+        let changed = false; 
+		this.ul.querySelectorAll("li").forEach( (li) => {
+			let idx = li.getAttribute("data-index");
+			let postVal = "";
+			let name = this.struct[idx].name;
+			let localname = [this.struct[idx].name,idx,0].map(x=>x+'').join("_");
+			switch ( this.struct[idx].type ) {
+				case "image":
+					// handle separately
+					break;
+				case "radio":
+					postVal = [...document.getElementsByName(localname)]
+						.filter( i => i.checked )
+						.map(i=>i.value)[0];
+					break;
+				case "datetime":
+					try {
+						postVal = new Date(flatpickr.parseDate(li.querySelector("input").value, "Y-m-d h:i K")).toISOString();
+					} catch {
+						postVal="";
+					}
+					break;
+				case "checkbox":
+					postVal = [...document.getElementsByName(localname)]
+						.filter( i => i.checked )
+						.map( i => i.value );
+					break;
+				case "textarea":
+					postVal = li.querySelector("textarea").value;
+					break;
+				default:
+					postVal = li.querySelector("input").value;
+					break;
+			}
+			if ( this.struct[idx].type != "image" ) {
+				if ( postVal != name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ) {
+					changed = true;
+					Object.assign( this.doc, name.split(".").reduceRight( (x,n) => ({[n]:x}) , postVal ));
+				}
+			} else {
+				// image
+				if ( this.images[localname].changed() ) {
+					changed = true;
+					this.images[localname].save(this.doc) ;
+				}
+			}
+		});
         return changed;
     }
     
     saveChanged ( state ) {
-        let changed = this.loadDocData();
-        Promise.all( this.doc.filter( (doc, idx) => changed[idx] ).map( (doc) => db.put( doc ) ) )
+        if ( this.loadDocData() ) {
+			// doc is changed
+			db.put( this.doc )
             .catch( (err) => objectLog.err(err) )
             .finally( () => objectPage.show( state ) );
+		} else {
+			objectPage.show( state ) ;
+		}
     }
     
     savePatientData() {
@@ -413,15 +391,15 @@ class PotDataRaw { // singleton class
 }
 
 class PotData extends PotDataRaw {
-    constructor(...args) {
-        super(false,...args); // clicked = false
+    constructor(doc,struct) {
+        super(false,doc,struct); // clicked = false
     }
 }
 
 class PotDataEditMode extends PotDataRaw {
     // starts with "EDIT" clicked
-    constructor(...args) {
-        super(true,...args); // clicked = true
+    constructor(doc,struct) {
+        super(true,doc,struct); // clicked = true
         this.clickEditButtons() ;
     }
 }

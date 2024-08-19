@@ -563,36 +563,6 @@ class Search { // singleton class
     }
 }
 
-class PotNewData extends PotDataEditMode {
-    savePatientData() {
-        this.loadDocData();
-        
-		// create new pot record
-		this.doc[0]._id = Id_pot.makeId( this.doc[0] );
-		db.put( this.doc[0] )
-		.then( (response) => {
-			objectPot.select(response.id);
-			objectPage.show( "PotMenu" );
-			})
-		.catch( (err) => objectLog.err(err) );
-    }
-}
-
-class PotEditData extends PotDataEditMode {
-    savePatientData() {
-        this.loadDocData();
-        
-		// edit pot record
-		this.doc[0]._id = Id_pot.makeId( this.doc[0] );
-		db.put( this.doc[0] )
-		.then( (response) => {
-			objectPot.select(response.id);
-			objectPage.show( "PotMenu" );
-			})
-		.catch( (err) => objectLog.err(err) );
-    }
-}
-
 class DateMath { // convenience class
     static prettyInterval(msec) {
         let hours = msec / 1000 / 60 / 60;
@@ -1293,6 +1263,21 @@ class PotNew extends Pagelist {
                 artist: remoteCouch.username,
                 start_date: new Date().toISOString(),
             }, structNewPot );
+    }
+}
+
+class PotNewData extends PotDataEditMode {
+    savePatientData() {
+        this.loadDocData();
+        
+		// create new pot record
+		this.doc._id = Id_pot.makeId( this.doc );
+		db.put( this.doc )
+		.then( (response) => {
+			objectPot.select(response.id);
+			objectPage.show( "PotMenu" );
+			})
+		.catch( (err) => objectLog.err(err) );
     }
 }
 
