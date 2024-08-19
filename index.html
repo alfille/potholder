@@ -26,6 +26,11 @@
                         <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/DCTOHC11.jpg"></div>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Return</button>
                     </div>
+                    <!-- top: PotMenu -->
+                    <div class= "PotMenu topButtons pageOverlay">
+                        <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/DCTOHC11.jpg"></div>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Return</button>
+                    </div>
                     <!-- top: QuickPhoto -->
                     <div class= "QuickPhoto topButtons pageOverlay">
                         <div class="headerboxlink mainOnly"><img class="missionLogo" src="images/DCTOHC11.jpg"></div>
@@ -34,7 +39,17 @@
                     <!-- top: AllPatients -->
                     <div class="AllPatients topButtons pageOverlay">
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'PatientNew' )" title="Create a new patient entry">Add Patient</button>
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new patient entry">Add Patient</button>
+                    </div>
+                    <!-- top: AllPieces -->
+                    <div class="AllPiecess topButtons pageOverlay">
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
+                    </div>
+                    <!-- top: ListMenu -->
+                    <div class="ListMenu topButtons pageOverlay">
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
                     </div>
                     <!-- top: SelectPatient -->
                         <!-- Nothing -->
@@ -43,13 +58,13 @@
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'MainMenu' )">Main Menu</button>
                     </div>
-                    <!-- top: PatientNew -->
-                    <div class="PatientData PatientNew topButtons pageOverlay">
+                    <!-- top: PotNew -->
+                    <div class="PotData PotNew topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
                     </div>
-                    <!-- top: PatientDemographics PatientMedical -->
-                    <div class="PatientData PatientDemographics PatientMedical topButtons pageOverlay">
+                    <!-- top: PotEdit PatientDemographics PatientMedical -->
+                    <div class="PotData PotEdit PatientDemographics PatientMedical topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                     </div>
@@ -75,7 +90,7 @@
                         <button class="libutton divbutton" type="button" onclick="objectPage.show('NoteList')">All Notes</button>
                         <button class="returnfromnote libutton divbutton return" type="button" onclick="objectPage.show( 'back' )">Return</button>
                     </div>
-                    <!-- top: EditMode (for any of the PatientData derivatives -->
+                    <!-- top: EditMode (for any of the PotData derivatives -->
                     <div class="patientDataEdit pageOverlay">
                         <button type="button" class="divbutton edit_data" disabled>Edit</button>
                         <button type="button" class="divbutton savedata">Save Changes</button>
@@ -90,15 +105,33 @@
         </header>
         <div id="emissionbody" class="work_screen">
             <!-- body: MainMenu -->
-            <div class="MainMenu pageOverlay">
-                
+            <div class="MainMenu pageOverlay">   
                 <div id="MainMenuContent" class="MainMenuRow" >
-                    <div class="PatientProcButtons">
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPatients' )">Patients</button>
+                    <div class="PotProcButtons">
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListMenu' )">Lists</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
                     </div>
-                    <div class="PatientProcButtons">
+                    <div class="PotProcButtons">
+                        <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
+                        <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
+                        <button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
+                        <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Administrator Area</button>
+                    </div>
+                    <button type="button" class="divbutton"  style="visibility:hidden"> </button>
+                </div>
+            </div>
+            <!-- body: ListMenu -->
+            <div class="ListMenu pageOverlay">
+                <div id="ListMenuContent" class="MainMenuRow" >
+                    <div class="PotProcButtons">
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPieces' )">All Pieces</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
+                    </div>
+                    <div class="PotProcButtons">
                         <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
                         <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
                         <button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
@@ -126,6 +159,12 @@
                     <table id="AllPatients"></table>
                 </div>
             </div>
+            <!-- body: AllPiecess -->
+            <div class="AllPieces pageOverlay">
+                <div id="AllPiecesContent" >
+                    <table id="AllPieces"></table>
+                </div>
+            </div>
             <!-- body: SelectPatient -->
             <div class="SelectPatient pageOverlay">
                 <div id="SelectPatientContent" >
@@ -142,9 +181,9 @@
                     <table id="SearchList"></table>
                 </div>
             </div>
-            <!-- body: PatientNew PatientDemographics PatientMedical -->
-            <div class="PatientData PatientNew PatientDemographics PatientMedical pageOverlay">
-                <div id="PatientDataContent" ></div>
+            <!-- body: PotNew PotEdit PatientDemographics PatientMedical -->
+            <div class="PotData PotNew PotEdit PatientDemographics PatientMedical pageOverlay">
+                <div id="PotDataContent" ></div>
             </div>
             <!-- body: PatientPhoto -->
             <div class="PatientPhoto pageOverlay">
@@ -152,7 +191,7 @@
                     <div id="PatientPhotoContent2"></div>
                 </div>
                 <div id="PatientPhotoButtons1">
-                    <div class="PatientProcButtons">
+                    <div class="PotProcButtons">
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PatientDemographics' )">Demographics</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PatientMedical' )">Medical</button>
                     </div>
@@ -161,12 +200,12 @@
                     <fieldset id="NoteFieldset">
                         <legend>Notes</legend>
                         <div id="PatientPhotoButtons0">
-                            <div class="PatientProcButtons">
+                            <div class="PotProcButtons">
                                 <button type="button" class="divbutton" id="nAll" onclick="objectPage.show( 'NoteList', 'All' )">All Notes (0)</button>
                                 <button class="create_note libutton divbutton" type="button" onclick="objectPage.show( 'NoteNew' )">New Note</button>
                                 <button class="createtheimage libutton divbutton Qphoto" type="button">&#128247; New Picture</button>
                             </div>
-                            <div class="PatientProcButtons">
+                            <div class="PotProcButtons">
                                 <button class="libutton divbutton" id="nPreOp" type="button" onclick="objectPage.show( 'NoteListCategory', 'Pre Op' )">Pre Op (0)</button>
                                 <button class="libutton divbutton" id="nAnesthesia" type="button" onclick="objectPage.show( 'NoteListCategory', 'Anesthesia' )">Anesthesia (0)</button>
                                 <button class="libutton divbutton" id="nOpNote" type="button" onclick="objectPage.show( 'NoteListCategory', 'Op Note' )">Op Note (0)</button>
@@ -177,11 +216,50 @@
                     </fieldset>
                 </div>
                 <div id="PatientPhotoButtons1">
-                    <div class="PatientProcButtons">
-                        <button type="button" class="divbutton" onclick="objectPatient.printCard()">Print Card</button>
+                    <div class="PotProcButtons">
+                        <button type="button" class="divbutton" onclick="objectPot.printCard()">Print Card</button>
                     </div>
-                    <div class="PatientProcButtons">
-                        <button type="button" class="divbutton delete" onclick="objectPatient.del()">Delete Patient</button>
+                    <div class="PotProcButtons">
+                        <button type="button" class="divbutton delete" onclick="objectPot.del()">Delete Patient</button>
+                    </div>
+                </div>
+            </div>
+            <!-- body: PotMenu -->
+            <div class="PotMenu pageOverlay">
+                <div id="PotMenuContent" >
+                    <div id="PatientPhotoContent2"></div>
+                </div>
+                <div id="PatientPhotoButtons1">
+                    <div class="PotProcButtons">
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'PotEdit' )">Details</button>
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'PatientMedical' )">Medical</button>
+                    </div>
+                </div>
+                <div id="NoteChoiceButtons">
+                    <fieldset id="NoteFieldset">
+                        <legend>Notes</legend>
+                        <div id="PatientPhotoButtons0">
+                            <div class="PotProcButtons">
+                                <button type="button" class="divbutton" id="nAll" onclick="objectPage.show( 'NoteList', 'All' )">All Notes (0)</button>
+                                <button class="create_note libutton divbutton" type="button" onclick="objectPage.show( 'NoteNew' )">New Note</button>
+                                <button class="createtheimage libutton divbutton Qphoto" type="button">&#128247; New Picture</button>
+                            </div>
+                            <div class="PotProcButtons">
+                                <button class="libutton divbutton" id="nPreOp" type="button" onclick="objectPage.show( 'NoteListCategory', 'Pre Op' )">Pre Op (0)</button>
+                                <button class="libutton divbutton" id="nAnesthesia" type="button" onclick="objectPage.show( 'NoteListCategory', 'Anesthesia' )">Anesthesia (0)</button>
+                                <button class="libutton divbutton" id="nOpNote" type="button" onclick="objectPage.show( 'NoteListCategory', 'Op Note' )">Op Note (0)</button>
+                                <button class="libutton divbutton" id="nPostOp" type="button" onclick="objectPage.show( 'NoteListCategory', 'Post Op' )">Post Op (0)</button>
+                                <button class="libutton divbutton" id="nFollowup" type="button" onclick="objectPage.show( 'NoteListCategory', 'Followup' )">Followup (0)</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div id="PatientPhotoButtons1">
+                    <div class="PotProcButtons">
+                        <button type="button" class="divbutton" onclick="objectPot.printCard()">Print Card</button>
+                    </div>
+                    <div class="PotProcButtons">
+                        <button type="button" class="divbutton delete" onclick="objectPot.del()">Delete Patient</button>
                     </div>
                 </div>
             </div>
@@ -320,7 +398,7 @@
                 </div>
                 <div class="entryfield_text choice" contenteditable></div>
             </div>
-            <fieldset class="dataFieldset"><legend><button type="button" value="show" onclick="objectPatientData.fsclick(this)">&#10134;</button></legend></fieldset>
+            <fieldset class="dataFieldset"><legend><button type="button" value="show" onclick="objectPotData.fsclick(this)">&#10134;</button></legend></fieldset>
             <fieldset class="noteFieldset">
                 <legend>
                     <button type="button" class="triggerbutton">&#10134;</button>
@@ -351,9 +429,9 @@
         <div class="print_patient">
             <div id="printCard">
                 <div class="rowCard">
-                    <div><img id="photoCard" alt="objectPatient photo"></div>
+                    <div><img id="photoCard" alt="objectPot photo"></div>
                     <div id="printCardButtons">
-                        <button type="button" class="divbutton return" onclick="objectPatient.ActuallyPrint()" title="Do not print">Print</button>
+                        <button type="button" class="divbutton return" onclick="objectPot.ActuallyPrint()" title="Do not print">Print</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Do not print">Cancel</button>
                     </div>
                 </div>

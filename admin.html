@@ -32,7 +32,7 @@
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton delete" onclick="objectLog.clear()">Erase Log</button>
                     </div>
-                    <!-- top: EditMode (for any of the PatientData derivatives -->
+                    <!-- top: EditMode (for any of the PotData derivatives -->
                     <div class="patientDataEdit pageOverlay">
                         <button type="button" class="divbutton edit_data" disabled>Edit</button>
                         <button type="button" class="divbutton savedata">Save Changes</button>
@@ -61,8 +61,8 @@
                 </div>
             </div>
             <!-- body: DatabaseInfo RemoteDatabaseInput -->
-            <div class="PatientData DatabaseInfo RemoteDatabaseInput pageOverlay">
-                <div id="PatientDataContent" ></div>
+            <div class="PotData DatabaseInfo RemoteDatabaseInput pageOverlay">
+                <div id="PotDataContent" ></div>
             </div>
             <!-- body: SendUser PrintYourself -->
             <div class="SendUser PrintYourself pageOverlay">
@@ -174,7 +174,7 @@
                 </div>
                 <div class="entryfield_text choice" contenteditable></div>
             </div>
-            <fieldset class="dataFieldset"><legend><button type="button" value="show" onclick="objectPatientData.fsclick(this)">&#10134;</button></legend></fieldset>
+            <fieldset class="dataFieldset"><legend><button type="button" value="show" onclick="objectPotData.fsclick(this)">&#10134;</button></legend></fieldset>
             <fieldset class="noteFieldset">
                 <legend>
                     <button type="button" class="triggerbutton">&#10134;</button>

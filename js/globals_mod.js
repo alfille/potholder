@@ -17,14 +17,14 @@ globalThis. credentialList = ["database", "username", "password", "address" ] ;
 
 // singleton class instances
 globalThis. objectPage = null ;
-globalThis. objectPatientData = null ;
+globalThis. objectPotData = null ;
 globalThis. objectNoteList = {
     category: 'Uncategorized',
     };
 globalThis. objectTable = null ;
 globalThis. objectRemote = null ;
 globalThis. objectLog = null ;
-globalThis. objectPatient = null ;
+globalThis. objectPot = null ;
 globalThis. objectNote = null ;
 globalThis. objectCookie = null ;
 
@@ -72,16 +72,16 @@ export function setButtons() {
         q.addEventListener("click",()=>objectPage.show('QuickPhoto'));
         });
 
-    // set edit details for PatientData edit pages -- only for "top" portion
+    // set edit details for PotData edit pages -- only for "top" portion
     document.querySelectorAll(".edit_data").forEach( e => {
         e.title = "Unlock record to allow changes" ;
-        e.addEventListener("click",()=>objectPatientData.clickEdit());
+        e.addEventListener("click",()=>objectPotData.clickEdit());
         });
 
-    // set save details for PatientData save pages
+    // set save details for PotData save pages
     document.querySelectorAll(".savedata").forEach( s => {
         s.title = "Save your changes to this record" ;
-        s.addEventListener("click",()=>objectPatientData.savePatientData());
+        s.addEventListener("click",()=>objectPotData.savePatientData());
         });
     // remove redundant mission buttons
     [...document.querySelectorAll(".topButtons")]
@@ -102,7 +102,7 @@ export function setButtons() {
         );
 }
 
-export function TitleBox( titlearray=null, show="PatientPhoto" ) {
+export function TitleBox( titlearray=null, show="PotMenu" ) {
     if ( titlearray == null ) {
         document.getElementById( "titlebox" ).innerHTML = "" ;
     } else {

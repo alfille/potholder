@@ -36,9 +36,9 @@ import {
     } from "./sorttable_mod.js" ;
 
 import {
-    PatientData,
-    PatientDataEditMode,
-    PatientDataRaw,
+    PotData,
+    PotDataEditMode,
+    PotDataRaw,
     } from "./patientdata_mod.js" ;
 
 import {
@@ -46,6 +46,7 @@ import {
 
 import {
     SimplePatient,
+    SimplePot,
     SimpleNote,
     } from "./simple_mod.js" ;
     
@@ -55,37 +56,30 @@ import {
 // other globals
 const NoPhoto = "style/NoPhoto.png";
 
-// used to generate data entry pages "PatientData" type
-const structNewPatient = [
-    {
-        name: "LastName",
-        hint: "Late name of patient",
-        type: "text",
-    },
-    {
-        name: "FirstName",
-        hint: "First name of patient",
-        type: "text",
-    },
-    {
-        name: "DOB",
-        hint: "Date of birth (as close as possible)",
-        type: "date",
-    },
+// used to generate data entry pages "PotData" type
+const structTest = [
+	{
+		name:  "type",
+		alias: "Type of piece",
+		hint:  "What will the piece be used for?",
+		type:  "text",
+	},
 ];
 const structNewPot = [
 	{
 		name:  "type",
 		alias: "Type of piece",
 		hint:  "What will the piece be used for?",
-		type:  "choice",
+		type:  "list",
 		salt:  ["bowl","plate","flowerpot"],
+		query: "qType",
 	},
 	{
 		name:  "series",
 		alias: "Series",	
 		hint:  "Which creative wave?",
-		type:  "choice",
+		type:  "list",
+		query: "qSeries",
 	},
 	{
 		name:  "Name",
@@ -97,6 +91,13 @@ const structNewPot = [
 		alias: "Start date",
 		type:  "date",
 		hint:  "Date work started",
+	},
+	{
+		name:  "artist",
+		alias: "Artist",
+		hint:  "Creator of this piece",
+		type:  "list",
+		query: "qArtist",
 	},
 	{
 		name:  "general_comment",
@@ -226,11 +227,6 @@ const structOperation = [
         type: "datetime",
     },
     {
-        name: "Duration",
-        hint: "Case length",
-        type: "length",
-    },
-    {
         name: "Laterality",
         hint: "Is there a sidedness to the case?",
         type: "radio",
@@ -317,7 +313,7 @@ function createQueries() {
 		views: {
 			qGlaze: {
 				map: function (doc) {
-					if (doc.glaze) {
+					if ("glaze" in doc) {
 						doc.glaze.forEach( g => {
 							if ( "type" in g ) {
 								emit( g.type ) ;
@@ -335,7 +331,7 @@ function createQueries() {
 		views: {
 			qClay: {
 				map: function (doc) {
-					if (doc.clay) {
+					if ("clay" in doc) {
 						doc.clay.forEach( g => {
 							if ( "type" in g ) {
 								emit( g.type ) ;
@@ -353,7 +349,7 @@ function createQueries() {
 		views: {
 			qProcess: {
 				map: function (doc) {
-					if (doc.process) {
+					if ("process" in doc) {
 						doc.process.forEach( g => {
 							if ( "type" in g ) {
 								emit( g.type ) ;
@@ -366,13 +362,41 @@ function createQueries() {
 		},
 	},
     {
-        _id: "_design/byEquipment" ,
+        _id: "_design/qType" ,
+        version: 1,
+        views: {
+            qType: {
+                map: function( doc ) {
+                    if ( "type" in doc ) {
+                        emit( doc.type );
+                    }
+                }.toString(),
+                reduce: '_count',
+            },
+        },
+    },
+    {
+        _id: "_design/qSeries" ,
         version: 2,
         views: {
-            byEquipment: {
+            qSeries: {
                 map: function( doc ) {
-                    if ( doc.type=="operation" ) {
-                        emit( doc.Equipment );
+                    if ( "series" in doc ) {
+                        emit( doc.series );
+                    }
+                }.toString(),
+                reduce: '_count',
+            },
+        },
+    },
+    {
+        _id: "_design/qArtist" ,
+        version: 2,
+        views: {
+            qArtist: {
+                map: function( doc ) {
+                    if ( "artist" in doc ) {
+                        emit( doc.artist );
                     }
                 }.toString(),
                 reduce: '_count',
@@ -539,28 +563,33 @@ class Search { // singleton class
     }
 }
 
-class NewPatientData extends PatientDataEditMode {
+class PotNewData extends PotDataEditMode {
     savePatientData() {
         this.loadDocData();
-        // make sure the fields needed for a patient ID are present
         
-        if ( this.doc[0].FirstName == "" ) {
-            alert("Need a First Name");
-        } else if ( this.doc[0].LastName == "" ) {
-            alert("Need a Last Name");
-        } else if ( this.doc[0].DOB == "" ) {
-            this.doc[0].DOB = new Date().toISOString();
-        } else {
-            // create new patient record
-            this.doc[0]._id = Id_pot.makeId( this.doc[0] );
-            this.doc[0].patient_id = this.doc[0]._id;
-            db.put( this.doc[0] )
-            .then( (response) => {
-                objectPatient.select(response.id);
-                objectPage.show( "PatientPhoto" );
-                })
-            .catch( (err) => objectLog.err(err) );
-        }
+		// create new pot record
+		this.doc[0]._id = Id_pot.makeId( this.doc[0] );
+		db.put( this.doc[0] )
+		.then( (response) => {
+			objectPot.select(response.id);
+			objectPage.show( "PotMenu" );
+			})
+		.catch( (err) => objectLog.err(err) );
+    }
+}
+
+class PotEditData extends PotDataEditMode {
+    savePatientData() {
+        this.loadDocData();
+        
+		// edit pot record
+		this.doc[0]._id = Id_pot.makeId( this.doc[0] );
+		db.put( this.doc[0] )
+		.then( (response) => {
+			objectPot.select(response.id);
+			objectPage.show( "PotMenu" );
+			})
+		.catch( (err) => objectLog.err(err) );
     }
 }
 
@@ -671,7 +700,7 @@ class Patient extends SimplePatient { // convenience class
         objectNote.unselect();
         objectNoteList.category = 'Uncategorized' ;
         if ( objectPage.test("AllPatients") ) {
-            let pt = document.getElementById("PatientTable");
+            let pt = document.getElementById("PotTable");
             if ( pt ) {
                 let rows = pt.rows;
                 for ( let i = 0; i < rows.length; ++i ) {
@@ -756,21 +785,165 @@ class Patient extends SimplePatient { // convenience class
             type:"html",
             ignoreElements:["printCardButtons"],
             documentTitle:[doc.Name,doc.Location,doc.Organization].join(" "),
-            onPrintDialogClose: ()=>objectPage.show("PatientPhoto"),
+            onPrintDialogClose: ()=>objectPage.show("PotMenu"),
             })
         );
     }
 }
-objectPatient = new Patient() ;
+class Pot extends SimplePot { // convenience class
+	potname( doc ) {
+		return (doc?.Name)?doc.Name:`${doc?.type} ${Id_pot.splitId(doc._id).rand}`;
+	}
+    del() {
+        if ( this.isSelected() ) {        
+            this.getRecordIdPix(potId)
+            .then( (doc) => {
+                // Confirm question
+                let c = `Delete pot ${this.potname(doc)}?\n`;
+                c += "Are you sure?";
+                if ( confirm(c) ) {
+					return db.remove(pdoc) ;
+                } else {
+                    throw "No delete";
+                }           
+                })
+            .then( _ => this.unselect() )
+            .catch( (err) => objectLog.err(err) ) 
+            .finally( _ => objectPage.show( "back" ) );
+        }
+    }
+
+    getAllIdDocPix() {
+        let doc = {
+            startkey: Id_pot.allStart(),
+            endkey:   Id_pot.allEnd(),
+            include_docs: true,
+            binary: true,
+            attachments: true,
+        };
+
+        return db.allDocs(doc);
+    }
+
+    select( pid = potId ) {
+        potId = pid ;
+		objectCookie.set( "potId", pid );
+		// Check pot existence
+		objectPot.getRecordIdPix(pid)
+		.then( (doc) => {
+			// highlight the list row
+			if ( objectPage.test('AllPieces') ) {
+				objectTable.highlight();
+			}
+			TitleBox([this.potname(doc)]);
+			})
+		.catch( (err) => {
+			objectLog.err(err,"pot select");
+			this.unselect();
+			});
+    }
+
+    unselect() {
+        potId = null;
+        objectCookie.del ( "potId" );
+        if ( objectPage.test("AllPieces") ) {
+            let pt = document.getElementById("PotTable");
+            if ( pt ) {
+                let rows = pt.rows;
+                for ( let i = 0; i < rows.length; ++i ) {
+                    rows[i].classList.remove('choice');
+                }
+            }
+        }
+        TitleBox();
+    }
+
+    menu( doc, notelist, onum=0 ) {
+        let d = document.getElementById("PatientPhotoContent2");
+        let inp = new ImageImbedded( d, doc, NoPhoto );
+
+        cloneClass( ".imagetemplate", d );
+        inp.display_image();
+        this.buttonSub( "nOps", onum );
+        NoteLister.categorize(notelist);
+        this.buttonSub( "nAll", notelist.rows.length );
+        this.buttonCalcSub( "nPreOp",      "Pre Op",     notelist ) ;
+        this.buttonCalcSub( "nAnesthesia", "Anesthesia", notelist ) ;
+        this.buttonCalcSub( "nOpNote",     "Op Note",    notelist ) ;
+        this.buttonCalcSub( "nPostOp",     "Post Op",    notelist ) ;
+        this.buttonCalcSub( "nFollowup",   "Followup",   notelist ) ;
+    }
+
+    buttonCalcSub( id, cat, notelist ) {
+        this.buttonSub( id, notelist.rows.filter( r=>r.doc.category==cat ).length );
+    }
+
+    buttonSub( id, num ) {
+        let d=document.getElementById(id);
+        d.innerText=d.innerText.replace( /\(.*\)/ , `(${num})` );
+    }
+    
+    printCard() {
+        objectPage.next("PrintCard"); // fake page
+        if ( potId == null ) {
+            objectLog.err("No patient to print");
+            return objectPage.show( "back" );
+        }
+        let card = document.getElementById("printCard");
+        let t = card.getElementsByTagName("table");
+        this.getRecordIdPix(potId,true)
+        .then( (doc) => {
+            let img = new ImageImbedded( card, doc, NoPhoto ) ;
+            img.display_image();
+            let link = new URL(window.location.href);
+            link.searchParams.append( "potId", potId );
+            link.searchParams.append( "database", remoteCouch.database );
+
+            new QR(
+                card.querySelector(".qrCard"),
+                link.href,
+                195,195,
+                4);
+            // patient parameters
+            t[0].rows[0].cells[1].innerText = ""; // name
+            t[0].rows[1].cells[1].innerText = ""; // procedure
+            t[0].rows[2].cells[1].innerText = ""; // surgeon
+            t[0].rows[3].cells[1].innerText = DateMath.age(doc.DOB); 
+            t[0].rows[4].cells[1].innerText = doc.Sex??""; 
+            t[0].rows[5].cells[1].innerText = doc.Weight+" kg"??"";
+            t[0].rows[6].cells[1].innerText = ""; // equipment
+            }) 
+        .then( _ => db.query("Pid2Name",{key:potId}) )
+        .then( (doc) => t[0].rows[0].cells[1].innerText = doc.rows[0].value[0] )
+        .then( _ => {
+            document.getElementById("printCardButtons").style.display="block";
+            objectPage.show_screen( "patient" ); // Also prints
+            })
+        .catch( (err) => {
+            objectLog.err(err);
+            objectPage.show( "back" );
+            });
+    }
+    
+    ActuallyPrint() {
+        Mission.getRecordId()
+        .then( doc => printJS({
+            printable:"printCard",
+            type:"html",
+            ignoreElements:["printCardButtons"],
+            documentTitle:[doc.Name,doc.Location,doc.Organization].join(" "),
+            onPrintDialogClose: ()=>objectPage.show("PotMenu"),
+            })
+        );
+    }
+}
+objectPot = new Pot() ;
 
 class Note extends SimpleNote { // convenience class
     select( nid=noteId ) {
         // Check patient existence
         db.get(nid)
         .then( doc => {
-            if ( doc.patient_id != potId ) {
-                objectPatient.select( doc.patient_id);
-            }
             objectCookie.set( "noteId", nid );
             if ( objectPage.test("NoteList") || objectPage.test("NoteListCategory")) {
                 objectNoteList.select() ;
@@ -847,7 +1020,6 @@ class Note extends SimpleNote { // convenience class
             author: remoteCouch.username,
             type: "note",
             category: category,
-            patient_id: potId,
             date: new Date().toISOString(),
         };
     }
@@ -942,16 +1114,34 @@ class AllPatients extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        objectTable = new PatientTable();
+        objectTable = new PotTable();
         let o2pid = {} ; // oplist
-        objectPatient.getAllIdDoc(true)
+        objectPot.getAllIdDoc(true)
         .then( (docs) => {
             docs.rows.forEach( r => Object.assign( r.doc, o2pid[r.id]) );
             objectTable.fill(docs.rows );
-            if ( objectPatient.isSelected() ) {
-                objectPatient.select( potId );
+            if ( objectPot.isSelected() ) {
+                objectPot.select( potId );
             } else {
-                objectPatient.unselect();
+                objectPot.unselect();
+            }
+            })
+        .catch( (err) => objectLog.err(err) );
+    }
+}
+
+class AllPieces extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectTable = new PotTable();
+        objectPot.getAllIdDoc(true)
+        .then( (docs) => {
+            objectTable.fill(docs.rows );
+            if ( objectPot.isSelected() ) {
+                objectPot.select( potId );
+            } else {
+                objectPot.unselect();
             }
             })
         .catch( (err) => objectLog.err(err) );
@@ -1001,7 +1191,7 @@ class InvalidPatient extends Pagelist {
     static safeLanding  = false ; // don't return here
 
     static subshow(extra="") {
-        objectPatient.unselect();
+        objectPot.unselect();
     }
 }
 
@@ -1009,11 +1199,15 @@ class MainMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
 
+class ListMenu extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+}
+
 class NoteListCategory extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() ) {
+        if ( objectPot.isSelected() ) {
             objectNote.getRecordsIdPix(potId,true)
             .then( notelist => objectNoteList = new NoteLister(notelist,extra) )
             .catch( (err) => {
@@ -1030,7 +1224,7 @@ class NoteList extends NoteListCategory {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() ) {
+        if ( objectPot.isSelected() ) {
             super.subshow('Uncategorized');
         } else {
             objectNote.unselect();
@@ -1043,7 +1237,7 @@ class NoteNew extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() ) {
+        if ( objectPot.isSelected() ) {
             // New note only
             objectNote.unselect();
             objectNote.create();
@@ -1057,9 +1251,9 @@ class PatientDemographics extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() ) {
-            objectPatient.getRecordIdPix(potId,true)
-            .then( (doc) => objectPatientData = new PatientData( doc, structDemographics ) )
+        if ( objectPot.isSelected() ) {
+            objectPot.getRecordIdPix(potId,true)
+            .then( (doc) => objectPotData = new PotData( doc, structDemographics ) )
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -1074,9 +1268,9 @@ class PatientMedical extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() ) {
+        if ( objectPot.isSelected() ) {
             let args;
-            objectPatient.getRecordId()
+            objectPot.getRecordId()
             .then( (doc) => args = [doc,structMedical] )
             .catch( (err) => {
                 objectLog.err(err);
@@ -1088,16 +1282,35 @@ class PatientMedical extends Pagelist {
     }
 }
 
-class PatientNew extends Pagelist {
+class PotNew extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        objectPatient.unselect();
-        objectPatientData = new NewPatientData(
+        objectPot.unselect();
+        objectPotData = new PotNewData(
             {
                 author: remoteCouch.username,
-                type:"patient"
-            }, structNewPatient );
+                artist: remoteCouch.username,
+                start_date: new Date().toISOString(),
+            }, structNewPot );
+    }
+}
+
+class PotEdit extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        if ( objectPot.isSelected() ) {
+            objectPot.getRecordId(potId,true)
+            .then( (doc) => objectPotData = new PotData( doc, structNewPot ) )
+            .then( _ => console.log("done") )
+            .catch( (err) => {
+                objectLog.err(err);
+                objectPage.show( "back" );
+                });
+        } else {
+            objectPage.show( "back" );
+        }
     }
 }
 
@@ -1105,14 +1318,34 @@ class PatientPhoto extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        if ( objectPatient.isSelected() ) {
-            objectPatient.select( potId );
+        if ( objectPot.isSelected() ) {
+            objectPot.select( potId );
             let pdoc;
             let onum ;
-            objectPatient.getRecordIdPix(potId,true)
+            objectPot.getRecordIdPix(potId,true)
             .then( (doc) => pdoc = doc )
             .then( _ => objectNote.getRecordsIdDoc(potId) )
-            .then ( (notelist) => objectPatient.menu( pdoc, notelist, onum ) )
+            .then ( (notelist) => objectPot.menu( pdoc, notelist, onum ) )
+            .catch( (err) => {
+                objectLog.err(err);
+                objectPage.show( "back" );
+                });
+        } else {
+            objectPage.show( "back" );
+        }
+    }
+}
+
+class PotMenu extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        if ( objectPot.isSelected() ) {
+            objectPot.select( potId );
+            objectPot.getRecordIdPix(potId,true)
+            .then( (doc) => {
+				// add number of pictures to picture button 
+				})
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -1165,7 +1398,7 @@ class SelectPatient extends Pagelist {
                     nnum[p] = 1 ;
                 }
                 }))
-        .then( _ => objectPatient.getAllIdDoc(true) ) // Patients
+        .then( _ => objectPot.getAllIdDoc(true) ) // Patients
         .then( (docs) => {
             docs.rows
             .forEach( d => {
@@ -1249,7 +1482,7 @@ class Page { // singleton class
     } 
     
     show( page, extra="" ) { // main routine for displaying different "pages" by hiding different elements
-        //console.log("SHOW",page,"STATE",displayState,this.path);
+        console.log("SHOW",page,"STATE",displayState,this.path);
         // test that database is selected
         if ( db == null || credentialList.some( c => remoteCouch[c]=='' ) ) {
             // can't bypass this! test if database exists
@@ -1265,7 +1498,7 @@ class Page { // singleton class
         }
 
         // clear display objects
-        objectPatientData = null;
+        objectPotData = null;
         objectTable = null;
 
         // clear old image urls
@@ -1295,7 +1528,7 @@ class Page { // singleton class
     }    
 }
 
-function TitleBox( titlearray=null, show="PatientPhoto" ) {
+function TitleBox( titlearray=null, show="PotMenu" ) {
     if ( titlearray == null ) {
         document.getElementById( "titlebox" ).innerHTML = "" ;
     } else {
@@ -1303,14 +1536,16 @@ function TitleBox( titlearray=null, show="PatientPhoto" ) {
     }
 }
 
-class PatientTable extends SortTable {
+class PotTable extends SortTable {
     constructor() {
         super( 
-            ["LastName", "Procedure","Date-Time","Surgeon" ], 
-            "AllPatients",
+            ["Thumbnail", "Name","start_date","series" ], 
+            "AllPieces",
             [
-                ["LastName","Name", (doc)=> `${doc.LastName}, ${doc.FirstName}`],
-                ['Date-Time','Date',(doc)=>doc["Date-Time"].substring(0,10)],
+                ["Thumbnail","Picture", (doc)=> `${doc.artist}`],
+                ['start_date','Date',null],
+                ['series','Series',null],
+                ['Name','Name',(doc)=>objectPot.potname(doc)]
             ] 
             );
     }
@@ -1320,11 +1555,11 @@ class PatientTable extends SortTable {
     }
 
     selectFunc(id) {
-        objectPatient.select(id) ;
+        objectPot.select(id) ;
     }
 
     editpage() {
-        objectPage.show("PatientPhoto");
+        objectPage.show("PotMenu");
     }
 }
 
@@ -1379,21 +1614,8 @@ class SearchTable extends SortTable {
         } else {
             db.get( id )
             .then( doc => {
-                switch (doc.type) {
-                    case 'patient':
-                        objectPatient.select( id );
-                        objectPage.show( 'PatientPhoto' ) ;
-                        break ;
-                    case 'note':
-                        objectPatient.select( doc.patient_id );
-                        objectNote.select( id );
-                        objectPage.show( 'NoteList' );
-                        break ;
-
-                    default:
-                        objectPage.show( null );
-                        break ;
-                    }
+				objectPot.select( id );
+				objectPage.show( 'PotMenu' ) ;
             })
             .catch( err => {
                 objectLog.err(err);
@@ -1614,8 +1836,8 @@ function URLparse() {
     
     // first try the search field
     if ( qline && ( "potId" in qline ) ) {
-        objectPatient.select( qline.potId );
-        objectPage.next("PatientPhoto");
+        objectPot.select( qline.potId );
+        objectPage.next("PotMenu");
     }
 
     if ( Object.keys(qline).length > 0 ) {
@@ -1664,17 +1886,8 @@ window.onload = () => {
                     objectSearch.addDoc(change.doc);
                 }
                 // update screen display
-				switch ( change?.doc?.type ) {
-					case "patient":
-						if ( objectPage.test("AllPatients") ) {
-							objectPage.show("AllPatients");
-						}
-						break;
-					case "note":
-						if ( objectPage.test("NoteList") && change.doc?.patient_id==potId ) {
-							objectPage.show("NoteList");
-						}
-						break;
+				if ( objectPage.test("AllPots") ) {
+					objectPage.show("AllPots");
 				}
                 })
             )
@@ -1692,8 +1905,8 @@ window.onload = () => {
         objectPage.show( null ) ;
 
         // Set patient, operation and note -- need page shown first
-        if ( objectPatient.isSelected() ) { // mission too
-            objectPatient.select() ;
+        if ( objectPot.isSelected() ) { // mission too
+            objectPot.select() ;
         }
         if ( noteId ) {
             objectNote.select() ;

@@ -21,11 +21,11 @@ class Id {
         if ( id ) {
             const spl = id.split(";");
             return {
-                version: spl[1] ?? null, // 0 so far
-                type:    spl[0] ?? null,
+                version: spl[0] ?? null, // 0 so far
+                type:    spl[1] ?? null,
                 artist:  spl[2] ?? null,
-                date:    spl[4] ?? null,
-                rand:    spl[5] ?? null, // really creation date
+                date:    spl[3] ?? null,
+                rand:    spl[4] ?? null, // really creation date
             };
         }
         return null;
@@ -58,11 +58,11 @@ class Id {
     }
     
     static allStart() { // Search entire database
-        return [this.type, this.start].join(";");
+        return [this.version, this.type, this.start].join(";");
     }
     
     static allEnd() { // Search entire database
-        return [this.type, this.end].join(";");
+        return [this.version, this.type, this.end].join(";");
     }
 
     static patStart( pid=potId ) { // Search just this patient's records
@@ -81,9 +81,9 @@ class Id_pot extends Id{
         return [
             this.version,
             this.type,
-            doc.artist??"",
-            doc.date,
-            doc.rand,
+            doc.artist??remoteCouch.username,
+            new Date().toISOString(),
+            Math.floor( Math.random() * 1000 ),
             ].join(";");
     }
     static splitId( id=potId ) {

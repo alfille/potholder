@@ -63,14 +63,14 @@ tr:nth-child(odd):hover, li:nth-child(even):hover {
   background: lightyellow ;
 }
 
-.PatientData li {
+.PotData li {
   background: #E6F2FF ;
   margin: 0 0 0 0;
   border-style: double none none none ;
   padding: 4px;
 }
 
-.PatientData li:nth-child(odd) {
+.PotData li:nth-child(odd) {
   background: #CCCCFF ;
 }
 
@@ -318,7 +318,7 @@ legend {
   width: 100%;
   padding: 1em;
 }
-.PatientDataContent, .dataFieldset {
+.PotDataContent, .dataFieldset {
     width: 100%;
 }
 .DownloadCheckbox {
@@ -365,18 +365,18 @@ legend {
   flex-direction: row ;
   justify-content: space-around;
 }
-.PatientProcButtons, .MainMenuButtons {
+.PotProcButtons, .MainMenuButtons {
   display: flex;
   flex-direction: column;
 }
 #InvalidPatientContent {
     padding: 5px ;
 }
-.PatientData input {
+.PotData input {
     background: #F6F6F6 ;
     size: 35 ;
 }
-.PatientData textarea {
+.PotData textarea {
     background: #F6F6F6 ;
     vertical-align: top;
     rows: 3;

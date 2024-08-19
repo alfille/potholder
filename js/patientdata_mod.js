@@ -7,9 +7,9 @@
  * */
  
 export {
-    PatientData,
-    PatientDataEditMode,
-    PatientDataRaw,
+    PotData,
+    PotDataEditMode,
+    PotDataRaw,
     } ;
 
 import {
@@ -18,10 +18,10 @@ import {
     
 // data entry page type
 // except for Noteslist and some html entries, this is the main type
-class PatientDataRaw { // singleton class
+class PotDataRaw { // singleton class
     constructor(click,...args) {
         // args is a list of "docs" to update"
-        this.parent = document.getElementById("PatientDataContent");
+        this.parent = document.getElementById("PotDataContent");
         let fieldset = document.getElementById("templates").querySelector(".dataFieldset");
         
         this.doc = [];
@@ -99,6 +99,7 @@ class PatientDataRaw { // singleton class
                 case "radio":
                     choices
                     .then( clist => clist.forEach( (c) => {
+						console.log("query",item.query,choices);
                         inp = document.createElement("input");
                         inp.type = item.type;
                         inp.name = localname;
@@ -124,6 +125,7 @@ class PatientDataRaw { // singleton class
                 case "checkbox":
                     choices
                     .then( clist => clist.forEach( (c) => {
+						console.log("query",item.query,choices);
                         inp = document.createElement("input");
                         inp.type = item.type;
                         inp.name = localname;
@@ -161,6 +163,7 @@ class PatientDataRaw { // singleton class
                         
                     choices
                     .then( clist => clist.forEach( (c) => {
+						console.log("query",item.query,choices);
                         let op = document.createElement("option");
                         op.value = c;
                         dlist.appendChild(op);
@@ -204,19 +207,6 @@ class PatientDataRaw { // singleton class
                     inp.readOnly = true;
                     inp.value = preVal??"";
                     inp.title = "Time in format HH:MM PM or HH:MM AM";
-                    lab.appendChild(inp);
-                    if ( click ) {
-                        this.clickEditItem(ipair,li);
-                    }
-                    break;
-                case "length":
-                    inp = document.createElement("input");
-                    inp.classList.add("flatpickr","flatpickr-input");
-                    inp.readOnly = true;
-                    inp.type = "text";
-                    inp.size = 6;
-                    inp.value = PatientData.HMfromMin(preVal??"");
-                    inp.title = "Time length in format HH:MM";
                     lab.appendChild(inp);
                     if ( click ) {
                         this.clickEditItem(ipair,li);
@@ -328,19 +318,6 @@ class PatientDataRaw { // singleton class
                         //defaultDate: "9:00",
                     });
                 break;
-            case "length":
-                li.querySelector("input").readOnly = false;
-                flatpickr( li.querySelector("input"),
-                    {
-                        dateFormat: "H:i",
-                        time_24hr: true,
-                        enableTime: true,
-                        noCalendar: true,
-                        minuteIncrement: 5,
-//                        formatDate: "H:i",
-                        //defaultDate: "09:00",
-                    });
-                break;
             case "datetime":
                 li.querySelector("input").readOnly = false;
                 flatpickr( li.querySelector("input"),
@@ -399,9 +376,6 @@ class PatientDataRaw { // singleton class
                             .filter( i => i.checked )
                             .map( i => i.value );
                         break;
-                    case "length":
-                        postVal = PatientData.HMtoMin( li.querySelector("input").value );
-                        break;
                     case "textarea":
                         postVal = li.querySelector("textarea").value;
                         break;
@@ -434,17 +408,17 @@ class PatientDataRaw { // singleton class
     }
     
     savePatientData() {
-        this.saveChanged( "PatientPhoto" );
+        this.saveChanged( "PotMenu" );
     }
 }
 
-class PatientData extends PatientDataRaw {
+class PotData extends PotDataRaw {
     constructor(...args) {
         super(false,...args); // clicked = false
     }
 }
 
-class PatientDataEditMode extends PatientDataRaw {
+class PotDataEditMode extends PotDataRaw {
     // starts with "EDIT" clicked
     constructor(...args) {
         super(true,...args); // clicked = true

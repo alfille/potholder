@@ -33,12 +33,13 @@ import {
 
 import {
     SimplePatient,
+    SimplePot,
     } from "./simple_mod.js" ;
     
 import {
     } from "./replicate_mod.js" ;
 
-objectPatient = new SimplePatient() ;
+objectPot = new SimplePot() ;
 
 objectNote = null ;
 
@@ -79,7 +80,7 @@ class CSV { // convenience class
         // First line titles 
         let csv = fields.map( f => '"'+f+'"' ).join(',')+'\n';
         // Add data
-        objectPatient.getAllIdDoc()
+        objectPot.getAllIdDoc()
         .then( doclist => { // full list of patients
             csv += doclist.rows
                 .map( row => fields // per wanted field
@@ -100,29 +101,13 @@ class CSV { // convenience class
                     .map( f => `"${f}"` )
                     .join(',')+'\n';
         let plist;
-        let olist = {};
-        let nlist = {};
-        objectPatient.getAllIdDoc()
+        objectPot.getAllIdDoc()
         .then( doclist => {
-            plist = doclist.rows;
-            plist.forEach( p => nlist[p.id] = 0 );
-            })
-        .then( _ => objectNote.getAllIdDoc() )
-        .then( doclist => {
-            doclist.rows.forEach( row => ++nlist[row.doc.patient_id] );
-            csv += plist
+            csv += doclist
                 .map( row =>
                     pfields
                     .map( f => row.doc[f] ?? "" )
                     .map( v => typeof(v) == "number" ? v : `"${v}"` )
-                    .concat(
-                        (row.id in olist) ? ofields
-                                            .map( ff => olist[row.id][ff] ?? "" )
-                                            .map( v => typeof(v) == "number" ? v : `"${v}"` )
-                                            :
-                                            ofields.map( () => "" ) ,
-                        [nlist[row.id]]
-                        )
                     .join(',')
                     )
                 .join( '\n' );
@@ -236,7 +221,7 @@ class PPTX {
         // https://github.com/gitbrent/PptxGenJS/issues/1217
 
         // powerpoint object
-        objectPatient.getAllIdDocPix() )
+        objectPot.getAllIdDocPix() )
         .then( doclist => {
             this.numpats = doclist.rows.length ;
             this.pat = 0 ;
@@ -413,7 +398,7 @@ class ZIP {
                 }
                 })
             )
-        .then( _ => objectPatient.getAllIdDocPix( true ) )
+        .then( _ => objectPot.getAllIdDocPix( true ) )
         .then( doclist => {
             this.numpats = doclist.rows.length ;
             this.pat = 0 ;
@@ -729,8 +714,8 @@ window.onload = () => {
         objectPage.show( null ) ;
 
         // Set patient, operation and note -- need page shown first
-        if ( objectPatient.isSelected() ) { // mission too
-            objectPatient.select() ;
+        if ( objectPot.isSelected() ) { // mission too
+            objectPot.select() ;
         }
 
     } else {

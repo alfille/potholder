@@ -34,9 +34,9 @@ import {
     } from "./sorttable_mod.js" ;
 
 import {
-    PatientData,
-    PatientDataEditMode,
-    PatientDataRaw,
+    PotData,
+    PotDataEditMode,
+    PotDataRaw,
     } from "./patientdata_mod.js" ;
 
 import {
@@ -45,7 +45,7 @@ import {
 import {
     } from "./replicate_mod.js" ;
 
-// used to generate data entry pages "PatientData" type
+// used to generate data entry pages "PotData" type
 const structDatabase = [
     {
         name: "username",
@@ -109,11 +109,11 @@ const structDatabaseInfo = [
     },
 ];
 
-class DatabaseInfoData extends PatientData {
+class DatabaseInfoData extends PotData {
     savePatientData() {}
 }
 
-class DatabaseData extends PatientDataRaw {
+class DatabaseData extends PotDataRaw {
     // starts with "EDIT" clicked
     constructor(...args) {
         if ( remoteCouch.database=="" ) {
@@ -370,7 +370,7 @@ class RemoteDatabaseInput extends Pagelist {
     static subshow(extra="") {
         const doc = Object.assign({},remoteCouch) ;
         doc.raw = "fixed";
-        objectPatientData = new DatabaseData( doc, structDatabase );
+        objectPotData = new DatabaseData( doc, structDatabase );
     }
 }
 
@@ -384,7 +384,7 @@ class DatabaseInfo extends Pagelist {
     static subshow(extra="") {
         db.info()
         .then( doc => {
-            objectPatientData = new DatabaseInfoData( doc, structDatabaseInfo );
+            objectPotData = new DatabaseInfoData( doc, structDatabaseInfo );
             })
         .catch( err => objectLog.err(err) );
     }
