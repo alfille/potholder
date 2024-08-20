@@ -26,23 +26,22 @@ class PotDataRaw { // singleton class
         
         this.doc = doc;
         this.struct = struct;
-        this.ul ;
-        this.pairs = 1;
         this.images={} ;
 
-        document.querySelectorAll(".edit_data").forEach( (e) => {
-            e.disabled = false;
-        });
-        this.parent.innerHTML = "";
-        
-		this.ul = this.fillshow( click );
-		this.parent.appendChild( this.ul );
+		if ( click ) {
+			this.clickEdit() ;
+		} else {
+			this.clickNoEdit() ;
+		}
     }
     
-    fillshow( click ) {
+    fillshow() {
+        let parent = document.getElementById("PotDataContent");
+        parent.innerHTML = "";
+        
         let ul = document.createElement('ul');
         
-        this.struct.forEach( ( item, idx ) => {
+        this.struct.forEach( item => {
 			console.log("ITEM",item);
             let li = document.createElement("li");
 
@@ -50,6 +49,7 @@ class PotDataRaw { // singleton class
             let span = document.createElement('span');
             span.classList.add('fill_show_label');
             span.innerHTML=`<i>${item.alias??item.name}:&nbsp;</i>`;
+            span.title = item.hint;               
             li.appendChild(span);
             
             // get value and make type-specific input field with filled in value
@@ -59,11 +59,10 @@ class PotDataRaw { // singleton class
             let textnode="";
             switch( item.type ) {
                 case "image":
-					textnode=document.createTextNode( "Picture" );
-                    break ;
-                case "radio":
-                case "list":
-					textnode=document.createTextNode( preVal );
+                    textnode = document.createElement("div");
+                    cloneClass( ".imagetemplate", textnode ) ;
+                    let img = new ImageImbedded( textnode, this.doc, item?.none ) ;
+                    img.display_image() ;
                     break ;
 
                 case "checkbox":
@@ -73,21 +72,30 @@ class PotDataRaw { // singleton class
                 case "datetime":
 					textnode=document.createTextNode( preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" );
                     break ;
+
                 case "date":
                 case "time":
+                case "radio":
+                case "list":
                 default:
 					textnode=document.createTextNode( preVal??"" );
                     break ;
-            }                
+            } 
+            span.title = item.hint;               
             span.appendChild(textnode);
             li.appendChild(span);
             ul.appendChild( li );
         });
         console.log("UL",ul);
-        return ul;
+
+		this.ul = ul ;
+        parent.appendChild(ul) ;
     }
 
-    fill( click ) {
+    filledit() {
+        let parent = document.getElementById("PotDataContent");
+        parent.innerHTML = "";
+        
         let ul = document.createElement('ul');
         
         this.struct.forEach( ( item, idx ) => {
@@ -119,14 +127,14 @@ class PotDataRaw { // singleton class
             switch( item.type ) {
                 case "image":
                     inp = document.createElement("div");
-                    cloneClass( ".imagetemplate", inp ) ;
+                    cloneClass( ".imagetemplate_edit", inp ) ;
                     this.images[localname] = new ImageImbedded( inp, this.doc, item?.none ) ;
                     this.images[localname].display_image() ;
                     lab.appendChild(inp);
-                    if ( click ) {
-                        this.clickEditItem(0,li);
-                    }
+					this.images[localname].addListen();
+					this.images[localname].addListen();
                     break ;
+                    
                 case "radio":
                     choices
                     .then( clist => clist.forEach( (c) => {
@@ -135,22 +143,13 @@ class PotDataRaw { // singleton class
                         inp.type = item.type;
                         inp.name = localname;
                         inp.value = c;
-                        inp.disabled = true;
                         if ( c == preVal??"" ) {
                             inp.checked = true;
-                            inp.disabled = false;
-                        } else {
-                            inp.disabled = true;
                         }
                         inp.title = item.hint;
                         lab.appendChild(inp);
                         lab.appendChild( document.createTextNode(c) );
-                        }))
-                    .then( () => {
-                        if ( click ) {
-                            this.clickEditItem(0,li);
-                        }
-                        }); 
+                        }));
                     break ;
 
                 case "checkbox":
@@ -161,22 +160,13 @@ class PotDataRaw { // singleton class
                         inp.type = item.type;
                         inp.name = localname;
                         inp.value = c;
-                        inp.disabled = true;
                         if ( (preVal??[]).includes(c) ) {
                             inp.checked = true;
-                            inp.disabled = false;
-                        } else {
-                            inp.disabled = true;
                         }
                         inp.title = item.hint;
                         lab.appendChild(inp);
                         lab.appendChild( document.createTextNode(c) );
-                        }))
-                    .then( () => {
-                        if ( click ) {
-                            this.clickEditItem(0,li);
-                        }
-                        }); 
+                        })); 
                     break;
 
                 case "list":
@@ -187,8 +177,6 @@ class PotDataRaw { // singleton class
                     inp.type = "text";
                     inp.setAttribute( "list", dlist.id );
                     inp.value = preVal??"";
-                    inp.readOnly = true;
-                    inp.disabled = true;
                     lab.appendChild( dlist );
                     lab.appendChild( inp );                    
                         
@@ -198,67 +186,74 @@ class PotDataRaw { // singleton class
                         let op = document.createElement("option");
                         op.value = c;
                         dlist.appendChild(op);
-                        }))
-                    .then( () => {
-                        if ( click ) {
-                            this.clickEditItem(0,li);
-                        }
-                        }); 
+                        })); 
                     }
                     break;
+                    
                 case "datetime":
                     inp = document.createElement("input");
                     inp.type = "text";
                     inp.value = preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" ;
                     inp.title = "Date and time in format YYYY-MM-DD HH:MM AM";
-                    inp.readOnly = true;
                     lab.appendChild( inp );                    
-                    if ( click ) {
-                        this.clickEditItem(0,li);
-                    }
+					flatpickr( inp,
+						{
+							time_24hr: false,
+							enableTime: true,
+							noCalendar: false,
+							dateFormat: "Y-m-d h:i K",
+							//defaultDate: Date.now(),
+						});
                     break;
+
                 case "date":
                     inp = document.createElement("input");
                     inp.classList.add("flatpickr","flatpickr-input");
                     inp.type = "text";
                     inp.size = 10;
                     inp.value = preVal??"";
-                    inp.readOnly = true;
                     inp.title = "Date in format YYYY-MM-DD";
                     lab.appendChild(inp);
-                    if ( click ) {
-                        this.clickEditItem(0,li);
-                    }
+					flatpickr( inp,
+						{
+							enableTime: false,
+							noCalendar: false,
+							dateFormat: "Y-m-d",
+							//defaultDate: Date.now(),
+						});
                     break;
+                    
                 case "time":
                     inp = document.createElement("input");
                     inp.classList.add("flatpickr","flatpickr-input");
                     inp.type = "text";
                     inp.size = 9;
-                    inp.readOnly = true;
                     inp.value = preVal??"";
                     inp.title = "Time in format HH:MM PM or HH:MM AM";
                     lab.appendChild(inp);
-                    if ( click ) {
-                        this.clickEditItem(0,li);
-                    }
+					flatpickr( inp,
+						{
+							enableTime: true,
+							noCalendar: true,
+							dateFormat: "h:i K",
+							//defaultDate: "9:00",
+						});
                     break;
+
                 default:
                     inp = document.createElement( item.type=="textarea" ? "textarea" : "input" );
                     inp.title = item.hint;
-                    inp.readOnly = true;
                     inp.value = preVal??"" ;
                     lab.appendChild(inp);
-                    if ( click ) {
-                        this.clickEditItem(0,li);
-                    }
                     break;
             }                
             
             ul.appendChild( li );
         });
         console.log("UL",ul);
-        return ul;
+        
+		this.ul = ul ;
+        parent.appendChild(ul) ;
     }
 
     static HMtoMin ( inp ) {
@@ -280,96 +275,24 @@ class PotDataRaw { // singleton class
         }
     }
         
-    fsclick( target ) {
-        if ( this.pairs > 1 ) {
-            let ul = target.parentNode.parentNode.querySelector("ul");
-            if ( target.value === "show" ) {
-                // hide
-                target.innerHTML = "&#10133;";
-                ul.style.display = "none";
-                target.value = "hide";
-            } else {
-                // show
-                target.innerHTML = "&#10134;";
-                ul.style.display = "";
-                target.value = "show";
-            }
-        }
-    }
-    
     clickEdit() {
-        this.clickEditButtons();
-		this.ul.querySelectorAll("li").forEach( (li) => this.clickEditItem( li ) );
-    }
-    
-    clickEditButtons() {
         document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
         document.querySelector(".patientDataEdit").style.display="block";
         document.querySelectorAll(".edit_data").forEach( (e) => {
             e.disabled = true;
         });
+        this.filledit() ;
     }
-    
-    clickEditItem(li) {
-        let idx = li.getAttribute("data-index");
-        let localname = [this.struct[idx].name,idx,0].map(x=>x+'').join("_");
-        if ( this.struct[idx] ?.readonly == "true" ) {
-            return;
-        }
-        switch ( this.struct[idx].type ) {
-            case "image":
-                cloneClass(".imagetemplate_edit",li.querySelector("div"));
-                this.images[localname].display_image();
-                this.images[localname].addListen();
-                break;
-            case "radio":
-            case "checkbox":
-                document.getElementsByName(localname).forEach( (i) => i.disabled = false );
-                break;
-            case "date":
-                li.querySelector("input").readOnly = false;
-                flatpickr( li.querySelector("input"),
-                    {
-                        enableTime: false,
-                        noCalendar: false,
-                        dateFormat: "Y-m-d",
-                        //defaultDate: Date.now(),
-                    });
-                break;
-            case "time":
-                li.querySelector("input").readOnly = false;
-                flatpickr( li.querySelector("input"),
-                    {
-                        enableTime: true,
-                        noCalendar: true,
-                        dateFormat: "h:i K",
-                        //defaultDate: "9:00",
-                    });
-                break;
-            case "datetime":
-                li.querySelector("input").readOnly = false;
-                flatpickr( li.querySelector("input"),
-                    {
-                        time_24hr: false,
-                        enableTime: true,
-                        noCalendar: false,
-                        dateFormat: "Y-m-d h:i K",
-                        //defaultDate: Date.now(),
-                    });
-                break;
-            case "textarea":
-                li.querySelector("textarea").readOnly = false;
-                break;
-            case "list":
-                li.querySelector("input").readOnly = false;
-                li.querySelector("input").disabled = false;
-                break;
-            default:
-                li.querySelector("input").readOnly = false;
-                break;
-        }
+
+    clickNoEdit() {
+        //document.querySelectorAll(".topButtons").forEach( v=>v.style.display="block" ); 
+        //document.querySelector(".patientDataEdit").style.display="none";
+        document.querySelectorAll(".edit_data").forEach( (e) => {
+            e.disabled = false;
+        });
+        this.fillshow() ;
     }
-    
+        
     loadDocData() {
         //return true if any real change
         let changed = false; 
@@ -448,6 +371,5 @@ class PotDataEditMode extends PotDataRaw {
     // starts with "EDIT" clicked
     constructor(doc,struct) {
         super(true,doc,struct); // clicked = true
-        this.clickEditButtons() ;
     }
 }

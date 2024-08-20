@@ -324,7 +324,7 @@ legend {
   width: 100%;
   padding: 1em;
 }
-.PotDataContent, .dataFieldset {
+.PotDataContent {
     width: 100%;
 }
 .DownloadCheckbox {

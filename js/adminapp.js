@@ -119,7 +119,6 @@ class DatabaseData extends PotDataRaw {
         if ( remoteCouch.database=="" ) {
             // First time
             super(true,doc,struct); // clicked = true
-            this.clickEditButtons() ;
         } else {
             super(false,doc,struct); // clicked = false
         }
