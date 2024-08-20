@@ -35,10 +35,58 @@ class PotDataRaw { // singleton class
         });
         this.parent.innerHTML = "";
         
-		this.ul = this.fill( click );
+		this.ul = this.fillshow( click );
 		this.parent.appendChild( this.ul );
     }
     
+    fillshow( click ) {
+        let ul = document.createElement('ul');
+        
+        this.struct.forEach( ( item, idx ) => {
+			console.log("ITEM",item);
+            let li = document.createElement("li");
+
+            // possibly use an alias instead of database field name
+            let span = document.createElement('span');
+            span.classList.add('fill_show_label');
+            span.innerHTML=`<i>${item.alias??item.name}:&nbsp;</i>`;
+            li.appendChild(span);
+            
+            // get value and make type-specific input field with filled in value
+            let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ;
+            span = document.createElement('span');
+            span.classList.add('fill_show_data');
+            let textnode="";
+            switch( item.type ) {
+                case "image":
+					textnode=document.createTextNode( "Picture" );
+                    break ;
+                case "radio":
+                case "list":
+					textnode=document.createTextNode( preVal );
+                    break ;
+
+                case "checkbox":
+					textnode=document.createTextNode( (preVal??[]).join(", ") );
+                    break;
+
+                case "datetime":
+					textnode=document.createTextNode( preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" );
+                    break ;
+                case "date":
+                case "time":
+                default:
+					textnode=document.createTextNode( preVal??"" );
+                    break ;
+            }                
+            span.appendChild(textnode);
+            li.appendChild(span);
+            ul.appendChild( li );
+        });
+        console.log("UL",ul);
+        return ul;
+    }
+
     fill( click ) {
         let ul = document.createElement('ul');
         

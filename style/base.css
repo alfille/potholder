@@ -173,8 +173,14 @@ ul {
   display: inline-block;
 }
 
-.yearspan {
+.yearspan, .fill_show_data {
   font-weight: bold;
+  color: black;
+  display: inline-block;
+}
+    
+.yearspan, .fill_show_label {
+  font-weight: italic;
   color: black;
   display: inline-block;
 }
