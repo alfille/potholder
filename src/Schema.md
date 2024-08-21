@@ -13,11 +13,10 @@ The database
 |start_date|date|1|date|no|
 |firing_type|firing type|radio|1|ox/red/soda/raku/garbage/none|yes|
 |construction|construction type|checkbox|1|wheel/slab/handbuilt/coil|yes|
-|photo|images|binary attachments|json object|Any supported image type||
+|photo|images|binary attachments|multi|Any supported image type||
 |photo_desc|image-array|json|multi-link to "images"|list||
 |photo_desc.comment|-- comments|text|array entry|free form|yes|
-|photo_desc.date|-- date|date|array entry|date|no|
-|photo-desc.key|key|text|1|image.name -- non edittable|
+|photo_dec.date|-- date|date|array entry|date|no|
 |clay|clay-array|json|multi|list||
 |clay.type|-- type|text|array entry|choice plus|yes|
 |clay.comment|-- comment|text|array entry|freeform|yes|

@@ -132,12 +132,6 @@ class RemoteReplicant { // convenience class
         }
     }
             
-    closeRemoteDB() {
-        return Promise.all( [
-            objectUser.user_db ? objectUser.user_db.close() : Promise.resolve(true),
-            ]);
-    }
-
     SecureURLparse( url ) {
         let prot = "https";
         let addr = url;

@@ -607,7 +607,7 @@ class Pot extends SimplePot { // convenience class
                 let c = `Delete pot ${this.potname(doc)}?\n`;
                 c += "Are you sure?";
                 if ( confirm(c) ) {
-					return db.remove(pdoc) ;
+					return db.remove(doc) ;
                 } else {
                     throw "No delete";
                 }           
@@ -626,7 +626,6 @@ class Pot extends SimplePot { // convenience class
             binary: true,
             attachments: true,
         };
-console.log("Search doc",doc);
         return db.allDocs(doc);
     }
 
@@ -994,41 +993,6 @@ class NoteNew extends Pagelist {
             // New note only
             objectNote.unselect();
             objectNote.create();
-        } else {
-            objectPage.show( "back" );
-        }
-    }
-}
-
-class PatientDemographics extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        if ( objectPot.isSelected() ) {
-            objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structDemographics ) )
-            .catch( (err) => {
-                objectLog.err(err);
-                objectPage.show( "back" );
-                });
-        } else {
-            objectPage.show( "back" );
-        }
-    }
-}
-
-class PatientMedical extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        if ( objectPot.isSelected() ) {
-            let args;
-            objectPot.getRecordId()
-            .then( (doc) => args = [doc,structMedical] )
-            .catch( (err) => {
-                objectLog.err(err);
-                objectPage.show( "back" );
-                });
         } else {
             objectPage.show( "back" );
         }

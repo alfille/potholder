@@ -42,7 +42,7 @@
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new patient entry">Add Patient</button>
                     </div>
                     <!-- top: AllPieces -->
-                    <div class="AllPiecess topButtons pageOverlay">
+                    <div class="AllPieces topButtons pageOverlay">
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
                     </div>
@@ -63,8 +63,8 @@
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
                     </div>
-                    <!-- top: PotEdit PatientDemographics PatientMedical -->
-                    <div class="PotData PotEdit PatientDemographics PatientMedical topButtons pageOverlay">
+                    <!-- top: PotEdit -->
+                    <div class="PotData PotEdit topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                     </div>
@@ -181,8 +181,8 @@
                     <table id="SearchList"></table>
                 </div>
             </div>
-            <!-- body: PotNew PotEdit PatientDemographics PatientMedical -->
-            <div class="PotData PotNew PotEdit PatientDemographics PatientMedical pageOverlay">
+            <!-- body: PotNew PotEdit -->
+            <div class="PotData PotNew PotEdit pageOverlay">
                 <div id="PotDataContent" ></div>
             </div>
             <!-- body: PatientPhoto -->
@@ -192,8 +192,6 @@
                 </div>
                 <div id="PatientPhotoButtons1">
                     <div class="PotProcButtons">
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'PatientDemographics' )">Demographics</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'PatientMedical' )">Medical</button>
                     </div>
                 </div>
                 <div id="NoteChoiceButtons">
@@ -229,7 +227,6 @@
                 <div id="PatientPhotoButtons1">
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotEdit' )">Details</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'PatientMedical' )">Medical</button>
                     </div>
                 </div>
                 <div id="NoteChoiceButtons">
@@ -253,7 +250,7 @@
                 </div>
                 <div id="PatientPhotoButtons1">
                     <div class="PotProcButtons">
-                        <button type="button" class="divbutton delete" onclick="objectPot.del()">Delete Patient</button>
+                        <button type="button" class="divbutton delete" onclick="objectPot.del()" title="Delete this piece from the database">Delete Piece</button>
                     </div>
                 </div>
             </div>
