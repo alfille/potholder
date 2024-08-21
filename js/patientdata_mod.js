@@ -174,19 +174,16 @@ class PotDataRaw { // singleton class
                     let dlist = document.createElement("datalist");
                     dlist.id = localname ;
                     inp = document.createElement("input");
-                    inp.type = "text";
+                    //inp.type = "text";
                     inp.setAttribute( "list", dlist.id );
                     inp.value = preVal??"";
                     lab.appendChild( dlist );
                     lab.appendChild( inp );                    
                         
                     choices
-                    .then( clist => clist.forEach( (c) => {
-						console.log("query",item.query,choices);
-                        let op = document.createElement("option");
-                        op.value = c;
-                        dlist.appendChild(op);
-                        })); 
+                    .then( clist => clist.forEach( (c) => 
+						dlist.appendChild( new Option(c) )
+                        )); 
                     }
                     break;
                     

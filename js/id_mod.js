@@ -15,7 +15,7 @@ export {
 class Id {
     static version = 0;
     static start="";
-    static end="\\fff0";
+    static end="\uffff";
     
     static splitId( id ) {
         if ( id ) {

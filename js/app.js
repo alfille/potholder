@@ -595,171 +595,6 @@ class DateMath { // convenience class
     }
 }
 
-class Patient extends SimplePatient { // convenience class
-    del() {
-        if ( this.isSelected() ) {        
-            let pdoc;
-            let ndocs;
-            let odocs;
-            this.getRecordIdPix(potId)
-            .then( (doc) => pdoc = doc ) // patient
-            .then( _ => objectNote.getRecordsIdDoc(potId) ) // notes
-            .then( (docs) => ndocs = docs.rows ) // get notes
-            .then( _ => {
-                // Confirm question
-                let c = `Delete patient \n   ${pdoc.FirstName} ${pdoc.LastName} DOB: ${pdoc.DOB}\n    `;
-                if (ndocs.length == 0 ) {
-                    c += "(no associated notes on this patient) \n   ";
-                } else {
-                    c += `also delete ${ndocs.length} associated notes\n   `;
-                }
-                c += "Are you sure?";
-                if ( confirm(c) ) {
-                    return true;
-                } else {
-                    throw "No delete";
-                }           
-                })
-            .then( _ => Promise.all(ndocs.map( (doc) => db.remove(doc.doc._id,doc.doc._rev) ) ) )
-            .then( _ => db.remove(pdoc) )
-            .then( _ => this.unselect() )
-            .catch( (err) => objectLog.err(err) ) 
-            .finally( _ => objectPage.show( "back" ) );
-        }
-    }
-
-    getAllIdDocPix() {
-        let doc = {
-            startkey: Id_pot.allStart(),
-            endkey:   Id_pot.allEnd(),
-            include_docs: true,
-            binary: true,
-            attachments: true,
-        };
-
-        return db.allDocs(doc);
-    }
-
-    select( pid = potId ) {
-        if ( potId != pid ) {
-            // change patient -- notes dont apply
-            objectNote.unselect();
-            objectNoteList.category = 'Uncategorized' ;
-        }
-
-        potId = pid ;
-		objectCookie.set( "potId", pid );
-		// Check patient existence
-		db.query("Pid2Name",{key:pid})
-		.then( (doc) => {
-			// highlight the list row
-			if ( objectPage.test('AllPatients') ) {
-				objectTable.highlight();
-			}
-			TitleBox([doc.rows[0].value[1]]);
-			})
-		.catch( (err) => {
-			objectLog.err(err,"patient select");
-			this.unselect();
-			});
-    }
-
-    unselect() {
-        potId = null;
-        objectCookie.del ( "potId" );
-        objectNote.unselect();
-        objectNoteList.category = 'Uncategorized' ;
-        if ( objectPage.test("AllPatients") ) {
-            let pt = document.getElementById("PotTable");
-            if ( pt ) {
-                let rows = pt.rows;
-                for ( let i = 0; i < rows.length; ++i ) {
-                    rows[i].classList.remove('choice');
-                }
-            }
-        }
-        TitleBox();
-    }
-
-    menu( doc, notelist, onum=0 ) {
-        let d = document.getElementById("PatientPhotoContent2");
-        let inp = new ImageImbedded( d, doc, NoPhoto );
-
-        cloneClass( ".imagetemplate", d );
-        inp.display_image();
-        this.buttonSub( "nOps", onum );
-        NoteLister.categorize(notelist);
-        this.buttonSub( "nAll", notelist.rows.length );
-        this.buttonCalcSub( "nPreOp",      "Pre Op",     notelist ) ;
-        this.buttonCalcSub( "nAnesthesia", "Anesthesia", notelist ) ;
-        this.buttonCalcSub( "nOpNote",     "Op Note",    notelist ) ;
-        this.buttonCalcSub( "nPostOp",     "Post Op",    notelist ) ;
-        this.buttonCalcSub( "nFollowup",   "Followup",   notelist ) ;
-    }
-
-    buttonCalcSub( id, cat, notelist ) {
-        this.buttonSub( id, notelist.rows.filter( r=>r.doc.category==cat ).length );
-    }
-
-    buttonSub( id, num ) {
-        let d=document.getElementById(id);
-        d.innerText=d.innerText.replace( /\(.*\)/ , `(${num})` );
-    }
-    
-    printCard() {
-        objectPage.next("PrintCard"); // fake page
-        if ( potId == null ) {
-            objectLog.err("No patient to print");
-            return objectPage.show( "back" );
-        }
-        let card = document.getElementById("printCard");
-        let t = card.getElementsByTagName("table");
-        this.getRecordIdPix(potId,true)
-        .then( (doc) => {
-            let img = new ImageImbedded( card, doc, NoPhoto ) ;
-            img.display_image();
-            let link = new URL(window.location.href);
-            link.searchParams.append( "potId", potId );
-            link.searchParams.append( "database", remoteCouch.database );
-
-            new QR(
-                card.querySelector(".qrCard"),
-                link.href,
-                195,195,
-                4);
-            // patient parameters
-            t[0].rows[0].cells[1].innerText = ""; // name
-            t[0].rows[1].cells[1].innerText = ""; // procedure
-            t[0].rows[2].cells[1].innerText = ""; // surgeon
-            t[0].rows[3].cells[1].innerText = DateMath.age(doc.DOB); 
-            t[0].rows[4].cells[1].innerText = doc.Sex??""; 
-            t[0].rows[5].cells[1].innerText = doc.Weight+" kg"??"";
-            t[0].rows[6].cells[1].innerText = ""; // equipment
-            }) 
-        .then( _ => db.query("Pid2Name",{key:potId}) )
-        .then( (doc) => t[0].rows[0].cells[1].innerText = doc.rows[0].value[0] )
-        .then( _ => {
-            document.getElementById("printCardButtons").style.display="block";
-            objectPage.show_screen( "patient" ); // Also prints
-            })
-        .catch( (err) => {
-            objectLog.err(err);
-            objectPage.show( "back" );
-            });
-    }
-    
-    ActuallyPrint() {
-        Mission.getRecordId()
-        .then( doc => printJS({
-            printable:"printCard",
-            type:"html",
-            ignoreElements:["printCardButtons"],
-            documentTitle:[doc.Name,doc.Location,doc.Organization].join(" "),
-            onPrintDialogClose: ()=>objectPage.show("PotMenu"),
-            })
-        );
-    }
-}
 class Pot extends SimplePot { // convenience class
 	potname( doc ) {
 		return (doc?.Name)?doc.Name:`${doc?.type} ${Id_pot.splitId(doc._id).rand}`;
@@ -791,7 +626,7 @@ class Pot extends SimplePot { // convenience class
             binary: true,
             attachments: true,
         };
-
+console.log("Search doc",doc);
         return db.allDocs(doc);
     }
 
@@ -853,59 +688,6 @@ class Pot extends SimplePot { // convenience class
         d.innerText=d.innerText.replace( /\(.*\)/ , `(${num})` );
     }
     
-    printCard() {
-        objectPage.next("PrintCard"); // fake page
-        if ( potId == null ) {
-            objectLog.err("No patient to print");
-            return objectPage.show( "back" );
-        }
-        let card = document.getElementById("printCard");
-        let t = card.getElementsByTagName("table");
-        this.getRecordIdPix(potId,true)
-        .then( (doc) => {
-            let img = new ImageImbedded( card, doc, NoPhoto ) ;
-            img.display_image();
-            let link = new URL(window.location.href);
-            link.searchParams.append( "potId", potId );
-            link.searchParams.append( "database", remoteCouch.database );
-
-            new QR(
-                card.querySelector(".qrCard"),
-                link.href,
-                195,195,
-                4);
-            // patient parameters
-            t[0].rows[0].cells[1].innerText = ""; // name
-            t[0].rows[1].cells[1].innerText = ""; // procedure
-            t[0].rows[2].cells[1].innerText = ""; // surgeon
-            t[0].rows[3].cells[1].innerText = DateMath.age(doc.DOB); 
-            t[0].rows[4].cells[1].innerText = doc.Sex??""; 
-            t[0].rows[5].cells[1].innerText = doc.Weight+" kg"??"";
-            t[0].rows[6].cells[1].innerText = ""; // equipment
-            }) 
-        .then( _ => db.query("Pid2Name",{key:potId}) )
-        .then( (doc) => t[0].rows[0].cells[1].innerText = doc.rows[0].value[0] )
-        .then( _ => {
-            document.getElementById("printCardButtons").style.display="block";
-            objectPage.show_screen( "patient" ); // Also prints
-            })
-        .catch( (err) => {
-            objectLog.err(err);
-            objectPage.show( "back" );
-            });
-    }
-    
-    ActuallyPrint() {
-        Mission.getRecordId()
-        .then( doc => printJS({
-            printable:"printCard",
-            type:"html",
-            ignoreElements:["printCardButtons"],
-            documentTitle:[doc.Name,doc.Location,doc.Organization].join(" "),
-            onPrintDialogClose: ()=>objectPage.show("PotMenu"),
-            })
-        );
-    }
 }
 objectPot = new Pot() ;
 
@@ -1107,6 +889,7 @@ class AllPieces extends Pagelist {
         objectTable = new PotTable();
         objectPot.getAllIdDoc(true)
         .then( (docs) => {
+			console.log(docs);
             objectTable.fill(docs.rows );
             if ( objectPot.isSelected() ) {
                 objectPot.select( potId );

@@ -388,9 +388,6 @@ legend {
     rows: 3;
     cols: 35;
 }
-.print_patient {
-    display: none ;
-}
 .print_user {
     display: none ;
 }
@@ -399,13 +396,6 @@ legend {
 }
 .work_screen {
     display: none ;
-}
-#printCard {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: flex-start;
 }
 #photoCard {
   max-height: 200px;

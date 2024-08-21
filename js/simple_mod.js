@@ -110,7 +110,7 @@ class SimplePot { // convenience class
             attachments: true,
             binary: binary,
         };
-
+console.log("getAllIdDoc",doc);
         return db.allDocs(doc);
     }
         
