@@ -44,46 +44,7 @@ class PotDataRaw { // singleton class
         this.struct.forEach( item => {
 			console.log("ITEM",item);
             let li = document.createElement("li");
-
-            // possibly use an alias instead of database field name
-            let span = document.createElement('span');
-            span.classList.add('fill_show_label');
-            span.innerHTML=`<i>${item.alias??item.name}:&nbsp;</i>`;
-            span.title = item.hint;               
-            li.appendChild(span);
-            
-            // get value and make type-specific input field with filled in value
-            let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ;
-            span = document.createElement('span');
-            span.classList.add('fill_show_data');
-            let textnode="";
-            switch( item.type ) {
-                case "image":
-                    textnode = document.createElement("div");
-                    cloneClass( ".imagetemplate", textnode ) ;
-                    let img = new ImageImbedded( textnode, this.doc, item?.none ) ;
-                    img.display_image() ;
-                    break ;
-
-                case "checkbox":
-					textnode=document.createTextNode( (preVal??[]).join(", ") );
-                    break;
-
-                case "datetime":
-					textnode=document.createTextNode( preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" );
-                    break ;
-
-                case "date":
-                case "time":
-                case "radio":
-                case "list":
-                default:
-					textnode=document.createTextNode( preVal??"" );
-                    break ;
-            } 
-            span.title = item.hint;               
-            span.appendChild(textnode);
-            li.appendChild(span);
+            this.fillshowitem(item).forEach( e => li.appendChild(e)) ;
             ul.appendChild( li );
         });
         console.log("UL",ul);
@@ -92,7 +53,53 @@ class PotDataRaw { // singleton class
         parent.appendChild(ul) ;
     }
 
-    filledit() {
+	fillshowitem(item) {
+		// return an array to attach
+		
+		// possibly use an alias instead of database field name
+		let span = document.createElement('span');
+		span.classList.add('fill_show_label');
+		span.innerHTML=`<i>${item.alias??item.name}:&nbsp;</i>`;
+		span.title = item.hint;
+		let return_list=[span] ;               
+		
+		// get value and make type-specific input field with filled in value
+		let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ;
+		span = document.createElement('span');
+		span.classList.add('fill_show_data');
+		let textnode="";
+		switch( item.type ) {
+			case "image":
+				textnode = document.createElement("div");
+				cloneClass( ".imagetemplate", textnode ) ;
+				let img = new ImageImbedded( textnode, this.doc, item?.none ) ;
+				img.display_image() ;
+				break ;
+
+			case "checkbox":
+				textnode=document.createTextNode( (preVal??[]).join(", ") );
+				break;
+
+			case "datetime":
+				textnode=document.createTextNode( preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" );
+				break ;
+
+			case "date":
+			case "time":
+			case "radio":
+			case "list":
+			default:
+				textnode=document.createTextNode( preVal??"" );
+				break ;
+		} 
+		span.title = item.hint;               
+		span.appendChild(textnode);
+		return_list.push(span);
+		return return_list;
+	}
+		
+
+    filledit_old() {
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
@@ -100,7 +107,6 @@ class PotDataRaw { // singleton class
         
         this.struct.forEach( ( item, idx ) => {
             let li = document.createElement("li");
-            li.setAttribute("data-index",idx);
             let lab = document.createElement("label");
             li.appendChild(lab);
             let localname = [item.name,idx,0].map( x=>x+'').join("_");
@@ -252,7 +258,171 @@ class PotDataRaw { // singleton class
 		this.ul = ul ;
         parent.appendChild(ul) ;
     }
+    
+    filledit() {
+        let parent = document.getElementById("PotDataContent");
+        parent.innerHTML = "";
+        
+        let ul = document.createElement('ul');
+        
+        this.struct.forEach( ( item, idx ) => {
+            let li = document.createElement("li");
+            this.filledititem(item,idx).forEach( e => li.appendChild(e)) ;
+            ul.appendChild( li );
+        });
+        console.log("UL",ul);
+        
+		this.ul = ul ;
+        parent.appendChild(ul) ;
+    }
+    
+    filledititem(item,idx) {
+		let li = document.createElement("li");
+		let lab = document.createElement("label");
+		let localname = [item.name,idx,0].map( x=>x+'').join("_");
+		
+		// possibly use an alias instead of database field name
+		if ( "alias" in item ) {
+			lab.appendChild( document.createTextNode(`${item.alias}: `) );
+		} else {
+			lab.appendChild( document.createTextNode(`${item.name}: `) );
+		}
+		lab.title = item.hint;
+		let return_list=[lab];
 
+		// get prior choices for fill-in choice
+		let choices = Promise.resolve([]) ;
+		if ( "choices" in item ) {
+			choices = Promise.resolve(item.choices) ;
+		} else if ( "query" in item ) {
+			choices = db.query(item.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) ) ;
+		}
+
+		// get value and make type-specific input field with filled in value
+		let inp = null;
+		let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ;
+		switch( item.type ) {
+			case "image":
+				inp = document.createElement("div");
+				cloneClass( ".imagetemplate_edit", inp ) ;
+				this.images[localname] = new ImageImbedded( inp, this.doc, item?.none ) ;
+				this.images[localname].display_image() ;
+				this.images[localname].addListen();
+				this.images[localname].addListen();
+				return_list.push(inp);
+				break ;
+				
+			case "radio":
+				choices
+				.then( clist => clist.forEach( (c) => {
+					console.log("query",item.query,choices);
+					inp = document.createElement("input");
+					inp.type = item.type;
+					inp.name = localname;
+					inp.value = c;
+					if ( c == preVal??"" ) {
+						inp.checked = true;
+					}
+					inp.title = item.hint;
+					return_list.push(inp);
+					return_list.push(document.createTextNode(c));
+					}));
+				break ;
+
+			case "checkbox":
+				choices
+				.then( clist => clist.forEach( (c) => {
+					console.log("query",item.query,choices);
+					inp = document.createElement("input");
+					inp.type = item.type;
+					inp.name = localname;
+					inp.value = c;
+					if ( (preVal??[]).includes(c) ) {
+						inp.checked = true;
+					}
+					inp.title = item.hint;
+					return_list.push(inp);
+					return_list.push(document.createTextNode(c));
+					})); 
+				break;
+
+			case "list":
+				{
+				let dlist = document.createElement("datalist");
+				dlist.id = localname ;
+				inp = document.createElement("input");
+				//inp.type = "text";
+				inp.setAttribute( "list", dlist.id );
+				inp.value = preVal??"";
+				choices
+				.then( clist => clist.forEach( (c) => 
+					dlist.appendChild( new Option(c) )
+					)); 
+				}
+				return_list.push(dlist);
+				return_list.push(inp);
+				break;
+				
+			case "datetime":
+				inp = document.createElement("input");
+				inp.type = "text";
+				inp.value = preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" ;
+				inp.title = "Date and time in format YYYY-MM-DD HH:MM AM";
+				lab.appendChild( inp );                    
+				flatpickr( inp,
+					{
+						time_24hr: false,
+						enableTime: true,
+						noCalendar: false,
+						dateFormat: "Y-m-d h:i K",
+						//defaultDate: Date.now(),
+					});
+				break;
+
+			case "date":
+				inp = document.createElement("input");
+				inp.classList.add("flatpickr","flatpickr-input");
+				inp.type = "text";
+				inp.size = 10;
+				inp.value = preVal??"";
+				inp.title = "Date in format YYYY-MM-DD";
+				flatpickr( inp,
+					{
+						enableTime: false,
+						noCalendar: false,
+						dateFormat: "Y-m-d",
+						//defaultDate: Date.now(),
+					});
+				return_list.push(inp);
+				break;
+				
+			case "time":
+				inp = document.createElement("input");
+				inp.classList.add("flatpickr","flatpickr-input");
+				inp.type = "text";
+				inp.size = 9;
+				inp.value = preVal??"";
+				inp.title = "Time in format HH:MM PM or HH:MM AM";
+				flatpickr( inp,
+					{
+						enableTime: true,
+						noCalendar: true,
+						dateFormat: "h:i K",
+						//defaultDate: "9:00",
+					});
+				return_list.push(inp);
+				break;
+
+			default:
+				inp = document.createElement( item.type=="textarea" ? "textarea" : "input" );
+				inp.title = item.hint;
+				inp.value = preVal??"" ;
+				return_list.push(inp);
+				break;
+		}
+		return return_list ;
+    }
+    
     static HMtoMin ( inp ) {
         if ( typeof inp != 'string' ) {
             throw "bad";
@@ -293,8 +463,7 @@ class PotDataRaw { // singleton class
     loadDocData() {
         //return true if any real change
         let changed = false; 
-		this.ul.querySelectorAll("li").forEach( (li) => {
-			let idx = li.getAttribute("data-index");
+		this.ul.querySelectorAll("li").forEach( (li,idx) => {
 			let postVal = "";
 			let name = this.struct[idx].name;
 			let localname = [this.struct[idx].name,idx,0].map(x=>x+'').join("_");
