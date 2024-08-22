@@ -34,9 +34,6 @@ globalThis.db = null ; // will be Pouchdb local copy
 // app only
 globalThis. objectSearch = null;
 
-// admin only
-globalThis. objectUser = null;
-
 // download only
 // singleton class instances
 globalThis. objectPPTX = null;

@@ -13,6 +13,7 @@
 import {
     cloneClass,
     setButtons,
+    TitleBox,
     } from "./globals_mod.js" ;
 
 import {
@@ -53,18 +54,74 @@ import {
 import {
     } from "./replicate_mod.js" ;
 
+
 // other globals
 const NoPhoto = "style/NoPhoto.png";
 
 // used to generate data entry pages "PotData" type
-const structTest = [
-	{
-		name:  "type",
-		alias: "Type of piece",
-		hint:  "What will the piece be used for?",
-		type:  "text",
-	},
+const structRemoveUser = [
+    {
+        name: "username",
+        hint: "Your user name for access",
+        type: "text",
+    },
+    {
+        name: "password",
+        hint: "Your password for access",
+        type: "text",
+    },    
+    {
+        name: "address",
+        alias: "Remote database server address",
+        hint: "emissionsystem.org -- don't include database name",
+        type: "text",
+    },
+    {
+        name: "raw",
+        alias: "  process address",
+        hint: "Fix URL with protocol and port",
+        type: "radio",
+        choices: ["fixed","raw"],
+    },
+    {
+        name: "database",
+        hint: 'Name of patient information database (e.g. "ukraine"',
+        type: "text",
+    },
 ];
+
+const structDatabaseInfo = [
+    {
+        name: "db_name",
+        alias: "Database name",
+        hint: "Name of underlying database",
+        type: "text",
+    },
+    {
+        name: "doc_count",
+        alias: "Document count",
+        hint: "Total number of undeleted documents",
+        type: "number",
+    },
+    {
+        name: "update_seq",
+        hint: "Sequence number",
+        type: "number",
+    },
+    {
+        name: "adapter",
+        alias: "Database adapter",
+        hint: "Actual database type used",
+        type: "text",
+    },
+    {
+        name: "auto_compaction",
+        alias: "Automatic compaction",
+        hint: "Database compaction done automaticslly?",
+        type: "text",
+    },
+];
+
 const structNewPot = [
 	{
 		name:  "type",
@@ -835,23 +892,58 @@ class Pagelist {
 
 class Administration extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+}
+
+class DatabaseInfo extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        window.location.href="/admin.html" ;
+        db.info()
+        .then( doc => {
+            objectPotData = new DatabaseInfoData( doc, structDatabaseInfo );
+            })
+        .catch( err => objectLog.err(err) );
     }
 }
-class DatabaseInfo extends Administration {
+
+class RemoteDatabaseInput extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        const doc = Object.assign({},remoteCouch) ;
+        doc.raw = "fixed";
+        objectPotData = new DatabaseData( doc, structRemoveUser );
+    }
 }
-class PrintYourself extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+class DatabaseInfoData extends PotData {
+    savePatientData() {}
 }
-class RemoteDatabaseInput extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+class DatabaseData extends PotDataRaw {
+    // starts with "EDIT" clicked
+    constructor(doc,struct) {
+        if ( remoteCouch.database=="" ) {
+            // First time
+            super(true,doc,struct); // clicked = true
+        } else {
+            super(false,doc,struct); // clicked = false
+        }
+    }
+
+    savePatientData() {
+        if ( this.loadDocData() ) {
+            if ( this.doc.raw=="fixed" ) {
+                this.doc.address=objectRemote.SecureURLparse(this.doc.address); // fix up URL
+            }
+            delete this.doc.raw ;
+            objectCookie.set ( "remoteCouch", Object.assign({},this.doc) );
+        }
+        objectPage.reset();
+        location.reload(); // force reload
+    }
 }
-class SendUser extends Administration {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-}
+
 class Help extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
@@ -1258,14 +1350,6 @@ class Page { // singleton class
             }
         }
     }    
-}
-
-function TitleBox( titlearray=null, show="PotMenu" ) {
-    if ( titlearray == null ) {
-        document.getElementById( "titlebox" ).innerHTML = "" ;
-    } else {
-        document.getElementById( "titlebox" ).innerHTML = `<button type="button" onClick='objectPage.show("${show}")'>${titlearray.join(" ")}</button>` ;
-    }
 }
 
 class PotTable extends SortTable {
