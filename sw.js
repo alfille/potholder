@@ -10,7 +10,6 @@ const cacheList = [
     "/",
     "/index.html",
     "/download.html",
-    "/admin.html",
     "/sw.js",
     "/images/DCTOHC11.jpg",
     "/images/Null.png",
@@ -22,7 +21,6 @@ const cacheList = [
     "/style/print.css",
     "/js/app.js",
     "/js/downapp.js",
-    "/js/adminapp.js",
     "/js/globals_mod.js",
     "/js/id_mod.js",
     "/js/image_mod.js",
@@ -38,7 +36,6 @@ const cacheList = [
     "/js/elasticlunr.min.js",
     "/js/jszip.min.js",
     "/js/pptxgen.min.js",
-    "/js/print.min.js",
     ];
 
 // preload cache
