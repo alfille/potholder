@@ -179,10 +179,11 @@ ul {
   display: inline-block;
 }
     
-.yearspan, .fill_show_label {
+.fill_show_label {
   font-weight: italic;
   color: black;
   display: inline-block;
+  text-align: left;
 }
     
 .yearnumber {
@@ -332,6 +333,13 @@ legend {
   line-height: 2em;
   font=weight: bold;
 }
+
+.Darray table, .Darray td {
+  border: 1px solid white;
+  width: 100%;
+  border-collapse: collapse;
+}
+
 .DownloadCheckbox input[type="checkbox"] {
   height: 2em;
   width: 2em;

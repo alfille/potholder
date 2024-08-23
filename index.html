@@ -63,8 +63,8 @@
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
                     </div>
-                    <!-- top: PotEdit -->
-                    <div class="PotData PotEdit topButtons pageOverlay">
+                    <!-- top: PotEdit PotProcess -->
+                    <div class="PotData PotEdit PotProcess topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                     </div>
@@ -196,8 +196,8 @@
                     <table id="SearchList"></table>
                 </div>
             </div>
-            <!-- body: PotNew PotEdit DatabaseInfo RemoteDatabaseInput -->
-            <div class="PotData PotNew PotEdit DatabaseInfo RemoteDatabaseInput pageOverlay">
+            <!-- body: PotNew PotEdit PotProcess DatabaseInfo RemoteDatabaseInput -->
+            <div class="PotData PotNew PotEdit PotProcess DatabaseInfo RemoteDatabaseInput pageOverlay">
                 <div id="PotDataContent" ></div>
             </div>
             <!-- body: PatientPhoto -->
@@ -242,26 +242,8 @@
                 <div id="PatientPhotoButtons1">
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotEdit' )">Details</button>
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'PotProcess' )" title="How the pot was made">Creation Process</button>
                     </div>
-                </div>
-                <div id="NoteChoiceButtons">
-                    <fieldset id="NoteFieldset">
-                        <legend>Notes</legend>
-                        <div id="PatientPhotoButtons0">
-                            <div class="PotProcButtons">
-                                <button type="button" class="divbutton" id="nAll" onclick="objectPage.show( 'NoteList', 'All' )">All Notes (0)</button>
-                                <button class="create_note libutton divbutton" type="button" onclick="objectPage.show( 'NoteNew' )">New Note</button>
-                                <button class="createtheimage libutton divbutton Qphoto" type="button">&#128247; New Picture</button>
-                            </div>
-                            <div class="PotProcButtons">
-                                <button class="libutton divbutton" id="nPreOp" type="button" onclick="objectPage.show( 'NoteListCategory', 'Pre Op' )">Pre Op (0)</button>
-                                <button class="libutton divbutton" id="nAnesthesia" type="button" onclick="objectPage.show( 'NoteListCategory', 'Anesthesia' )">Anesthesia (0)</button>
-                                <button class="libutton divbutton" id="nOpNote" type="button" onclick="objectPage.show( 'NoteListCategory', 'Op Note' )">Op Note (0)</button>
-                                <button class="libutton divbutton" id="nPostOp" type="button" onclick="objectPage.show( 'NoteListCategory', 'Post Op' )">Post Op (0)</button>
-                                <button class="libutton divbutton" id="nFollowup" type="button" onclick="objectPage.show( 'NoteListCategory', 'Followup' )">Followup (0)</button>
-                            </div>
-                        </div>
-                    </fieldset>
                 </div>
                 <div id="PatientPhotoButtons1">
                     <div class="PotProcButtons">

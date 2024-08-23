@@ -248,6 +248,25 @@ const structMedical = [
     },
 ];
 
+const structCreation = [
+	{
+		name: "glaze",
+		type: "array",
+		members: [
+			{
+				name: "glaze_type",
+				alias: "Glaze",
+				type: "list",
+			},
+			{
+				name: "glaze_comment",
+				alias: "Notes",
+				type: "textarea",
+			}
+		],
+	}
+];
+				
 const structOperation = [
     {
         name: "Complaint",
@@ -1127,6 +1146,24 @@ class PotEdit extends Pagelist {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordId(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structNewPot ) )
+            .then( _ => console.log("done") )
+            .catch( (err) => {
+                objectLog.err(err);
+                objectPage.show( "back" );
+                });
+        } else {
+            objectPage.show( "back" );
+        }
+    }
+}
+
+class PotProcess extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        if ( objectPot.isSelected() ) {
+            objectPot.getRecordId(potId,true)
+            .then( (doc) => objectPotData = new PotData( doc, structCreation ) )
             .then( _ => console.log("done") )
             .catch( (err) => {
                 objectLog.err(err);
