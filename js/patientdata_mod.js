@@ -83,6 +83,16 @@ class PotDataRaw { // singleton class
 			case "datetime":
 				textnode=document.createTextNode( preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" );
 				break ;
+				
+			case "array":
+				// Insert a table, and pull label into caption
+				// separate return because the flow is different
+				let tab = document.createElement("table");
+				let cap = document.createElement("caption");
+				cap.appendChild( return_list[0] ) ; // unwrapped label
+				tab.appendChild(cap);
+				console.log("ARRAY",item,this.doc);
+				return [tab];
 
 			case "date":
 			case "time":

@@ -80,6 +80,7 @@ export function setButtons() {
         s.title = "Save your changes to this record" ;
         s.addEventListener("click",()=>objectPotData.savePatientData());
         });
+        
     // remove redundant mission buttons
     [...document.querySelectorAll(".topButtons")]
     .filter(d => d.querySelector(".missionLogo"))
