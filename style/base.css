@@ -334,10 +334,11 @@ legend {
   font=weight: bold;
 }
 
-.Darray table, .Darray td {
+.Darray table, .Darray td, .Darray caption {
   border: 1px solid white;
   width: 100%;
   border-collapse: collapse;
+  text-align: left;
 }
 
 .DownloadCheckbox input[type="checkbox"] {

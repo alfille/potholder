@@ -88,7 +88,9 @@ class PotDataRaw { // singleton class
 				// Insert a table, and pull label into caption
 				// separate return because the flow is different
 				let tab = document.createElement("table");
+				tab.classList.add("Darray");
 				let cap = document.createElement("caption");
+				cap.classList.add("Darray");
 				cap.appendChild( return_list[0] ) ; // unwrapped label
 				tab.appendChild(cap);
 				console.log("ARRAY",item,this.doc);
