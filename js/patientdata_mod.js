@@ -347,7 +347,6 @@ class PotDataRaw { // singleton class
 				break;
 
 			case "list":
-				{
 				let dlist = document.createElement("datalist");
 				dlist.id = localname ;
 				inp = document.createElement("input");
@@ -358,7 +357,6 @@ class PotDataRaw { // singleton class
 				.then( clist => clist.forEach( (c) => 
 					dlist.appendChild( new Option(c) )
 					)); 
-				}
 				return_list.push(dlist);
 				return_list.push(inp);
 				break;
