@@ -254,12 +254,12 @@ const structCreation = [
 		type: "array",
 		members: [
 			{
-				name: "glaze_type",
+				name: "type",
 				alias: "Glaze",
 				type: "list",
 			},
 			{
-				name: "glaze_comment",
+				name: "comment",
 				alias: "Notes",
 				type: "textarea",
 			}

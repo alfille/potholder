@@ -35,7 +35,7 @@ class PotDataRaw { // singleton class
 		}
     }
     
-    fillshow() {
+    fill_show() {
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
@@ -44,7 +44,7 @@ class PotDataRaw { // singleton class
         this.struct.forEach( item => {
 			console.log("ITEM",item);
             let li = document.createElement("li");
-            this.fillshowitem(item).forEach( e => li.appendChild(e)) ;
+            this.fill_show_item(item,this.doc).forEach( e => li.appendChild(e)) ;
             ul.appendChild( li );
         });
         console.log("UL",ul);
@@ -53,7 +53,7 @@ class PotDataRaw { // singleton class
         parent.appendChild(ul) ;
     }
 
-	fillshowitem(item) {
+	fill_show_item(item,doc) {
 		// return an array to attach
 		
 		// possibly use an alias instead of database field name
@@ -64,7 +64,12 @@ class PotDataRaw { // singleton class
 		let return_list=[span] ;               
 		
 		// get value and make type-specific input field with filled in value
-		let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ;
+		let preVal = null ;
+		if ( item.name in doc ) {
+			preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , doc ) ;
+		} else {
+			doc[item.name]=null ;
+		}
 		span = document.createElement('span');
 		span.classList.add('fill_show_data');
 		let textnode="";
@@ -72,7 +77,7 @@ class PotDataRaw { // singleton class
 			case "image":
 				textnode = document.createElement("div");
 				cloneClass( ".imagetemplate", textnode ) ;
-				let img = new ImageImbedded( textnode, this.doc, item?.none ) ;
+				let img = new ImageImbedded( textnode, doc, item?.none ) ;
 				img.display_image() ;
 				break ;
 
@@ -87,14 +92,7 @@ class PotDataRaw { // singleton class
 			case "array":
 				// Insert a table, and pull label into caption
 				// separate return because the flow is different
-				let tab = document.createElement("table");
-				tab.classList.add("Darray");
-				let cap = document.createElement("caption");
-				cap.classList.add("Darray");
-				cap.appendChild( return_list[0] ) ; // unwrapped label
-				tab.appendChild(cap);
-				console.log("ARRAY",item,this.doc);
-				return [tab];
+				return this.fill_show_array( item, doc, preVal  ) ;
 
 			case "date":
 			case "time":
@@ -109,9 +107,108 @@ class PotDataRaw { // singleton class
 		return_list.push(span);
 		return return_list;
 	}
-		
-
-    filledit_old() {
+	
+	fill_edit_array( item, doc, preVal ) {
+		// Insert a table, and pull label into caption
+		// separate return because the flow is different
+		let tab = document.createElement("table");
+		let elements = 0 ;
+		if ( Array.isArray(preVal) ) {
+			elements = preVal.length ;
+		}
+		tab.classList.add("Darray");
+		{
+			let cap = document.createElement("caption");
+			cap.classList.add("Darray");
+			{
+				let span = document.createElement('span');
+				span.classList.add('fill_show_label');
+				span.innerHTML=`<i>${item.alias??item.name} list</i>`;
+				span.title = item.hint;
+				cap.appendChild( span ) ; // unwrapped label
+			}
+			let makebutton = ( na, fn, yn ) => {
+				let b = document.createElement("button");
+				b.type = "button";
+				b.appendChild( document.createTextNode( na ) );
+				b.onclick = fn ;
+				b.disabled = yn ;
+				cap.appendChild( b );
+				};
+			makebutton("Add",()=>this.ArrayAdd(item),false);
+			makebutton("Edit",()=>this.ArrayEdit(item),elements<1);
+			makebutton("Rearrange",()=>this.ArrayRearrange(item),elements<2);
+			makebutton("Delete",()=>this.ArrayEdlete(item),elements<1);
+			tab.appendChild( cap ) ;
+		}
+		console.log("DOC",doc);
+		console.log("ARRAY",item);
+		console.log("PREVAL",preVal);
+		if ( Array.isArray(preVal) ) {
+			preVal.forEach( v => {
+			console.log("v",v);
+			let tr = document.createElement( "tr" ) ;
+			let td = document.createElement( "td") ;
+			let ul = document.createElement( "ul") ;
+			td.classList.add("Darray");
+			item.members.forEach( m => {
+				let li = document.createElement("li");
+				this.fill_show_item(m,v).forEach( e => li.appendChild(e)) ;
+				ul.appendChild(li);
+			}) ;
+			td.appendChild(ul);
+			tr.appendChild(td);
+			tab.appendChild(tr) ;
+			});
+		}
+		return [tab];
+	}
+	
+	ArrayAdd(item) {
+		console.log("ArrayAdd",item,"DOC",this.doc);
+	}
+		    
+	fill_show_array( item, doc, preVal ) {
+		// Insert a table, and pull label into caption
+		// separate return because the flow is different
+		let tab = document.createElement("table");
+		tab.classList.add("Darray");
+		{
+			let cap = document.createElement("caption");
+			cap.classList.add("Darray");
+			{
+				let span = document.createElement('span');
+				span.classList.add('fill_show_label');
+				span.innerHTML=`<i>${item.alias??item.name} list</i>`;
+				span.title = item.hint;
+				cap.appendChild( span ) ; // unwrapped label
+			}
+			tab.appendChild(cap);
+		}
+		console.log("DOC",doc);
+		console.log("ARRAY",item);
+		console.log("PREVAL",preVal);
+		if ( Array.isArray(preVal) ) {
+			preVal.forEach( v => {
+			console.log("v",v);
+			let tr = document.createElement( "tr" ) ;
+			let td = document.createElement( "td") ;
+			let ul = document.createElement( "ul") ;
+			td.classList.add("Darray");
+			item.members.forEach( m => {
+				let li = document.createElement("li");
+				this.fill_show_item(m,v).forEach( e => li.appendChild(e)) ;
+				ul.appendChild(li);
+			}) ;
+			td.appendChild(ul);
+			tr.appendChild(td);
+			tab.appendChild(tr) ;
+			});
+		}
+		return [tab];
+	}
+		    
+    fill_edit() {
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
@@ -119,150 +216,7 @@ class PotDataRaw { // singleton class
         
         this.struct.forEach( ( item, idx ) => {
             let li = document.createElement("li");
-            let lab = document.createElement("label");
-            li.appendChild(lab);
-            let localname = [item.name,idx,0].map( x=>x+'').join("_");
-            
-            // possibly use an alias instead of database field name
-            if ( "alias" in item ) {
-                lab.appendChild( document.createTextNode(`${item.alias}: `) );
-            } else {
-                lab.appendChild( document.createTextNode(`${item.name}: `) );
-            }
-            lab.title = item.hint;
-
-            // get prior choices for fill-in choice
-            let choices = Promise.resolve([]) ;
-            if ( "choices" in item ) {
-                choices = Promise.resolve(item.choices) ;
-            } else if ( "query" in item ) {
-                choices = db.query(item.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) ) ;
-            }
-
-            // get value and make type-specific input field with filled in value
-            let inp = null;
-            let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ;
-            switch( item.type ) {
-                case "image":
-                    inp = document.createElement("div");
-                    cloneClass( ".imagetemplate_edit", inp ) ;
-                    this.images[localname] = new ImageImbedded( inp, this.doc, item?.none ) ;
-                    this.images[localname].display_image() ;
-                    lab.appendChild(inp);
-					this.images[localname].addListen();
-					this.images[localname].addListen();
-                    break ;
-                    
-                case "radio":
-                    choices
-                    .then( clist => clist.forEach( (c) => {
-						console.log("query",item.query,choices);
-                        inp = document.createElement("input");
-                        inp.type = item.type;
-                        inp.name = localname;
-                        inp.value = c;
-                        if ( c == preVal??"" ) {
-                            inp.checked = true;
-                        }
-                        inp.title = item.hint;
-                        lab.appendChild(inp);
-                        lab.appendChild( document.createTextNode(c) );
-                        }));
-                    break ;
-
-                case "checkbox":
-                    choices
-                    .then( clist => clist.forEach( (c) => {
-						console.log("query",item.query,choices);
-                        inp = document.createElement("input");
-                        inp.type = item.type;
-                        inp.name = localname;
-                        inp.value = c;
-                        if ( (preVal??[]).includes(c) ) {
-                            inp.checked = true;
-                        }
-                        inp.title = item.hint;
-                        lab.appendChild(inp);
-                        lab.appendChild( document.createTextNode(c) );
-                        })); 
-                    break;
-
-                case "list":
-                    {
-                    let dlist = document.createElement("datalist");
-                    dlist.id = localname ;
-                    inp = document.createElement("input");
-                    //inp.type = "text";
-                    inp.setAttribute( "list", dlist.id );
-                    inp.value = preVal??"";
-                    lab.appendChild( dlist );
-                    lab.appendChild( inp );                    
-                        
-                    choices
-                    .then( clist => clist.forEach( (c) => 
-						dlist.appendChild( new Option(c) )
-                        )); 
-                    }
-                    break;
-                    
-                case "datetime":
-                    inp = document.createElement("input");
-                    inp.type = "text";
-                    inp.value = preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" ;
-                    inp.title = "Date and time in format YYYY-MM-DD HH:MM AM";
-                    lab.appendChild( inp );                    
-					flatpickr( inp,
-						{
-							time_24hr: false,
-							enableTime: true,
-							noCalendar: false,
-							dateFormat: "Y-m-d h:i K",
-							//defaultDate: Date.now(),
-						});
-                    break;
-
-                case "date":
-                    inp = document.createElement("input");
-                    inp.classList.add("flatpickr","flatpickr-input");
-                    inp.type = "text";
-                    inp.size = 10;
-                    inp.value = preVal??"";
-                    inp.title = "Date in format YYYY-MM-DD";
-                    lab.appendChild(inp);
-					flatpickr( inp,
-						{
-							enableTime: false,
-							noCalendar: false,
-							dateFormat: "Y-m-d",
-							//defaultDate: Date.now(),
-						});
-                    break;
-                    
-                case "time":
-                    inp = document.createElement("input");
-                    inp.classList.add("flatpickr","flatpickr-input");
-                    inp.type = "text";
-                    inp.size = 9;
-                    inp.value = preVal??"";
-                    inp.title = "Time in format HH:MM PM or HH:MM AM";
-                    lab.appendChild(inp);
-					flatpickr( inp,
-						{
-							enableTime: true,
-							noCalendar: true,
-							dateFormat: "h:i K",
-							//defaultDate: "9:00",
-						});
-                    break;
-
-                default:
-                    inp = document.createElement( item.type=="textarea" ? "textarea" : "input" );
-                    inp.title = item.hint;
-                    inp.value = preVal??"" ;
-                    lab.appendChild(inp);
-                    break;
-            }                
-            
+            this.fill_edit_item(item,idx,this.doc).forEach( e => li.appendChild(e)) ;
             ul.appendChild( li );
         });
         console.log("UL",ul);
@@ -271,24 +225,7 @@ class PotDataRaw { // singleton class
         parent.appendChild(ul) ;
     }
     
-    filledit() {
-        let parent = document.getElementById("PotDataContent");
-        parent.innerHTML = "";
-        
-        let ul = document.createElement('ul');
-        
-        this.struct.forEach( ( item, idx ) => {
-            let li = document.createElement("li");
-            this.filledititem(item,idx).forEach( e => li.appendChild(e)) ;
-            ul.appendChild( li );
-        });
-        console.log("UL",ul);
-        
-		this.ul = ul ;
-        parent.appendChild(ul) ;
-    }
-    
-    filledititem(item,idx) {
+    fill_edit_item(item,idx,doc) {
 		let li = document.createElement("li");
 		let lab = document.createElement("label");
 		let localname = [item.name,idx,0].map( x=>x+'').join("_");
@@ -422,6 +359,9 @@ class PotDataRaw { // singleton class
 					});
 				return_list.push(inp);
 				break;
+				
+			case "array":
+				return this.fill_edit_array( item, doc, preVal ) ;
 
 			default:
 				inp = document.createElement( item.type=="textarea" ? "textarea" : "input" );
@@ -458,7 +398,7 @@ class PotDataRaw { // singleton class
         document.querySelectorAll(".edit_data").forEach( (e) => {
             e.disabled = true;
         });
-        this.filledit() ;
+        this.fill_edit() ;
     }
 
     clickNoEdit() {
@@ -467,7 +407,7 @@ class PotDataRaw { // singleton class
         document.querySelectorAll(".edit_data").forEach( (e) => {
             e.disabled = false;
         });
-        this.fillshow() ;
+        this.fill_show() ;
     }
         
     loadDocData() {
