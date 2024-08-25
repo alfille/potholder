@@ -882,7 +882,7 @@ class Pagelist {
     
     static show(extra="") {
         // set up specific page display
-        document.querySelector(".patientDataEdit").style.display="none"; 
+        document.querySelector(".potDataEdit").style.display="none"; 
         document.querySelectorAll(".topButtons")
             .forEach( tb => tb.style.display = "block" );
 

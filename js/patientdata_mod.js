@@ -27,6 +27,7 @@ class PotDataRaw { // singleton class
         this.doc = doc;
         this.struct = struct;
         this.images={} ;
+        this.array_preVals={} ;
 
 		if ( click ) {
 			this.clickEdit() ;
@@ -108,9 +109,11 @@ class PotDataRaw { // singleton class
 		return return_list;
 	}
 	
-	fill_edit_array( item, doc, preVal ) {
+	fill_edit_array( item, doc ) {
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
+		
+		// Heading and buttons
 		let tab = document.createElement("table");
 		let elements = 0 ;
 		if ( Array.isArray(preVal) ) {
@@ -141,9 +144,15 @@ class PotDataRaw { // singleton class
 			makebutton("Delete",()=>this.ArrayEdlete(item),elements<1);
 			tab.appendChild( cap ) ;
 		}
-		console.log("DOC",doc);
-		console.log("ARRAY",item);
-		console.log("PREVAL",preVal);
+
+		// table
+		if ( not (item.name in this.doc ) ) {
+			this.doc[item.name] = null ;
+		}
+		let preVal = this.doc[item.name] ;
+		if ( not (item.nam in this.array_list) ) {
+			array_list[item.name] = preVal ;
+		}
 		if ( Array.isArray(preVal) ) {
 			preVal.forEach( v => {
 			console.log("v",v);
@@ -361,7 +370,7 @@ class PotDataRaw { // singleton class
 				break;
 				
 			case "array":
-				return this.fill_edit_array( item, doc, preVal ) ;
+				return this.fill_edit_array( item, doc ) ;
 
 			default:
 				inp = document.createElement( item.type=="textarea" ? "textarea" : "input" );
@@ -394,7 +403,7 @@ class PotDataRaw { // singleton class
         
     clickEdit() {
         document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
-        document.querySelector(".patientDataEdit").style.display="block";
+        document.querySelector(".potDataEdit").style.display="block";
         document.querySelectorAll(".edit_data").forEach( (e) => {
             e.disabled = true;
         });
@@ -403,12 +412,19 @@ class PotDataRaw { // singleton class
 
     clickNoEdit() {
         //document.querySelectorAll(".topButtons").forEach( v=>v.style.display="block" ); 
-        //document.querySelector(".patientDataEdit").style.display="none";
+        //document.querySelector(".potDataEdit").style.display="none";
         document.querySelectorAll(".edit_data").forEach( (e) => {
             e.disabled = false;
         });
         this.fill_show() ;
     }
+    
+    ClickArrayEdit(msg) {
+        document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
+        document.querySelectorAll(".edit_data").forEach( (e) => {
+            e.disabled = false;
+			});
+	}		
         
     loadDocData() {
         //return true if any real change
@@ -438,6 +454,9 @@ class PotDataRaw { // singleton class
 						.filter( i => i.checked )
 						.map( i => i.value );
 					break;
+				case array:
+					// already set
+					break ;
 				case "textarea":
 					postVal = li.querySelector("textarea").value;
 					break;
