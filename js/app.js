@@ -254,62 +254,19 @@ const structCreation = [
 		type: "array",
 		members: [
 			{
-				name: "type",
+				name:  "type",
 				alias: "Glaze",
-				type: "list",
+				type:  "list",
 			},
 			{
-				name: "comment",
+				name:  "comment",
 				alias: "Notes",
-				type: "textarea",
+				type:  "textarea",
 			}
 		],
 	}
 ];
 				
-const structOperation = [
-    {
-        name: "Complaint",
-        hint: "Main complaint (patient's view of the problem)",
-        type: "textarea",
-    },
-    {
-        name: "Procedure",
-        hint: "Surgical operation / procedure",
-        type: "list",
-        query: "byProcedure"
-    },
-    {
-        name: "Surgeon",
-        hint: "Surgeon(s) involved",
-        type: "list",
-        query: "bySurgeon"
-    },
-    {
-        name: "Equipment",
-        hint: "Special equipment",
-        type: "list",
-        query: "byEquipment"
-    },
-    {
-        name: "Status",
-        hint: "Status of operation planning",
-        type: "radio",
-        choices: ["none","unscheduled", "scheduled", "finished", "postponed", "cancelled"],
-    },
-    {
-        name: "Date-Time",
-        hint: "Scheduled date",
-        type: "datetime",
-    },
-    {
-        name: "Laterality",
-        hint: "Is there a sidedness to the case?",
-        type: "radio",
-        choices: ["?", "L", "R", "L+R", "N/A"],
-    },
-];
-
 const structMission = [
     {
         name: "Logo",

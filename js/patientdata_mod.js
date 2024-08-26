@@ -113,12 +113,21 @@ class PotDataRaw { // singleton class
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
 		
-		// Heading and buttons
-		let tab = document.createElement("table");
+		// data field
+		if ( !(item.name in this.doc ) ) {
+			this.doc[item.name] = null ;
+		}
+		let preVal = this.doc[item.name] ;
+		if ( !(item.name in this.array_list) ) {
+			array_list[item.name] = preVal ;
+		}
 		let elements = 0 ;
 		if ( Array.isArray(preVal) ) {
 			elements = preVal.length ;
 		}
+
+		// Heading and buttons
+		let tab = document.createElement("table");
 		tab.classList.add("Darray");
 		{
 			let cap = document.createElement("caption");
@@ -146,13 +155,6 @@ class PotDataRaw { // singleton class
 		}
 
 		// table
-		if ( not (item.name in this.doc ) ) {
-			this.doc[item.name] = null ;
-		}
-		let preVal = this.doc[item.name] ;
-		if ( not (item.nam in this.array_list) ) {
-			array_list[item.name] = preVal ;
-		}
 		if ( Array.isArray(preVal) ) {
 			preVal.forEach( v => {
 			console.log("v",v);
@@ -433,6 +435,7 @@ class PotDataRaw { // singleton class
 			let postVal = "";
 			let name = this.struct[idx].name;
 			let localname = [this.struct[idx].name,idx,0].map(x=>x+'').join("_");
+			// first pass for value
 			switch ( this.struct[idx].type ) {
 				case "image":
 					// handle separately
@@ -454,7 +457,9 @@ class PotDataRaw { // singleton class
 						.filter( i => i.checked )
 						.map( i => i.value );
 					break;
-				case array:
+				case "array":
+					postVal = this.doc[struct[idx].name] ;
+					changed = ( postVal != this.array_list[struct[idx].name] ) ;
 					// already set
 					break ;
 				case "textarea":
@@ -464,17 +469,24 @@ class PotDataRaw { // singleton class
 					postVal = li.querySelector("input").value;
 					break;
 			}
-			if ( this.struct[idx].type != "image" ) {
-				if ( postVal != name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ) {
-					changed = true;
-					Object.assign( this.doc, name.split(".").reduceRight( (x,n) => ({[n]:x}) , postVal ));
-				}
-			} else {
-				// image
-				if ( this.images[localname].changed() ) {
-					changed = true;
-					this.images[localname].save(this.doc) ;
-				}
+			// second pass for changed
+			switch( this.struct[idx].type ) {
+				case "image":
+					if ( this.images[localname].changed() ) {
+						changed = true;
+						this.images[localname].save(this.doc) ;
+					}
+					break ;
+				
+				case "array":
+					break ;
+				
+				default:
+					if ( postVal != name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ) {
+						changed = true;
+						Object.assign( this.doc, name.split(".").reduceRight( (x,n) => ({[n]:x}) , postVal ));
+					}
+					break ;
 			}
 		});
         return changed;
