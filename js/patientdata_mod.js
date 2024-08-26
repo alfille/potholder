@@ -118,8 +118,8 @@ class PotDataRaw { // singleton class
 			this.doc[item.name] = null ;
 		}
 		let preVal = this.doc[item.name] ;
-		if ( !(item.name in this.array_list) ) {
-			array_list[item.name] = preVal ;
+		if ( !(item.name in this.array_preVals) ) {
+			this.array_preVals[item.name] = preVal ;
 		}
 		let elements = 0 ;
 		if ( Array.isArray(preVal) ) {
@@ -127,32 +127,12 @@ class PotDataRaw { // singleton class
 		}
 
 		// Heading and buttons
-		let tab = document.createElement("table");
-		tab.classList.add("Darray");
-		{
-			let cap = document.createElement("caption");
-			cap.classList.add("Darray");
-			{
-				let span = document.createElement('span');
-				span.classList.add('fill_show_label');
-				span.innerHTML=`<i>${item.alias??item.name} list</i>`;
-				span.title = item.hint;
-				cap.appendChild( span ) ; // unwrapped label
-			}
-			let makebutton = ( na, fn, yn ) => {
-				let b = document.createElement("button");
-				b.type = "button";
-				b.appendChild( document.createTextNode( na ) );
-				b.onclick = fn ;
-				b.disabled = yn ;
-				cap.appendChild( b );
-				};
-			makebutton("Add",()=>this.ArrayAdd(item),false);
-			makebutton("Edit",()=>this.ArrayEdit(item),elements<1);
-			makebutton("Rearrange",()=>this.ArrayRearrange(item),elements<2);
-			makebutton("Delete",()=>this.ArrayEdlete(item),elements<1);
-			tab.appendChild( cap ) ;
-		}
+		let temp = document.createElement("span"); // hold clone
+		cloneClass( ".Darray", temp ) ;
+		let tab = temp.querySelector( ".Darray_table" ) ;
+		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
+	    tab.querySelector(".Darray_edit").disabled=(elements<1);
+	    tab.querySelector(".Darray_rearrange").disabled=(elements<2);
 
 		// table
 		if ( Array.isArray(preVal) ) {
@@ -182,23 +162,11 @@ class PotDataRaw { // singleton class
 	fill_show_array( item, doc, preVal ) {
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
-		let tab = document.createElement("table");
-		tab.classList.add("Darray");
-		{
-			let cap = document.createElement("caption");
-			cap.classList.add("Darray");
-			{
-				let span = document.createElement('span');
-				span.classList.add('fill_show_label');
-				span.innerHTML=`<i>${item.alias??item.name} list</i>`;
-				span.title = item.hint;
-				cap.appendChild( span ) ; // unwrapped label
-			}
-			tab.appendChild(cap);
-		}
-		console.log("DOC",doc);
-		console.log("ARRAY",item);
-		console.log("PREVAL",preVal);
+		let temp = document.createElement("span"); // hold clone
+		cloneClass( ".Darray", temp ) ;
+		let tab = temp.querySelector( ".Darray_table" ) ;
+		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
+		tab.querySelectorAll("button").forEach(b=>b.style.display="none");
 		if ( Array.isArray(preVal) ) {
 			preVal.forEach( v => {
 			console.log("v",v);
@@ -459,7 +427,7 @@ class PotDataRaw { // singleton class
 					break;
 				case "array":
 					postVal = this.doc[struct[idx].name] ;
-					changed = ( postVal != this.array_list[struct[idx].name] ) ;
+					changed = ( postVal != this.array_preVals[struct[idx].name] ) ;
 					// already set
 					break ;
 				case "textarea":

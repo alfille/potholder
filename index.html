@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-                <div id="titlebox">
+            <div id="titlebox">
             </div>
         </header>
         <div id="emissionbody" class="work_screen">
@@ -288,8 +288,6 @@
             <!-- body: FloatPicture -->
             <img class="FloatPicture pageOverlay" onclick="ImageImbedded.hideBigPicture(this)">
         </div>
-        </div>
-        <!-- copyable parts -->
         <!-- copyable parts -->
         <div id="templates" class="pageOverlay">
            <div class="notelabel"><button class="edit_note libutton" type="button">Edit</button> <input type="text" class="flatpickr flatpickr-input" name="dummy" readonly><div class="inly"></div></div>
@@ -409,6 +407,19 @@
                 <center>Add a note, or picture, or drag an image here</center>
                 <br>
             </span>
+            <!-- Property Array Table -->
+            <div class="Darray">
+				<table class="Darray_table">
+					<caption class="Darray_caption">
+						<div class="Darray_div">
+							<span class="Darray_span"></span>
+							<button type="button" class="Darray_add" onClick="objectPotData.addArray()" title="Add a new entry to the list">Add</button>
+							<button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry">Edit</button>
+							<button type="button" class="Darray_rearrange" onClick="objectPotData.rearrangeArray()" title="Change the display order">Rearrange</button>
+						</div>
+					</caption>
+				</table>
+			</div>
             <!-- more top buttons -->
             <div id="moreTop">
                 <button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
