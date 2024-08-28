@@ -153,23 +153,11 @@ class PotDataRaw { // singleton class
 	}
 	
 	rearrange( item ) {
-		console.log(item);
+		console.log("ITEM",item);
+		console.log("THIS",this);
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
 		
-		// data field
-		if ( !(item.name in this.doc ) ) {
-			this.doc[item.name] = null ;
-		}
-		let preVal = this.doc[item.name] ;
-		if ( !(item.name in this.array_preVals) ) {
-			this.array_preVals[item.name] = preVal ;
-		}
-		let elements = 0 ;
-		if ( Array.isArray(preVal) ) {
-			elements = preVal.length ;
-		}
-
 		// Heading and buttons
 		let temp = document.createElement("span"); // hold clone
 		cloneClass( ".Darray", temp ) ;
@@ -177,42 +165,47 @@ class PotDataRaw { // singleton class
 		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} rearrange order</i>`;
 		[".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
 
-		const up = (i)=>{
-			console.log("up",i);
-			[this.doc[item.name][i],this.doc[item.name][(i-1+elements)%elements]]=[this.doc[item.name][(i-1+elements)%elements],this.doc[item.name][i]];
-			console.log("up2",i);
-			this.rearrange( item );
-			console.log("up3",i);
-		}
-		const down = (i)=>{
-			[this.doc[item.name][i],this.doc[item.name][(i+1)%elements]]=[this.doc[item.name][(i+1)%elements],this.doc[item.name][i]];
-			this.rearrange( item );
-		}
-		const ok = () => this.file_edit();
-		
-		tab.querySelector(".Darray_ok").onclick=ok;
+		tab.querySelector(".Darray_ok").onclick=()=>this.fill_edit();
 
 		// table
-		if ( Array.isArray(preVal) ) {
-			preVal.forEach( (v,i) => {
-			let tr = tab.insertRow(-1) ;
-			tr.insertCell(-1).innerHTML=`<button type="button" onClick="()=>up(i)" title="Move this entry up"><B>&#8657;</B></button>`;
-			tr.insertCell(-1).innerHTML=`<button type="button" onClick="()=>down(i)" title="Move this entry down"><B>&#8659;</B></button>`;
-			let td = tr.insertCell(-1);
-			td.style.width="100%";
-			let ul = document.createElement("ul");
-			td.appendChild(ul);
-			item.members.forEach( m => {
-				let li = document.createElement("li");
-				this.fill_show_item(m,v).forEach( e => li.appendChild(e)) ;
-				ul.appendChild(li);
-				}) ;
-			});
-		}
+		this.doc[item.name].forEach( (v,i) => {
+		let tr = tab.insertRow(-1) ;
+		const id = `${item.name}${i}`;
+		tr.insertCell(-1).innerHTML=`<button type="button" id=${id}up title="Move this entry up"><B>&#8657;</B></button>`;
+		tr.querySelector("#"+id+"up").onclick=()=>this.rearrange_up(item,i);
+		tr.insertCell(-1).innerHTML=`<button type="button"  id=${id}down title="Move this entry down"><B>&#8659;</B></button>`;
+		tr.querySelector("#"+id+"down").onclick=()=>this.rearrange_down(item,i);
+		let td = tr.insertCell(-1);
+		td.style.width="100%";
+		let ul = document.createElement("ul");
+		td.appendChild(ul);
+		item.members.forEach( m => {
+			let li = document.createElement("li");
+			this.fill_show_item(m,v).forEach( e => li.appendChild(e)) ;
+			ul.appendChild(li);
+			}) ;
+		});
 		
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         parent.appendChild(tab);
+	}
+
+	rearrange_up(item,i)
+	{
+		const elements = this.doc[item.name].length ;
+		console.log("up",i);
+		[this.doc[item.name][i],this.doc[item.name][(i-1+elements)%elements]]=[this.doc[item.name][(i-1+elements)%elements],this.doc[item.name][i]];
+		console.log("up2",i);
+		this.rearrange( item );
+		console.log("up3",i);
+	}
+	
+	rearrange_down(item,i)
+	{
+		const elements = this.doc[item.name].length ;
+		[this.doc[item.name][i],this.doc[item.name][(i+1)%elements]]=[this.doc[item.name][(i+1)%elements],this.doc[item.name][i]];
+		this.rearrange( item );
 	}
 	
 	fill_edit_array( item, doc ) {
