@@ -407,15 +407,19 @@
                 <center>Add a note, or picture, or drag an image here</center>
                 <br>
             </span>
-            <!-- Property Array Table -->
+            <!-- Property Array Table Caption -->
             <div class="Darray">
 				<table class="Darray_table">
 					<caption class="Darray_caption">
 						<div class="Darray_div">
 							<span class="Darray_span"></span>
-							<button type="button" class="Darray_add" onClick="objectPotData.addArray()" title="Add a new entry to the list">Add</button>
-							<button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry">Edit</button>
-							<button type="button" class="Darray_rearrange" onClick="objectPotData.rearrangeArray()" title="Change the display order">Rearrange</button>
+							<button type="button" class="Darray_add" onClick="objectPotData.addArray()" title="Add a new entry to the list" hidden>Add</button>
+							<button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry" hidden>Edit</button>
+							<button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
+							<button type="button" class="Darray_ok" onClick="objectPotData.okArray()" title="Keep this change" hidden>Ok</button>
+							<button type="button" class="Darray_delete" onClick="objectPotData.deleteArray()" title="Delete this entry" hidden>Delete</button>
+							<button type="button" class="Darray_cancel" onClick="objectPotData.cancelArray()" title="Cancel any changes" hidden>Cancel</button>
+							<button type="button" class="Darray_back" onClick="objectPotData.backArray()" title="Return to previous screen" hidden>Back</button>
 						</div>
 					</caption>
 				</table>
