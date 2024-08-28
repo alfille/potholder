@@ -170,11 +170,8 @@ class PotDataRaw { // singleton class
 		// table
 		this.doc[item.name].forEach( (v,i) => {
 		let tr = tab.insertRow(-1) ;
-		const id = `${item.name}${i}`;
-		tr.insertCell(-1).innerHTML=`<button type="button" id=${id}up title="Move this entry up"><B>&#8657;</B></button>`;
-		tr.querySelector("#"+id+"up").onclick=()=>this.rearrange_up(item,i);
-		tr.insertCell(-1).innerHTML=`<button type="button"  id=${id}down title="Move this entry down"><B>&#8659;</B></button>`;
-		tr.querySelector("#"+id+"down").onclick=()=>this.rearrange_down(item,i);
+		tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
+		tr.insertCell(-1).innerHTML=`<button type="button"  class="Darray_down" title="Move this entry down"><B>&#8659;</B></button>`;
 		let td = tr.insertCell(-1);
 		td.style.width="100%";
 		let ul = document.createElement("ul");
@@ -185,6 +182,8 @@ class PotDataRaw { // singleton class
 			ul.appendChild(li);
 			}) ;
 		});
+		tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>this.rearrange_up(item,i) );
+		tab.querySelectorAll(".Darray_down").forEach( (b,i)=>b.onclick=()=>this.rearrange_down(item,i) );
 		
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";

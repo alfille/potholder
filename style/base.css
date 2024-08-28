@@ -353,7 +353,14 @@ legend {
 .Darray_button {
   font-size: 1em;
 }
-
+.Darray_up, .Darray_down {
+  background-color: blue;
+  color: white;
+}
+.Darray_up:hover, .Darray_down:hover {
+  background-color: white;
+  color: blue;
+}
 .DownloadCheckbox input[type="checkbox"] {
   height: 2em;
   width: 2em;
