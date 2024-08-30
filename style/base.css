@@ -344,14 +344,11 @@ legend {
   justify-content: space-between;
   flex-flow: row wrap;
 }
-.Darray_caption {
+.Darray_caption, .Darray_li {
   font-size: 2em;
 }
-.Darray_caption button {
+.Darray_caption button, .Darray_li button {
   font-size: .9em;
-}
-.Darray_button {
-  font-size: 1em;
 }
 .Darray_up, .Darray_down {
   background-color: blue;
