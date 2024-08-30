@@ -73,7 +73,7 @@ class PotDataRaw { // singleton class
 		// get value and make type-specific input field with filled in value
 		let preVal = null ;
 		if ( item.name in doc ) {
-			preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , doc ) ;
+			preVal = doc[item.name];
 		} else {
 			doc[item.name]=null ;
 		}
@@ -361,7 +361,7 @@ class PotDataRaw { // singleton class
 
 		// get value and make type-specific input field with filled in value
 		let inp = null;
-		let preVal = item.name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ;
+		let preVal = doc[item.name] ;
 		switch( item.type ) {
 			case "image":
 				inp = document.createElement("div");
@@ -563,9 +563,9 @@ class PotDataRaw { // singleton class
 					break ;
 				
 				default:
-					if ( postVal != name.split(".").reduce( (arr,arg) => arr && arr[arg] , this.doc ) ) {
+					if ( postVal != this.doc[name] ) {
 						changed = true;
-						Object.assign( this.doc, name.split(".").reduceRight( (x,n) => ({[n]:x}) , postVal ));
+						Object.assign(this.doc,{name:postVal});
 					}
 					break ;
 			}
