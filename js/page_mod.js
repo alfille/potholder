@@ -121,11 +121,6 @@ class SimplePage { // singleton class
             s.title = "Search everywhere for a word or phrase" ;
             s.addEventListener("click",()=>objectPage.show('SearchList'));
             });
-
-        // remove redundant mission buttons
-        [...document.querySelectorAll(".topButtons")]
-        .filter(d => d.querySelector(".missionLogo"))
-        .forEach( d => d.removeChild(d.querySelector(".missionButton")));
     }
 }
 

@@ -20,13 +20,11 @@ import {
 // except for Noteslist and some html entries, this is the main type
 class PotDataRaw { // singleton class
     constructor(click,doc,struct) {
-		console.log("PotDataRaw",doc,struct);
         // args is a list of "docs" to update"
         this.parent = document.getElementById("PotDataContent");
         
         this.doc = doc;
         this.struct = struct;
-        console.log("CONSTRUCT",doc,struct);
         this.images={} ;
         this.array_preVals={} ;
 
@@ -46,29 +44,26 @@ class PotDataRaw { // singleton class
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
-        let ul = document.createElement('ul');
+        this.ul = document.createElement('ul');
         
         this.struct.forEach( item => {
-			console.log("ITEM",item);
             let li = document.createElement("li");
             this.fill_show_item(item,this.doc).forEach( e => li.appendChild(e)) ;
-            ul.appendChild( li );
+            this.ul.appendChild( li );
         });
-        console.log("UL",ul);
 
-		this.ul = ul ;
-        parent.appendChild(ul) ;
+        parent.appendChild(this.ul) ;
     }
 
 	fill_show_item(item,doc) {
 		// return an array to attach
 		
 		// possibly use an alias instead of database field name
-		let span = document.createElement('span');
-		span.classList.add('fill_show_label');
-		span.innerHTML=`<i>${item.alias??item.name}:</i>`;
-		span.title=item.hint??"data entry";
-		let return_list=[];
+		let span0 = document.createElement('span');
+		span0.classList.add('fill_show_label');
+		span0.innerHTML=`<i>${item.alias??item.name}:&nbsp;&nbsp;</i>`;
+		span0.title=item.hint??"data entry";
+		let return_list=[span0];
 				
 		// get value and make type-specific input field with filled in value
 		let preVal = null ;
@@ -77,7 +72,7 @@ class PotDataRaw { // singleton class
 		} else {
 			doc[item.name]=null ;
 		}
-		span = document.createElement('span');
+		let span = document.createElement('span');
 		span.classList.add('fill_show_data');
 		let textnode="";
 		switch( item.type ) {
@@ -144,37 +139,57 @@ class PotDataRaw { // singleton class
 				ul.appendChild(li);
 				}) ;
 			});
-		tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>this.edit_entry(item,i) );
+		tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>this.edit_array_entry(item,i) );
 	}
 
-	edit_entry( item, idx ) {
+	edit_array_entry( item, idx ) {
 		this.clickEditArray();
+
+		let doc={} ;
+		let adding = idx==-1 ; // flag for adding rather than editing
+		if ( !adding ) {
+			Object.assign(doc,this.doc[item.name][idx]);
+		}
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
-		let adding = idx==-1 ; // flag for adding rather than editing
 		
-        let ul = document.createElement('ul');
+        this.ul = document.createElement('ul');
         let li1 = document.createElement('li');
+        let title = item.alias??item.name ;
+        if ( !(item.name in this.doc) || this.doc[item.name]==null ) {
+			this.doc[item.name]=[];
+		}
         cloneClass( ".Darray_li", li1 ) ;
-		li1.querySelector("span").innerHTML=`<i>${adding?"Add":"Edit"} ${item.alias??item.name} entry</i>`;
+		li1.querySelector("span").innerHTML=`<i>${adding?"Add":"Edit"} ${title} entry</i>`;
+		li1.classList.add("Darray_li1");
 		(adding?[".Darray_ok",".Darray_cancel"]:[".Darray_ok",".Darray_cancel",".Darray_delete"]).forEach(c=>li1.querySelector(c).hidden=false);
-	    li1.querySelector(".Darray_ok").onclick=()=>this.clickEdit();
+	    li1.querySelector(".Darray_ok").onclick=()=>{
+			this.loadDocData_local( item.members, doc ) ;
+			if ( adding ) {
+				this.doc[item.name].push(doc);
+			} else {
+				Object.assign(this.doc[item.name][idx],doc);
+			}
+			this.clickEdit() ;
+			};
 	    li1.querySelector(".Darray_cancel").onclick=()=>this.clickEdit();
-	    li1.querySelector(".Darray_delete").onclick=()=>this.clickEdit();
-        ul.appendChild(li1);
+	    li1.querySelector(".Darray_delete").onclick=()=>{
+			if (confirm(`WARNING -- about to delete this ${title} entry\nPress CANCEL to back out`)==true) {
+				this.doc[item.name].splice(idx,1);
+				this.clickEdit();
+			}};
+        this.ul.appendChild(li1);
         
-        this.struct.forEach( ( item, idx ) => {
+        item.members.forEach( m => {
             let li = document.createElement("li");
 			li.classList.add("MainEditList");
-            this.fill_edit_item(item,idx,this.doc).forEach( e => li.appendChild(e)) ;
-            ul.appendChild( li );
+            this.fill_edit_item(m,doc).forEach( e => li.appendChild(e)) ;
+            this.ul.appendChild( li );
         });
-        console.log("UL",ul);
         
-		this.ul = ul ;
-        parent.appendChild(ul) ;
+        parent.appendChild(this.ul) ;
     }
 
 	rearrange( item ) {
@@ -193,6 +208,7 @@ class PotDataRaw { // singleton class
 		tab.querySelector(".Darray_ok").onclick=()=>this.clickEdit();
 
 		// table
+		const elements = this.doc[item.name].length ;
 		this.doc[item.name].forEach( (v,i) => {
 			let tr = tab.insertRow(-1) ;
 			tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
@@ -207,25 +223,14 @@ class PotDataRaw { // singleton class
 				ul.appendChild(li);
 				}) ;
 			});
-		tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>this.rearrange_up(item,i) );
-		tab.querySelectorAll(".Darray_down").forEach( (b,i)=>b.onclick=()=>this.rearrange_down(item,i) );
-	}
-
-	rearrange_up(item,i)
-	{
-		const elements = this.doc[item.name].length ;
-		console.log("up",i);
-		[this.doc[item.name][i],this.doc[item.name][(i-1+elements)%elements]]=[this.doc[item.name][(i-1+elements)%elements],this.doc[item.name][i]];
-		console.log("up2",i);
-		this.rearrange( item );
-		console.log("up3",i);
-	}
-	
-	rearrange_down(item,i)
-	{
-		const elements = this.doc[item.name].length ;
-		[this.doc[item.name][i],this.doc[item.name][(i+1)%elements]]=[this.doc[item.name][(i+1)%elements],this.doc[item.name][i]];
-		this.rearrange( item );
+		tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>{
+			[this.doc[item.name][i],this.doc[item.name][(i-1+elements)%elements]]=[this.doc[item.name][(i-1+elements)%elements],this.doc[item.name][i]];
+			this.rearrange( item );
+			});
+		tab.querySelectorAll(".Darray_down").forEach( (b,i)=>b.onclick=()=>{
+			[this.doc[item.name][i],this.doc[item.name][(i+1)%elements]]=[this.doc[item.name][(i+1)%elements],this.doc[item.name][i]];
+			this.rearrange( item );
+			});
 	}
 	
 	fill_edit_array( item, doc ) {
@@ -233,13 +238,11 @@ class PotDataRaw { // singleton class
 		// separate return because the flow is different
 		
 		// data field
-		if ( !(item.name in this.doc ) ) {
-			this.doc[item.name] = null ;
+		if ( !(item.name in this.doc) ||  !Array.isArray(this.doc[item.name]) ) {
+			this.doc[item.name] = [] ;
 		}
-		console.log("FILL_EDIT_ARRAY",this.array_preVals);
 		let preVal = this.doc[item.name] ;
 		if ( !(item.name in this.array_preVals) ) {
-			console.log("Store initial array",this.array_preVals);
 			this.array_preVals[item.name] = JSON.stringify(preVal) ;
 		}
 		let elements = 0 ;
@@ -253,12 +256,11 @@ class PotDataRaw { // singleton class
 		let tab = temp.querySelector( ".Darray_table" ) ;
 		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
 		[".Darray_add",".Darray_edit",".Darray_rearrange"].forEach(c=>tab.querySelector(c).hidden=false);
-	    tab.querySelector(".Darray_add").onclick=()=>this.edit_entry( item, -1 );
+	    tab.querySelector(".Darray_add").onclick=()=>this.edit_array_entry( item, -1 );
 	    tab.querySelector(".Darray_edit").disabled=(elements<1);
-	    tab.querySelector(".Darray_edit").onclick=(elements==1)?(()=>this.edit_entry( item, 0 )):(()=>this.select_edit(item));
+	    tab.querySelector(".Darray_edit").onclick=(elements==1)?(()=>this.edit_array_entry( item, 0 )):(()=>this.select_edit(item));
 	    tab.querySelector(".Darray_rearrange").disabled=(elements<2);
 	    tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange(item);
-	    console.log("OK");
 
 		// table
 		if ( Array.isArray(preVal) ) {
@@ -276,10 +278,6 @@ class PotDataRaw { // singleton class
 		return [tab];
 	}
 	
-	ArrayAdd(item) {
-		console.log("ArrayAdd",item,"DOC",this.doc);
-	}
-		    
 	fill_show_array( item, doc ) {
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
@@ -328,23 +326,21 @@ class PotDataRaw { // singleton class
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
-        let ul = document.createElement('ul');
+        this.ul = document.createElement('ul');
         
         this.struct.forEach( ( item, idx ) => {
             let li = document.createElement("li");
 			li.classList.add("MainEditList");
-            this.fill_edit_item(item,idx,this.doc).forEach( e => li.appendChild(e)) ;
-            ul.appendChild( li );
+            this.fill_edit_item(item,this.doc).forEach( e => li.appendChild(e)) ;
+            this.ul.appendChild( li );
         });
-        console.log("UL",ul);
         
-		this.ul = ul ;
-        parent.appendChild(ul) ;
+        parent.appendChild(this.ul) ;
     }
     
-    fill_edit_item(item,idx,doc) {
+    fill_edit_item(item,doc) {
 		let lab = document.createElement("label");
-		let localname = [item.name,idx,0].map( x=>x+'').join("_");
+		let localname = `UNIQUE${item.name}`;
 		
 		// possibly use an alias instead of database field name
 		lab.appendChild( document.createTextNode(`${item.alias??item.name}: `) );
@@ -369,14 +365,12 @@ class PotDataRaw { // singleton class
 				this.images[localname] = new ImageImbedded( inp, this.doc, item?.none ) ;
 				this.images[localname].display_image() ;
 				this.images[localname].addListen();
-				this.images[localname].addListen();
 				return_list.push(inp);
 				break ;
 				
 			case "radio":
 				choices
 				.then( clist => clist.forEach( (c) => {
-					console.log("query",item.query,choices);
 					inp = document.createElement("input");
 					inp.type = item.type;
 					inp.name = localname;
@@ -393,7 +387,6 @@ class PotDataRaw { // singleton class
 			case "checkbox":
 				choices
 				.then( clist => clist.forEach( (c) => {
-					console.log("query",item.query,choices);
 					inp = document.createElement("input");
 					inp.type = item.type;
 					inp.name = localname;
@@ -473,7 +466,7 @@ class PotDataRaw { // singleton class
 				break;
 				
 			case "array":
-				return this.fill_edit_array( item ) ;
+				return this.fill_edit_array( item, doc ) ;
 
 			default:
 				inp = document.createElement( item.type=="textarea" ? "textarea" : "input" );
@@ -504,18 +497,15 @@ class PotDataRaw { // singleton class
         }
     }
         
-    loadDocData() {
+    loadDocData_local(struct,doc) {
         //return true if any real change
         let changed = false; 
-		console.log("LOADDOC DOC",this.doc);
 		this.ul.querySelectorAll(".MainEditList").forEach( (li,idx) => {
 			let postVal = "";
-			console.log("struct",idx,this.struct[idx],this.struct);
-			let name = this.struct[idx].name;
-			let localname = [name,idx,0].map(x=>x+'').join("_");
-			console.log("Name",name);
+			let name = struct[idx].name;
+			let localname = `UNIQUE${name}`;
 			// first pass for value
-			switch ( this.struct[idx].type ) {
+			switch ( struct[idx].type ) {
 				case "image":
 					// handle separately
 					break;
@@ -537,8 +527,7 @@ class PotDataRaw { // singleton class
 						.map( i => i.value );
 					break;
 				case "array":
-					postVal = this.doc[name] ;
-					console.log("Array postVal",postVal);
+					postVal = doc[name] ;
 					// already set
 					break ;
 				case "textarea":
@@ -549,7 +538,7 @@ class PotDataRaw { // singleton class
 					break;
 			}
 			// second pass for changed
-			switch( this.struct[idx].type ) {
+			switch( struct[idx].type ) {
 				case "image":
 					if ( this.images[localname].changed() ) {
 						changed = true;
@@ -559,13 +548,12 @@ class PotDataRaw { // singleton class
 				
 				case "array":
 					changed ||= JSON.stringify(postVal) != this.array_preVals[name] ;
-					console.log("Array changed?",changed);
 					break ;
 				
 				default:
-					if ( postVal != this.doc[name] ) {
+					if ( postVal != doc[name] ) {
 						changed = true;
-						Object.assign(this.doc,{name:postVal});
+						Object.assign(doc,{[name]:postVal});
 					}
 					break ;
 			}
@@ -573,8 +561,17 @@ class PotDataRaw { // singleton class
         return changed;
     }
     
+    loadDocData(struct,doc) {
+        //return true if any real change
+        let changed = this.loadDocData_local(struct,doc); 
+        if ( changed ) {
+			Object.assign(this.doc,doc);
+		}
+        return changed ;
+    }
+    
     saveChanged ( state ) {
-        if ( this.loadDocData() ) {
+        if ( this.loadDocData(this.struct,this.doc) ) {
 			// doc is changed
 			db.put( this.doc )
             .catch( (err) => objectLog.err(err) )
@@ -585,7 +582,6 @@ class PotDataRaw { // singleton class
     }
     
     savePatientData() {
-		console.log("Savepatientdata",this);
         this.saveChanged( "PotMenu" );
     }
 }

@@ -908,7 +908,7 @@ class DatabaseData extends PotDataRaw {
     }
 
     savePatientData() {
-        if ( this.loadDocData() ) {
+        if ( this.loadDocData(this.struct,this.doc) ) {
             if ( this.doc.raw=="fixed" ) {
                 this.doc.address=objectRemote.SecureURLparse(this.doc.address); // fix up URL
             }
@@ -1083,7 +1083,7 @@ class PotNew extends Pagelist {
 
 class PotNewData extends PotDataEditMode {
     savePatientData() {
-        this.loadDocData();
+        this.loadDocData(this.struct,this.doc);
         
 		// create new pot record
 		this.doc._id = Id_pot.makeId( this.doc );
@@ -1121,7 +1121,6 @@ class PotProcess extends Pagelist {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordId(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structCreation ) )
-            .then( _ => console.log("done") )
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );

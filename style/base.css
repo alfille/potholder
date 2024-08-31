@@ -344,10 +344,13 @@ legend {
   justify-content: space-between;
   flex-flow: row wrap;
 }
-.Darray_caption, .Darray_li {
+.Darray_caption {
   font-size: 2em;
 }
-.Darray_caption button, .Darray_li button {
+.Darray_li1 {
+  font-size: 2em ;
+}
+.Darray_caption button, .Darray_div button {
   font-size: .9em;
 }
 .Darray_up, .Darray_down {
@@ -472,10 +475,6 @@ legend {
 }
 .potholderLogo {
   height:100px;
-  width:auto;
-}
-.missionLogo {
-  height:50px;
   width:auto;
 }
 .splashImg {

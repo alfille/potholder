@@ -81,11 +81,6 @@ export function setButtons() {
         s.addEventListener("click",()=>objectPotData.savePatientData());
         });
         
-    // remove redundant mission buttons
-    [...document.querySelectorAll(".topButtons")]
-    .filter(d => d.querySelector(".missionLogo"))
-    .forEach( d => d.removeChild(d.querySelector(".missionButton")));
-
     document.querySelectorAll(".headerboxlink")
     .forEach( q => q.addEventListener("click",() => {
             if ( objectPage && objectPage.current() != "MainMenu" ) {
