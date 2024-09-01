@@ -13,6 +13,26 @@ export {
     ImageQuick,
 } ;
 
+class PotImages {
+	static srcList = [] ;
+	
+	constructor( doc ) {
+		// Clear existing Images in memory
+		PotImages.srcList.forEach( s => URL.revokeObjectURL(s) );
+		PotImages.srcList=[] ;
+		
+		this.doc = doc;
+		
+		this.Imap = new Map() ;
+		if ( "_attachments" in doc ) {
+			Object.entries( doc._attachments ).forEach( ([k,v]) => {
+				let s=URL.createObjectURL(v.data);
+				this.Imap.set(k,s);
+				PotImages.srcList.push(s);
+				});
+		}
+}
+
 class ImageImbedded {
     static srcList = [] ;
     

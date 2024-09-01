@@ -118,14 +118,11 @@
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListMenu' )">Lists</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
                     </div>
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
-                        <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
-                        <button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
-                        <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Administrator Area</button>
+                        <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Advanced Options</button>
                     </div>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                 </div>
@@ -136,14 +133,11 @@
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPieces' )">All Pieces</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
                     </div>
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
-                        <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
-                        <button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
-                        <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Administrator Area</button>
+                        <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Advanced Options</button>
                     </div>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                 </div>
@@ -273,6 +267,10 @@
             <!-- body: Administration -->
             <div class="Administration pageOverlay">
                 <div id="AdministrationContent" class="buttonmenu" >
+					<button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
+                    <button type="button" class="divbutton"  style="visibility:hidden"> </button>
+					<button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
+					<button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                     <button type="button" class="divbutton" onClick="objectRemote.link()" hint="Open Couchdb Fauxton console">Database Console</button>
                     <button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>

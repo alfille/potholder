@@ -59,7 +59,7 @@ import {
 const NoPhoto = "style/NoPhoto.png";
 
 // used to generate data entry pages "PotData" type
-const structRemoveUser = [
+const structRemoteUser = [
     {
         name: "username",
         hint: "Your user name for access",
@@ -164,91 +164,33 @@ const structNewPot = [
 	},
 ];
     
-const structDemographics = [
-    {
-        name: "Photo",
-        hint: "PatientPhoto",
-        type: "image",
-        none: NoPhoto,
-    },
-    {
-        name: "LastName",
-        hint: "Late name of patient",
-        type: "text",
-    },
-    {
-        name: "FirstName",
-        hint: "First name of patient",
-        type: "text",
-    },
-    {
-        name: "DOB",
-        hint: "Date of Birth",
-        type: "date",
-    },
-    {
-        name: "email",
-        hint: "email address",
-        type: "email",
-    },
-    {
-        name: "phone",
-        hint: "Contact phone number",
-        type: "tel",
-    },
-    {
-        name: "Address",
-        hint: "Patient home address",
-        type: "textarea",
-    },
-    {
-        name: "Contact",
-        hint: "Additional contact information (family member, local address,...)",
-        type: "textarea",
-    },
+const structImages = [
+	{
+		name:  "images",
+		alias: "Images",
+		type:  "list",
+		members: [
+			{
+				name:  "image",
+				type:  "image",
+			},
+			{
+				name:  "comment",
+				alias: "Notes",
+				hint:  "Notes about this photo",
+				type:  "textarea",
+			},
+			{
+				name:  "date",
+				type:  "date",
+				alias: "Date",
+				hint:  "Date photo was taken",
+			}
+		]
+	}
 ];
-
-const structMedical = [
-    {
-        name: "Dx",
-        hint: "Diagnosis",
-        type: "textarea",
-    } , 
-    {
-        name: "Sex",
-        hint: "Patient gender",
-        type: "radio",
-        choices: ["?","M","F","X"],
-    },
-    {
-        name: "Weight",
-        hint: "Patient weight (kg)",
-        type: "number",
-    },
-    {
-        name: "Height",
-        hint: "Patient height (cm?)",
-        type: "number",
-    },
-    {
-        name: "ASA",
-        hint: "ASA classification",
-        type: "radio",
-        choices: ["I","II","III","IV"],
-    },
-    {
-        name: "Allergies",
-        hint: "Allergies and intolerances",
-        type: "textarea",
-    },
-    {
-        name: "Meds",
-        hint: "Medicine and antibiotics",
-        type: "textarea",
-    },
-];
-
-const structCreation = [
+		
+const structProcess = [
 	{
 		name: "glaze",
 		type: "array",
@@ -267,60 +209,6 @@ const structCreation = [
 	}
 ];
 				
-const structMission = [
-    {
-        name: "Logo",
-        hint: "logo for this organization/mission -- ~150x50 pixels",
-        type: "image",
-        none: "images/DCTOHC11.jpg",
-    } , 
-    {
-        name: "Name",
-        hint: "Name of Mission",
-        type: "text",
-    } , 
-    {
-        name: "Organization",
-        hint: "Mission organization",
-        type: "text",
-    } , 
-    {
-        name: "Mission",
-        hint: "Mission Name",
-        type: "text",
-    },
-    {
-        name: "Link",
-        hint: "Web page of organization or mission",
-        type: "url",
-    } , 
-    {
-        name: "Location",
-        hint: "Where is the mission?",
-        type: "text",
-    },
-    {
-        name: "StartDate",
-        hint: "First day of mission",
-        type: "date",
-    },
-    {
-        name: "EndDate",
-        hint: "Last day of mission",
-        type: "date",
-    },
-    {
-        name: "LocalContact",
-        hint: "Who and how to contact local facility",
-        type: "textarea",
-    },
-    {
-        name: "Emergency",
-        hint: "Emergency contact",
-        type: "textarea",
-    },
-];
-
 // Create pouchdb indexes.
 // Used for links between records and getting list of choices
 // change version number to force a new version
@@ -888,7 +776,7 @@ class RemoteDatabaseInput extends Pagelist {
     static subshow(extra="") {
         const doc = Object.assign({},remoteCouch) ;
         doc.raw = "fixed";
-        objectPotData = new DatabaseData( doc, structRemoveUser );
+        objectPotData = new DatabaseData( doc, structRemoteUser );
     }
 }
 
@@ -1120,7 +1008,7 @@ class PotProcess extends Pagelist {
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordId(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structCreation ) )
+            .then( (doc) => objectPotData = new PotData( doc, structProcess ) )
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
