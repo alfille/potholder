@@ -639,8 +639,12 @@ class Pot extends SimplePot { // convenience class
 		document.getElementById("HiddenFile").click() ;
 	}
 
-	newPhoto() {
+	newPhoto(target) {
+		console.log("THIS",this);
+		console.log("TARGET",target);
 		let inp = document.getElementById("HiddenFile") ;
+		console.log("INP",inp);
+		console.log("INP.files",inp.files);
 		if ( inp.files.length == 0 ) {
 			return ;
 		}
@@ -649,25 +653,37 @@ class Pot extends SimplePot { // convenience class
             objectPot.select( potId );
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
+				// make sure basic structure is there
+				if ( !("_attachments" in doc) ) {
+					doc._attachments={} ;
+				}
+				if ( !("images" in doc) ) {
+					doc.images=[] ;
+				}
+				console.log("DOC",doc);
+				console.log("FILES",files);
 				
 				// add number of pictures to picture button 
 				inp.files.forEach( f => {
-					
+					// Add to doc
+					doc._attachments[f.name]={
+						data: f,
+						content_type: f.type,
+					} ;
+					doc.images.push( {
+						name: f.name,
+						comment: "",
+						date: new Date().toISOString(),
+						} );
 					})
+					db.put(doc) ;
 				})
             .catch( (err) => {
                 objectLog.err(err);
-                });
+                })
+            .finally( () => inp.value = "" ) ;
         }
-		for inp.files
-		// file object
-		console.log("IMAGE FILES",files);
-		files.files.forEach( f => {
-			const name = f.name;
-			const s = URL.createObjectURL(f);
-			this.Imap.set(f.name,s);
-			PotImages.srcList.push(s);
-		});
+	}
 
     menu( doc, notelist, onum=0 ) {
         let d = document.getElementById("PatientPhotoContent2");
