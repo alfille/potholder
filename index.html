@@ -15,6 +15,7 @@
     <body>
         <header class="work_screen">
             <div id="headerbox">
+				<input type="file" id="HiddenFile" accept="image/*" class="imageBar" capture="environment" onChange="objectPot.newPhto()>
                 <div class="headerboxlink mainOnly"><img class="potholderLogo" src="images/potholder.png"></div>
                 <div id="buttonheader">
                     <!-- top: MainMenu FirstTime -->
@@ -22,6 +23,7 @@
                     </div>
                     <!-- top: PotMenu -->
                     <div class= "PotMenu topButtons pageOverlay">
+						<button type="button" class="divbutton" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Return</button>
                     </div>
                     <!-- top: QuickPhoto -->
@@ -49,12 +51,19 @@
                         <button type="button" class="divbutton" onclick="objectPage.show( 'MainMenu' )">Main Menu</button>
                     </div>
                     <!-- top: PotNew -->
-                    <div class="PotData PotNew topButtons pageOverlay">
+                    <div class="PotNew topButtons pageOverlay">
+                        <button type="button" class="divbutton edit_data">Edit</button>
+                        <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
+                    </div>
+                    <!-- top: PotData -->
+                    <div class="PotData topButtons pageOverlay">
+						<button type="button" class="divbutton" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
                     </div>
                     <!-- top: PotEdit PotProcess PotPix -->
                     <div class="PotData PotEdit PotProcess topButtons PotPix pageOverlay">
+						<button type="button" class="divbutton" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                     </div>

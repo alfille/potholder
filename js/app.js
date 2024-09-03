@@ -588,6 +588,87 @@ class Pot extends SimplePot { // convenience class
         TitleBox();
     }
 
+    template(category=objectNoteList.category) {
+        if ( category=='' ) {
+            category = 'Uncategorized' ;
+        }
+        return {
+            _id: Id_note.makeId(),
+            text: "",
+            title: "",
+            author: remoteCouch.username,
+            type: "note",
+            category: category,
+            date: new Date().toISOString(),
+        };
+    }
+
+    quickPhoto() {
+        if ( objectPot.isSelected() ) {
+            objectPot.select( potId );
+            objectPot.getRecordIdPix(potId,true)
+            .then( (doc) => {
+				// add number of pictures to picture button 
+				})
+            .catch( (err) => {
+                objectLog.err(err);
+                objectPage.show( "back" );
+                });
+        } else {
+            objectPage.show( "back" );
+        }
+
+        let inp = document.getElementById("QuickPhotoContent");
+        cloneClass( ".imagetemplate_quick", inp );
+        let doc = this.template();
+        let img = new ImageQuick( inp, doc );
+        function handleImage() {
+            img.handleImage();
+            img.save(doc);
+            db.put(doc)
+            .then( () => this.getRecordsId(potId) ) // to try to prime the list
+            .catch( err => objectLog.err(err) )
+            .finally( objectPage.show( null ) );
+        }
+        img.display_image();
+        img.addListen(handleImage);
+        img.getImage();
+    }
+    
+    pushPixButton() {
+		document.getElementById("HiddenFile").click() ;
+	}
+
+	newPhoto() {
+		let inp = document.getElementById("HiddenFile") ;
+		if ( inp.files.length == 0 ) {
+			return ;
+		}
+		let members = structImages.members ;
+        if ( objectPot.isSelected() ) {
+            objectPot.select( potId );
+            objectPot.getRecordIdPix(potId,true)
+            .then( (doc) => {
+				
+				// add number of pictures to picture button 
+				inp.files.forEach( f => {
+					
+					})
+				})
+            .catch( (err) => {
+                objectLog.err(err);
+                });
+        }
+		for inp.files
+		// file object
+		console.log("IMAGE FILES",files);
+		files.files.forEach( f => {
+			const name = f.name;
+			const s = URL.createObjectURL(f);
+			this.Imap.set(f.name,s);
+			PotImages.srcList.push(s);
+		});
+
     menu( doc, notelist, onum=0 ) {
         let d = document.getElementById("PatientPhotoContent2");
         let inp = new ImageImbedded( d, doc, NoPhoto );
@@ -1467,6 +1548,50 @@ class NoteLister {
     }
 }
 
+/*
+function quickPhoto() {
+	if ( objectPot.isSelected() ) {
+		objectPot.select( potId );
+		objectPot.getRecordIdPix(potId,true)
+		.then( (doc) => {
+			const isAndroid() = () => navigator.userAgent.toLowerCase().indexOf("android") > -1 ;
+			let inp = document.getElementById("HiddenFile");
+			let struct = structImages.members;
+			if ( isAndroid() ) {
+				inp.removeAttribute("capture");
+			} else {
+				inp.setAttribute("capture","environment");
+			}
+			inp.click() ;
+			// add number of pictures to picture button 
+			})
+		.catch( (err) => {
+			objectLog.err(err);
+			objectPage.show( "back" );
+			});
+	} else {
+		objectPage.show( "back" );
+	}
+
+	let inp = document.getElementById("QuickPhotoContent");
+	cloneClass( ".imagetemplate_quick", inp );
+	let doc = this.template();
+	let img = new ImageQuick( inp, doc );
+	function handleImage() {
+		img.handleImage();
+		img.save(doc);
+		db.put(doc)
+		.then( () => this.getRecordsId(potId) ) // to try to prime the list
+		.catch( err => objectLog.err(err) )
+		.finally( objectPage.show( null ) );
+	}
+	img.display_image();
+	img.addListen(handleImage);
+	img.getImage();
+}
+*/
+
+
 function parseQuery() {
     // returns a dict of keys/values or null
     let url = new URL(location.href);
@@ -1507,6 +1632,8 @@ function URLparse() {
         window.location.href = "/index.html" ;
     }
 }
+
+
 
 // Application starting point
 window.onload = () => {

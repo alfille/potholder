@@ -596,6 +596,45 @@ class PotData extends PotDataRaw {
     constructor(doc,struct) {
         super(false,doc,struct); // clicked = false
     }
+    dropPictureinNote( target ) {
+            // Optional.   Show the copy icon when dragging over.  Seems to only work for chrome.
+        target.addEventListener('dragover', e => {
+            e.stopPropagation();
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+            });
+
+        // Get file data on drop
+        target.addEventListener('drop', e => {
+            e.stopPropagation();
+            e.preventDefault();
+            // Array of files
+            Promise.all(
+                Array.from(e.dataTransfer.files)
+                .filter( file => file.type.match(/image.*/) )
+                .map( file => {
+                    let reader = new FileReader();
+                    reader.onload = e2 =>
+                        fetch(e2.target.result)
+                        .then( b64 => b64.blob() )
+                        .then( blb => {
+                            let doc = this.template();
+                            new ImageDrop(blb).save(doc);
+                            return db.put(doc);
+                            });
+                    reader.readAsDataURL(file); // start reading the file data.
+                    }))
+                    .then( () => this.getRecordsId(potId) ) // refresh the list
+                    .catch( err => objectLog.err(err,"Photo drop") )
+                    .finally( () => {
+                        if (objectNoteList.category=='Uncategorized') {
+                            objectPage.show( "NoteList" );
+                        } else {
+                            objectPage.show( "NoteListCategory",objectNoteList.category );
+                        }
+                        });
+            });
+    }
 }
 
 class PotDataEditMode extends PotDataRaw {
