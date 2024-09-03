@@ -7,6 +7,7 @@
  * */
  
 export {
+	PotImages,
     ImageDrop,
     ImageImbedded,
     ImageNote,
@@ -31,6 +32,52 @@ class PotImages {
 				PotImages.srcList.push(s);
 				});
 		}
+	}	
+	
+	number() {
+		return this.Imap.size;
+	}
+	
+	getByName(name) {
+		return this.Imap.get(name)??null;
+	}
+	
+	delByName(name) {
+		// srcList corrected later
+		this.Imap.delete(name);
+	}
+	
+	exists(name) {
+		return this.Imap.has(name) ;
+	}
+	
+	add(files) {
+		// file object
+		console.log("IMAGE FILES",files);
+		files.files.forEach( f => {
+			const name = f.name;
+			const s = URL.createObjectURL(f);
+			this.Imap.set(f.name,s);
+			PotImages.srcList.push(s);
+		});
+	}
+	
+    display( name ) {
+		const img = document.createElement( "img" ) ;
+		img.src=this.Imap.get(name) ;
+		img.classList.add("entryfield_image");
+		img.onclick=()=>{
+			let big = document.querySelector( ".FloatPicture" );
+			big.src= this.Imap.get(name) ;
+			big.onclick=()=>{
+				big.src = "" ;
+				big.style.display = "none" ;
+			}
+			big.style.display = "block" ;
+		}
+		return img ;
+	}
+		
 }
 
 class ImageImbedded {
@@ -228,6 +275,7 @@ class ImageImbedded {
         return this.upload_image != null;
     }
 }
+
 globalThis. ImageImbedded = ImageImbedded ;
 
 class ImageNote extends ImageImbedded {

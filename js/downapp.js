@@ -16,6 +16,7 @@ import {
     } from "./globals_mod.js" ;
 
 import {
+	PotImages,
     ImageImbedded,
     } from "./image_mod.js" ;
 

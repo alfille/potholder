@@ -17,6 +17,7 @@ import {
     } from "./globals_mod.js" ;
 
 import {
+	PotImages,
     ImageDrop,
     ImageImbedded,
     ImageNote,
@@ -520,22 +521,26 @@ class Pot extends SimplePot { // convenience class
 	potname( doc ) {
 		return (doc?.Name)?doc.Name:`${doc?.type} ${Id_pot.splitId(doc._id).rand}`;
 	}
+	
     del() {
         if ( this.isSelected() ) {        
             this.getRecordIdPix(potId)
             .then( (doc) => {
                 // Confirm question
-                let c = `Delete pot ${this.potname(doc)}?\n`;
-                c += "Are you sure?";
-                if ( confirm(c) ) {
+				if (confirm(`WARNING -- about to delete this piece\n ${this.potname(doc)}\nPress CANCEL to back out`)==true) {
 					return db.remove(doc) ;
-                } else {
-                    throw "No delete";
-                }           
-                })
+				} else {
+					throw "Cancel";
+				}           
+			})
             .then( _ => this.unselect() )
-            .catch( (err) => objectLog.err(err) ) 
-            .finally( _ => objectPage.show( "back" ) );
+            .then( _ => objectPage.show( "back" ) )
+            .catch( (err) => {
+				if (err != "Cancel" ) {
+					objectLog.err(err);
+					objectPage.show( "back" ) ;
+				}
+			});
         }
     }
 
@@ -1019,18 +1024,13 @@ class PotProcess extends Pagelist {
     }
 }
 
-class PatientPhoto extends Pagelist {
+class PotPix extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.select( potId );
-            let pdoc;
-            let onum ;
-            objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => pdoc = doc )
-            .then( _ => objectNote.getRecordsIdDoc(potId) )
-            .then ( (notelist) => objectPot.menu( pdoc, notelist, onum ) )
+            objectPot.getRecordId(potId,true)
+            .then( (doc) => objectPotData = new PotData( doc, structImages ) )
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -1081,37 +1081,6 @@ class SearchList extends Pagelist {
     static subshow(extra="") {
         objectTable = new SearchTable() ;
         objectSearch.setTable();
-    }
-}
-
-class SelectPatient extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        document.getElementById("headerbox").style.display = "none"; // make less confusing
-        document.getElementById("titlebox").style.display = "none"; // make less confusing
-        document.getElementById("footerflex").style.display = "none"; // make less confusing
-        objectTable = new SelectPatientTable();
-        let nnum = {} ;
-        objectNote.getAllIdDoc() // Notes
-        .then( doclist => doclist.rows
-            .forEach( d => {
-                let p = d.doc.patient_id;
-                if (p in nnum ) {
-                    ++ nnum[p];
-                } else {
-                    nnum[p] = 1 ;
-                }
-                }))
-        .then( _ => objectPot.getAllIdDoc(true) ) // Patients
-        .then( (docs) => {
-            docs.rows
-            .forEach( d => {
-                d.doc.Notes = nnum[d.id]??0 ;
-            })
-            objectTable.fill(docs.rows );
-            })
-        .catch( (err) => objectLog.err(err) );
     }
 }
 
@@ -1197,10 +1166,6 @@ class Page { // singleton class
         }
 
         this.next(page) ; // place in reversal list
-
-        if ( this.current() == "SelectPatient" ) {
-            this.show("MainMenu");
-        }
 
         // clear display objects
         objectPotData = null;

@@ -15,6 +15,10 @@ export {
 import {
     cloneClass,
     } from "./globals_mod.js" ;
+
+import {
+	PotImages,
+    } from "./image_mod.js" ;
     
 // data entry page type
 // except for Noteslist and some html entries, this is the main type
@@ -22,6 +26,7 @@ class PotDataRaw { // singleton class
     constructor(click,doc,struct) {
         // args is a list of "docs" to update"
         this.parent = document.getElementById("PotDataContent");
+        this.Images = new PotImages(doc);
         
         this.doc = doc;
         this.struct = struct;
@@ -77,10 +82,11 @@ class PotDataRaw { // singleton class
 		let textnode="";
 		switch( item.type ) {
 			case "image":
-				textnode = document.createElement("div");
-				cloneClass( ".imagetemplate", textnode ) ;
-				let img = new ImageImbedded( textnode, doc, item?.none ) ;
-				img.display_image() ;
+				if ( preVal && this.Images,exists(preVal) ) {
+					textnode = this.Images.display(preVal) ;
+				} else {
+					textnode = document.createTextNode( "No Image" );
+				}
 				break ;
 
 			case "checkbox":
