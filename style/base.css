@@ -107,6 +107,10 @@ ul {
   appearance: none;
 }
 
+.Camera {
+  background: purple;
+}
+
 .divbutton:disabled {
   color: grey;
   background: #9eb6ff ;
@@ -123,17 +127,86 @@ ul {
   background: red;
   float: right;
 }
-.entryfield_image {
-  max-width: 20%;
+.small_pic {
+  max-height: 60px;
+  cursor: pointer;
+  transition: 0.3s;
   display: inline-block;
-  height: auto ;
+  width: auto ;
+  border-radius: 5px;
 }
-.entryfield_image:hover {
-    position:relative;
-    width:40%;
-    height:auto;
-    display:block;
-    z-index:9;
+.small_pic:hover {
+  opacity: 0.7;
+}
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image */
+#modal_caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #modal_caption {  
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform: scale(0.1)} 
+  to {transform: scale(1)}
+}
+
+/* The Close Button */
+#modal_close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+#modal_close:hover,
+#modal_close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+  .modal-content {
+    width: 100%;
+  }
 }
 .FloatPicture {
     position: absolute;
@@ -145,13 +218,6 @@ ul {
     top: 0px;
     max-height: auto ;
     max-width: 100% ;
-}
-@media only and (orientation: landscape) {
-  .entryfield_image {
-    max-height: 20%;
-    display: inline-block;
-    width: auto ;
-  }
 }
 @media print {
     header, footer, aside, form {
@@ -224,11 +290,6 @@ body {
   display: none ;
 }
 
-.NoteList li:nth-child(odd) {
-  font-style: italic;
-  display: flex;
-  width: 100%;
-}
 #userbutton, #remotebutton {
   background: #99ddff;
 }
@@ -369,7 +430,7 @@ legend {
   margin-left: 5px;
   margin-right: 5px;
 }
-#PatientPhotoButtons0, .MainMenuRow{
+.MainMenuRow{
   display: flex;
   color: white;
   background: inherit;
@@ -385,12 +446,6 @@ legend {
 .MainItalic {
   font-style: italic;
   color: #d0d0d0;
-}
-#NoteFieldset {
-  background: #a581ed;
-}
-#NoteFieldset legend {
-  color: white;
 }
 #PatientPhotoButtons1{
   display: flex;
@@ -425,18 +480,6 @@ legend {
 }
 .work_screen {
     display: none ;
-}
-#photoCard {
-  max-height: 200px;
-  display: inline-block;
-  width: auto ;
-}
-#UserNameContent {
-  background: #5e6cc7;
-  color: white;
-  display: flex ;
-  justify-content: center;
-  align-items: center;
 }
 #footer {
   color: darkblue;

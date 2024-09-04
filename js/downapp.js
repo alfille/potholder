@@ -17,13 +17,11 @@ import {
 
 import {
 	PotImages,
-    ImageImbedded,
     } from "./image_mod.js" ;
 
 import {
     Id,
     Id_pot,
-    Id_note,
     } from "./id_mod.js";
 
 import {
@@ -33,7 +31,6 @@ import {
     } from "./log_mod.js" ;
 
 import {
-    SimplePatient,
     SimplePot,
     } from "./simple_mod.js" ;
     
@@ -491,16 +488,12 @@ class Page { // singleton class
         window.open( new URL(`/book/${this.current()}.html`,location.href).toString(), '_blank' );
     } 
     
-    show( page = "AllPatients", extra="" ) { // main routine for displaying different "pages" by hiding different elements
+    show( page = "AllPieces", extra="" ) { // main routine for displaying different "pages" by hiding different elements
         if ( db == null || credentialList.some( c=> remoteCouch[c]=='' ) ) {
             this.show("FirstTime");
         }
 
         this.next(page) ; // update reversal list
-
-        // clear old image urls
-        ImageImbedded.clearSrc() ;
-        ImageImbedded.clearSrc() ;
 
         this.show_screen( "screen" ); // basic page display setup
 

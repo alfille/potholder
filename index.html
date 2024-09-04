@@ -15,7 +15,7 @@
     <body>
         <header class="work_screen">
             <div id="headerbox">
-				<input type="file" id="HiddenFile" accept="image/*" class="imageBar" capture="environment" onChange="objectPot.newPhoto()">
+				<input type="file" id="HiddenFile" accept="image/*" class="imageBar" onchange="objectPot.newPhoto()" capture="environment">
                 <div class="headerboxlink mainOnly"><img class="potholderLogo" src="images/potholder.png"></div>
                 <div id="buttonheader">
                     <!-- top: MainMenu FirstTime -->
@@ -23,17 +23,8 @@
                     </div>
                     <!-- top: PotMenu -->
                     <div class= "PotMenu topButtons pageOverlay">
-						<button type="button" class="divbutton" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
+						<button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Return</button>
-                    </div>
-                    <!-- top: QuickPhoto -->
-                    <div class= "QuickPhoto topButtons pageOverlay">
-                        <button type="button" class="divbutton return" onclick="objectPage.show('back')">Return</button>
-                    </div>
-                    <!-- top: AllPatients -->
-                    <div class="AllPatients topButtons pageOverlay">
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new patient entry">Add Patient</button>
                     </div>
                     <!-- top: AllPieces -->
                     <div class="AllPieces topButtons pageOverlay">
@@ -57,37 +48,24 @@
                     </div>
                     <!-- top: PotData -->
                     <div class="PotData topButtons pageOverlay">
-						<button type="button" class="divbutton" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
+						<button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
                     </div>
                     <!-- top: PotEdit PotProcess PotPix -->
                     <div class="PotData PotEdit PotProcess topButtons PotPix pageOverlay">
-						<button type="button" class="divbutton" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
+						<button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                     </div>
                     <!-- top: InvalidPatient -->
                     <div class="InvalidPatient topButtons pageOverlay">
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'AllPatients' )">Return</button>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'AllPieces' )">Return</button>
                     </div>
                     <!-- top: ErrorLog -->
                     <div class="ErrorLog topButtons pageOverlay">
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton delete" onclick="objectLog.clear()">Erase Log</button>
-                    </div>
-                    <!-- top: NoteList -->
-                    <div class="NoteList topButtons pageOverlay">
-                        <button class="create_note libutton divbutton" type="button" onclick="objectPage.show( 'NoteNew' )">New Note</button>
-                        <button class="createtheimage libutton divbutton Qphoto" type="button">&#128247;</button>
-                        <button class="returnfromnote libutton divbutton return" type="button" onclick="objectPage.show( 'back' )">Return</button>
-                    </div>
-                    <!-- top: NoteListCategory -->
-                    <div class="NoteListCategory topButtons pageOverlay">
-                        <button class="create_note libutton divbutton" type="button" onclick="objectPage.show( 'NoteNew' )">New Note</button>
-                        <button class="createtheimage libutton divbutton Qphoto" type="button">&#128247;</button>
-                        <button class="libutton divbutton" type="button" onclick="objectPage.show('NoteList')">All Notes</button>
-                        <button class="returnfromnote libutton divbutton return" type="button" onclick="objectPage.show( 'back' )">Return</button>
                     </div>
                     <!-- top: EditMode (for any of the PotData derivatives -->
                     <div class="potDataEdit pageOverlay">
@@ -158,12 +136,6 @@
                     <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'RemoteDatabaseInput' )">Setup</button>
                 </div>
             </div>
-            <!-- body: AllPatients -->
-            <div class="AllPatients pageOverlay">
-                <div id="PatientListContent" >
-                    <table id="AllPatients"></table>
-                </div>
-            </div>
             <!-- body: AllPiecess -->
             <div class="AllPieces pageOverlay">
                 <div id="AllPiecesContent" >
@@ -208,27 +180,15 @@
                 <div id="InvalidPatientContent" >
                     <H2>Not a valid patient ID</H2>
                     <p>Possble causes include your data not yet synced, or changes since this patient was selected</p>
-                    <center><button type="button" class="divbutton" onclick="objectPage.show('AllPatients')">Ok</button></center>
+                    <center><button type="button" class="divbutton" onclick="objectPage.show('AllPieces')">Ok</button></center>
                 </div>
-            </div>
-            <!-- body: NoteList NoteListCategory -->
-            <div class="NoteList NoteListCategory pageOverlay">
-                <div id="NoteListContent"></div>
-            </div>
-            <!-- body: NoteNew (quick note) -->
-            <div class="NoteNew pageOverlay">
-                <div id="NoteNewContent"></div>
             </div>
             <!-- body: ErrorLog -->
             <div class="ErrorLog pageOverlay">
                 <div id="ErrorLogContent"></div>
             </div>
-            <!-- body: QuickPhoto (quick photo) -->
-            <div class="QuickPhoto pageOverlay">
-                <div id="QuickPhotoContent"></div>
-            </div>
             <!-- body: FloatPicture -->
-            <img class="FloatPicture pageOverlay" onclick="ImageImbedded.hideBigPicture(this)">
+            <img class="FloatPicture pageOverlay">
             <!-- body: Administration -->
             <div class="Administration pageOverlay">
                 <div id="AdministrationContent" class="buttonmenu" >
@@ -245,122 +205,6 @@
         <!-- copyable parts -->
         <div id="templates" class="pageOverlay">
            <div class="notelabel"><button class="edit_note libutton" type="button">Edit</button> <input type="text" class="flatpickr flatpickr-input" name="dummy" readonly><div class="inly"></div></div>
-            <!-- Image display -->
-            <div class="imagetemplate">
-                <img class="entryfield_image">
-            </div>
-            <!-- Image edit -->
-            <div class="imagetemplate_edit">
-                <img class="entryfield_image">
-                <div class="editToolbar">
-                    <button type="button" class="imageGet" title="Get image"><span><B>&#128247;</B></span></button>            
-                    <button type="button" class="imageRemove" title="Remove image"><span><B>&#128473;&#128247;</B></span></button>
-                    <input type="file" accept="image/*" class="imageBar" capture="environment">
-                </div>
-            </div>
-            <!-- Quick Photo -->
-            <div class="imagetemplate_quick">
-                <img class="entryfield_image">
-                <div class="photoToolbar">
-                    <button type="button" class="imageGet" title="Get image"><span><B>&#128247;</B></span></button>            
-                    <input type="file" accept="image/*" class="imageBar" capture="environment">
-                </div>
-            </div>
-            <!-- Note display -->
-            <div class="notetemplate">
-                <img class="entryfield_image">
-                <div class="entryfield_file">
-                    File: <a><B>&#x1F5BA; <label></label></B></a>
-                </div>
-                <div class="titlediv">
-                    <label>Title: <div class="entryfield_title choice" contenteditable></div></label>
-                    <label class="selectdiv">Type
-                        <select disabled name="dummy1">
-                            <option>Uncategorized</option>
-                            <option>Pre Op</option>
-                            <option>Anesthesia</option>
-                            <option>Op Note</option>
-                            <option>Post Op</option>
-                            <option>Followup</option>
-                        </select>
-                    </label>
-                </div>
-                <div class="entryfield_text"></div>
-            </div>
-            <!-- Note edit -->
-            <div class="notetemplate_edit">
-                <img class="entryfield_image">
-                <div class="entryfield_file">
-                    File: <a><B>&#x1F5BA; <label></label></B></a>
-                </div>
-                <div class="editToolbar">
-                    <button type="button" class="imageSave" title="Save this note"><span><B>Save</B></span></button>
-                    <button type="button" class="imageCancel" title="Do not save any changes"><span><B>Cancel</B></span></button>
-                    <button type="button" class="imageGet" title="Get image"><span><B>&#128247;</B></span></button>            
-                    <button type="button" class="imageRemove" title="Remove image"><span><B>&#128473;&#128247;</B></span></button>
-                    <button type="button" class="fileGet" title="Get file"><span><B>&#x1F5BA;</B></span></button>            
-                    <button type="button" class="fileRemove" title="Remove file"><span><B>&#128473;&#x1F5BA;</B></span></button>
-                    <button type="button" class="imageDelete delete" title="Delete this note"><span><B>Delete</B></span></button>
-                    <input type="file" accept="image/*" class="imageBar" capture="environment">
-                    <input type="file" accept="*" class="fileBar">
-                </div>
-                <div class="titlediv">
-                    <label>Title: <div class="entryfield_title choice" contenteditable></div></label>
-                    <label class="selectdiv">Type
-                        <select name="dummy2">
-                            <option>Uncategorized</option>
-                            <option>Pre Op</option>
-                            <option>Anesthesia</option>
-                            <option>Op Note</option>
-                            <option>Post Op</option>
-                            <option>Followup</option>
-                        </select>
-                    </label>
-                </div>
-                <div class="entryfield_text" contenteditable></div>
-            </div>
-            <!-- New Note edit -->
-            <div class="newnotetemplate_edit">
-                <img class="entryfield_image">
-                <div class="entryfield_file">
-                    File: <a><B>&#x1F5BA; <label></label></B></a>
-                </div>
-                <div class="editToolbar choice">
-                    <button type="button" class="imageSave" title="Save this note"><span><B>Save</B></span></button>
-                    <button type="button" class="imageCancel" title="Do not save any changes"><span><B>Cancel</B></span></button>
-                    <button type="button" class="imageGet" title="Get image"><span><B>&#128247;</B></span></button>            
-                    <button type="button" class="imageRemove" title="Remove image"><span><B>&#128473;&#128247;</B></span></button>
-                    <button type="button" class="fileGet" title="Get file"><span><B>&#x1F5BA;</B></span></button>            
-                    <button type="button" class="fileRemove" title="Remove file"><span><B>&#128473;&#x1F5BA;</B></span></button>
-                    <input type="file" accept="image/*" class="imageBar" capture="environment">
-                    <input type="file" accept="*" class="fileBar">
-                </div>
-                <div class="titlediv">
-                    <label>Title: <div class="entryfield_title choice" contenteditable></div></label>
-                    <label class="selectdiv">Type
-                        <select name="dummy3">
-                            <option>Uncategorized</option>
-                            <option>Pre Op</option>
-                            <option>Anesthesia</option>
-                            <option>Op Note</option>
-                            <option>Post Op</option>
-                            <option>Followup</option>
-                        </select>
-                </div>
-                <div class="entryfield_text choice" contenteditable></div>
-            </div>
-            <fieldset class="noteFieldset">
-                <legend>
-                    <button type="button" class="triggerbutton">&#10134;</button>
-                    <span class="yearspan">Year</span>
-                    <span class="yearnumber"># notes</span>
-                </legend>
-            </fieldset>
-            <span class="emptynotelist">
-                <br>
-                <center>Add a note, or picture, or drag an image here</center>
-                <br>
-            </span>
             <!-- Property Array Table Caption -->
             <div class="Darray">
 				<table class="Darray_table">
@@ -416,7 +260,13 @@
             <hr>
             </center></b>
         </div>
-        
+		 <!-- The Modal https://www.w3schools.com/css/tryit.asp?filename=trycss_image_modal_js -->
+		<div id="modal_id" class="modal">
+		  <span id="modal_close">&times;</span>
+		  <img class="modal-content" id="modal_img">
+		  <div id="modal_caption"></div>
+		</div>
+       
         <!-- scripts -->
         <!-- pouchdb --> <script src="js/pouchdb-9.0.0.min.js"></script>
         <!-- qr --> <script src="js/qrenc-4.0.0.min.js"></script>

@@ -9,7 +9,6 @@
 export {
     Id,
     Id_pot,
-    Id_note,
 } ;
 
 class Id {
@@ -91,9 +90,3 @@ class Id_pot extends Id{
     }
 }
 
-class Id_note extends Id{
-    static type = "c";        
-    static splitId( id=noteId ) {
-        return super.splitId(id);
-    }
-}

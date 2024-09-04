@@ -18,16 +18,11 @@ import {
 
 import {
 	PotImages,
-    ImageDrop,
-    ImageImbedded,
-    ImageNote,
-    ImageQuick,
     } from "./image_mod.js" ;
 
 import {
     Id,
     Id_pot,
-    Id_note,
     } from "./id_mod.js";
 
 import {
@@ -47,9 +42,7 @@ import {
     } from "./log_mod.js" ;
 
 import {
-    SimplePatient,
     SimplePot,
-    SimpleNote,
     } from "./simple_mod.js" ;
     
 import {
@@ -169,7 +162,7 @@ const structImages = [
 	{
 		name:  "images",
 		alias: "Images",
-		type:  "list",
+		type:  "image_array",
 		members: [
 			{
 				name:  "image",
@@ -215,20 +208,6 @@ const structProcess = [
 // change version number to force a new version
 function createQueries() {
     let ddoclist = [
-    {
-        _id: "_design/bySurgeon" ,
-        version: 2,
-        views: {
-            bySurgeon: {
-                map: function( doc ) {
-                    if ( doc.type=="operation" ) {
-                        emit( doc.Surgeon );
-                    }
-                }.toString(),
-                reduce: '_count',
-            },
-        },
-    },
     {
 		_id: "_design/qGlaze",
 		version: 1,
@@ -336,42 +315,6 @@ function createQueries() {
                     }
                 }.toString(),
                 reduce: '_count',
-            },
-        },
-    }, 
-    {
-        _id: "_design/Doc2Pid" ,
-        version: 0,
-        views: {
-            Doc2Pid: {
-                map: function( doc ) {
-                    if ( doc.type=="patient" || doc.type=="mission" ) {
-                        emit( doc._id,doc._id );
-                    } else {
-                        emit( doc._id,doc.patient_id );
-                    }
-                }.toString(),
-            },
-        },
-    }, 
-    {
-        _id: "_design/Pid2Name" ,
-        version: 2,
-        views: {
-            Pid2Name: {
-                map: function( doc ) {
-                    if ( doc.type=="patient" ) {
-                        emit( doc._id, [
-                            `${doc.FirstName} ${doc.LastName}`,
-                            `Patient: <B>${doc.FirstName} ${doc.LastName}</B> DOB: <B>${doc.DOB}</B>`
-                            ]);
-                    } else if ( doc.type=="mission" ) {
-                        emit( doc._id, [
-                            `${doc.Organization??""} ${doc.Name??doc._id}`,
-                            `Mission: <B>${doc.Organization??""}: ${doc.Name??""}</B> to <B>${doc.Location??"?"}</B> on <B>${[doc.StartDate,doc.EndDate].join("-")}</B>`
-                            ]);
-                    }
-                }.toString(),
             },
         },
     }, 
@@ -588,63 +531,12 @@ class Pot extends SimplePot { // convenience class
         TitleBox();
     }
 
-    template(category=objectNoteList.category) {
-        if ( category=='' ) {
-            category = 'Uncategorized' ;
-        }
-        return {
-            _id: Id_note.makeId(),
-            text: "",
-            title: "",
-            author: remoteCouch.username,
-            type: "note",
-            category: category,
-            date: new Date().toISOString(),
-        };
-    }
-
-    quickPhoto() {
-        if ( objectPot.isSelected() ) {
-            objectPot.select( potId );
-            objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => {
-				// add number of pictures to picture button 
-				})
-            .catch( (err) => {
-                objectLog.err(err);
-                objectPage.show( "back" );
-                });
-        } else {
-            objectPage.show( "back" );
-        }
-
-        let inp = document.getElementById("QuickPhotoContent");
-        cloneClass( ".imagetemplate_quick", inp );
-        let doc = this.template();
-        let img = new ImageQuick( inp, doc );
-        function handleImage() {
-            img.handleImage();
-            img.save(doc);
-            db.put(doc)
-            .then( () => this.getRecordsId(potId) ) // to try to prime the list
-            .catch( err => objectLog.err(err) )
-            .finally( objectPage.show( null ) );
-        }
-        img.display_image();
-        img.addListen(handleImage);
-        img.getImage();
-    }
-    
     pushPixButton() {
 		document.getElementById("HiddenFile").click() ;
 	}
 
-	newPhoto(target) {
-		console.log("THIS",this);
-		console.log("TARGET",target);
+	newPhoto() {
 		let inp = document.getElementById("HiddenFile") ;
-		console.log("INP",inp);
-		console.log("INP.files",inp.files);
 		if ( inp.files.length == 0 ) {
 			return ;
 		}
@@ -661,23 +553,32 @@ class Pot extends SimplePot { // convenience class
 					doc.images=[] ;
 				}
 				console.log("DOC",doc);
-				console.log("FILES",files);
+				console.log("INP",inp.files);
 				
 				// add number of pictures to picture button 
-				inp.files.forEach( f => {
+				[...inp.files].forEach( f => {
+					console.log("File",f);
 					// Add to doc
 					doc._attachments[f.name]={
 						data: f,
 						content_type: f.type,
 					} ;
-					doc.images.push( {
-						name: f.name,
-						comment: "",
-						date: new Date().toISOString(),
-						} );
+					const idx = doc.images.findIndex( a => a.image==f.name ) ;
+					if ( idx == -1 ) {
+						// put newest one first
+						doc.images.unshift( {
+							image: f.name,
+							comment: "",
+							date: f.lastModifiedDate.toISOString(),
+							} );
+					} else {
+						// keep comment and name
+						doc.images[idx].date = f.lastModifiedDate.toISOString() ;
+					}
 					})
-					db.put(doc) ;
+					return db.put(doc) ;
 				})
+			.then( () => objectPage.show("PotPix") )
             .catch( (err) => {
                 objectLog.err(err);
                 })
@@ -685,138 +586,9 @@ class Pot extends SimplePot { // convenience class
         }
 	}
 
-    menu( doc, notelist, onum=0 ) {
-        let d = document.getElementById("PatientPhotoContent2");
-        let inp = new ImageImbedded( d, doc, NoPhoto );
-
-        cloneClass( ".imagetemplate", d );
-        inp.display_image();
-        this.buttonSub( "nOps", onum );
-        NoteLister.categorize(notelist);
-        this.buttonSub( "nAll", notelist.rows.length );
-        this.buttonCalcSub( "nPreOp",      "Pre Op",     notelist ) ;
-        this.buttonCalcSub( "nAnesthesia", "Anesthesia", notelist ) ;
-        this.buttonCalcSub( "nOpNote",     "Op Note",    notelist ) ;
-        this.buttonCalcSub( "nPostOp",     "Post Op",    notelist ) ;
-        this.buttonCalcSub( "nFollowup",   "Followup",   notelist ) ;
-    }
-
-    buttonCalcSub( id, cat, notelist ) {
-        this.buttonSub( id, notelist.rows.filter( r=>r.doc.category==cat ).length );
-    }
-
-    buttonSub( id, num ) {
-        let d=document.getElementById(id);
-        d.innerText=d.innerText.replace( /\(.*\)/ , `(${num})` );
-    }
-    
 }
+
 objectPot = new Pot() ;
-
-class Note extends SimpleNote { // convenience class
-    select( nid=noteId ) {
-        // Check patient existence
-        db.get(nid)
-        .then( doc => {
-            objectCookie.set( "noteId", nid );
-            if ( objectPage.test("NoteList") || objectPage.test("NoteListCategory")) {
-                objectNoteList.select() ;
-            }
-            })
-        .catch( err => objectLog.err(err,"note select"));
-    }
-
-    unselect() {
-        objectCookie.del ( "noteId" );
-        if ( objectPage.test("NoteList") || objectPage.test("NoteListCategory")) {
-            document.getElementById("NoteListContent").querySelectorAll("li")
-            .forEach( l => l.classList.remove('choice') );
-        }
-    }
-
-    create() { // new note, not class
-        let d = document.getElementById("NoteNewContent");
-        cloneClass ( ".newnotetemplate_edit", d );
-        objectPage.forget() ;
-        let doc = this.template();
-        let img = new ImageNote( d, doc );
-        img.edit();
-    }
-
-    dropPictureinNote( target ) {
-            // Optional.   Show the copy icon when dragging over.  Seems to only work for chrome.
-        target.addEventListener('dragover', e => {
-            e.stopPropagation();
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'copy';
-            });
-
-        // Get file data on drop
-        target.addEventListener('drop', e => {
-            e.stopPropagation();
-            e.preventDefault();
-            // Array of files
-            Promise.all(
-                Array.from(e.dataTransfer.files)
-                .filter( file => file.type.match(/image.*/) )
-                .map( file => {
-                    let reader = new FileReader();
-                    reader.onload = e2 =>
-                        fetch(e2.target.result)
-                        .then( b64 => b64.blob() )
-                        .then( blb => {
-                            let doc = this.template();
-                            new ImageDrop(blb).save(doc);
-                            return db.put(doc);
-                            });
-                    reader.readAsDataURL(file); // start reading the file data.
-                    }))
-                    .then( () => this.getRecordsId(potId) ) // refresh the list
-                    .catch( err => objectLog.err(err,"Photo drop") )
-                    .finally( () => {
-                        if (objectNoteList.category=='Uncategorized') {
-                            objectPage.show( "NoteList" );
-                        } else {
-                            objectPage.show( "NoteListCategory",objectNoteList.category );
-                        }
-                        });
-            });
-    }
-
-    template(category=objectNoteList.category) {
-        if ( category=='' ) {
-            category = 'Uncategorized' ;
-        }
-        return {
-            _id: Id_note.makeId(),
-            text: "",
-            title: "",
-            author: remoteCouch.username,
-            type: "note",
-            category: category,
-            date: new Date().toISOString(),
-        };
-    }
-
-    quickPhoto() {
-        let inp = document.getElementById("QuickPhotoContent");
-        cloneClass( ".imagetemplate_quick", inp );
-        let doc = this.template();
-        let img = new ImageQuick( inp, doc );
-        function handleImage() {
-            img.handleImage();
-            img.save(doc);
-            db.put(doc)
-            .then( () => this.getRecordsId(potId) ) // to try to prime the list
-            .catch( err => objectLog.err(err) )
-            .finally( objectPage.show( null ) );
-        }
-        img.display_image();
-        img.addListen(handleImage);
-        img.getImage();
-    }
-}
-objectNote = new Note() ;
 
 class Pagelist {
     // list of subclasses = displayed "pages"
@@ -919,26 +691,6 @@ class Help extends Pagelist {
     }
 }
 
-class AllPatients extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        objectTable = new PotTable();
-        let o2pid = {} ; // oplist
-        objectPot.getAllIdDoc(true)
-        .then( (docs) => {
-            docs.rows.forEach( r => Object.assign( r.doc, o2pid[r.id]) );
-            objectTable.fill(docs.rows );
-            if ( objectPot.isSelected() ) {
-                objectPot.select( potId );
-            } else {
-                objectPot.unselect();
-            }
-            })
-        .catch( (err) => objectLog.err(err) );
-    }
-}
-
 class AllPieces extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
@@ -1013,50 +765,6 @@ class ListMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
 
-class NoteListCategory extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        if ( objectPot.isSelected() ) {
-            objectNote.getRecordsIdPix(potId,true)
-            .then( notelist => objectNoteList = new NoteLister(notelist,extra) )
-            .catch( (err) => {
-                objectLog.err(err,`Notelist (${extra})`);
-                objectPage.show( "back" );
-                });
-        } else {
-            objectPage.show( "back" );
-        }
-    }
-}
-
-class NoteList extends NoteListCategory {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        if ( objectPot.isSelected() ) {
-            super.subshow('Uncategorized');
-        } else {
-            objectNote.unselect();
-            objectPage.show( "back" );
-        }
-    }
-}
-
-class NoteNew extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        if ( objectPot.isSelected() ) {
-            // New note only
-            objectNote.unselect();
-            objectNote.create();
-        } else {
-            objectPage.show( "back" );
-        }
-    }
-}
-
 class PotNew extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
@@ -1091,7 +799,7 @@ class PotEdit extends Pagelist {
 
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.getRecordId(potId,true)
+            objectPot.getRecordIdPix(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structNewPot ) )
             .then( _ => console.log("done") )
             .catch( (err) => {
@@ -1109,7 +817,7 @@ class PotProcess extends Pagelist {
 
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.getRecordId(potId,true)
+            objectPot.getRecordIdPix(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structProcess ) )
             .catch( (err) => {
                 objectLog.err(err);
@@ -1126,7 +834,7 @@ class PotPix extends Pagelist {
 
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.getRecordId(potId,true)
+            objectPot.getRecordIdPix(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structImages ) )
             .catch( (err) => {
                 objectLog.err(err);
@@ -1152,20 +860,6 @@ class PotMenu extends Pagelist {
                 objectLog.err(err);
                 objectPage.show( "back" );
                 });
-        } else {
-            objectPage.show( "back" );
-        }
-    }
-}
-
-class QuickPhoto extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static safeLanding  = false ; // don't return here
-
-    static subshow(extra="") {
-        objectPage.forget(); // don't return here!
-        if ( potId ) { // patient or Mission!
-            objectNote.quickPhoto(this.extra);
         } else {
             objectPage.show( "back" );
         }
@@ -1267,10 +961,6 @@ class Page { // singleton class
         // clear display objects
         objectPotData = null;
         objectTable = null;
-
-        // clear old image urls
-        ImageImbedded.clearSrc() ;
-        ImageImbedded.clearSrc() ;
 
         this.show_screen( "screen" ); // basic page display setup
 
@@ -1384,230 +1074,6 @@ class SearchTable extends SortTable {
     }
 }
 
-class NoteLister {
-    constructor( notelist, category="Uncategorized" ) {
-        this.category = category;
-        if ( category == "" ) {
-            this.category = "Uncategorized" ;
-        }
-        NoteLister.categorize(notelist);
-
-        let parent = document.getElementById("NoteListContent") ;
-        parent.innerHTML = "" ;
-
-        // Filter or sort
-        if ( this.category !== 'Uncategorized' ) {
-            // category selected, must filter
-            notelist.rows = notelist.rows.filter( r=>r.doc.category == this.category ) ;
-        }
-
-        // Separate rows into groups by year (and "Undated")
-        this.year={};
-        notelist.rows
-        .forEach( r => {
-            let y = this.yearTitle(r);
-            if ( y in this.year ) {
-                this.year[y].rows.push(r);
-            } else {
-                this.year[y] = { open:false, rows:[r] } ;
-            }
-        });
-        this.yearKeys = Object.keys(this.year).sort() ;
-        
-        let fieldset = document.getElementById("templates").querySelector(".noteFieldset");
-        
-        // show notes
-        if ( notelist.rows.length == 0 ) {
-            parent.appendChild( document.querySelector(".emptynotelist").cloneNode(true) );
-        } else {
-            this.yearKeys.forEach( y => {
-                let fs = fieldset.cloneNode( true ) ;
-                fs.querySelector(".yearspan").innerText = y ;
-                fs.querySelector(".yearnumber").innerText = `(${this.year[y].rows.length})` ;
-                parent.appendChild(fs);
-                let ul = document.createElement('ul');
-                fs.appendChild(ul);
-                this.year[y].rows.forEach( note => {
-                    let li1 = this.liLabel(note);
-                    ul.appendChild( li1 );
-                    let li2 = this.liNote(note,li1);
-                    ul.appendChild( li2 );
-                    });
-                this.close(fs);
-                });
-        }
-
-        // Highlight (and open fieldset) selected note
-        // this includes recently edited or created
-        this.select() ;
-        
-        // if only one year open fieldset
-        if ( this.yearKeys.length == 1 ) {
-            this.open(parent.querySelector("fieldset"));
-        }
-        
-        
-        objectNote.dropPictureinNote( parent );        
-    }
-    
-    open( fs ) {
-        fs.querySelector("ul").style.display=""; // show
-        fs.querySelector(".triggerbutton").innerHTML="&#10134;";
-        fs.querySelector(".triggerbutton").onclick = () => this.close(fs) ;
-    }
-    
-    close( fs ) {
-        fs.querySelector("ul").style.display="none"; // show
-        fs.querySelector(".triggerbutton").innerHTML="&#10133;";
-        fs.querySelector(".triggerbutton").onclick = () => this.open(fs) ;
-    }
-    
-    select() {
-        // select noteId in list and highlight (if there)
-        document.getElementById("NoteListContent")
-        .querySelectorAll("fieldset")
-        .forEach( fs => fs.querySelectorAll("li")
-            .forEach(li=>{
-                if ( li.getAttribute("data-id") == noteId ) {
-                    li.classList.add('choice');
-                    this.open(fs);
-                    li.scrollIntoView();
-                } else {
-                    li.classList.remove('choice');
-                }
-                })
-            ) ;
-    }
-    
-    static categorize( notelist ) {
-        // place categories (if none exist)
-        notelist.rows.forEach(r=> r.doc.category = r.doc?.category ?? "Uncategorized" ); 
-        notelist.rows.forEach(r=> { if (r.doc.category=='') r.doc.category = "Uncategorized" ; } ); 
-    }
-
-    yearTitle(row) {
-        return objectNote.dateFromDoc(row.doc).substr(0,4);
-    }
-        
-    fsclick( target ) {
-        if ( this.yearKeys.length > 1 ) {
-            let ul = target.parentNode.parentNode.querySelector("ul");
-            if ( target.value === "show" ) {
-                // hide
-                target.innerHTML = "&#10133;";
-                ul.style.display = "none";
-                target.value = "hide";
-            } else {
-                // show
-                target.innerHTML = "&#10134;"; 
-                ul.style.display = "";
-                target.value = "show";
-            }
-        }
-    }
-    
-    liLabel( note ) {
-        let li = document.createElement("li");
-        li.setAttribute("data-id", note.id );
-
-        li.appendChild( document.getElementById("templates").querySelector(".notelabel").cloneNode(true) );
-
-        li.querySelector(".inly").appendChild( document.createTextNode( ` by ${this.noteAuthor(note)}` ));
-        li.querySelector(".flatpickr").value = flatpickr.formatDate(new Date(objectNote.dateFromDoc(note.doc)),"Y-m-d h:i K");
-        li.addEventListener( 'click', () => objectNote.select( note.id ) );
-
-        return li;
-    }
-
-    liNote( note, label ) {
-        let li = document.createElement("li");
-        li.setAttribute("data-id", note.id );
-        let img;
-        if ( noteId == note.id ) {
-            li.classList.add("choice");
-        }
-        if ( "doc" in note ) {
-            cloneClass( ".notetemplate", li );
-            img=new ImageNote(li,note.doc);
-            img.display_all();
-        }    
-        
-        let edit_note = () => {
-            flatpickr( label.querySelector(".flatpickr"),
-                {
-                    time_24hr: false,
-                    enableTime: true,
-                    noCalendar: false,
-                    dateFormat: "Y-m-d h:i K",
-                    onChange: (d) => note.doc.date=d[0].toISOString(),
-                });
-            objectNote.select( note.id );
-            cloneClass( ".notetemplate_edit", li );
-            img.edit();
-            } ;
-        li.addEventListener( 'click', () => objectNote.select( note.id ) );
-        ['dblclick','swiped-right','swiped-left'].forEach( ev =>
-            [li, label].forEach( targ => targ.addEventListener( ev, edit_note )));
-        label.querySelector(".edit_note").addEventListener( 'click', edit_note );
-
-        return li;
-    }
-
-    noteAuthor( doc ) {
-        let author = remoteCouch.username;
-        if ( doc  && doc.id ) {
-            if ( doc.doc && doc.doc.author ) {
-                author = doc.doc.author;
-            }
-        }
-        return author;
-    }
-}
-
-/*
-function quickPhoto() {
-	if ( objectPot.isSelected() ) {
-		objectPot.select( potId );
-		objectPot.getRecordIdPix(potId,true)
-		.then( (doc) => {
-			const isAndroid() = () => navigator.userAgent.toLowerCase().indexOf("android") > -1 ;
-			let inp = document.getElementById("HiddenFile");
-			let struct = structImages.members;
-			if ( isAndroid() ) {
-				inp.removeAttribute("capture");
-			} else {
-				inp.setAttribute("capture","environment");
-			}
-			inp.click() ;
-			// add number of pictures to picture button 
-			})
-		.catch( (err) => {
-			objectLog.err(err);
-			objectPage.show( "back" );
-			});
-	} else {
-		objectPage.show( "back" );
-	}
-
-	let inp = document.getElementById("QuickPhotoContent");
-	cloneClass( ".imagetemplate_quick", inp );
-	let doc = this.template();
-	let img = new ImageQuick( inp, doc );
-	function handleImage() {
-		img.handleImage();
-		img.save(doc);
-		db.put(doc)
-		.then( () => this.getRecordsId(potId) ) // to try to prime the list
-		.catch( err => objectLog.err(err) )
-		.finally( objectPage.show( null ) );
-	}
-	img.display_image();
-	img.addListen(handleImage);
-	img.getImage();
-}
-*/
-
-
 function parseQuery() {
     // returns a dict of keys/values or null
     let url = new URL(location.href);
@@ -1713,10 +1179,6 @@ window.onload = () => {
         if ( objectPot.isSelected() ) { // mission too
             objectPot.select() ;
         }
-        if ( noteId ) {
-            objectNote.select() ;
-        }
-
     } else {
         db = null;
         objectPage.reset();

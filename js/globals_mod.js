@@ -8,7 +8,6 @@
 
 // globals cookie backed
 globalThis. potId = null ;
-globalThis. noteId = null ;
 globalThis. displayState = null ;
 globalThis. remoteCouch = null ;
 
@@ -63,16 +62,10 @@ export function setButtons() {
         s.addEventListener("click",()=>objectPage.show('SearchList'));
         });
 
-    // set Quick Photo buttons
-    document.querySelectorAll(".Qphoto").forEach( q => {
-        q.title = "Quick photo using camera or from gallery" ;
-        q.addEventListener("click",()=>objectPage.show('QuickPhoto'));
-        });
-
     // set edit details for PotData edit pages -- only for "top" portion
     document.querySelectorAll(".edit_data").forEach( e => {
         e.title = "Unlock record to allow changes" ;
-        e.addEventListener("click",()=>objectPotData.clickEdit());
+        e.addEventListener("click",()=>objectPotData.edit_doc());
         });
 
     // set save details for PotData save pages
@@ -80,6 +73,10 @@ export function setButtons() {
         s.title = "Save your changes to this record" ;
         s.addEventListener("click",()=>objectPotData.savePatientData());
         });
+        
+    // modal picture display
+    document.getElementById("modal_close").onclick = 
+		() => document.getElementById("modal_id").style.display="none";
         
     document.querySelectorAll(".headerboxlink")
     .forEach( q => q.addEventListener("click",() => {

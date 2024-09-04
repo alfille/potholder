@@ -34,13 +34,13 @@ class PotDataRaw { // singleton class
         this.array_preVals={} ;
 
 		if ( click ) {
-			this.clickEdit() ;
+			this.edit_doc() ;
 		} else {
-			this.clickNoEdit() ;
+			this.show_doc() ;
 		}
     }
     
-    clickNoEdit() {
+    show_doc() {
         //document.querySelectorAll(".topButtons").forEach( v=>v.style.display="block" ); 
         //document.querySelector(".potDataEdit").style.display="none";
         document.querySelectorAll(".edit_data").forEach( (e) => {
@@ -53,14 +53,14 @@ class PotDataRaw { // singleton class
         
         this.struct.forEach( item => {
             let li = document.createElement("li");
-            this.fill_show_item(item,this.doc).forEach( e => li.appendChild(e)) ;
+            this.show_item(item,this.doc).forEach( e => li.appendChild(e)) ;
             this.ul.appendChild( li );
         });
 
         parent.appendChild(this.ul) ;
     }
 
-	fill_show_item(item,doc) {
+	show_item(item,doc) {
 		// return an array to attach
 		
 		// possibly use an alias instead of database field name
@@ -82,7 +82,8 @@ class PotDataRaw { // singleton class
 		let textnode="";
 		switch( item.type ) {
 			case "image":
-				if ( preVal && this.Images,exists(preVal) ) {
+				console.log("IAMGE",preVal,this.Images,this.Images.exists(preVal));
+				if ( preVal && this.Images.exists(preVal) ) {
 					textnode = this.Images.display(preVal) ;
 				} else {
 					textnode = document.createTextNode( "No Image" );
@@ -98,9 +99,10 @@ class PotDataRaw { // singleton class
 				break ;
 				
 			case "array":
+			case "image_array":
 				// Insert a table, and pull label into caption
 				// separate return because the flow is different
-				return this.fill_show_array( item, doc ) ;
+				return this.show_array( item, doc ) ;
 
 			case "date":
 			case "time":
@@ -117,7 +119,7 @@ class PotDataRaw { // singleton class
 	}
 		
 	select_edit( item ) {
-		this.clickEditArray();
+		this.array_buttons();
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
         let parent = document.getElementById("PotDataContent");
@@ -129,7 +131,7 @@ class PotDataRaw { // singleton class
 		tab.querySelector("span").innerHTML=`<i>Choose ${item.alias??item.name} item</i>`;
 		[".Darray_back"].forEach(c=>tab.querySelector(c).hidden=false);
 
-		tab.querySelector(".Darray_back").onclick=()=>this.clickEdit();
+		tab.querySelector(".Darray_back").onclick=()=>this.edit_doc();
 
 		// table
 		this.doc[item.name].forEach( (v,i) => {
@@ -141,7 +143,7 @@ class PotDataRaw { // singleton class
 			td.appendChild(ul);
 			item.members.forEach( m => {
 				let li = document.createElement("li");
-				this.fill_show_item(m,v).forEach( e => li.appendChild(e)) ;
+				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
 				ul.appendChild(li);
 				}) ;
 			});
@@ -149,7 +151,7 @@ class PotDataRaw { // singleton class
 	}
 
 	edit_array_entry( item, idx ) {
-		this.clickEditArray();
+		this.array_buttons();
 
 		let doc={} ;
 		let adding = idx==-1 ; // flag for adding rather than editing
@@ -178,20 +180,20 @@ class PotDataRaw { // singleton class
 			} else {
 				Object.assign(this.doc[item.name][idx],doc);
 			}
-			this.clickEdit() ;
+			this.edit_doc() ;
 			};
-	    li1.querySelector(".Darray_cancel").onclick=()=>this.clickEdit();
+	    li1.querySelector(".Darray_cancel").onclick=()=>this.edit_doc();
 	    li1.querySelector(".Darray_delete").onclick=()=>{
 			if (confirm(`WARNING -- about to delete this ${title} entry\nPress CANCEL to back out`)==true) {
 				this.doc[item.name].splice(idx,1);
-				this.clickEdit();
+				this.edit_doc();
 			}};
         this.ul.appendChild(li1);
         
         item.members.forEach( m => {
             let li = document.createElement("li");
 			li.classList.add("MainEditList");
-            this.fill_edit_item(m,doc).forEach( e => li.appendChild(e)) ;
+            this.edit_item(m,doc).forEach( e => li.appendChild(e)) ;
             this.ul.appendChild( li );
         });
         
@@ -199,7 +201,7 @@ class PotDataRaw { // singleton class
     }
 
 	rearrange( item ) {
-		this.clickEditArray();
+		this.array_buttons();
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
         let parent = document.getElementById("PotDataContent");
@@ -211,7 +213,7 @@ class PotDataRaw { // singleton class
 		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} rearrange order</i>`;
 		[".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
 
-		tab.querySelector(".Darray_ok").onclick=()=>this.clickEdit();
+		tab.querySelector(".Darray_ok").onclick=()=>this.edit_doc();
 
 		// table
 		const elements = this.doc[item.name].length ;
@@ -225,7 +227,7 @@ class PotDataRaw { // singleton class
 			td.appendChild(ul);
 			item.members.forEach( m => {
 				let li = document.createElement("li");
-				this.fill_show_item(m,v).forEach( e => li.appendChild(e)) ;
+				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
 				ul.appendChild(li);
 				}) ;
 			});
@@ -239,7 +241,7 @@ class PotDataRaw { // singleton class
 			});
 	}
 	
-	fill_edit_array( item, doc ) {
+	edit_array( item, doc ) {
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
 		
@@ -276,7 +278,7 @@ class PotDataRaw { // singleton class
 			td.appendChild(ul);
 			item.members.forEach( m => {
 				let li = document.createElement("li");
-				this.fill_show_item(m,v).forEach( e => li.appendChild(e)) ;
+				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
 				ul.appendChild(li);
 				}) ;
 			});
@@ -284,7 +286,52 @@ class PotDataRaw { // singleton class
 		return [tab];
 	}
 	
-	fill_show_array( item, doc ) {
+	edit_images( item, doc ) {
+		// Insert a table, and pull label into caption
+		// separate return because the flow is different
+		console.log("EDIT_IMAGES",item,doc);
+		
+		// data field
+		if ( !(item.name in this.doc) ||  !Array.isArray(this.doc[item.name]) ) {
+			this.doc[item.name] = [] ;
+		}
+		let preVal = this.doc[item.name] ;
+		if ( !(item.name in this.array_preVals) ) {
+			this.array_preVals[item.name] = JSON.stringify(preVal) ;
+		}
+		let elements = 0 ;
+		if ( Array.isArray(preVal) ) {
+			elements = preVal.length ;
+		}
+
+		// Heading and buttons
+		let temp = document.createElement("span"); // hold clone
+		cloneClass( ".Darray", temp ) ;
+		let tab = temp.querySelector( ".Darray_table" ) ;
+		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
+		[".Darray_edit",".Darray_rearrange"].forEach(c=>tab.querySelector(c).hidden=false);
+	    tab.querySelector(".Darray_edit").disabled=(elements<1);
+	    tab.querySelector(".Darray_edit").onclick=(elements==1)?(()=>this.edit_array_entry( item, 0 )):(()=>this.select_edit(item));
+	    tab.querySelector(".Darray_rearrange").disabled=(elements<2);
+	    tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange(item);
+
+		// table
+		if ( Array.isArray(preVal) ) {
+			preVal.forEach( (v,i) => {
+			let td = tab.insertRow(-1).insertCell(0);
+			let ul = document.createElement("ul");
+			td.appendChild(ul);
+			item.members.forEach( m => {
+				let li = document.createElement("li");
+				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
+				ul.appendChild(li);
+				}) ;
+			});
+		}
+		return [tab];
+	}
+	
+	show_array( item, doc ) {
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
 
@@ -307,7 +354,7 @@ class PotDataRaw { // singleton class
 			td.appendChild(ul);
 			item.members.forEach( m => {
 				let li = document.createElement("li");
-				this.fill_show_item(m,v).forEach( e => li.appendChild(e)) ;
+				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
 				ul.appendChild(li);
 				}) ;
 			});
@@ -315,7 +362,7 @@ class PotDataRaw { // singleton class
 		return [tab];
 	}
 		    
-    clickEditArray() {
+    array_buttons() {
         document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
         document.querySelector(".potDataEdit").style.display="none";
         document.querySelectorAll(".edit_data").forEach( (e) => {
@@ -323,7 +370,7 @@ class PotDataRaw { // singleton class
 			});
 	}		
         
-    clickEdit() {
+    edit_doc() {
         document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
         document.querySelector(".potDataEdit").style.display="block";
         document.querySelectorAll(".edit_data").forEach( (e) => {
@@ -337,14 +384,14 @@ class PotDataRaw { // singleton class
         this.struct.forEach( ( item, idx ) => {
             let li = document.createElement("li");
 			li.classList.add("MainEditList");
-            this.fill_edit_item(item,this.doc).forEach( e => li.appendChild(e)) ;
+            this.edit_item(item,this.doc).forEach( e => li.appendChild(e)) ;
             this.ul.appendChild( li );
         });
         
         parent.appendChild(this.ul) ;
     }
     
-    fill_edit_item(item,doc) {
+    edit_item(item,doc) {
 		let lab = document.createElement("label");
 		let localname = `UNIQUE${item.name}`;
 		
@@ -366,12 +413,12 @@ class PotDataRaw { // singleton class
 		let preVal = doc[item.name] ;
 		switch( item.type ) {
 			case "image":
-				inp = document.createElement("div");
-				cloneClass( ".imagetemplate_edit", inp ) ;
-				this.images[localname] = new ImageImbedded( inp, this.doc, item?.none ) ;
-				this.images[localname].display_image() ;
-				this.images[localname].addListen();
-				return_list.push(inp);
+				console.log("IMAGE",preVal,doc);
+				if ( preVal && this.Images.exists(preVal) ) {
+					return_list.push( this.Images.display(preVal) ) ;
+				} else {
+					return_list.push( document.createTextNode( "No Image" ) );
+				}
 				break ;
 				
 			case "radio":
@@ -435,6 +482,7 @@ class PotDataRaw { // singleton class
 						dateFormat: "Y-m-d h:i K",
 						//defaultDate: Date.now(),
 					});
+				return_list.push(inp);
 				break;
 
 			case "date":
@@ -472,7 +520,10 @@ class PotDataRaw { // singleton class
 				break;
 				
 			case "array":
-				return this.fill_edit_array( item, doc ) ;
+				return this.edit_array( item, doc ) ;
+
+			case "image_array":
+				return this.edit_images( item, doc ) ;
 
 			default:
 				inp = document.createElement( item.type=="textarea" ? "textarea" : "input" );
@@ -533,6 +584,7 @@ class PotDataRaw { // singleton class
 						.map( i => i.value );
 					break;
 				case "array":
+				case "image_array":
 					postVal = doc[name] ;
 					// already set
 					break ;
@@ -546,10 +598,7 @@ class PotDataRaw { // singleton class
 			// second pass for changed
 			switch( struct[idx].type ) {
 				case "image":
-					if ( this.images[localname].changed() ) {
-						changed = true;
-						this.images[localname].save(this.doc) ;
-					}
+					// Picture cannot be changed 
 					break ;
 				
 				case "array":
@@ -595,45 +644,6 @@ class PotDataRaw { // singleton class
 class PotData extends PotDataRaw {
     constructor(doc,struct) {
         super(false,doc,struct); // clicked = false
-    }
-    dropPictureinNote( target ) {
-            // Optional.   Show the copy icon when dragging over.  Seems to only work for chrome.
-        target.addEventListener('dragover', e => {
-            e.stopPropagation();
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'copy';
-            });
-
-        // Get file data on drop
-        target.addEventListener('drop', e => {
-            e.stopPropagation();
-            e.preventDefault();
-            // Array of files
-            Promise.all(
-                Array.from(e.dataTransfer.files)
-                .filter( file => file.type.match(/image.*/) )
-                .map( file => {
-                    let reader = new FileReader();
-                    reader.onload = e2 =>
-                        fetch(e2.target.result)
-                        .then( b64 => b64.blob() )
-                        .then( blb => {
-                            let doc = this.template();
-                            new ImageDrop(blb).save(doc);
-                            return db.put(doc);
-                            });
-                    reader.readAsDataURL(file); // start reading the file data.
-                    }))
-                    .then( () => this.getRecordsId(potId) ) // refresh the list
-                    .catch( err => objectLog.err(err,"Photo drop") )
-                    .finally( () => {
-                        if (objectNoteList.category=='Uncategorized') {
-                            objectPage.show( "NoteList" );
-                        } else {
-                            objectPage.show( "NoteListCategory",objectNoteList.category );
-                        }
-                        });
-            });
     }
 }
 
