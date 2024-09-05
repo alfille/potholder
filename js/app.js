@@ -655,7 +655,7 @@ class RemoteDatabaseInput extends Pagelist {
 }
 
 class DatabaseInfoData extends PotData {
-    savePatientData() {}
+    savePieceData() {}
 }
 
 class DatabaseData extends PotDataRaw {
@@ -669,7 +669,7 @@ class DatabaseData extends PotDataRaw {
         }
     }
 
-    savePatientData() {
+    savePieceData() {
         if ( this.loadDocData(this.struct,this.doc) ) {
             if ( this.doc.raw=="fixed" ) {
                 this.doc.address=objectRemote.SecureURLparse(this.doc.address); // fix up URL
@@ -748,7 +748,7 @@ class FirstTime extends Pagelist {
     }
 }
 
-class InvalidPatient extends Pagelist {
+class InvalidPiece extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     static safeLanding  = false ; // don't return here
 
@@ -780,7 +780,7 @@ class PotNew extends Pagelist {
 }
 
 class PotNewData extends PotDataEditMode {
-    savePatientData() {
+    savePieceData() {
         this.loadDocData(this.struct,this.doc);
         
 		// create new pot record

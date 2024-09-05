@@ -39,8 +39,6 @@ import {
 
 objectPot = new SimplePot() ;
 
-objectNote = null ;
-
 class DownloadFile { // convenience class
     static file(contents, filename, htype ) {
         //htype the file type i.e. text/csv
@@ -233,9 +231,6 @@ class PPTX {
                         this.pname = q.rows[0].value[0] ;
                         return this.patient( pt.doc ) ;
                         })
-                    // Get notes
-                    .then( _ => this.add_notes ? objectNote.getRecordsIdPix( pt.id ) : Promise.resolve( ({ rows:[]}) ) )
-                    .then( notes => this.notelist( notes ) )
                     .catch( err => console.log(err) ) ;
                     }));
                 })
@@ -273,14 +268,6 @@ class PPTX {
             })
         .then( _ => Promise.resolve(true) ) ;
     }
-
-    notelist( nlist ) {
-        return PromiseSeq( 
-            nlist.rows
-            .sort((a,b)=>objectNote.dateFromDoc(a.doc).localeCompare(objectNote.dateFromDoc(b.doc)))
-            .map( r => this.note(r.doc) )
-            ) ;         
-    }
     
     category( doc ) {
         let cat = doc ?. category ;
@@ -302,9 +289,7 @@ class PPTX {
         .then( (img) => {
             let slide = this.pptx
                 .addSlide({masterName:"Template"})
-                .addNotes([doc?.text,doc._id,doc?.author,objectNote.dateFromDoc(doc).substring(0,10)].join("\n"))
                 .addText(this.pname,{placeholder:"title",color:"e4e444",isTextBox:true,align:"center"})
-                .addTable([[this.category(doc)],[objectNote.dateFromDoc(doc).substring(0,10)]],{x:6.6,y:.7,w:3.3,color:"e4e444",fontSize:28})
                 ;
 
             if (img) {
@@ -414,16 +399,6 @@ class ZIP {
                                 }) ;
                         }
                         })
-                    .then( _ => objectNote.getRecordsIdPix( pt.id, true) )                    
-                    .then( notelist => notelist.rows.forEach( row => {
-                        if ( qimg ) {
-                            this.one_note_image( this.pname, row.doc );
-                        }
-                        if ( qdoc ) {
-                            this.one_note_doc( this.pname, row.doc );
-                        }
-                    }))
-                    
                 })
             )})
         .then( _ => this.zip.generateAsync({type:"blob"}) )

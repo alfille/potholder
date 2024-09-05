@@ -17,9 +17,6 @@ globalThis. credentialList = ["database", "username", "password", "address" ] ;
 // singleton class instances
 globalThis. objectPage = null ;
 globalThis. objectPotData = null ;
-globalThis. objectNoteList = {
-    category: 'Uncategorized',
-    };
 globalThis. objectTable = null ;
 globalThis. objectRemote = null ;
 globalThis. objectLog = null ;
@@ -71,7 +68,7 @@ export function setButtons() {
     // set save details for PotData save pages
     document.querySelectorAll(".savedata").forEach( s => {
         s.title = "Save your changes to this record" ;
-        s.addEventListener("click",()=>objectPotData.savePatientData());
+        s.addEventListener("click",()=>objectPotData.savePieceData());
         });
         
     // modal picture display

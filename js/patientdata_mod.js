@@ -99,10 +99,12 @@ class PotDataRaw { // singleton class
 				break ;
 				
 			case "array":
-			case "image_array":
 				// Insert a table, and pull label into caption
 				// separate return because the flow is different
 				return this.show_array( item, doc ) ;
+
+			case "image_array":
+				return this.show_image_array( item, doc ) ;
 
 			case "date":
 			case "time":
@@ -134,7 +136,7 @@ class PotDataRaw { // singleton class
 		tab.querySelector(".Darray_back").onclick=()=>this.edit_doc();
 
 		// table
-		this.doc[item.name].forEach( (v,i) => {
+		this.doc[item.name].forEach( v => {
 			let tr = tab.insertRow(-1) ;
 			tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Edit this entry"><B>Edit</B></button>`;
 			let td = tr.insertCell(-1);
@@ -143,6 +145,41 @@ class PotDataRaw { // singleton class
 			td.appendChild(ul);
 			item.members.forEach( m => {
 				let li = document.createElement("li");
+				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
+				ul.appendChild(li);
+				}) ;
+			});
+		tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>this.edit_array_entry(item,i) );
+	}
+
+	select_image_edit( item ) {
+		this.array_buttons();
+		// Insert a table, and pull label into caption
+		// separate return because the flow is different
+        let parent = document.getElementById("PotDataContent");
+        parent.innerHTML = "";
+		
+		// Heading and buttons
+		cloneClass( ".Darray", parent ) ;
+		let tab = parent.querySelector( ".Darray_table" ) ;
+		tab.querySelector("span").innerHTML=`<i>Choose ${item.alias??item.name} item</i>`;
+		[".Darray_back"].forEach(c=>tab.querySelector(c).hidden=false);
+
+		tab.querySelector(".Darray_back").onclick=()=>this.edit_doc();
+
+		// table
+		this.doc[item.name].forEach( v => {
+			const tr = tab.insertRow(-1) ;
+			tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Edit this entry"><B>Edit</B></button>`;
+			tr.insertCell(-1).appendChild( this.Images.display(v.image) );
+			const td = tr.insertCell(-1);
+			td.style.width="100%";
+			const ul = document.createElement("ul");
+			td.appendChild(ul);
+			item.members
+				.filter( m => m.type != "image" )
+				.forEach( m => {
+				const li = document.createElement("li");
 				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
 				ul.appendChild(li);
 				}) ;
@@ -217,7 +254,7 @@ class PotDataRaw { // singleton class
 
 		// table
 		const elements = this.doc[item.name].length ;
-		this.doc[item.name].forEach( (v,i) => {
+		this.doc[item.name].forEach( v => {
 			let tr = tab.insertRow(-1) ;
 			tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
 			tr.insertCell(-1).innerHTML=`<button type="button"  class="Darray_down" title="Move this entry down"><B>&#8659;</B></button>`;
@@ -238,6 +275,50 @@ class PotDataRaw { // singleton class
 		tab.querySelectorAll(".Darray_down").forEach( (b,i)=>b.onclick=()=>{
 			[this.doc[item.name][i],this.doc[item.name][(i+1)%elements]]=[this.doc[item.name][(i+1)%elements],this.doc[item.name][i]];
 			this.rearrange( item );
+			});
+	}
+	
+	rearrange_images( item ) {
+		this.array_buttons();
+		// Insert a table, and pull label into caption
+		// separate return because the flow is different
+        let parent = document.getElementById("PotDataContent");
+        parent.innerHTML = "";
+		
+		// Heading and buttons
+		cloneClass( ".Darray", parent ) ;
+		let tab = parent.querySelector( ".Darray_table" ) ;
+		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} rearrange order</i>`;
+		[".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
+
+		tab.querySelector(".Darray_ok").onclick=()=>this.edit_doc();
+
+		// table
+		const elements = this.doc[item.name].length ;
+		this.doc[item.name].forEach( v => {
+			const tr = tab.insertRow(-1) ;
+			tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
+			tr.insertCell(-1).innerHTML=`<button type="button"  class="Darray_down" title="Move this entry down"><B>&#8659;</B></button>`;
+			tr.insertCell(-1).appendChild( this.Images.display(v.image) );
+			const td = tr.insertCell(-1);
+			td.style.width="100%";
+			const ul = document.createElement("ul");
+			td.appendChild(ul);
+			item.members
+				.filter( m => m.type != "image" )
+				.forEach( m => {
+				const li = document.createElement("li");
+				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
+				ul.appendChild(li);
+				}) ;
+			});
+		tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>{
+			[this.doc[item.name][i],this.doc[item.name][(i-1+elements)%elements]]=[this.doc[item.name][(i-1+elements)%elements],this.doc[item.name][i]];
+			this.rearrange_images( item );
+			});
+		tab.querySelectorAll(".Darray_down").forEach( (b,i)=>b.onclick=()=>{
+			[this.doc[item.name][i],this.doc[item.name][(i+1)%elements]]=[this.doc[item.name][(i+1)%elements],this.doc[item.name][i]];
+			this.rearrange_images( item );
 			});
 	}
 	
@@ -272,7 +353,7 @@ class PotDataRaw { // singleton class
 
 		// table
 		if ( Array.isArray(preVal) ) {
-			preVal.forEach( (v,i) => {
+			preVal.forEach( v => {
 			let td = tab.insertRow(-1).insertCell(0);
 			let ul = document.createElement("ul");
 			td.appendChild(ul);
@@ -286,7 +367,7 @@ class PotDataRaw { // singleton class
 		return [tab];
 	}
 	
-	edit_images( item, doc ) {
+	edit_image_array( item, doc ) {
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
 		console.log("EDIT_IMAGES",item,doc);
@@ -311,18 +392,23 @@ class PotDataRaw { // singleton class
 		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
 		[".Darray_edit",".Darray_rearrange"].forEach(c=>tab.querySelector(c).hidden=false);
 	    tab.querySelector(".Darray_edit").disabled=(elements<1);
-	    tab.querySelector(".Darray_edit").onclick=(elements==1)?(()=>this.edit_array_entry( item, 0 )):(()=>this.select_edit(item));
+	    tab.querySelector(".Darray_edit").onclick=(elements==1)?(()=>this.edit_array_entry( item, 0 )):(()=>this.select_image_edit(item));
 	    tab.querySelector(".Darray_rearrange").disabled=(elements<2);
-	    tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange(item);
+	    tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange_images(item);
 
 		// table
 		if ( Array.isArray(preVal) ) {
-			preVal.forEach( (v,i) => {
-			let td = tab.insertRow(-1).insertCell(0);
-			let ul = document.createElement("ul");
+			preVal.forEach( v => {
+			const tr = tab.insertRow(-1);
+			tr.insertCell(-1).appendChild( this.Images.display(v.image) );
+			const td = tr.insertCell(-1);
+			const ul = document.createElement("ul");
 			td.appendChild(ul);
-			item.members.forEach( m => {
-				let li = document.createElement("li");
+			td.style.width="100%";
+			item.members
+				.filter( m => m.type != "image" )
+				.forEach( m => {
+				const li = document.createElement("li");
 				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
 				ul.appendChild(li);
 				}) ;
@@ -354,6 +440,42 @@ class PotDataRaw { // singleton class
 			td.appendChild(ul);
 			item.members.forEach( m => {
 				let li = document.createElement("li");
+				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
+				ul.appendChild(li);
+				}) ;
+			});
+		}
+		return [tab];
+	}
+		    
+	show_image_array( item, doc ) {
+		// Insert a table, and pull label into caption
+		// separate return because the flow is different
+
+		// data field
+		if ( !(item.name in this.doc ) ) {
+			this.doc[item.name] = null ;
+		}
+		let preVal = this.doc[item.name] ;
+
+		let temp = document.createElement("span"); // hold clone
+		cloneClass( ".Darray", temp ) ;
+		let tab = temp.querySelector( ".Darray_table" ) ;
+		tab.querySelector("span").innerHTML=`<i>Saved Images</i>`;
+		tab.querySelectorAll("button").forEach(b=>b.style.display="none");
+
+		if ( Array.isArray(preVal) ) {
+			preVal.forEach( v => {
+			const tr = tab.insertRow(-1);
+			tr.insertCell(-1).appendChild( this.Images.display(v.image) );
+			const td=tr.insertCell(-1);
+			td.style.width="100%";
+			const ul = document.createElement("ul");
+			td.appendChild(ul);
+			item.members
+				.filter( m => m.type != "image" )
+				.forEach( m => {
+				const li = document.createElement("li");
 				this.show_item(m,v).forEach( e => li.appendChild(e)) ;
 				ul.appendChild(li);
 				}) ;
@@ -523,7 +645,8 @@ class PotDataRaw { // singleton class
 				return this.edit_array( item, doc ) ;
 
 			case "image_array":
-				return this.edit_images( item, doc ) ;
+				return this.edit_image_array( item, doc ) ;
+				return this.edit_image_array( item, doc ) ;
 
 			default:
 				inp = document.createElement( item.type=="textarea" ? "textarea" : "input" );
@@ -602,6 +725,7 @@ class PotDataRaw { // singleton class
 					break ;
 				
 				case "array":
+				case "image_array":
 					changed ||= JSON.stringify(postVal) != this.array_preVals[name] ;
 					break ;
 				
@@ -636,7 +760,7 @@ class PotDataRaw { // singleton class
 		}
     }
     
-    savePatientData() {
+    savePieceData() {
         this.saveChanged( "PotMenu" );
     }
 }
