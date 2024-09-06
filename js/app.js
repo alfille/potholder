@@ -158,6 +158,54 @@ const structNewPot = [
 	},
 ];
     
+const structGeneralPot = [
+	{
+		name:  "type",
+		alias: "Type of piece",
+		hint:  "What will the piece be used for?",
+		type:  "list",
+		salt:  ["bowl","plate","flowerpot"],
+		query: "qType",
+	},
+	{
+		name:  "series",
+		alias: "Series",	
+		hint:  "Which creative wave?",
+		type:  "list",
+		query: "qSeries",
+	},
+	{
+		name:  "Name",
+		hint:  "Name of piece (optional)",
+		type:  "text",
+	},
+	{
+		name: "location",
+		hint: "Current location",
+		type: "list",
+		query: "qLocation",
+	},
+	{
+		name:  "start_date",
+		alias: "Start date",
+		type:  "date",
+		hint:  "Date work started",
+	},
+	{
+		name:  "artist",
+		alias: "Artist",
+		hint:  "Creator of this piece",
+		type:  "list",
+		query: "qArtist",
+	},
+	{
+		name:  "general_comment",
+		alias: "General comments",
+		hint:  "Overall comments on piece",
+		type:  "textarea",
+	},
+];
+    
 const structImages = [
 	{
 		name:  "images",
@@ -186,6 +234,37 @@ const structImages = [
 		
 const structProcess = [
 	{
+		name:  "firing",
+		alias: "Firing",
+		hint:  "Type of firing type",
+		type:  "radio",
+		choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
+	},
+	{
+		name:  "construction",
+		hint:  "techniques",
+		type:  "checkbox",
+		choices: ["wheel","slab","handbuilt","coil","pinch"],
+	},
+	{
+		name: "clay",
+		type: "array",
+		members: [
+			{
+				name:  "type",
+				alias: "Clay body",
+				hint:  "Which clay type used?",
+				type:  "list",
+				query: "qClay",
+			},
+			{
+				name:  "comment",
+				hint:  "Clay comments",
+				type:  "textarea",
+			}
+		],
+	},
+	{
 		name: "glaze",
 		type: "array",
 		members: [
@@ -193,6 +272,7 @@ const structProcess = [
 				name:  "type",
 				alias: "Glaze",
 				type:  "list",
+				query: "qGlaze",
 			},
 			{
 				name:  "comment",
@@ -200,7 +280,35 @@ const structProcess = [
 				type:  "textarea",
 			}
 		],
-	}
+	},
+	{
+		name: "kilns",
+		type: "array",
+		members: [
+			{
+				name: "kiln",
+				hint: "Which kiln used?",
+				type: "list",
+				query: "qKiln",
+			},
+			{
+				name: "cone",
+				hint: "firing cone",
+				type: "list",
+				query: "qCone",
+			},
+			{
+				name: "date",
+				hint: "firing date",
+				type: "date",
+			},
+			{
+				name: "comment",
+				hint: "Comments on firing",
+				type: "textarea",
+			},
+		],
+	},
 ];
 				
 // Create pouchdb indexes.
@@ -236,6 +344,60 @@ function createQueries() {
 						doc.clay.forEach( g => {
 							if ( "type" in g ) {
 								emit( g.type ) ;
+							}
+						})
+					}
+				}.toString(),
+				reduce: '_count',
+			},
+		},
+	},
+    {
+		_id: "_design/qGlaze",
+		version: 1,
+		views: {
+			qGlaze: {
+				map: function (doc) {
+					if ("glaze" in doc) {
+						doc.glaze.forEach( g => {
+							if ( "type" in g ) {
+								emit( g.type ) ;
+							}
+						})
+					}
+				}.toString(),
+				reduce: '_count',
+			},
+		},
+	},
+    {
+		_id: "_design/qKiln",
+		version: 1,
+		views: {
+			qKiln: {
+				map: function (doc) {
+					if ("kilns" in doc) {
+						doc.kilns.forEach( g => {
+							if ( "kiln" in g ) {
+								emit( g.kiln ) ;
+							}
+						})
+					}
+				}.toString(),
+				reduce: '_count',
+			},
+		},
+	},
+    {
+		_id: "_design/qCone",
+		version: 1,
+		views: {
+			qCone: {
+				map: function (doc) {
+					if ("kilns" in doc) {
+						doc.kilns.forEach( g => {
+							if ( "cone" in g ) {
+								emit( g.cone ) ;
 							}
 						})
 					}
@@ -304,20 +466,20 @@ function createQueries() {
             },
         },
     },
-    { 
-        _id: "_design/byProcedure" ,
+    {
+        _id: "_design/qLocation" ,
         version: 2,
         views: {
-            byProcedure: {
+            qLocation: {
                 map: function( doc ) {
-                    if ( doc.type=="operation" ) {
-                        emit( doc.Procedure );
+                    if ( "location" in doc ) {
+                        emit( doc.location );
                     }
                 }.toString(),
                 reduce: '_count',
             },
         },
-    }, 
+    },
     ];
     Promise.all( ddoclist.map( (ddoc) => {
         db.get( ddoc._id )
@@ -800,7 +962,7 @@ class PotEdit extends Pagelist {
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structNewPot ) )
+            .then( (doc) => objectPotData = new PotData( doc, structGeneralPot ) )
             .then( _ => console.log("done") )
             .catch( (err) => {
                 objectLog.err(err);

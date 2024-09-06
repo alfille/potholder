@@ -352,7 +352,7 @@ class PotDataRaw { // singleton class
 	    tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange(item);
 
 		// table
-		if ( Array.isArray(preVal) ) {
+		if ( Array.isArray(preVal) && (preVal.length>0) ) {
 			preVal.forEach( v => {
 			let td = tab.insertRow(-1).insertCell(0);
 			let ul = document.createElement("ul");
@@ -363,6 +363,8 @@ class PotDataRaw { // singleton class
 				ul.appendChild(li);
 				}) ;
 			});
+		} else {
+			tab.insertRow(-1).insertCell(-1).innerHTML="<i>- no entries -</i>";
 		}
 		return [tab];
 	}
@@ -433,7 +435,7 @@ class PotDataRaw { // singleton class
 		tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
 		tab.querySelectorAll("button").forEach(b=>b.style.display="none");
 
-		if ( Array.isArray(preVal) ) {
+		if ( Array.isArray(preVal) && (preVal.length>0) ) {
 			preVal.forEach( v => {
 			let td = tab.insertRow(-1).insertCell(0);
 			let ul = document.createElement("ul");
@@ -444,6 +446,8 @@ class PotDataRaw { // singleton class
 				ul.appendChild(li);
 				}) ;
 			});
+		} else {
+			tab.insertRow(-1).insertCell(-1).innerHTML="<i>- no entries -</i>";
 		}
 		return [tab];
 	}
