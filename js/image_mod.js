@@ -66,3 +66,26 @@ class PotImages {
 function isAndroid() {
     return navigator.userAgent.toLowerCase().indexOf("android") > -1;
 }
+
+class Thumb {
+	constructor() {
+		this.thumbs = new Map() ;
+		this.canvas = document.createElement("canvas");
+		this.canvas.width  = 100 ;
+		this.canvas.height = 100 ;
+		this.ctx = this.canvas.getContext( "2d" ) ;
+	}
+	
+	add( doc ) {
+		if ( ("images" in doc) 
+			&& ("_attachments" in doc) 
+			&& doc.images.length > 0 
+			&& (doc.images[0].image in doc._attachments) ) 
+		{
+			const img = new Image() ;
+			img.onload = () => sdf ;
+		}
+	}
+}
+			
+			
