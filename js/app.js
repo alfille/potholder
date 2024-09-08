@@ -236,7 +236,7 @@ const structProcess = [
 	{
 		name:  "firing",
 		alias: "Firing",
-		hint:  "Type of firing type",
+		hint:  "Type of firing",
 		type:  "radio",
 		choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
 	},

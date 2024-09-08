@@ -407,6 +407,7 @@ legend {
 .Darray_caption {
   font-size: 2em;
   background: lightblue;
+  padding-top: 10px;
 }
 .Darray_li1 {
   font-size: 2em ;
