@@ -506,7 +506,22 @@ class PotDataRaw { // singleton class
             e.disabled = false;
 			});
 	}		
-        
+    
+    choicePromise( struct, map ) {
+		struct
+			.filter( item => "choices" in item )
+			.forEach( item => map.set( item.name, item.choices ) ) ;
+		console.log("Map",map);
+		return Promise.all( struct
+			.filter( item => "query"   in item )
+			.map( item => {
+				db.query(item.query,{group:true,reduce:true})
+				.then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) )
+				.then( c => {map.set(item.name, c );console.log("C",item,c,map);} ) ;
+			}) 
+		);
+	}
+ 
     edit_doc() {
         document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
         document.querySelector(".potDataEdit").style.display="block";
@@ -515,24 +530,30 @@ class PotDataRaw { // singleton class
         });
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
-        
+
+/*        
         // gather choices, especially queries
 		const choicesF = this.struct.map( item => 
 			{
 				if ( "choices" in item ) {
 					return item.choices ;
 				} else if ( "query" in item ) {
-					return db.query(item.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) ) ;
+					return db.query(item.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0).map( c => [item.name,c] ) ) ;
 				} else {
 					return [];
 				}
 			});
 		Promise.all( choicesF ).then( choices => {
+*/
+		const M = new Map() ;
+		this.choicePromise( this.struct, M ).then( _ => { 
+			console.log("Map",M);
 			this.ul = document.createElement('ul');
 			this.struct.forEach( ( item, idx ) => {
+				console.log("Mapped Choices", item.name, M.get(item.name) );
 				let li = document.createElement("li");
 				li.classList.add("MainEditList");
-				this.edit_item(item,choices[idx],this.doc).forEach( e => li.appendChild(e)) ;
+				this.edit_item(item,M.get(item.name),this.doc).forEach( e => li.appendChild(e)) ;
 				this.ul.appendChild( li );
 			});
 			
