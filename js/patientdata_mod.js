@@ -82,7 +82,6 @@ class PotDataRaw { // singleton class
 		let textnode="";
 		switch( item.type ) {
 			case "image":
-				console.log("IAMGE",preVal,this.Images,this.Images.exists(preVal));
 				if ( preVal && this.Images.exists(preVal) ) {
 					textnode = this.Images.display(preVal) ;
 				} else {
@@ -227,14 +226,27 @@ class PotDataRaw { // singleton class
 			}};
         this.ul.appendChild(li1);
         
-        item.members.forEach( m => {
-            let li = document.createElement("li");
-			li.classList.add("MainEditList");
-            this.edit_item(m,doc).forEach( e => li.appendChild(e)) ;
-            this.ul.appendChild( li );
-        });
-        
-        parent.appendChild(this.ul) ;
+        // gather choices, especially queries
+		const choicesF = item.members.map( m => 
+			{
+				if ( "choices" in m ) {
+					return m.choices ;
+				} else if ( "query" in m ) {
+					return db.query(m.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) ) ;
+				} else {
+					return [];
+				}
+			});
+		Promise.all( choicesF ).then( choices => {
+			item.members.forEach( ( m, idx ) => {
+				let li = document.createElement("li");
+				li.classList.add("MainEditList");
+				this.edit_item(m,choices[idx],doc).forEach( e => li.appendChild(e)) ;
+				this.ul.appendChild( li );
+			});
+			
+			parent.appendChild(this.ul) ;
+		});
     }
 
 	rearrange( item ) {
@@ -372,7 +384,6 @@ class PotDataRaw { // singleton class
 	edit_image_array( item, doc ) {
 		// Insert a table, and pull label into caption
 		// separate return because the flow is different
-		console.log("EDIT_IMAGES",item,doc);
 		
 		// data field
 		if ( !(item.name in this.doc) ||  !Array.isArray(this.doc[item.name]) ) {
@@ -505,41 +516,44 @@ class PotDataRaw { // singleton class
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
-        this.ul = document.createElement('ul');
-        
-        this.struct.forEach( ( item, idx ) => {
-            let li = document.createElement("li");
-			li.classList.add("MainEditList");
-            this.edit_item(item,this.doc).forEach( e => li.appendChild(e)) ;
-            this.ul.appendChild( li );
-        });
-        
-        parent.appendChild(this.ul) ;
+        // gather choices, especially queries
+		const choicesF = this.struct.map( item => 
+			{
+				if ( "choices" in item ) {
+					return item.choices ;
+				} else if ( "query" in item ) {
+					return db.query(item.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) ) ;
+				} else {
+					return [];
+				}
+			});
+		Promise.all( choicesF ).then( choices => {
+			this.ul = document.createElement('ul');
+			this.struct.forEach( ( item, idx ) => {
+				let li = document.createElement("li");
+				li.classList.add("MainEditList");
+				this.edit_item(item,choices[idx],this.doc).forEach( e => li.appendChild(e)) ;
+				this.ul.appendChild( li );
+			});
+			
+			parent.appendChild(this.ul) ;
+		});
     }
     
-    edit_item(item,doc) {
-		let lab = document.createElement("label");
-		let localname = `UNIQUE${item.name}`;
+    edit_item(item,choices,doc) {
+		const lab = document.createElement("label");
+		const localname = `UNIQUE${item.name}`;
 		
 		// possibly use an alias instead of database field name
 		lab.appendChild( document.createTextNode(`${item.alias??item.name}: `) );
 		lab.title = item.hint;
 		let return_list=[lab];
 
-		// get prior choices for fill-in choice
-		let choices = Promise.resolve([]) ;
-		if ( "choices" in item ) {
-			choices = Promise.resolve(item.choices) ;
-		} else if ( "query" in item ) {
-			choices = db.query(item.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) ) ;
-		}
-
 		// get value and make type-specific input field with filled in value
 		let inp = null;
 		let preVal = doc[item.name] ;
 		switch( item.type ) {
 			case "image":
-				console.log("IMAGE",preVal,doc);
 				if ( preVal && this.Images.exists(preVal) ) {
 					return_list.push( this.Images.display(preVal) ) ;
 				} else {
@@ -548,8 +562,8 @@ class PotDataRaw { // singleton class
 				break ;
 				
 			case "radio":
-				choices
-				.then( clist => clist.forEach( (c) => {
+				choices.forEach( c => {
+					console.log("Choice",c);
 					inp = document.createElement("input");
 					inp.type = item.type;
 					inp.name = localname;
@@ -560,12 +574,11 @@ class PotDataRaw { // singleton class
 					inp.title = item.hint;
 					return_list.push(inp);
 					return_list.push(document.createTextNode(c));
-					}));
+					});
 				break ;
 
-			case "checkbox":
-				choices
-				.then( clist => clist.forEach( (c) => {
+			case "checkbox":				console.log("Box",preVal,doc,item.choices,localname);
+				choices.forEach( c => {
 					inp = document.createElement("input");
 					inp.type = item.type;
 					inp.name = localname;
@@ -576,7 +589,7 @@ class PotDataRaw { // singleton class
 					inp.title = item.hint;
 					return_list.push(inp);
 					return_list.push(document.createTextNode(c));
-					})); 
+					}); 
 				break;
 
 			case "list":
@@ -586,10 +599,9 @@ class PotDataRaw { // singleton class
 				//inp.type = "text";
 				inp.setAttribute( "list", dlist.id );
 				inp.value = preVal??"";
-				choices
-				.then( clist => clist.forEach( (c) => 
+				choices.forEach( c => 
 					dlist.appendChild( new Option(c) )
-					)); 
+					); 
 				return_list.push(dlist);
 				return_list.push(inp);
 				break;

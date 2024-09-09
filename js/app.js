@@ -241,6 +241,14 @@ const structProcess = [
 		choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
 	},
 	{
+		name:  "type",
+		alias: "Type of piece",
+		hint:  "What will the piece be used for?",
+		type:  "list",
+		salt:  ["bowl","plate","flowerpot"],
+		query: "qType",
+	},
+	{
 		name:  "construction",
 		hint:  "techniques",
 		type:  "checkbox",

@@ -261,7 +261,7 @@ ul {
 }
     
 body {
-  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   line-height: 1.4em;
   background: #172bae;
   color: #250f0f;
@@ -391,7 +391,7 @@ legend {
 .DownloadCheckbox {
   font-size: 20px;
   line-height: 2em;
-  font=weight: bold;
+  font-weight: bold;
 }
 
 .Darray_table {
@@ -399,21 +399,22 @@ legend {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  margin-left: 4px;
 }
 .Darray_div {
   justify-content: space-between;
   flex-flow: row wrap;
 }
 .Darray_caption {
-  font-size: 2em;
+  font-size: 1.5em;
   background: lightblue;
   padding-top: 10px;
 }
 .Darray_li1 {
-  font-size: 2em ;
+  font-size: 1.5em ;
 }
 .Darray_caption button, .Darray_div button {
-  font-size: .9em;
+  font-size: .8em;
 }
 .Darray_up, .Darray_down {
   background-color: blue;
