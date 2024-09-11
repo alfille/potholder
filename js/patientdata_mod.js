@@ -227,6 +227,7 @@ class PotDataRaw { // singleton class
         this.ul.appendChild(li1);
         
         // gather choices, especially queries
+        
 		const choicesF = item.members.map( m => 
 			{
 				if ( "choices" in m ) {
@@ -237,11 +238,12 @@ class PotDataRaw { // singleton class
 					return [];
 				}
 			});
-		Promise.all( choicesF ).then( choices => {
+		this.choicePromise( item.members ).then( choices => {
 			item.members.forEach( ( m, idx ) => {
+				const c = (choices.find(c=>c[0]==m.name)??[null,null])[1] ;
 				let li = document.createElement("li");
 				li.classList.add("MainEditList");
-				this.edit_item(m,choices[idx],doc).forEach( e => li.appendChild(e)) ;
+				this.edit_item(m,c,doc).forEach( e => li.appendChild(e)) ;
 				this.ul.appendChild( li );
 			});
 			
@@ -507,19 +509,29 @@ class PotDataRaw { // singleton class
 			});
 	}		
     
-    choicePromise( struct, map ) {
+    choicePromise( struct ) {
+		const choices = [];
 		struct
 			.filter( item => "choices" in item )
-			.forEach( item => map.set( item.name, item.choices ) ) ;
-		console.log("Map",map);
+			.forEach( item => choices.push([item.name,item.choices] ) ) ;
 		return Promise.all( struct
 			.filter( item => "query"   in item )
-			.map( item => {
-				db.query(item.query,{group:true,reduce:true})
-				.then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) )
-				.then( c => {map.set(item.name, c );console.log("C",item,c,map);} ) ;
-			}) 
-		);
+			.map( item => db.query(item.query,{group:true,reduce:true})
+				.then( q=>[item.name,q.rows.map(qq=>qq.key).filter(c=>c.length>0)] ) ) )
+			.then( x => {
+				struct
+				.filter( item => "choices" in item )
+				.forEach( item => {
+					const f = x.find( xx=>xx[0]==item.name ) ;
+					if (f) {
+						x[1].push( ...item.choices ) ;
+					} else {
+						x.push( [item.name,item.choices] ) ;
+					}
+				});
+				console.log("x",x);
+				return x ;
+				} );
 	}
  
     edit_doc() {
@@ -531,29 +543,16 @@ class PotDataRaw { // singleton class
         let parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
 
-/*        
-        // gather choices, especially queries
-		const choicesF = this.struct.map( item => 
-			{
-				if ( "choices" in item ) {
-					return item.choices ;
-				} else if ( "query" in item ) {
-					return db.query(item.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0).map( c => [item.name,c] ) ) ;
-				} else {
-					return [];
-				}
-			});
-		Promise.all( choicesF ).then( choices => {
-*/
-		const M = new Map() ;
-		this.choicePromise( this.struct, M ).then( _ => { 
-			console.log("Map",M);
+		this.choicePromise( this.struct ).then( choices => { 
+			//console.log("Map",choices);
 			this.ul = document.createElement('ul');
 			this.struct.forEach( ( item, idx ) => {
-				console.log("Mapped Choices", item.name, M.get(item.name) );
+				const c = (choices.find(c=>c[0]==item.name)??[null,null])[1] ;
+				//console.log("Mapped Choices", item.name, c );
 				let li = document.createElement("li");
 				li.classList.add("MainEditList");
-				this.edit_item(item,M.get(item.name),this.doc).forEach( e => li.appendChild(e)) ;
+				this.edit_item( item, c, this.doc)
+					.forEach( e => li.appendChild(e)) ;
 				this.ul.appendChild( li );
 			});
 			

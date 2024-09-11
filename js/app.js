@@ -122,7 +122,7 @@ const structNewPot = [
 		alias: "Type of piece",
 		hint:  "What will the piece be used for?",
 		type:  "list",
-		salt:  ["bowl","plate","flowerpot"],
+		choices:  ["bowl","plate","flowerpot"],
 		query: "qType",
 	},
 	{
@@ -164,7 +164,7 @@ const structGeneralPot = [
 		alias: "Type of piece",
 		hint:  "What will the piece be used for?",
 		type:  "list",
-		salt:  ["bowl","plate","flowerpot"],
+		choices:  ["bowl","plate","flowerpot"],
 		query: "qType",
 	},
 	{
@@ -245,7 +245,7 @@ const structProcess = [
 		alias: "Type of piece",
 		hint:  "What will the piece be used for?",
 		type:  "list",
-		salt:  ["bowl","plate","flowerpot"],
+		choices:  ["bowl","plate","flowerpot"],
 		query: "qType",
 	},
 	{
@@ -511,10 +511,9 @@ class Search { // singleton class
     constructor() {
         this.index={};
         this.fieldlist={
-            note: ["text","title",],
-            operation: ["Procedure","Complaint","Surgeon","Equipment"],
-            patient: ["Dx","LastName","FirstName","email","address","contact","Allergies","Meds",],
-            mission: ["Mission","Organization","Link","Location","LocalContact",],
+            general: structGeneralPot,
+            images: structImages,
+            process: structProcess,
         };
         this.types = Object.keys(this.fieldlist);
         this.types.forEach( ty => this.makeIndex(ty) ) ;
@@ -523,7 +522,7 @@ class Search { // singleton class
     }
 
     makeIndex(type) {
-        let fl = this.fieldlist[type] ;
+        let struct = this.fieldlist[type] ;
         this.index[type] = elasticlunr( function() {
             this.setRef("_id");
             fl.forEach( f => this.addField(f) ) ;
