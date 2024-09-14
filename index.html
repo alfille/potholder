@@ -7,15 +7,15 @@
         <title>PotHolder &mdash; Ceramic Production Tracker</title>
         <link rel="stylesheet" href="style/base.css">
         <link rel="manifest" href="manifest.json" />
-		<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-		<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-		<link rel="manifest" href="images/site.webmanifest">
+        <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+        <link rel="manifest" href="images/site.webmanifest">
     </head>
     <body>
         <header class="work_screen">
             <div id="headerbox">
-				<input type="file" id="HiddenFile" accept="image/*" class="imageBar" onchange="objectPot.newPhoto()" capture="environment">
+                <input type="file" id="HiddenFile" accept="image/*" class="imageBar" onchange="objectPot.newPhoto()" capture="environment">
                 <div class="headerboxlink mainOnly"><img class="potholderLogo" src="images/potholder.png"></div>
                 <div id="buttonheader">
                     <!-- top: MainMenu FirstTime -->
@@ -23,7 +23,7 @@
                     </div>
                     <!-- top: PotMenu -->
                     <div class= "PotMenu topButtons pageOverlay">
-						<button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
+                        <button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Return</button>
                     </div>
                     <!-- top: AllPieces -->
@@ -48,13 +48,13 @@
                     </div>
                     <!-- top: PotData -->
                     <div class="PotData topButtons pageOverlay">
-						<button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
+                        <button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
                     </div>
                     <!-- top: PotEdit PotProcess PotPix -->
                     <div class="PotData PotEdit PotProcess topButtons PotPix pageOverlay">
-						<button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
+                        <button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
                     </div>
@@ -166,7 +166,7 @@
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotEdit' )">Overview</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotProcess' )" title="How the pot was made">Process Details</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotPix' )" title="Photo gallery">Images</button>
-						<button type="button" class="divbutton"  style="visibility:hidden"> </button>
+                        <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                         <button type="button" class="divbutton delete" onclick="objectPot.del()" title="Delete this piece from the database">Delete Piece</button>
                     </div>
                 </div>
@@ -190,10 +190,10 @@
             <!-- body: Administration -->
             <div class="Administration pageOverlay">
                 <div id="AdministrationContent" class="buttonmenu" >
-					<button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
+                    <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Download' )">Download Data</button>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
-					<button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
-					<button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
+                    <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
+                    <button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                     <button type="button" class="divbutton" onClick="objectRemote.link()" hint="Open Couchdb Fauxton console">Database Console</button>
                     <button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>
@@ -205,34 +205,34 @@
            <div class="notelabel"><button class="edit_note libutton" type="button">Edit</button> <input type="text" class="flatpickr flatpickr-input" name="dummy" readonly><div class="inly"></div></div>
             <!-- Property Array Table Caption -->
             <div class="Darray">
-				<table class="Darray_table">
-					<caption class="Darray_caption">
-						<div class="Darray_div">
-							<span class="Darray_span"></span>
-							<button type="button" class="Darray_add" onClick="objectPotData.addArray()" title="Add a new entry to the list" hidden>Add</button>
-							<button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry" hidden>Edit</button>
-							<button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
-							<button type="button" class="Darray_ok" title="Keep this change" hidden>Ok</button>
-							<button type="button" class="Darray_delete" onClick="objectPotData.deleteArray()" title="Delete this entry" hidden>Delete</button>
-							<button type="button" class="Darray_cancel" onClick="objectPotData.cancelArray()" title="Cancel any changes" hidden>Cancel</button>
-							<button type="button" class="Darray_back" onClick="objectPotData.backArray()" title="Return to previous screen" hidden>Back</button>
-						</div>
-					</caption>
-				</table>
-			</div>
-			<!-- Array entry top li element -->
-			<div class="Darray_li">
-				<div class="Darray_div">
-					<span class="Darray_span"></span>
-					<button type="button" class="Darray_add" onClick="objectPotData.addArray()" title="Add a new entry to the list" hidden>Add</button>
-					<button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry" hidden>Edit</button>
-					<button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
-					<button type="button" class="Darray_ok" title="Keep this change" hidden>Ok</button>
-					<button type="button" class="Darray_delete" onClick="objectPotData.deleteArray()" title="Delete this entry" hidden>Delete</button>
-					<button type="button" class="Darray_cancel" onClick="objectPotData.cancelArray()" title="Cancel any changes" hidden>Cancel</button>
-					<button type="button" class="Darray_back" onClick="objectPotData.backArray()" title="Return to previous screen" hidden>Back</button>
-				</div>
-			</div>
+                <table class="Darray_table">
+                    <caption class="Darray_caption">
+                        <div class="Darray_div">
+                            <span class="Darray_span"></span>
+                            <button type="button" class="Darray_add" onClick="objectPotData.addArray()" title="Add a new entry to the list" hidden>Add</button>
+                            <button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry" hidden>Edit</button>
+                            <button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
+                            <button type="button" class="Darray_ok" title="Keep this change" hidden>Ok</button>
+                            <button type="button" class="Darray_delete" onClick="objectPotData.deleteArray()" title="Delete this entry" hidden>Delete</button>
+                            <button type="button" class="Darray_cancel" onClick="objectPotData.cancelArray()" title="Cancel any changes" hidden>Cancel</button>
+                            <button type="button" class="Darray_back" onClick="objectPotData.backArray()" title="Return to previous screen" hidden>Back</button>
+                        </div>
+                    </caption>
+                </table>
+            </div>
+            <!-- Array entry top li element -->
+            <div class="Darray_li">
+                <div class="Darray_div">
+                    <span class="Darray_span"></span>
+                    <button type="button" class="Darray_add" onClick="objectPotData.addArray()" title="Add a new entry to the list" hidden>Add</button>
+                    <button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry" hidden>Edit</button>
+                    <button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
+                    <button type="button" class="Darray_ok" title="Keep this change" hidden>Ok</button>
+                    <button type="button" class="Darray_delete" onClick="objectPotData.deleteArray()" title="Delete this entry" hidden>Delete</button>
+                    <button type="button" class="Darray_cancel" onClick="objectPotData.cancelArray()" title="Cancel any changes" hidden>Cancel</button>
+                    <button type="button" class="Darray_back" onClick="objectPotData.backArray()" title="Return to previous screen" hidden>Back</button>
+                </div>
+            </div>
             <!-- more top buttons -->
             <div id="moreTop">
                 <button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
@@ -258,12 +258,12 @@
             <hr>
             </center></b>
         </div>
-		 <!-- The Modal https://www.w3schools.com/css/tryit.asp?filename=trycss_image_modal_js -->
-		<div id="modal_id" class="modal">
-		  <span id="modal_close">&times;</span>
-		  <img class="modal-content" id="modal_img">
-		  <div id="modal_caption"></div>
-		</div>
+         <!-- The Modal https://www.w3schools.com/css/tryit.asp?filename=trycss_image_modal_js -->
+        <div id="modal_id" class="modal">
+          <span id="modal_close">&times;</span>
+          <img class="modal-content" id="modal_img">
+          <div id="modal_caption"></div>
+        </div>
        
         <!-- scripts -->
         <!-- pouchdb --> <script src="js/pouchdb-9.0.0.min.js"></script>

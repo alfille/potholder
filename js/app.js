@@ -17,7 +17,7 @@ import {
     } from "./globals_mod.js" ;
 
 import {
-	PotImages,
+    PotImages,
     } from "./image_mod.js" ;
 
 import {
@@ -117,321 +117,321 @@ const structDatabaseInfo = [
 ];
 
 const structNewPot = [
-	{
-		name:  "type",
-		alias: "Type of piece",
-		hint:  "What will the piece be used for?",
-		type:  "list",
-		choices:  ["bowl","plate","flowerpot"],
-		query: "qType",
-	},
-	{
-		name:  "series",
-		alias: "Series",	
-		hint:  "Which creative wave?",
-		type:  "list",
-		query: "qSeries",
-	},
-	{
-		name:  "Name",
-		hint:  "Name of piece (optional)",
-		type:  "text",
-	},
-	{
-		name:  "start_date",
-		alias: "Start date",
-		type:  "date",
-		hint:  "Date work started",
-	},
-	{
-		name:  "artist",
-		alias: "Artist",
-		hint:  "Creator of this piece",
-		type:  "list",
-		query: "qArtist",
-	},
-	{
-		name:  "general_comment",
-		alias: "General comments",
-		hint:  "Overall comments on piece",
-		type:  "textarea",
-	},
+    {
+        name:  "type",
+        alias: "Type of piece",
+        hint:  "What will the piece be used for?",
+        type:  "list",
+        choices:  ["bowl","plate","flowerpot"],
+        query: "qType",
+    },
+    {
+        name:  "series",
+        alias: "Series",    
+        hint:  "Which creative wave?",
+        type:  "list",
+        query: "qSeries",
+    },
+    {
+        name:  "Name",
+        hint:  "Name of piece (optional)",
+        type:  "text",
+    },
+    {
+        name:  "start_date",
+        alias: "Start date",
+        type:  "date",
+        hint:  "Date work started",
+    },
+    {
+        name:  "artist",
+        alias: "Artist",
+        hint:  "Creator of this piece",
+        type:  "list",
+        query: "qArtist",
+    },
+    {
+        name:  "general_comment",
+        alias: "General comments",
+        hint:  "Overall comments on piece",
+        type:  "textarea",
+    },
 ];
     
 const structGeneralPot = [
-	{
-		name:  "type",
-		alias: "Type of piece",
-		hint:  "What will the piece be used for?",
-		type:  "list",
-		choices:  ["bowl","plate","flowerpot"],
-		query: "qType",
-	},
-	{
-		name:  "series",
-		alias: "Series",	
-		hint:  "Which creative wave?",
-		type:  "list",
-		query: "qSeries",
-	},
-	{
-		name:  "Name",
-		hint:  "Name of piece (optional)",
-		type:  "text",
-	},
-	{
-		name: "location",
-		hint: "Current location",
-		type: "list",
-		query: "qLocation",
-	},
-	{
-		name:  "start_date",
-		alias: "Start date",
-		type:  "date",
-		hint:  "Date work started",
-	},
-	{
-		name:  "artist",
-		alias: "Artist",
-		hint:  "Creator of this piece",
-		type:  "list",
-		query: "qArtist",
-	},
-	{
-		name:  "general_comment",
-		alias: "General comments",
-		hint:  "Overall comments on piece",
-		type:  "textarea",
-	},
+    {
+        name:  "type",
+        alias: "Type of piece",
+        hint:  "What will the piece be used for?",
+        type:  "list",
+        choices:  ["bowl","plate","flowerpot"],
+        query: "qType",
+    },
+    {
+        name:  "series",
+        alias: "Series",    
+        hint:  "Which creative wave?",
+        type:  "list",
+        query: "qSeries",
+    },
+    {
+        name:  "Name",
+        hint:  "Name of piece (optional)",
+        type:  "text",
+    },
+    {
+        name: "location",
+        hint: "Current location",
+        type: "list",
+        query: "qLocation",
+    },
+    {
+        name:  "start_date",
+        alias: "Start date",
+        type:  "date",
+        hint:  "Date work started",
+    },
+    {
+        name:  "artist",
+        alias: "Artist",
+        hint:  "Creator of this piece",
+        type:  "list",
+        query: "qArtist",
+    },
+    {
+        name:  "general_comment",
+        alias: "General comments",
+        hint:  "Overall comments on piece",
+        type:  "textarea",
+    },
 ];
     
 const structImages = [
-	{
-		name:  "images",
-		alias: "Images",
-		type:  "image_array",
-		members: [
-			{
-				name:  "image",
-				type:  "image",
-			},
-			{
-				name:  "comment",
-				alias: "Notes",
-				hint:  "Notes about this photo",
-				type:  "textarea",
-			},
-			{
-				name:  "date",
-				type:  "date",
-				alias: "Date",
-				hint:  "Date photo was taken",
-			}
-		]
-	}
+    {
+        name:  "images",
+        alias: "Images",
+        type:  "image_array",
+        members: [
+            {
+                name:  "image",
+                type:  "image",
+            },
+            {
+                name:  "comment",
+                alias: "Notes",
+                hint:  "Notes about this photo",
+                type:  "textarea",
+            },
+            {
+                name:  "date",
+                type:  "date",
+                alias: "Date",
+                hint:  "Date photo was taken",
+            }
+        ]
+    }
 ];
-		
+        
 const structProcess = [
-	{
-		name:  "firing",
-		alias: "Firing",
-		hint:  "Type of firing",
-		type:  "radio",
-		choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
-	},
-	{
-		name:  "type",
-		alias: "Type of piece",
-		hint:  "What will the piece be used for?",
-		type:  "list",
-		choices:  ["bowl","plate","flowerpot"],
-		query: "qType",
-	},
-	{
-		name:  "construction",
-		hint:  "techniques",
-		type:  "checkbox",
-		choices: ["wheel","slab","handbuilt","coil","pinch"],
-	},
-	{
-		name: "clay",
-		type: "array",
-		members: [
-			{
-				name:  "type",
-				alias: "Clay body",
-				hint:  "Which clay type used?",
-				type:  "list",
-				query: "qClay",
-			},
-			{
-				name:  "comment",
-				hint:  "Clay comments",
-				type:  "textarea",
-			}
-		],
-	},
-	{
-		name: "glaze",
-		type: "array",
-		members: [
-			{
-				name:  "type",
-				alias: "Glaze",
-				type:  "list",
-				query: "qGlaze",
-			},
-			{
-				name:  "comment",
-				alias: "Notes",
-				type:  "textarea",
-			}
-		],
-	},
-	{
-		name: "kilns",
-		type: "array",
-		members: [
-			{
-				name: "kiln",
-				hint: "Which kiln used?",
-				type: "list",
-				query: "qKiln",
-			},
-			{
-				name: "cone",
-				hint: "firing cone",
-				type: "list",
-				query: "qCone",
-			},
-			{
-				name: "date",
-				hint: "firing date",
-				type: "date",
-			},
-			{
-				name: "comment",
-				hint: "Comments on firing",
-				type: "textarea",
-			},
-		],
-	},
+    {
+        name:  "firing",
+        alias: "Firing",
+        hint:  "Type of firing",
+        type:  "radio",
+        choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
+    },
+    {
+        name:  "type",
+        alias: "Type of piece",
+        hint:  "What will the piece be used for?",
+        type:  "list",
+        choices:  ["bowl","plate","flowerpot"],
+        query: "qType",
+    },
+    {
+        name:  "construction",
+        hint:  "techniques",
+        type:  "checkbox",
+        choices: ["wheel","slab","handbuilt","coil","pinch"],
+    },
+    {
+        name: "clay",
+        type: "array",
+        members: [
+            {
+                name:  "type",
+                alias: "Clay body",
+                hint:  "Which clay type used?",
+                type:  "list",
+                query: "qClay",
+            },
+            {
+                name:  "comment",
+                hint:  "Clay comments",
+                type:  "textarea",
+            }
+        ],
+    },
+    {
+        name: "glaze",
+        type: "array",
+        members: [
+            {
+                name:  "type",
+                alias: "Glaze",
+                type:  "list",
+                query: "qGlaze",
+            },
+            {
+                name:  "comment",
+                alias: "Notes",
+                type:  "textarea",
+            }
+        ],
+    },
+    {
+        name: "kilns",
+        type: "array",
+        members: [
+            {
+                name: "kiln",
+                hint: "Which kiln used?",
+                type: "list",
+                query: "qKiln",
+            },
+            {
+                name: "cone",
+                hint: "firing cone",
+                type: "list",
+                query: "qCone",
+            },
+            {
+                name: "date",
+                hint: "firing date",
+                type: "date",
+            },
+            {
+                name: "comment",
+                hint: "Comments on firing",
+                type: "textarea",
+            },
+        ],
+    },
 ];
-				
+                
 // Create pouchdb indexes.
 // Used for links between records and getting list of choices
 // change version number to force a new version
 function createQueries() {
     let ddoclist = [
     {
-		_id: "_design/qGlaze",
-		version: 1,
-		views: {
-			qGlaze: {
-				map: function (doc) {
-					if ("glaze" in doc) {
-						doc.glaze.forEach( g => {
-							if ( "type" in g ) {
-								emit( g.type ) ;
-							}
-						})
-					}
-				}.toString(),
-				reduce: '_count',
-			},
-		},
-	},
+        _id: "_design/qGlaze",
+        version: 1,
+        views: {
+            qGlaze: {
+                map: function (doc) {
+                    if ("glaze" in doc) {
+                        doc.glaze.forEach( g => {
+                            if ( "type" in g ) {
+                                emit( g.type ) ;
+                            }
+                        })
+                    }
+                }.toString(),
+                reduce: '_count',
+            },
+        },
+    },
     {
-		_id: "_design/qClay",
-		version: 1,
-		views: {
-			qClay: {
-				map: function (doc) {
-					if ("clay" in doc) {
-						doc.clay.forEach( g => {
-							if ( "type" in g ) {
-								emit( g.type ) ;
-							}
-						})
-					}
-				}.toString(),
-				reduce: '_count',
-			},
-		},
-	},
+        _id: "_design/qClay",
+        version: 1,
+        views: {
+            qClay: {
+                map: function (doc) {
+                    if ("clay" in doc) {
+                        doc.clay.forEach( g => {
+                            if ( "type" in g ) {
+                                emit( g.type ) ;
+                            }
+                        })
+                    }
+                }.toString(),
+                reduce: '_count',
+            },
+        },
+    },
     {
-		_id: "_design/qGlaze",
-		version: 1,
-		views: {
-			qGlaze: {
-				map: function (doc) {
-					if ("glaze" in doc) {
-						doc.glaze.forEach( g => {
-							if ( "type" in g ) {
-								emit( g.type ) ;
-							}
-						})
-					}
-				}.toString(),
-				reduce: '_count',
-			},
-		},
-	},
+        _id: "_design/qGlaze",
+        version: 1,
+        views: {
+            qGlaze: {
+                map: function (doc) {
+                    if ("glaze" in doc) {
+                        doc.glaze.forEach( g => {
+                            if ( "type" in g ) {
+                                emit( g.type ) ;
+                            }
+                        })
+                    }
+                }.toString(),
+                reduce: '_count',
+            },
+        },
+    },
     {
-		_id: "_design/qKiln",
-		version: 1,
-		views: {
-			qKiln: {
-				map: function (doc) {
-					if ("kilns" in doc) {
-						doc.kilns.forEach( g => {
-							if ( "kiln" in g ) {
-								emit( g.kiln ) ;
-							}
-						})
-					}
-				}.toString(),
-				reduce: '_count',
-			},
-		},
-	},
+        _id: "_design/qKiln",
+        version: 1,
+        views: {
+            qKiln: {
+                map: function (doc) {
+                    if ("kilns" in doc) {
+                        doc.kilns.forEach( g => {
+                            if ( "kiln" in g ) {
+                                emit( g.kiln ) ;
+                            }
+                        })
+                    }
+                }.toString(),
+                reduce: '_count',
+            },
+        },
+    },
     {
-		_id: "_design/qCone",
-		version: 1,
-		views: {
-			qCone: {
-				map: function (doc) {
-					if ("kilns" in doc) {
-						doc.kilns.forEach( g => {
-							if ( "cone" in g ) {
-								emit( g.cone ) ;
-							}
-						})
-					}
-				}.toString(),
-				reduce: '_count',
-			},
-		},
-	},
+        _id: "_design/qCone",
+        version: 1,
+        views: {
+            qCone: {
+                map: function (doc) {
+                    if ("kilns" in doc) {
+                        doc.kilns.forEach( g => {
+                            if ( "cone" in g ) {
+                                emit( g.cone ) ;
+                            }
+                        })
+                    }
+                }.toString(),
+                reduce: '_count',
+            },
+        },
+    },
     {
-		_id: "_design/qProcess",
-		version: 1,
-		views: {
-			qProcess: {
-				map: function (doc) {
-					if ("process" in doc) {
-						doc.process.forEach( g => {
-							if ( "type" in g ) {
-								emit( g.type ) ;
-							}
-						})
-					}
-				}.toString(),
-				reduce: '_count',
-			},
-		},
-	},
+        _id: "_design/qProcess",
+        version: 1,
+        views: {
+            qProcess: {
+                map: function (doc) {
+                    if ("process" in doc) {
+                        doc.process.forEach( g => {
+                            if ( "type" in g ) {
+                                emit( g.type ) ;
+                            }
+                        })
+                    }
+                }.toString(),
+                reduce: '_count',
+            },
+        },
+    },
     {
         _id: "_design/qType" ,
         version: 1,
@@ -523,6 +523,7 @@ class Search { // singleton class
 
     makeIndex(type) {
         let struct = this.fieldlist[type] ;
+        const fl=[];
         this.index[type] = elasticlunr( function() {
             this.setRef("_id");
             fl.forEach( f => this.addField(f) ) ;
@@ -541,13 +542,13 @@ class Search { // singleton class
 
     removeDocById( doc_id ) {
         // we don't have full doc. Could figure type from ID, but easier (and more general) to remove from all.
-		this.types.forEach( ty => this.index[ty].removeDocByRef( doc_id ) );
+        this.types.forEach( ty => this.index[ty].removeDocByRef( doc_id ) );
     }
 
     fill() {
-		// adds docs to index
-		return db.allDocs( { include_docs: true, } )
-		.then( docs => docs.rows.forEach( r => this.addDoc( r.doc ) ));
+        // adds docs to index
+        return db.allDocs( { include_docs: true, } )
+        .then( docs => docs.rows.forEach( r => this.addDoc( r.doc ) ));
     }
 
     search( text="" ) {
@@ -630,29 +631,29 @@ class DateMath { // convenience class
 }
 
 class Pot extends SimplePot { // convenience class
-	potname( doc ) {
-		return (doc?.Name)?doc.Name:`${doc?.type} ${Id_pot.splitId(doc._id).rand}`;
-	}
-	
+    potname( doc ) {
+        return (doc?.Name)?doc.Name:`${doc?.type} ${Id_pot.splitId(doc._id).rand}`;
+    }
+    
     del() {
         if ( this.isSelected() ) {        
             this.getRecordIdPix(potId)
             .then( (doc) => {
                 // Confirm question
-				if (confirm(`WARNING -- about to delete this piece\n ${this.potname(doc)}\nPress CANCEL to back out`)==true) {
-					return db.remove(doc) ;
-				} else {
-					throw "Cancel";
-				}           
-			})
+                if (confirm(`WARNING -- about to delete this piece\n ${this.potname(doc)}\nPress CANCEL to back out`)==true) {
+                    return db.remove(doc) ;
+                } else {
+                    throw "Cancel";
+                }           
+            })
             .then( _ => this.unselect() )
             .then( _ => objectPage.show( "back" ) )
             .catch( (err) => {
-				if (err != "Cancel" ) {
-					objectLog.err(err);
-					objectPage.show( "back" ) ;
-				}
-			});
+                if (err != "Cancel" ) {
+                    objectLog.err(err);
+                    objectPage.show( "back" ) ;
+                }
+            });
         }
     }
 
@@ -669,20 +670,20 @@ class Pot extends SimplePot { // convenience class
 
     select( pid = potId ) {
         potId = pid ;
-		objectCookie.set( "potId", pid );
-		// Check pot existence
-		objectPot.getRecordIdPix(pid)
-		.then( (doc) => {
-			// highlight the list row
-			if ( objectPage.test('AllPieces') ) {
-				objectTable.highlight();
-			}
-			TitleBox([this.potname(doc)]);
-			})
-		.catch( (err) => {
-			objectLog.err(err,"pot select");
-			this.unselect();
-			});
+        objectCookie.set( "potId", pid );
+        // Check pot existence
+        objectPot.getRecordIdPix(pid)
+        .then( (doc) => {
+            // highlight the list row
+            if ( objectPage.test('AllPieces') ) {
+                objectTable.highlight();
+            }
+            TitleBox([this.potname(doc)]);
+            })
+        .catch( (err) => {
+            objectLog.err(err,"pot select");
+            this.unselect();
+            });
     }
 
     unselect() {
@@ -701,59 +702,59 @@ class Pot extends SimplePot { // convenience class
     }
 
     pushPixButton() {
-		document.getElementById("HiddenFile").click() ;
-	}
+        document.getElementById("HiddenFile").click() ;
+    }
 
-	newPhoto() {
-		let inp = document.getElementById("HiddenFile") ;
-		if ( inp.files.length == 0 ) {
-			return ;
-		}
-		let members = structImages.members ;
+    newPhoto() {
+        let inp = document.getElementById("HiddenFile") ;
+        if ( inp.files.length == 0 ) {
+            return ;
+        }
+        let members = structImages.members ;
         if ( objectPot.isSelected() ) {
             objectPot.select( potId );
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
-				// make sure basic structure is there
-				if ( !("_attachments" in doc) ) {
-					doc._attachments={} ;
-				}
-				if ( !("images" in doc) ) {
-					doc.images=[] ;
-				}
-				console.log("DOC",doc);
-				console.log("INP",inp.files);
-				
-				// add number of pictures to picture button 
-				[...inp.files].forEach( f => {
-					console.log("File",f);
-					// Add to doc
-					doc._attachments[f.name]={
-						data: f,
-						content_type: f.type,
-					} ;
-					const idx = doc.images.findIndex( a => a.image==f.name ) ;
-					if ( idx == -1 ) {
-						// put newest one first
-						doc.images.unshift( {
-							image: f.name,
-							comment: "",
-							date: f.lastModifiedDate.toISOString(),
-							} );
-					} else {
-						// keep comment and name
-						doc.images[idx].date = f.lastModifiedDate.toISOString() ;
-					}
-					})
-					return db.put(doc) ;
-				})
-			.then( () => objectPage.show("PotPix") )
+                // make sure basic structure is there
+                if ( !("_attachments" in doc) ) {
+                    doc._attachments={} ;
+                }
+                if ( !("images" in doc) ) {
+                    doc.images=[] ;
+                }
+                console.log("DOC",doc);
+                console.log("INP",inp.files);
+                
+                // add number of pictures to picture button 
+                [...inp.files].forEach( f => {
+                    console.log("File",f);
+                    // Add to doc
+                    doc._attachments[f.name]={
+                        data: f,
+                        content_type: f.type,
+                    } ;
+                    const idx = doc.images.findIndex( a => a.image==f.name ) ;
+                    if ( idx == -1 ) {
+                        // put newest one first
+                        doc.images.unshift( {
+                            image: f.name,
+                            comment: "",
+                            date: f.lastModifiedDate.toISOString(),
+                            } );
+                    } else {
+                        // keep comment and name
+                        doc.images[idx].date = f.lastModifiedDate.toISOString() ;
+                    }
+                    })
+                    return db.put(doc) ;
+                })
+            .then( () => objectPage.show("PotPix") )
             .catch( (err) => {
                 objectLog.err(err);
                 })
             .finally( () => inp.value = "" ) ;
         }
-	}
+    }
 
 }
 
@@ -867,7 +868,7 @@ class AllPieces extends Pagelist {
         objectTable = new PotTable();
         objectPot.getAllIdDoc(true)
         .then( (docs) => {
-			console.log(docs);
+            console.log(docs);
             objectTable.fill(docs.rows );
             if ( objectPot.isSelected() ) {
                 objectPot.select( potId );
@@ -952,14 +953,14 @@ class PotNewData extends PotDataEditMode {
     savePieceData() {
         this.loadDocData(this.struct,this.doc);
         
-		// create new pot record
-		this.doc._id = Id_pot.makeId( this.doc );
-		db.put( this.doc )
-		.then( (response) => {
-			objectPot.select(response.id);
-			objectPage.show( "PotMenu" );
-			})
-		.catch( (err) => objectLog.err(err) );
+        // create new pot record
+        this.doc._id = Id_pot.makeId( this.doc );
+        db.put( this.doc )
+        .then( (response) => {
+            objectPot.select(response.id);
+            objectPage.show( "PotMenu" );
+            })
+        .catch( (err) => objectLog.err(err) );
     }
 }
 
@@ -1023,8 +1024,8 @@ class PotMenu extends Pagelist {
             objectPot.select( potId );
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
-				// add number of pictures to picture button 
-				})
+                // add number of pictures to picture button 
+                })
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -1232,8 +1233,8 @@ class SearchTable extends SortTable {
         } else {
             db.get( id )
             .then( doc => {
-				objectPot.select( id );
-				objectPage.show( 'PotMenu' ) ;
+                objectPot.select( id );
+                objectPage.show( 'PotMenu' ) ;
             })
             .catch( err => {
                 objectLog.err(err);
@@ -1326,9 +1327,9 @@ window.onload = () => {
                     objectSearch.addDoc(change.doc);
                 }
                 // update screen display
-				if ( objectPage.test("AllPots") ) {
-					objectPage.show("AllPots");
-				}
+                if ( objectPage.test("AllPots") ) {
+                    objectPage.show("AllPots");
+                }
                 })
             )
         .catch( err => objectLog.err(err,"Initial search database") );
