@@ -13,10 +13,10 @@ export {
 class Cookie { //convenience class
     set( cname, value ) {
         // From https://www.tabnine.com/academy/javascript/how-to-set-cookies-javascript/
-		globalThis[cname] = value;
-		let date = new Date();
-		date.setTime(date.getTime() + (400 * 24 * 60 * 60 * 1000)); // > 1year
-		document.cookie = `${cname}=${encodeURIComponent(JSON.stringify(value))}; expires=${date.toUTCString()}; SameSite=None; Secure; path=/`;
+        globalThis[cname] = value;
+        let date = new Date();
+        date.setTime(date.getTime() + (400 * 24 * 60 * 60 * 1000)); // > 1year
+        document.cookie = `${cname}=${encodeURIComponent(JSON.stringify(value))}; expires=${date.toUTCString()}; SameSite=None; Secure; path=/`;
     }
 
     del( cname ) {

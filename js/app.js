@@ -205,6 +205,28 @@ const structGeneralPot = [
         type:  "textarea",
     },
 ];
+
+function struct2keys( struct ) {
+    return struct.map( ob => {
+        switch (ob.type) {
+            case "text":
+            case "textarea":
+            case "radio":
+            case "checkbox":
+            case "list":
+                return ob.name;
+
+            case "array":
+            case "image_array":
+                return struct2keys(ob.members).map(m=>[ob.name,m].join(".")) ;
+
+            default:
+                return "";
+            }
+    })
+    .filter( k => k !=="" )
+    .flat() ;
+}
     
 const structImages = [
     {
@@ -318,6 +340,13 @@ const structProcess = [
         ],
     },
 ];
+
+console.log( "structDatabaseInfo", struct2keys( structDatabaseInfo ) );
+console.log( "structGeneralPot",   struct2keys( structGeneralPot   ) );
+console.log( "structImages",       struct2keys( structImages       ) );
+console.log( "structNewPot",       struct2keys( structNewPot       ) );
+console.log( "structProcess",      struct2keys( structProcess      ) );
+console.log( "structRemoteUser",   struct2keys( structRemoteUser   ) );
                 
 // Create pouchdb indexes.
 // Used for links between records and getting list of choices
@@ -508,47 +537,190 @@ function createQueries() {
 }
 
 class Search { // singleton class
+    // The char adjustment table used above
+    static adjustments = {
+      'A': ['E','I','O','U'],
+      'B': ['V'],
+      'E': ['I','O','U','Y','F',' '],
+      'I': ['O','U','Y','J'],
+      'O': ['U'],
+      'C': ['G','K'],
+      'W': ['U','V'],
+      'X': ['K','S'],
+      'S': ['Z',' '],
+      'Q': ['C','O'],
+      'U': ['V'],
+      'M': ['N'],
+      'L': ['I'],
+      'P': ['R'],
+      '2': ['Z'],
+      '5': ['S'],
+      '8': ['B'],
+      '1': ['I','L'],
+      '0': ['O','Q'],
+      'G': ['J'],
+      'Y': [' ']
+    }
+
     constructor() {
-        this.index={};
-        this.fieldlist={
-            general: structGeneralPot,
-            images: structImages,
-            process: structProcess,
-        };
-        this.types = Object.keys(this.fieldlist);
-        this.types.forEach( ty => this.makeIndex(ty) ) ;
-        this.result=[];
         this.select_id = null ;
     }
 
-    makeIndex(type) {
-        let struct = this.fieldlist[type] ;
-        const fl=[];
-        this.index[type] = elasticlunr( function() {
-            this.setRef("_id");
-            fl.forEach( f => this.addField(f) ) ;
-        }) ;
-    }
+    /* JS implementation of the strcmp95 C function written by
+    Bill Winkler, George McLaughlin, Matt Jaro and Maureen Lynch,
+    released in 1994 (http://web.archive.org/web/20100227020019/http://www.census.gov/geo/msb/stand/strcmp.c).
 
-    addDoc( doc ) {
-        if ( doc?.type in this.fieldlist ) {
-            this.index[doc.type].addDoc(
-                this.fieldlist[doc.type]
-                .concat("_id")
-                .reduce( (o,k) => {o[k]=doc[k]??"";return o;}, {})
-                );
+    a and b should be strings. Always performs case-insensitive comparisons
+    and always adjusts for long strings. */
+    
+    docScore( a, doc ) {
+        let weight = 0. ;
+        let text = "" ;
+        Object.entries(doc).forEach( ([k,v]) => {
+            if ( Array.isArray(v) ) {
+                if (v.length>0 ) {
+                    if ( typeof(v[0])=='object' ) {
+                        v.forEach( m => {
+                            const [w,t] = this.docScore( a, m ) ;
+                            if ( w > weight ) {
+                                weight = w ;
+                                text = t ;
+                            }
+                        })
+                    } else {
+                        const vv = v.join(" ");
+                        const w = this.score(a,vv) ;
+                        if ( w > weight ) {
+                            weight = w;
+                            text = vv ;
+                        }
+                    }
+                }
+            } else if ( typeof(v)=='string' ) {
+                const w = this.score(a,v) ;
+                if ( w > weight ) {
+                    weight = w;
+                    text = v ;
+                }
+            }
+            
+        });
+        return [weight,text] ;
+    }
+    
+    score( a, b ) {
+        if (!a || !b) {
+            return 0.0;
         }
-    }
 
-    removeDocById( doc_id ) {
-        // we don't have full doc. Could figure type from ID, but easier (and more general) to remove from all.
-        this.types.forEach( ty => this.index[ty].removeDocByRef( doc_id ) );
-    }
+        a = a.trim().toUpperCase();
+        b = b.trim().toUpperCase();
 
-    fill() {
-        // adds docs to index
-        return db.allDocs( { include_docs: true, } )
-        .then( docs => docs.rows.forEach( r => this.addDoc( r.doc ) ));
+        let weight = 0. ;
+
+        do {
+            const ind = b.indexOf( a[0] ) ;
+            if ( ind < 0 ) {
+                break ;
+            }
+            b = b.slice( ind ) ;
+            weight = Math.max( weight, this.distance(a,b));
+            b = b.slice(1) ;
+        } while ( weight < 1.0 ) ;
+        return weight ;
+  }
+    
+    distance(a, b) {
+        const a_len = a.length;
+        const b_len = Math.min(b.length,a.length+2);
+        const a_flag = [];
+        const b_flag = [];
+        const search_range = Math.floor(Math.max(a_len, b_len) / 2) - 1;
+        const minv = Math.min(a_len, b_len);
+
+        // Looking only within the search range, count and flag the matched pairs. 
+        let Num_com = 0;
+        const yl1 = b_len - 1;
+        for (let i = 0; i < a_len; i++) {
+            const lowlim = (i >= search_range) ? i - search_range : 0;
+            const hilim  = ((i + search_range) <= yl1) ? (i + search_range) : yl1;
+            for (let j = lowlim; j <= hilim; j++) {
+                if (b_flag[j] !== 1 && a[j] === b[i]) {
+                    a_flag[j] = 1;
+                    b_flag[i] = 1;
+                    Num_com++;
+                    break;
+                }
+            }
+        }
+
+        // Return if no characters in common
+        if (Num_com === 0) {
+            return 0.0;
+        }
+
+        // Count the number of transpositions
+        let k = 0;
+        let N_trans = 0;
+        for (let i = 0; i < a_len; i++) {
+            if (a_flag[i] === 1) {
+                let j;
+                for (j = k; j < b_len; j++) {
+                    if (b_flag[j] === 1) {
+                        k = j + 1;
+                        break;
+                    }
+                }
+                if (a[i] !== b[j]) {
+                    N_trans++;
+                }
+            }
+        }
+        N_trans = Math.floor(N_trans / 2);
+
+        // Adjust for similarities in nonmatched characters
+        let N_simi = 0;
+        if (minv > Num_com) {
+            for (var i = 0; i < a_len; i++) {
+                if (!a_flag[i]) {
+                    for (var j = 0; j < b_len; j++) {
+                        if (!b_flag[j]) {
+                            if ( (Search.adjustments[a[i]]??[]).includes(b[j])) {
+                                N_simi += 3;
+                                b_flag[j] = 2;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        const Num_sim = (N_simi / 10.0) + Num_com;
+
+        // Main weight computation
+        let weight = Num_sim / a_len + Num_sim / b_len + (Num_com - N_trans) / Num_com;
+        weight /= 3;
+
+        // Continue to boost the weight if the strings are similar
+        if (weight > 0.7) {
+            // Adjust for having up to the first 4 characters in common
+            const j = (minv >= 4) ? 4 : minv;
+            let i;
+            for (i = 0; (i < j) && a[i] === b[i]; i++) { }
+            if (i) {
+                weight += i * 0.1 * (1.0 - weight)
+            }
+
+            // Adjust for long strings.
+            // After agreeing beginning chars, at least two more must agree
+            // and the agreeing characters must be more than half of the
+            // remaining characters.
+            if (minv > 4 && Num_com > i + 1 && 2 * Num_com >= minv + i) {
+                weight += (1 - weight) * ((Num_com - i - 1) / (a_len * b_len - i*2 + 2));
+            }
+        }
+        return weight ;     
     }
 
     search( text="" ) {
@@ -556,11 +728,7 @@ class Search { // singleton class
     }
 
     resetTable () {
-        if ( this.result.length > 0 ) {
-            this.reselect_id = null ;
-            this.result = [];
-            this.setTable();
-        }
+        this.setTable([]);
     } 
 
     select(id) {
@@ -568,33 +736,33 @@ class Search { // singleton class
     }
 
     toTable() {
-        let result = [] ;
-        let value = document.getElementById("searchtext").value;
+        let needle = document.getElementById("searchtext").value;
 
-        if ( value.length == 0 ) {
+        if ( needle.length == 0 ) {
             return this.resetTable();
         }
         
         db.allDocs( { // get docs from search
             include_docs: true,
-            keys: this.search(value).map( s => s.ref ),
         })
         .then( docs => { // add _id, Text, Type fields to result
-            docs.rows.forEach( (r,i)=> result[i]=({_id:r.id,Type:r.doc.type,Text:r.doc[this.fieldlist[r.doc.type][0]]}) );
-            return db.query("Doc2Pid", { keys: docs.rows.map( r=>r.id), } );
+            const result = docs.rows.map( r => {
+                const [w,t] = this.docScore(needle,r.doc) ;
+                return ({_id:r.id,weight:w,Text:t});
+                }) ;
+            result.sort((a,b)=>b.weight-a.weight) ;
+            return result.filter( a=>a.weight>.8 ) ;
             })
-        .then( docs => db.query("Pid2Name", {keys: docs.rows.map(r=>r.value),} )) // associated patient Id for each
-        .then( docs => docs.rows.forEach( (r,i) => result[i].Name = r.value[0] )) // associate patient name
-        .then( () => this.result = result.map( r=>({doc:r}))) // encode as list of doc objects
-        .then( ()=>this.setTable()) // fill the table
+        .then( (res) => res.map( r=>({doc:r}))) // encode as list of doc objects
+        .then( (res)=>this.setTable(res)) // fill the table
         .catch(err=> {
             objectLog.err(err);
             this.resetTable();
             });
     }
 
-    setTable() {
-        objectTable.fill(this.result);
+    setTable(docs=[]) {
+        objectTable.fill(docs);
     }
 }
 
@@ -1182,36 +1350,10 @@ class PotTable extends SortTable {
     }
 }
 
-class SelectPatientTable extends SortTable {
-    constructor() {
-        super( 
-            ["LastName", "DOB","Notes" ], 
-            "SelectPatient",
-            [
-                ["LastName","Name", (doc)=> `${doc.LastName}, ${doc.FirstName}`],
-                ["Notes","Note",null],
-            ] 
-            );
-        this.pid = "";
-    }
-
-    selectId() {
-        return this.pid;
-    }
-
-    selectFunc(id) {
-        this.pid = id
-    }
-
-    editpage() {
-        //objectPage.show("PatientPhoto");
-    }
-}
-
 class SearchTable extends SortTable {
     constructor() {
         super( 
-        ["Name","Type","Text"], 
+        ["_id","weight","Text"], 
         "SearchList"
         );
     }
@@ -1315,23 +1457,14 @@ window.onload = () => {
 
         // Set up text search
         objectSearch = new Search();
-        objectSearch.fill()
-        .then ( _ =>
-            // now start listening for any changes to the database
-            db.changes({ since: 'now', live: true, include_docs: true, })
-            .on('change', (change) => {
-                // update search index
-                if ( change?.deleted ) {
-                    objectSearch.removeDocById(change.id);
-                } else {
-                    objectSearch.addDoc(change.doc);
-                }
-                // update screen display
-                if ( objectPage.test("AllPots") ) {
-                    objectPage.show("AllPots");
-                }
-                })
-            )
+        // now start listening for any changes to the database
+        db.changes({ since: 'now', live: true, include_docs: true, })
+        .on('change', (change) => {
+            // update screen display
+            if ( objectPage.test("AllPieces") ) {
+                objectPage.show("AllPieces");
+            }
+            })
         .catch( err => objectLog.err(err,"Initial search database") );
 
         // start sync with remote database
