@@ -353,6 +353,7 @@ body {
 }
 #searchtext {
     background: "paleblue";
+    font-size: 2em;
     flex: 1;
 }
 #splash_screen {
@@ -457,6 +458,11 @@ legend {
   flex-direction: row ;
   justify-content: space-around;
 }
+#PotPhotos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;  
+}
 .PotProcButtons, .MainMenuButtons {
   display: flex;
   flex-direction: column;
@@ -519,7 +525,7 @@ legend {
   white-space:nowrap;
 }
 .potholderLogo {
-  height:100px;
+  max-height:100px;
   width:auto;
 }
 .splashImg {

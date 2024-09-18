@@ -29,6 +29,7 @@ globalThis.db = null ; // will be Pouchdb local copy
 
 // app only
 globalThis. objectSearch = null;
+globalThis. objectThumb = null;
 
 // download only
 // singleton class instances

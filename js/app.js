@@ -18,6 +18,7 @@ import {
 
 import {
     PotImages,
+    Thumb,
     } from "./image_mod.js" ;
 
 import {
@@ -30,6 +31,7 @@ import {
 
 import {
     SortTable,
+    ThumbTable,
     } from "./sorttable_mod.js" ;
 
 import {
@@ -206,28 +208,6 @@ const structGeneralPot = [
     },
 ];
 
-function struct2keys( struct ) {
-    return struct.map( ob => {
-        switch (ob.type) {
-            case "text":
-            case "textarea":
-            case "radio":
-            case "checkbox":
-            case "list":
-                return ob.name;
-
-            case "array":
-            case "image_array":
-                return struct2keys(ob.members).map(m=>[ob.name,m].join(".")) ;
-
-            default:
-                return "";
-            }
-    })
-    .filter( k => k !=="" )
-    .flat() ;
-}
-    
 const structImages = [
     {
         name:  "images",
@@ -341,13 +321,6 @@ const structProcess = [
     },
 ];
 
-console.log( "structDatabaseInfo", struct2keys( structDatabaseInfo ) );
-console.log( "structGeneralPot",   struct2keys( structGeneralPot   ) );
-console.log( "structImages",       struct2keys( structImages       ) );
-console.log( "structNewPot",       struct2keys( structNewPot       ) );
-console.log( "structProcess",      struct2keys( structProcess      ) );
-console.log( "structRemoteUser",   struct2keys( structRemoteUser   ) );
-                
 // Create pouchdb indexes.
 // Used for links between records and getting list of choices
 // change version number to force a new version
@@ -723,10 +696,6 @@ class Search { // singleton class
         return weight ;     
     }
 
-    search( text="" ) {
-        return [].concat( ... this.types.map(ty => this.index[ty].search(text)) );
-    }
-
     resetTable () {
         this.setTable([]);
     } 
@@ -799,6 +768,12 @@ class DateMath { // convenience class
 }
 
 class Pot extends SimplePot { // convenience class
+    constructor() {
+        super() ;
+        this.TL=document.getElementById("TopLeftImage");
+        this.LOGO = document.getElementById("LogoPicture");
+    }
+    
     potname( doc ) {
         return (doc?.Name)?doc.Name:`${doc?.type} ${Id_pot.splitId(doc._id).rand}`;
     }
@@ -842,6 +817,8 @@ class Pot extends SimplePot { // convenience class
         // Check pot existence
         objectPot.getRecordIdPix(pid)
         .then( (doc) => {
+            // Top left Logo
+            objectThumb.display( this.TL, pid ) ;
             // highlight the list row
             if ( objectPage.test('AllPieces') ) {
                 objectTable.highlight();
@@ -857,6 +834,7 @@ class Pot extends SimplePot { // convenience class
     unselect() {
         potId = null;
         objectCookie.del ( "potId" );
+        this.TL.src = this.LOGO.src;
         if ( objectPage.test("AllPieces") ) {
             let pt = document.getElementById("PotTable");
             if ( pt ) {
@@ -916,6 +894,7 @@ class Pot extends SimplePot { // convenience class
                     })
                     return db.put(doc) ;
                 })
+            .then( () => objectPot.select( potId ) )
             .then( () => objectPage.show("PotPix") )
             .catch( (err) => {
                 objectLog.err(err);
@@ -1033,6 +1012,7 @@ class AllPieces extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+        objectPot.unselect() ;
         objectTable = new PotTable();
         objectPot.getAllIdDoc(true)
         .then( (docs) => {
@@ -1052,26 +1032,47 @@ class Download extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+        objectPot.unselect() ;
         window.location.href="/download.html" ;
     }
 }
 class DownloadCSV extends Download {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect();
+    }
 }
+
 class DownloadJSON extends Download {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect();
+    }
 }
+
 class DownloadPPTX extends Download {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect();
+    }
 }
+
 class DownloadZIP extends Download {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect();
+    }
 }
 
 class ErrorLog extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+        objectPot.unselect() ;
         objectLog.show() ;
     }
 }
@@ -1080,6 +1081,7 @@ class FirstTime extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+        objectPot.unselect() ;
         if ( db !== null ) {
             objectPage.show("MainMenu");
         }
@@ -1097,10 +1099,18 @@ class InvalidPiece extends Pagelist {
 
 class MainMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect();
+    }
 }
 
 class ListMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect();
+    }
 }
 
 class PotNew extends Pagelist {
@@ -1192,7 +1202,12 @@ class PotMenu extends Pagelist {
             objectPot.select( potId );
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
-                // add number of pictures to picture button 
+                const pix = document.getElementById("PotPhotos");
+                const images = new PotImages(doc);
+                pix.innerHTML="";
+                //console.log("IMAGES",images);
+                //console.log("array",images.displayAll() ) ;
+                images.displayAll().forEach( i => pix.appendChild(i) ) ;
                 })
             .catch( (err) => {
                 objectLog.err(err);
@@ -1208,6 +1223,7 @@ class SearchList extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+        objectPot.unselect() ;
         objectTable = new SearchTable() ;
         objectSearch.setTable();
     }
@@ -1323,10 +1339,10 @@ class Page { // singleton class
     }    
 }
 
-class PotTable extends SortTable {
+class PotTable extends ThumbTable {
     constructor() {
         super( 
-            ["Thumbnail", "Name","start_date","series" ], 
+            ["Name","start_date","series" ], 
             "AllPieces",
             [
                 ["Thumbnail","Picture", (doc)=> `${doc.artist}`],
@@ -1350,10 +1366,10 @@ class PotTable extends SortTable {
     }
 }
 
-class SearchTable extends SortTable {
+class SearchTable extends ThumbTable {
     constructor() {
         super( 
-        ["_id","weight","Text"], 
+        ["weight","Text"], 
         "SearchList"
         );
     }
@@ -1455,11 +1471,19 @@ window.onload = () => {
     if ( credentialList.every( c => remoteCouch[c] !== "" ) ) {
         db = new PouchDB( remoteCouch.database, {auto_compaction: true} ); // open local copy
 
+        // Thumbnails
+        objectThumb = new Thumb() ;
+        objectThumb.getAll();
+
         // Set up text search
         objectSearch = new Search();
         // now start listening for any changes to the database
         db.changes({ since: 'now', live: true, include_docs: true, })
         .on('change', (change) => {
+            if ( change?.deleted ) {
+            } else {
+                objectThumb.getOne( change.id ) ;
+            }
             // update screen display
             if ( objectPage.test("AllPieces") ) {
                 objectPage.show("AllPieces");

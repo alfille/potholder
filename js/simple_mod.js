@@ -63,16 +63,16 @@ class SimplePot { // convenience class
 
     select( pid = potId ) {
         potId = pid ;
-		Cookie.set( "potId", pid );
-		this.getRecordIdPix( pid )
-		.then( (doc) => {
-			// highlight the list row
-			TitleBox([doc.rows[0].value[1]]) ;
-			})
-		.catch( (err) => {
-			objectLog.err(err,"patient select");
-			});
-	}
+        Cookie.set( "potId", pid );
+        this.getRecordIdPix( pid )
+        .then( (doc) => {
+            // highlight the list row
+            TitleBox([doc.rows[0].value[1]]) ;
+            })
+        .catch( (err) => {
+            objectLog.err(err,"patient select");
+            });
+    }
 
     isSelected() {
         return ( potId != null ) ;
