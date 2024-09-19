@@ -62,10 +62,10 @@ class Thumb {
         this.ctx = this.canvas.getContext( "2d" ) ;
         this.Thumbs = {} ;
         this.img = document.createElement("img");
-        this.NoPicture = this.no_picture() ;
+        this.NoPicture = this._no_picture() ;
     }
 
-    no_picture() {
+    _no_picture() {
         const img = document.getElementById("NoPicture");
         this.ctx.drawImage( img, 0, 0, this.canvas.width, this.canvas.height ) ;
         this.canvas.toBlob( (blob) => {
@@ -83,7 +83,19 @@ class Thumb {
             const url = URL.createObjectURL(doc._attachments[doc.images[0].image].data) ;
             this.img.onload = () => {
                 URL.revokeObjectURL(url) ;
-                this.ctx.drawImage( this.img, 0, 0, this.canvas.width, this.canvas.height ) ;
+                // center and crop to maintain 1:1 aspect ratio
+                let sw = this.img.naturalWidth;
+                let sh = this.img.naturalHeight ;
+                let sx = 0 ;
+                let sy = 0 ;
+                if (  sw > sh ) {
+                    sx = (sw - sh) / 2;
+                    sw = sh ;
+                } else {
+                    sy = (sh - sw ) / 2 ;
+                    sh = sw ;
+                }
+                this.ctx.drawImage( this.img, sx, sy, sw, sh, 0, 0, this.canvas.width, this.canvas.height ) ;
                 this.canvas.toBlob( (blob) => {
                     this.Thumbs[doc._id] = blob;
                     }) ;

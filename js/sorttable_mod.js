@@ -177,13 +177,11 @@ class ThumbTable extends SortTable {
     }
 
     fill( doclist ) {
-        console.log("Tdoclist",doclist);
         // typically called with doc.rows from allDocs
         const tbody = this.tbl.querySelector('tbody');
         tbody.innerHTML = "";
         //let collist = this.collist;
         doclist.forEach( (doc) => {
-            console.log("fill",doc);
             const row = tbody.insertRow(-1);
             const record = doc.doc;
             row.setAttribute("data-id",record._id);
@@ -193,13 +191,11 @@ class ThumbTable extends SortTable {
             // thumb
             const img = document.createElement("img");
             objectThumb.display( img, record._id ) ;
-            console.log("Image",record._id);
             row.insertCell(-1).appendChild(img);
             // cells
             this.collist
             .slice(1)
             .forEach( colname => {
-                console.log("cell");
                 const c = row.insertCell(-1);
                 c.innerHTML=(this.aliases[colname].value)(record) ;
             });

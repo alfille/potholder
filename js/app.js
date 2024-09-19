@@ -1016,7 +1016,6 @@ class AllPieces extends Pagelist {
         objectTable = new PotTable();
         objectPot.getAllIdDoc(true)
         .then( (docs) => {
-            console.log(docs);
             objectTable.fill(docs.rows );
             if ( objectPot.isSelected() ) {
                 objectPot.select( potId );

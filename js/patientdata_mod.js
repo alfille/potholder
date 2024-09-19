@@ -32,6 +32,37 @@ class PotDataRaw { // singleton class
         this.struct = struct;
         this.array_preVals={} ;
 
+        // Add dummy entries for extra images
+        if ( "_attachments" in doc ) {
+            const a_list = Object.keys(doc._attachments);
+            if ( ! ( "images" in doc ) ) {
+                doc.images=[] ;
+            }
+            const i_list = doc.images.map( i=>i.image ) ;
+            a_list
+            .filter( a => ! i_list.includes(a) )
+            .forEach( a=> {
+                doc.images.push( {
+                    image: a,
+                    comment: "<Restored>",
+                    date: new Date().toISOString()
+                    }) ;
+                changed = true ;
+            });
+        }
+        // remove references to non-existent images
+        if ( "images" in doc ) {
+            const i_list = doc.images.map( i=>i.image ) ;
+            if ( ! ( "_attachments" in doc ) ) {
+                doc._attachments=[] ;
+            }
+            const a_list = Object.keys(doc._attachments);
+            i_list
+            .filter( i => ! a_list.includes(i) )
+            .forEach( i => delete doc.images[i] ) ;
+        }
+
+        // jump to edit mode?
         if ( click ) {
             this.edit_doc() ;
         } else {
@@ -774,7 +805,16 @@ class PotDataRaw { // singleton class
     
     loadDocData(struct,doc) {
         //return true if any real change
-        let changed = this.loadDocData_local(struct,doc); 
+        let changed = this.loadDocData_local(struct,doc);
+        // Check images
+        if ( "images" in doc ) {
+            const i_list = doc.images.map( i=>i.image ) ;
+            const a_list = Object.keys(doc._attachments);
+            a_list.filter( a=> ! i_list.includes(a) ).forEach( a=> {
+                delete doc._attachments[a] ;
+                changed = true ;
+            });
+        }
         if ( changed ) {
             Object.assign(this.doc,doc);
         }
