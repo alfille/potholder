@@ -67,7 +67,7 @@ class SimplePot { // convenience class
         this.getRecordIdPix( pid )
         .then( (doc) => {
             // highlight the list row
-            TitleBox([doc.rows[0].value[1]]) ;
+            TitleBox([doc.rows[0].doc]) ;
             })
         .catch( (err) => {
             objectLog.err(err,"patient select");

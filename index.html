@@ -55,7 +55,7 @@
                     <div class="PotData PotEdit PotProcess topButtons PotPix pageOverlay">
                         <button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Back</button>
                     </div>
                     <!-- top: InvalidPiece -->
                     <div class="InvalidPiece topButtons pageOverlay">
@@ -104,7 +104,6 @@
                         <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
                         <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Advanced Options</button>
                     </div>
-                    <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                 </div>
             </div>
             <!-- body: ListMenu -->
@@ -246,6 +245,8 @@
             <div id="footerflex">
                 <div><label>User:<input type="text" readonly id="userstatus"></label></div>
                 <div ><label>Sync status:<input type="text" readonly id="syncstatus" onclick="objectPage.show( 'ErrorLog' )"></label></div>
+            </div>
+            <div id="MainPhotos">
             </div>
         </footer>
         <!-- Splash screen -->

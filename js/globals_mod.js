@@ -90,11 +90,11 @@ export function setButtons() {
         );
 }
 
-export function TitleBox( titlearray=null, show="PotMenu" ) {
-    if ( titlearray == null ) {
+export function TitleBox( doc ) {
+    if ( doc == null ) {
         document.getElementById( "titlebox" ).innerHTML = "" ;
     } else {
-        document.getElementById( "titlebox" ).innerHTML = `<button type="button" onClick='objectPage.show("${show}")'>${titlearray.join(" ")}</button>` ;
+        document.getElementById( "titlebox" ).innerHTML = `<button type="button" onClick='objectPage.show("PotMenu")'>${[doc?.type,"from",doc?.series,"by",doc?.artist,doc?.start_date].join(" ")}</button>` ;
     }
 }
 

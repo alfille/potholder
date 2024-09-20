@@ -823,7 +823,7 @@ class Pot extends SimplePot { // convenience class
             if ( objectPage.test('AllPieces') ) {
                 objectTable.highlight();
             }
-            TitleBox([this.potname(doc)]);
+            TitleBox(doc);
             })
         .catch( (err) => {
             objectLog.err(err,"pot select");
@@ -925,6 +925,8 @@ class Pagelist {
         document.querySelectorAll(".pageOverlay")
             .forEach( po => po.style.display = po.classList.contains(this.name) ? "block" : "none" );
 
+        document.getElementById("MainPhotos").style.display="none";
+        
         this.subshow(extra);
     }
     
@@ -1013,6 +1015,7 @@ class AllPieces extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect() ;
+        document.getElementById("MainPhotos").style.display="block";
         objectTable = new PotTable();
         objectPot.getAllIdDoc(true)
         .then( (docs) => {
@@ -1073,6 +1076,7 @@ class ErrorLog extends Pagelist {
     static subshow(extra="") {
         objectPot.unselect() ;
         objectLog.show() ;
+        document.getElementById("MainPhotos").style.display="block";
     }
 }
 
@@ -1093,6 +1097,7 @@ class InvalidPiece extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect();
+        document.getElementById("MainPhotos").style.display="block";
     }
 }
 
@@ -1101,6 +1106,7 @@ class MainMenu extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect();
+        document.getElementById("MainPhotos").style.display="block";
     }
 }
 
@@ -1109,6 +1115,7 @@ class ListMenu extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect();
+        document.getElementById("MainPhotos").style.display="block";
     }
 }
 
@@ -1223,6 +1230,7 @@ class SearchList extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect() ;
+        document.getElementById("MainPhotos").style.display="block";
         objectTable = new SearchTable() ;
         objectSearch.setTable();
     }
@@ -1472,14 +1480,21 @@ window.onload = () => {
 
         // Thumbnails
         objectThumb = new Thumb() ;
-        objectThumb.getAll();
+
+        // Secondary indexes
+        createQueries();
+        db.viewCleanup()
+        .then( () => objectThumb.getAll() )
+        .catch( err => objectLog.err(err,"Query cleanup") );
 
         // Set up text search
         objectSearch = new Search();
+
         // now start listening for any changes to the database
         db.changes({ since: 'now', live: true, include_docs: true, })
         .on('change', (change) => {
             if ( change?.deleted ) {
+                obJectThumb.remove( change.id ) ;
             } else {
                 objectThumb.getOne( change.id ) ;
             }
@@ -1493,11 +1508,6 @@ window.onload = () => {
         // start sync with remote database
         objectRemote.foreverSync();
 
-        // Secondary indexes
-        createQueries();
-        db.viewCleanup()
-        .catch( err => objectLog.err(err,"Query cleanup") );
-
         // now jump to proper page
         objectPage.show( null ) ;
 
@@ -1505,6 +1515,7 @@ window.onload = () => {
         if ( objectPot.isSelected() ) { // mission too
             objectPot.select() ;
         }
+
     } else {
         db = null;
         objectPage.reset();

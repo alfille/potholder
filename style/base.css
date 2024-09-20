@@ -148,6 +148,17 @@ ul {
 .small_pic:hover {
   opacity: 0.7;
 }
+.medium_pic {
+  max-height: 120px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: inline-block;
+  width: auto ;
+  border-radius: 5px;
+}
+.medium_pic:hover {
+  opacity: 0.7;
+}
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
@@ -458,10 +469,14 @@ legend {
   flex-direction: row ;
   justify-content: space-around;
 }
-#PotPhotos {
+#PotPhotos, #MainPhotos {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;  
+}
+.MainPhoto {
+  border: 1px solid white;
+  margin: 5px;
 }
 .PotProcButtons, .MainMenuButtons {
   display: flex;
