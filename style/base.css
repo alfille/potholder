@@ -237,19 +237,8 @@ ul {
 .titlediv {
   overflow: auto;
 }
-.selectdiv{
-  float: right;
-}
-.entryfield_text {
-  min-height: 1em;
-  display: block;
-}
-.entryfield_title {
-  font-weight: bold;
-  display: inline-block;
-}
 
-.yearspan, .fill_show_data {
+.multiCat, .fill_show_data {
   font-weight: bold;
   color: black;
   display: inline-block;
@@ -267,7 +256,7 @@ ul {
   display: inline-block;
 }
 
-.noteFieldset {
+.MultiFieldset {
   background-color: #949ddf;
 }
     
@@ -332,7 +321,7 @@ body {
 .editToolbar span:hover {
     color: yellow;
 }
-.edit_data, .edit_note, .search {
+.edit_data, .search {
   display: inline-block;
   background: yellow;
   color: black;
@@ -342,7 +331,7 @@ body {
 .inly {
   display : inline-block;
 }
-.edit_data:disabled, .edit_note:disabled {
+.edit_data:disabled {
   background: #ffffcc;
   color: grey;
 }
@@ -361,6 +350,7 @@ body {
     background: "darkblue";
     width: 100%;
     display: flex;
+    overflow: hidden;
 }
 #searchtext {
     background: "paleblue";

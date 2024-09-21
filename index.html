@@ -30,6 +30,11 @@
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
                     </div>
+                    <!-- top: ListSeries ListFiring ListClay ListGlaze -->
+                    <div class="ListSeries ListFiring ListClay ListGlaze topButtons pageOverlay">
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
+                        <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
+                    </div>
                     <!-- top: ListMenu -->
                     <div class="ListMenu topButtons pageOverlay">
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
@@ -112,11 +117,12 @@
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPieces' )">All Pieces</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
                     </div>
                     <div class="PotProcButtons">
-                        <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
-                        <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Advanced Options</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListSeries' )">Series</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListFiring' )">Firing</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListClay' )">Clay</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListGlaze' )">Glaze</button>
                     </div>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                 </div>
@@ -138,6 +144,11 @@
             <div class="AllPieces pageOverlay">
                 <div id="AllPiecesContent" >
                     <table id="AllPieces"></table>
+                </div>
+            </div>
+            <!-- body: ListSeries ListFiring ListClay ListGlaze -->
+            <div class="ListSeries ListFiring ListClay ListGlaze pageOverlay">
+                <div id="MultiTableContent" >
                 </div>
             </div>
             <!-- body: SearchList -->
@@ -239,6 +250,14 @@
                 <button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
                 <button type="button" class="divbutton Qmark">Help</button>
             </div>
+            <!-- MultiSortTable fieldsets -->
+            <fieldset class="MultiFieldset">
+                <legend>
+                    <button type="button" class="triggerbutton">&#10134;</button>
+                    <span class="multiCat"></span>
+                </legend>
+                <table></table>
+            </fieldset>
         </div>
         <!-- Footer -->
         <footer class="work_screen mainOnly">

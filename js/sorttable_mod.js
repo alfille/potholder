@@ -9,7 +9,13 @@
 export {
     SortTable,
     ThumbTable,
+    PotTable,
+    MultiTable,
 } ;
+
+import {
+    TitleBox,
+    } from "./globals_mod.js" ;
 
 class SortTable {
     constructor( collist, tableId, aliaslist=[] ) {
@@ -204,3 +210,98 @@ class ThumbTable extends SortTable {
     }
     
 }
+
+class PotTable extends ThumbTable {
+    constructor(
+        collist=["type","series","start_date" ],
+        tableId="AllPieces",
+        aliaslist=
+            [
+                ["Thumbnail","Picture", (doc)=> `${doc.artist}`],
+                ['start_date','Date',null],
+                ['series','Series',null],
+                ['type','Type',null]
+            ] ) {
+        super( collist, tableId, aliaslist ) ;
+    }
+
+    selectId() {
+        return potId;
+    }
+
+    selectFunc(id) {
+        objectPot.select(id) ;
+    }
+
+    editpage() {
+        objectPage.show("PotMenu");
+    }
+}
+
+class MultiTable {
+    constructor( title, cat_func, collist=["type","series","start_date" ], aliaslist=[] ) {
+        // cat_func outputs a category array:
+        // [] or  [category] or [category1, category2,...]
+        // sort_func operates on a doc record
+
+        /* Example:
+         *  new MultiTable( "Artist", (doc)=>[doc.artist], "series",document.getElementById("MultiTableContent") );
+        */
+
+        TitleBox(title);
+        this.cat_ob = {} ;
+        const parent = document.getElementById("MultiTableContent") ;
+        parent.innerHTML="";
+        const fieldset = document.getElementById("templates").querySelector(".MultiFieldset");
+        this.apply_cat( cat_func )
+        .then( () => console.log("MULTI",this.cat_ob ) )
+        .then( () => Object.keys(this.cat_ob).forEach( cat => {
+            const fs = fieldset.cloneNode( true ) ;
+            fs.querySelector(".multiCat").innerText = cat ;
+            const tb = fs.querySelector("table");
+            tb.id = `MT${cat}` ;
+            tb.style.display="";
+            parent.appendChild(fs) ;
+            const cl = [...collist] ;
+            this.cat_ob[cat].table=new PotTable( cl, tb.id ) ;
+            this.cat_ob[cat].table.fill(this.cat_ob[cat].rows)
+            this.cat_ob[cat].visible=true ;
+            const plus = fs.querySelector(".triggerbutton") ;
+            plus.onclick = () => {
+                console.log("click",cat);
+                if ( this.cat_ob[cat].visible ) {
+                    plus.innerHTML= "&#10133;" ;
+                    tb.style.display = "none" ;
+                    this.cat_ob[cat].visible = false ;
+                } else {
+                    plus.innerHTML= "&#10134;" ;
+                    tb.style.display = "" ;
+                    this.cat_ob[cat].visible = true ;
+                }
+            } ;                
+        })) ;
+    }
+    
+    apply_cat( cat_func ) {
+        const a2a = [] ;
+        return objectPot.getAllIdDoc()
+        .then( docs => docs.rows
+                        .forEach( r => (cat_func( r.doc )??[])
+                            .forEach( c => a2a.push( [c,r] ))
+                             ))
+        .then( () => this.arrays2object( a2a ) );
+    }
+        
+    arrays2object( arrays ) {
+        arrays.forEach( ([k,v]) => {
+            if ( k in this.cat_ob ) {
+                this.cat_ob[k].rows.push(v) ;
+            } else {
+                this.cat_ob[k]={rows:[v]} ;
+            }
+        })
+    }
+}
+
+        
+        

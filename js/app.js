@@ -32,6 +32,8 @@ import {
 import {
     SortTable,
     ThumbTable,
+    PotTable,
+    MultiTable,
     } from "./sorttable_mod.js" ;
 
 import {
@@ -1018,15 +1020,48 @@ class AllPieces extends Pagelist {
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new PotTable();
         objectPot.getAllIdDoc(true)
-        .then( (docs) => {
-            objectTable.fill(docs.rows );
-            if ( objectPot.isSelected() ) {
-                objectPot.select( potId );
-            } else {
-                objectPot.unselect();
-            }
-            })
+        .then( (docs) => objectTable.fill(docs.rows ) )
         .catch( (err) => objectLog.err(err) );
+    }
+}
+
+class ListSeries extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect() ;
+        document.getElementById("MainPhotos").style.display="block";
+        objectTable = new MultiTable( "by Series", (doc)=>[doc?.series??"Unknown"] ) ;
+    }
+}
+
+class ListFiring extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect() ;
+        document.getElementById("MainPhotos").style.display="block";
+        objectTable = new MultiTable( "by Firing", (doc)=>[doc?.firing??"Unknown"] ) ;
+    }
+}
+
+class ListGlaze extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect() ;
+        document.getElementById("MainPhotos").style.display="block";
+        objectTable = new MultiTable( "by Glaze", (doc)=>{ if ("glaze" in doc) { return doc.glaze.map(x=>x.type); }} ) ;
+    }
+}
+
+class ListClay extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+        objectPot.unselect() ;
+        document.getElementById("MainPhotos").style.display="block";
+        objectTable = new MultiTable( "by Clay", (doc)=>{ if ("clay" in doc) { return doc.clay.map(x=>x.type); } } ) ;
     }
 }
 
@@ -1344,33 +1379,6 @@ class Page { // singleton class
             }
         }
     }    
-}
-
-class PotTable extends ThumbTable {
-    constructor() {
-        super( 
-            ["Name","start_date","series" ], 
-            "AllPieces",
-            [
-                ["Thumbnail","Picture", (doc)=> `${doc.artist}`],
-                ['start_date','Date',null],
-                ['series','Series',null],
-                ['Name','Name',(doc)=>objectPot.potname(doc)]
-            ] 
-            );
-    }
-
-    selectId() {
-        return potId;
-    }
-
-    selectFunc(id) {
-        objectPot.select(id) ;
-    }
-
-    editpage() {
-        objectPage.show("PotMenu");
-    }
 }
 
 class SearchTable extends ThumbTable {
