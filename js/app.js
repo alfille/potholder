@@ -52,10 +52,6 @@ import {
 import {
     } from "./replicate_mod.js" ;
 
-
-// other globals
-const NoPhoto = "style/NoPhoto.png";
-
 // used to generate data entry pages "PotData" type
 const structRemoteUser = [
     {
@@ -512,190 +508,9 @@ function createQueries() {
 }
 
 class Search { // singleton class
-    // The char adjustment table used above
-    static adjustments = {
-      'A': ['E','I','O','U'],
-      'B': ['V'],
-      'E': ['I','O','U','Y','F',' '],
-      'I': ['O','U','Y','J'],
-      'O': ['U'],
-      'C': ['G','K'],
-      'W': ['U','V'],
-      'X': ['K','S'],
-      'S': ['Z',' '],
-      'Q': ['C','O'],
-      'U': ['V'],
-      'M': ['N'],
-      'L': ['I'],
-      'P': ['R'],
-      '2': ['Z'],
-      '5': ['S'],
-      '8': ['B'],
-      '1': ['I','L'],
-      '0': ['O','Q'],
-      'G': ['J'],
-      'Y': [' ']
-    }
-
     constructor() {
         this.select_id = null ;
-    }
-
-    /* JS implementation of the strcmp95 C function written by
-    Bill Winkler, George McLaughlin, Matt Jaro and Maureen Lynch,
-    released in 1994 (http://web.archive.org/web/20100227020019/http://www.census.gov/geo/msb/stand/strcmp.c).
-
-    a and b should be strings. Always performs case-insensitive comparisons
-    and always adjusts for long strings. */
-    
-    docScore( a, doc ) {
-        let weight = 0. ;
-        let text = "" ;
-        Object.entries(doc).forEach( ([k,v]) => {
-            if ( Array.isArray(v) ) {
-                if (v.length>0 ) {
-                    if ( typeof(v[0])=='object' ) {
-                        v.forEach( m => {
-                            const [w,t] = this.docScore( a, m ) ;
-                            if ( w > weight ) {
-                                weight = w ;
-                                text = t ;
-                            }
-                        })
-                    } else {
-                        const vv = v.join(" ");
-                        const w = this.score(a,vv) ;
-                        if ( w > weight ) {
-                            weight = w;
-                            text = vv ;
-                        }
-                    }
-                }
-            } else if ( typeof(v)=='string' ) {
-                const w = this.score(a,v) ;
-                if ( w > weight ) {
-                    weight = w;
-                    text = v ;
-                }
-            }
-            
-        });
-        return [weight,text] ;
-    }
-    
-    score( a, b ) {
-        if (!a || !b) {
-            return 0.0;
-        }
-
-        a = a.trim().toUpperCase();
-        b = b.trim().toUpperCase();
-
-        let weight = 0. ;
-
-        do {
-            const ind = b.indexOf( a[0] ) ;
-            if ( ind < 0 ) {
-                break ;
-            }
-            b = b.slice( ind ) ;
-            weight = Math.max( weight, this.distance(a,b));
-            b = b.slice(1) ;
-        } while ( weight < 1.0 ) ;
-        return weight ;
-  }
-    
-    distance(a, b) {
-        const a_len = a.length;
-        const b_len = Math.min(b.length,a.length+2);
-        const a_flag = [];
-        const b_flag = [];
-        const search_range = Math.floor(Math.max(a_len, b_len) / 2) - 1;
-        const minv = Math.min(a_len, b_len);
-
-        // Looking only within the search range, count and flag the matched pairs. 
-        let Num_com = 0;
-        const yl1 = b_len - 1;
-        for (let i = 0; i < a_len; i++) {
-            const lowlim = (i >= search_range) ? i - search_range : 0;
-            const hilim  = ((i + search_range) <= yl1) ? (i + search_range) : yl1;
-            for (let j = lowlim; j <= hilim; j++) {
-                if (b_flag[j] !== 1 && a[j] === b[i]) {
-                    a_flag[j] = 1;
-                    b_flag[i] = 1;
-                    Num_com++;
-                    break;
-                }
-            }
-        }
-
-        // Return if no characters in common
-        if (Num_com === 0) {
-            return 0.0;
-        }
-
-        // Count the number of transpositions
-        let k = 0;
-        let N_trans = 0;
-        for (let i = 0; i < a_len; i++) {
-            if (a_flag[i] === 1) {
-                let j;
-                for (j = k; j < b_len; j++) {
-                    if (b_flag[j] === 1) {
-                        k = j + 1;
-                        break;
-                    }
-                }
-                if (a[i] !== b[j]) {
-                    N_trans++;
-                }
-            }
-        }
-        N_trans = Math.floor(N_trans / 2);
-
-        // Adjust for similarities in nonmatched characters
-        let N_simi = 0;
-        if (minv > Num_com) {
-            for (var i = 0; i < a_len; i++) {
-                if (!a_flag[i]) {
-                    for (var j = 0; j < b_len; j++) {
-                        if (!b_flag[j]) {
-                            if ( (Search.adjustments[a[i]]??[]).includes(b[j])) {
-                                N_simi += 3;
-                                b_flag[j] = 2;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        const Num_sim = (N_simi / 10.0) + Num_com;
-
-        // Main weight computation
-        let weight = Num_sim / a_len + Num_sim / b_len + (Num_com - N_trans) / Num_com;
-        weight /= 3;
-
-        // Continue to boost the weight if the strings are similar
-        if (weight > 0.7) {
-            // Adjust for having up to the first 4 characters in common
-            const j = (minv >= 4) ? 4 : minv;
-            let i;
-            for (i = 0; (i < j) && a[i] === b[i]; i++) { }
-            if (i) {
-                weight += i * 0.1 * (1.0 - weight)
-            }
-
-            // Adjust for long strings.
-            // After agreeing beginning chars, at least two more must agree
-            // and the agreeing characters must be more than half of the
-            // remaining characters.
-            if (minv > 4 && Num_com > i + 1 && 2 * Num_com >= minv + i) {
-                weight += (1 - weight) * ((Num_com - i - 1) / (a_len * b_len - i*2 + 2));
-            }
-        }
-        return weight ;     
+        this.fields = [ structGeneralPot, structImages, structProcess ].map(e => this.structParse(e)).flat() ;
     }
 
     resetTable () {
@@ -713,17 +528,17 @@ class Search { // singleton class
             return this.resetTable();
         }
         
-        db.allDocs( { // get docs from search
-            include_docs: true,
-        })
-        .then( docs => { // add _id, Text, Type fields to result
-            const result = docs.rows.map( r => {
-                const [w,t] = this.docScore(needle,r.doc) ;
-                return ({_id:r.id,weight:w,Text:t});
-                }) ;
-            result.sort((a,b)=>b.weight-a.weight) ;
-            return result.filter( a=>a.weight>.8 ) ;
-            })
+        db.search(
+			{ 
+				query: needle,
+				fields: this.fields,
+				highlighting: true,
+				mm: "80%",
+			})
+		.then( rows => rows.map( r =>
+			Object.entries(r.highlighting).map( ([k,v]) => ({_id:r.id,Field:k,Text:v}) ) ) 
+			)
+		.then( res => res.flat() )
         .then( (res) => res.map( r=>({doc:r}))) // encode as list of doc objects
         .then( (res)=>this.setTable(res)) // fill the table
         .catch(err=> {
@@ -735,6 +550,19 @@ class Search { // singleton class
     setTable(docs=[]) {
         objectTable.fill(docs);
     }
+
+	structParse( struct ) {
+		return struct
+		.filter( e=>!(['date','image'].includes(e.type)))
+		.map(e=>{
+			if ( ['array','image_array'].includes(e.type) ) {
+				return this.structParse(e.members).map(m=>[e.name,m].join("."));
+			} else{
+				return e.name;
+			}
+			})
+		.flat();
+	}
 }
 
 class DateMath { // convenience class
@@ -1384,7 +1212,7 @@ class Page { // singleton class
 class SearchTable extends ThumbTable {
     constructor() {
         super( 
-        ["weight","Text"], 
+        ["Field","Text"], 
         "SearchList"
         );
     }

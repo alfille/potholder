@@ -11,7 +11,8 @@ const cacheList = [
     "/index.html",
     "/download.html",
     "/sw.js",
-    "/NoPicture.png",
+    "/images/NoPicture.png",
+    "/images/PotHolder.png",
     "/images/Null.png",
     "/style/base.css",
     "/style/print.css",
@@ -29,6 +30,7 @@ const cacheList = [
     "/js/flatpickr.min.js",
     "/js/qrenc-4.0.0.min.js",
     "/js/pouchdb-9.0.0.min.js",
+    "/js/pouchdb.quick-search.js",
     "/js/jszip.min.js",
     "/js/pptxgen.min.js",
     ];

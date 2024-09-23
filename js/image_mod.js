@@ -102,6 +102,7 @@ class Thumb {
                 sy = (sh - sw ) / 2 ;
                 sh = sw ;
             }
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.drawImage( t_img, sx, sy, sw, sh, 0, 0, this.canvas.width, this.canvas.height ) ;
             this.canvas.toBlob( (blob) => {
                 this.Thumbs[pid] = blob;
