@@ -255,8 +255,9 @@ const structProcess = [
         choices: ["wheel","slab","handbuilt","coil","pinch"],
     },
     {
-        name: "clay",
-        type: "array",
+        name:  "clay",
+        alias: "Clays",
+        type:  "array",
         members: [
             {
                 name:  "type",
@@ -273,8 +274,9 @@ const structProcess = [
         ],
     },
     {
-        name: "glaze",
-        type: "array",
+        name:  "glaze",
+        alias: "Glazes",
+        type:  "array",
         members: [
             {
                 name:  "type",
@@ -510,7 +512,8 @@ function createQueries() {
 class Search { // singleton class
     constructor() {
         this.select_id = null ;
-        this.fields = [ structGeneralPot, structImages, structProcess ].map(e => this.structParse(e)).flat() ;
+        this.field_alias={} ;
+        this.fields = [ structGeneralPot, structImages, structProcess ].map(e => this.structFields(e)).flat() ;
     }
 
     resetTable () {
@@ -535,11 +538,19 @@ class Search { // singleton class
 				highlighting: true,
 				mm: "80%",
 			})
-		.then( rows => rows.map( r =>
-			Object.entries(r.highlighting).map( ([k,v]) => ({_id:r.id,Field:k,Text:v}) ) ) 
+		.then( x => { console.log(x); return x })
+		.then( x => x.rows.map( r =>
+			Object.entries(r.highlighting).map( ([k,v]) => ({
+				_id:r.id,
+				Field:this.field_alias[k],
+				Text:v
+				}) ) ) 
 			)
+		.then( x => { console.log(x); return x })
 		.then( res => res.flat() )
+		.then( x => { console.log(x); return x })
         .then( (res) => res.map( r=>({doc:r}))) // encode as list of doc objects
+		.then( x => { console.log(x); return x })
         .then( (res)=>this.setTable(res)) // fill the table
         .catch(err=> {
             objectLog.err(err);
@@ -555,13 +566,22 @@ class Search { // singleton class
 		return struct
 		.filter( e=>!(['date','image'].includes(e.type)))
 		.map(e=>{
+			const name=e.name;
+			const alias=e?.alias??name;
 			if ( ['array','image_array'].includes(e.type) ) {
-				return this.structParse(e.members).map(m=>[e.name,m].join("."));
-			} else{
-				return e.name;
+				return this.structParse(e.members)
+				.map(o=>({name:[name,o.name].join("."),alias:[alias,o.alias].join(".")})) ;
+			} else {
+				return ({name:name,alias:alias});
 			}
 			})
 		.flat();
+	}
+	
+	structFields( struct ) {
+		const sP = this.structParse( struct ) ;
+		sP.forEach( o => this.field_alias[o.name]=o.alias );
+		return sP.map( o => o.name ) ;
 	}
 }
 
@@ -890,46 +910,6 @@ class ListClay extends Pagelist {
         objectPot.unselect() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new MultiTable( "by Clay", (doc)=>{ if ("clay" in doc) { return doc.clay.map(x=>x.type); } } ) ;
-    }
-}
-
-class Download extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        objectPot.unselect() ;
-        window.location.href="/download.html" ;
-    }
-}
-class DownloadCSV extends Download {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        objectPot.unselect();
-    }
-}
-
-class DownloadJSON extends Download {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        objectPot.unselect();
-    }
-}
-
-class DownloadPPTX extends Download {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        objectPot.unselect();
-    }
-}
-
-class DownloadZIP extends Download {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static subshow(extra="") {
-        objectPot.unselect();
     }
 }
 

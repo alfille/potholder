@@ -249,26 +249,37 @@ class MultiTable {
         */
 
         TitleBox(title);
+
+        // catagories
         this.cat_ob = {} ;
+
+		// parent container
         const parent = document.getElementById("MultiTableContent") ;
         parent.innerHTML="";
         const fieldset = document.getElementById("templates").querySelector(".MultiFieldset");
+        
         this.apply_cat( cat_func )
-        .then( () => console.log("MULTI",this.cat_ob ) )
+//        .then( () => console.log("MULTI",this.cat_ob ) )
         .then( () => Object.keys(this.cat_ob).forEach( cat => {
+			// fieldset holds a sorttable
             const fs = fieldset.cloneNode( true ) ;
             fs.querySelector(".multiCat").innerText = cat ;
+
+			// setup table
             const tb = fs.querySelector("table");
             tb.id = `MT${cat}` ;
             tb.style.display="";
             parent.appendChild(fs) ;
             const cl = [...collist] ;
             this.cat_ob[cat].table=new PotTable( cl, tb.id ) ;
+
+			// put data in it
             this.cat_ob[cat].table.fill(this.cat_ob[cat].rows)
+
+			// fieldset open/close toggle
             this.cat_ob[cat].visible=true ;
             const plus = fs.querySelector(".triggerbutton") ;
             plus.onclick = () => {
-                console.log("click",cat);
                 if ( this.cat_ob[cat].visible ) {
                     plus.innerHTML= "&#10133;" ;
                     tb.style.display = "none" ;
@@ -282,6 +293,7 @@ class MultiTable {
         })) ;
     }
     
+    // apply the function on all records to get categorized records
     apply_cat( cat_func ) {
         const a2a = [] ;
         return objectPot.getAllIdDoc()
@@ -292,6 +304,7 @@ class MultiTable {
         .then( () => this.arrays2object( a2a ) );
     }
         
+	// split into separate records per category
     arrays2object( arrays ) {
         arrays.forEach( ([k,v]) => {
             if ( k in this.cat_ob ) {

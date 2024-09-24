@@ -128,15 +128,7 @@ ul {
 .divbutton:hover, a:hover {
   color: yellow;
 }
-.missionButtonImage {
-  height: 15px;
-  width: auto;
-}
- 
-#deleteedit {
-  background: red;
-  float: right;
-}
+
 .small_pic {
   max-height: 60px;
   cursor: pointer;
@@ -274,7 +266,7 @@ body {
   font-smoothing: antialiased;
 }
 
-#emissionbody {
+#potholderbody {
   background: #949ddf;
   margin: 0 0 0 0;
   border: 1px solid #ccc;
@@ -293,33 +285,8 @@ body {
   background: #99ddff;
 }
 
-.imageBar, .fileBar {
+.imageBar {
   display:none;
-}
-.editable {
-  border: 1px solid darkgray;
-  width: 100%;
-}
-.editor {
-    border:solid 1px #ccc;
-    padding: 20px;
-    min-height:200px;
-}
-.editToolbar {
-    border:solid 1px #ddd;
-    background:#f4f4f4;
-    padding: 5px;
-    border-radius:3px;
-}
-.editToolbar button {
-  background: lightblue;
-}
-.editToolbar span {
-    cursor:pointer;
-    background: inherit;
-}
-.editToolbar span:hover {
-    color: yellow;
 }
 .edit_data, .search {
   display: inline-block;
@@ -390,11 +357,6 @@ legend {
 .PotDataContent {
     width: 100%;
 }
-.DownloadCheckbox {
-  font-size: 20px;
-  line-height: 2em;
-  font-weight: bold;
-}
 
 .Darray_table {
   border: 3px solid black;
@@ -425,10 +387,6 @@ legend {
 .Darray_up:hover, .Darray_down:hover {
   background-color: white;
   color: blue;
-}
-.DownloadCheckbox input[type="checkbox"] {
-  height: 2em;
-  width: 2em;
 }
 #FirstTimeContent p {
   margin-left: 5px;
@@ -485,12 +443,6 @@ legend {
     rows: 3;
     cols: 35;
 }
-.print_user {
-    display: none ;
-}
-#printUser {
-    background-color: #F0FFF0;
-}
 .work_screen {
     display: none ;
 }
@@ -515,16 +467,6 @@ legend {
   background: lightblue;
   border: 4px;
   width: 8em;
-}
-#frameholder {
-  display:flex;
-  flex-flow:row wrap;
-  justify-content:stretch;
-}
-.framesource {
-  display:flex;
-  flex-flow:column wrap;
-  justify-content:stretch;
 }
 .nowrap {
   white-space:nowrap;
