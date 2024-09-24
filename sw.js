@@ -5,18 +5,16 @@
     4. Fall back to cache if network fails
     * */
     
-const cacheName = "eMission";
+const cacheName = "PotHolder";
 const cacheList = [
     "/",
     "/index.html",
     "/sw.js",
     "/images/NoPicture.png",
     "/images/PotHolder.png",
-    "/images/Null.png",
     "/style/base.css",
     "/style/print.css",
     "/js/app.js",
-    "/js/downapp.js",
     "/js/globals_mod.js",
     "/js/id_mod.js",
     "/js/image_mod.js",
@@ -28,7 +26,7 @@ const cacheList = [
     "/js/replicate_mod.js",
     "/js/flatpickr.min.js",
     "/js/pouchdb-9.0.0.min.js",
-    "/js/pouchdb.quick-search.js",
+    "/js/pouchdb.quick-search.min.js",
     ];
 
 // preload cache
