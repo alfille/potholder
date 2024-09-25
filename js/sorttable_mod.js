@@ -11,6 +11,7 @@ export {
     ThumbTable,
     PotTable,
     MultiTable,
+    SearchTable,
 } ;
 
 import {
@@ -316,5 +317,56 @@ class MultiTable {
     }
 }
 
-        
+class SearchTable extends ThumbTable {
+    constructor() {
+        super( 
+        ["Field","Text"], 
+        "SearchList"
+        );
+    }
+
+    fill( doclist ) {
+        // typically called with doc.rows from allDocs
+        const tbody = this.tbl.querySelector('tbody');
+        tbody.innerHTML = "";
+        //let collist = this.collist;
+        doclist.forEach( (doc) => {
+            const row = tbody.insertRow(-1);
+            const record = doc.doc;
+            row.setAttribute("data-id",record._id);
+            /* Select and edit -- need to make sure selection is complete*/
+            ['click']
+            .forEach( (e) => row.addEventListener( e, () => this.selectandedit( record._id, record.Link ) ) ) ;
+            // thumb
+            const img = document.createElement("img");
+            objectThumb.display( img, record._id ) ;
+            row.insertCell(-1).appendChild(img);
+            // cells
+            this.collist
+            .slice(1)
+            .forEach( colname => {
+                const c = row.insertCell(-1);
+                c.innerHTML=(this.aliases[colname].value)(record) ;
+            });
+        });
+        this.highlight();
+    }
+
+    selectId() {
+        return objectSearch.select_id;
+    }
+
+    selectFunc(id) {
+        objectSearch.select_id = id ;
+        objectTable.highlight();
+    }
+    
+    // for search -- go to a result of search
+    selectandedit( id, page ) {
+		objectPot.select(id) ;
+		objectPage.show( page ) ;
+    }
+}
+
+    
         

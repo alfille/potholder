@@ -34,6 +34,7 @@ import {
     ThumbTable,
     PotTable,
     MultiTable,
+    SearchTable,
     } from "./sorttable_mod.js" ;
 
 import {
@@ -512,8 +513,27 @@ function createQueries() {
 class Search { // singleton class
     constructor() {
         this.select_id = null ;
+
         this.field_alias={} ;
-        this.fields = [ structGeneralPot, structImages, structProcess ].map(e => this.structFields(e)).flat() ;
+        this.field_link={} ;
+		this.fields = [] ;
+
+        this.structStructure= ({
+			PotEdit:    structGeneralPot,
+			PotPix:     structImages,
+			PotProcess: structProcess,
+			});
+
+        // Extract fields fields
+        Object.entries(this.structStructure).forEach( ([k,v]) =>
+			this.structFields(v)
+			.forEach( fn => {
+				this.field_link[fn]=k ;
+				this.fields.push(fn);
+				})
+			);
+        console.log(this.field_link);
+        console.log(this.fields);
     }
 
     resetTable () {
@@ -530,7 +550,6 @@ class Search { // singleton class
         if ( needle.length == 0 ) {
             return this.resetTable();
         }
-        
         db.search(
 			{ 
 				query: needle,
@@ -538,20 +557,19 @@ class Search { // singleton class
 				highlighting: true,
 				mm: "80%",
 			})
-		.then( x => { console.log(x); return x })
 		.then( x => x.rows.map( r =>
-			Object.entries(r.highlighting).map( ([k,v]) => ({
-				_id:r.id,
-				Field:this.field_alias[k],
-				Text:v
-				}) ) ) 
+			Object.entries(r.highlighting)
+			.map( ([k,v]) => ({
+					_id:r.id,
+					Field:this.field_alias[k],
+					Text:v,
+					Link:this.field_link[k],
+				})
+				)) 
 			)
-		.then( x => { console.log(x); return x })
 		.then( res => res.flat() )
-		.then( x => { console.log(x); return x })
-        .then( (res) => res.map( r=>({doc:r}))) // encode as list of doc objects
-		.then( x => { console.log(x); return x })
-        .then( (res)=>this.setTable(res)) // fill the table
+        .then( res => res.map( r=>({doc:r}))) // encode as list of doc objects
+        .then( res=>this.setTable(res)) // fill the table
         .catch(err=> {
             objectLog.err(err);
             this.resetTable();
@@ -1187,42 +1205,6 @@ class Page { // singleton class
             }
         }
     }    
-}
-
-class SearchTable extends ThumbTable {
-    constructor() {
-        super( 
-        ["Field","Text"], 
-        "SearchList"
-        );
-    }
-
-    selectId() {
-        return objectSearch.select_id;
-    }
-
-    selectFunc(id) {
-        objectSearch.select_id = id ;
-        objectTable.highlight();
-    }
-    
-    // for search -- go to a result of search
-    editpage() {
-        let id = objectSearch.select_id;
-        if ( id == null ) {
-            objectPage.show( null );
-        } else {
-            db.get( id )
-            .then( doc => {
-                objectPot.select( id );
-                objectPage.show( 'PotMenu' ) ;
-            })
-            .catch( err => {
-                objectLog.err(err);
-                objectPage.show(null);
-                });
-        }
-    }
 }
 
 function parseQuery() {
