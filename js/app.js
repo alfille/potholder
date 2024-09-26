@@ -47,8 +47,13 @@ import {
     } from "./log_mod.js" ;
 
 import {
-    SimplePot,
+    Pot,
     } from "./simple_mod.js" ;
+    
+import {
+    Page,
+    Pagelist
+    } from "./page_mod.js" ;
     
 import {
     } from "./replicate_mod.js" ;
@@ -134,11 +139,6 @@ const structNewPot = [
         query: "qSeries",
     },
     {
-        name:  "Name",
-        hint:  "Name of piece (optional)",
-        type:  "text",
-    },
-    {
         name:  "start_date",
         alias: "Start date",
         type:  "date",
@@ -174,11 +174,6 @@ const structGeneralPot = [
         hint:  "Which creative wave?",
         type:  "list",
         query: "qSeries",
-    },
-    {
-        name:  "Name",
-        hint:  "Name of piece (optional)",
-        type:  "text",
     },
     {
         name: "location",
@@ -635,185 +630,7 @@ class DateMath { // convenience class
     }
 }
 
-class Pot extends SimplePot { // convenience class
-    constructor() {
-        super() ;
-        this.TL=document.getElementById("TopLeftImage");
-        this.LOGO = document.getElementById("LogoPicture");
-    }
-    
-    potname( doc ) {
-        return (doc?.Name)?doc.Name:`${doc?.type} ${Id_pot.splitId(doc._id).rand}`;
-    }
-    
-    del() {
-        if ( this.isSelected() ) {        
-            this.getRecordIdPix(potId)
-            .then( (doc) => {
-                // Confirm question
-                if (confirm(`WARNING -- about to delete this piece\n ${this.potname(doc)}\nPress CANCEL to back out`)==true) {
-                    return db.remove(doc) ;
-                } else {
-                    throw "Cancel";
-                }           
-            })
-            .then( _ => this.unselect() )
-            .then( _ => objectPage.show( "back" ) )
-            .catch( (err) => {
-                if (err != "Cancel" ) {
-                    objectLog.err(err);
-                    objectPage.show( "back" ) ;
-                }
-            });
-        }
-    }
-
-    getAllIdDocPix() {
-        let doc = {
-            startkey: Id_pot.allStart(),
-            endkey:   Id_pot.allEnd(),
-            include_docs: true,
-            binary: true,
-            attachments: true,
-        };
-        return db.allDocs(doc);
-    }
-
-    select( pid = potId ) {
-        potId = pid ;
-        objectCookie.set( "potId", pid );
-        // Check pot existence
-        objectPot.getRecordIdPix(pid)
-        .then( (doc) => {
-            // Top left Logo
-            objectThumb.display( this.TL, pid ) ;
-            // highlight the list row
-            if ( objectPage.test('AllPieces') ) {
-                objectTable.highlight();
-            }
-            TitleBox(doc);
-            })
-        .catch( (err) => {
-            objectLog.err(err,"pot select");
-            this.unselect();
-            });
-    }
-
-    unselect() {
-        potId = null;
-        objectCookie.del ( "potId" );
-        this.TL.src = this.LOGO.src;
-        if ( objectPage.test("AllPieces") ) {
-            let pt = document.getElementById("PotTable");
-            if ( pt ) {
-                let rows = pt.rows;
-                for ( let i = 0; i < rows.length; ++i ) {
-                    rows[i].classList.remove('choice');
-                }
-            }
-        }
-        TitleBox();
-    }
-
-    pushPixButton() {
-        document.getElementById("HiddenFile").click() ;
-    }
-
-    newPhoto() {
-        let inp = document.getElementById("HiddenFile") ;
-        if ( inp.files.length == 0 ) {
-            return ;
-        }
-        let members = structImages.members ;
-        if ( objectPot.isSelected() ) {
-            objectPot.select( potId );
-            objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => {
-                // make sure basic structure is there
-                if ( !("_attachments" in doc) ) {
-                    doc._attachments={} ;
-                }
-                if ( !("images" in doc) ) {
-                    doc.images=[] ;
-                }
-                console.log("DOC",doc);
-                console.log("INP",inp.files);
-                
-                // add number of pictures to picture button 
-                [...inp.files].forEach( f => {
-                    console.log("File",f);
-                    // Add to doc
-                    doc._attachments[f.name]={
-                        data: f,
-                        content_type: f.type,
-                    } ;
-                    const idx = doc.images.findIndex( a => a.image==f.name ) ;
-                    if ( idx == -1 ) {
-                        // put newest one first
-                        doc.images.unshift( {
-                            image: f.name,
-                            comment: "",
-                            date: f.lastModifiedDate.toISOString(),
-                            } );
-                    } else {
-                        // keep comment and name
-                        doc.images[idx].date = f.lastModifiedDate.toISOString() ;
-                    }
-                    })
-                    return db.put(doc) ;
-                })
-            .then( () => objectPot.select( potId ) )
-            .then( () => objectPage.show("PotPix") )
-            .catch( (err) => {
-                objectLog.err(err);
-                })
-            .finally( () => inp.value = "" ) ;
-        }
-    }
-
-}
-
 objectPot = new Pot() ;
-
-class Pagelist {
-    // list of subclasses = displayed "pages"
-    // Note that these classes are never "instantiated -- only used statically
-    static pages = {} ; // [pagetitle]->class -- pagetitle is used by HTML to toggle display of "pages"
-    // prototype to add to pages
-    static AddPage() { Pagelist.pages[this.name]=this; }
-    // safeLanding -- safe to resume on this page
-    static safeLanding = true ; // default
-    
-    static show(extra="") {
-        // set up specific page display
-        document.querySelector(".potDataEdit").style.display="none"; 
-        document.querySelectorAll(".topButtons")
-            .forEach( tb => tb.style.display = "block" );
-
-        document.querySelectorAll(".pageOverlay")
-            .forEach( po => po.style.display = po.classList.contains(this.name) ? "block" : "none" );
-
-        document.getElementById("MainPhotos").style.display="none";
-        
-        this.subshow(extra);
-    }
-    
-    static subshow(extra="") {
-        // default version, derived classes may overrule
-        // Simple menu page
-    }
-    
-    static subclass(pagetitle) {
-        let cls = Pagelist.pages[pagetitle] ?? null ;
-        if ( cls ) {
-            return cls ;
-        } else {
-            // bad entry -- fix by going back
-            objectPage.back() ;
-            return objectPage.current() ;
-        }
-    } 
-}
 
 class Administration extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
@@ -1097,116 +914,6 @@ class SearchList extends Pagelist {
     }
 }
 
-class Page { // singleton class
-    constructor() {
-        // get page history from cookies
-        let path = [] ;
-        this.lastscreen = null ; // splash/screen/patient for show_screen
-        this.path = [];
-        // stop at repeat of a page          
-        for( const p of path ) {
-            if ( this.path.includes(p) ) {
-                break ;
-            } else {
-                this.path.push(p);
-            }
-        }
-    }
-    
-    reset() {
-        // resets to just MainMenu
-        this.path = [ "MainMenu" ] ;
-        objectCookie.set ( "displayState", this.path ) ;
-    }
-
-    back() {
-        this.path.shift() ;
-        if ( this.path.length == 0 ) {
-            this.reset();
-        }
-        if ( Pagelist.subclass(this.path[0]).safeLanding ) {
-            objectCookie.set ( "displayState", this.path ) ;
-        } else {
-            this.back() ;
-        }
-    }
-
-    current() {
-        if ( this.path.length == 0 ) {
-            this.reset();
-        }
-        return this.path[0];
-    }
-
-    next( page = null ) {
-        if ( page == "back" ) {
-            this.back();
-        } else if ( page == null ) {
-            return ;
-        } else {
-            let iop = this.path.indexOf( page ) ;
-            if ( iop < 0 ) {
-                // add to from of page list
-                this.path.unshift( page ) ;
-            } else {
-                // trim page list back to prior occurence of this page (no loops, finite size)
-                this.path = this.path.slice( iop ) ;
-            }
-            objectCookie.set ( "displayState", this.path ) ;
-        }
-    }
-
-    test( page ) {
-        return this.current()==page ;
-    }
-
-    forget() {
-        this.back();
-    }
-
-    link() {
-        window.open( new URL(`/book/${this.current()}.html`,location.href).toString(), '_blank' );
-    } 
-    
-    show( page, extra="" ) { // main routine for displaying different "pages" by hiding different elements
-        console.log("SHOW",page,"STATE",displayState,this.path);
-        // test that database is selected
-        if ( db == null || credentialList.some( c => remoteCouch[c]=='' ) ) {
-            // can't bypass this! test if database exists
-            if ( page != "FirstTime" && page != "RemoteDatabaseInput" ) {
-                this.show("RemoteDatabaseInput");
-            }
-        }
-
-        this.next(page) ; // place in reversal list
-
-        // clear display objects
-        objectPotData = null;
-        objectTable = null;
-
-        this.show_screen( "screen" ); // basic page display setup
-
-        // send to page-specific code
-        (Pagelist.subclass(objectPage.current())).show(extra);
-    }
-    
-    show_screen( type ) { // switch between screen and print
-        if ( type !== this.lastscreen ) {
-            this.lastscreen == type ;
-            document.getElementById("splash_screen").style.display = "none";
-            let showscreen = {
-                ".work_screen": type=="screen",
-                ".print_patient": type == "patient",
-            };
-            for ( let cl in showscreen ) {
-                document.querySelectorAll(cl)
-                .forEach( (v)=> v.style.display=showscreen[cl]?"block":"none"
-                );
-            }
-        }
-    }    
-}
-
 function parseQuery() {
     // returns a dict of keys/values or null
     let url = new URL(location.href);
@@ -1247,8 +954,6 @@ function URLparse() {
         window.location.href = "/index.html" ;
     }
 }
-
-
 
 // Application starting point
 window.onload = () => {

@@ -7,30 +7,81 @@
  * */
  
 export {
-    SimplePage,
-    SimplePagelist,
+	Page,
+    Pagelist,
     } ;
 
-class SimplePage { // singleton class
+class Pagelist {
+    // list of subclasses = displayed "pages"
+    // Note that these classes are never "instantiated -- only used statically
+    static pages = {} ; // [pagetitle]->class -- pagetitle is used by HTML to toggle display of "pages"
+    // prototype to add to pages
+    static AddPage() { Pagelist.pages[this.name]=this; }
+    // safeLanding -- safe to resume on this page
+    static safeLanding = true ; // default
+    
+    static show(extra="") {
+        // set up specific page display
+        document.querySelector(".potDataEdit").style.display="none"; 
+        document.querySelectorAll(".topButtons")
+            .forEach( tb => tb.style.display = "block" );
+
+        document.querySelectorAll(".pageOverlay")
+            .forEach( po => po.style.display = po.classList.contains(this.name) ? "block" : "none" );
+
+        document.getElementById("MainPhotos").style.display="none";
+        
+        this.subshow(extra);
+    }
+    
+    static subshow(extra="") {
+        // default version, derived classes may overrule
+        // Simple menu page
+    }
+    
+    static subclass(pagetitle) {
+        let cls = Pagelist.pages[pagetitle] ?? null ;
+        if ( cls ) {
+            return cls ;
+        } else {
+            // bad entry -- fix by going back
+            objectPage.back() ;
+            return objectPage.current() ;
+        }
+    } 
+}
+
+class Page { // singleton class
     constructor() {
         // get page history from cookies
-        // much simplified from app.js -- no checking of entries or history
-        // since any unrecognized entries send us back to app.js
-        this.path = displayState;
+        let path = [] ;
         this.lastscreen = null ; // splash/screen/patient for show_screen
+        this.path = [];
+        // stop at repeat of a page          
+        for( const p of path ) {
+            if ( this.path.includes(p) ) {
+                break ;
+            } else {
+                this.path.push(p);
+            }
+        }
     }
     
     reset() {
         // resets to just MainMenu
         this.path = [ "MainMenu" ] ;
-        Cookie.set ( "displayState", this.path ) ;
+        objectCookie.set ( "displayState", this.path ) ;
     }
 
     back() {
-        // don't check entry -- 'app.js' will do that
         this.path.shift() ;
         if ( this.path.length == 0 ) {
             this.reset();
+        }
+        if ( Pagelist.subclass(this.path[0]).safeLanding ) {
+            objectCookie.set ( "displayState", this.path ) ;
+        } else {
+            this.back() ;
         }
     }
 
@@ -55,42 +106,51 @@ class SimplePage { // singleton class
                 // trim page list back to prior occurence of this page (no loops, finite size)
                 this.path = this.path.slice( iop ) ;
             }
+            objectCookie.set ( "displayState", this.path ) ;
         }
-        Cookie.set ( "displayState", this.path ) ;
     }
 
     test( page ) {
         return this.current()==page ;
     }
 
+    forget() {
+        this.back();
+    }
+
     link() {
         window.open( new URL(`/book/${this.current()}.html`,location.href).toString(), '_blank' );
     } 
     
-    show( page = "AllPieces", extra="" ) { // main routine for displaying different "pages" by hiding different elements
-        if ( db == null || credentialList.some( c=> remoteCouch[c]=='' ) ) {
-            this.show("FirstTime");
+    show( page, extra="" ) { // main routine for displaying different "pages" by hiding different elements
+        console.log("SHOW",page,"STATE",displayState,this.path);
+        // test that database is selected
+        if ( db == null || credentialList.some( c => remoteCouch[c]=='' ) ) {
+            // can't bypass this! test if database exists
+            if ( page != "FirstTime" && page != "RemoteDatabaseInput" ) {
+                this.show("RemoteDatabaseInput");
+            }
         }
 
-        this.next(page) ; // update reversal list
+        this.next(page) ; // place in reversal list
+
+        // clear display objects
+        objectPotData = null;
+        objectTable = null;
 
         this.show_screen( "screen" ); // basic page display setup
 
         // send to page-specific code
-        const page_class = Pagelist.subclass(objectPage.current()) ;
-        if ( page_class ) {
-            page_class.show(extra) ;
-        } else {
-            window.location.href="/index.html" ;
-        }
+        (Pagelist.subclass(objectPage.current())).show(extra);
     }
-
+    
     show_screen( type ) { // switch between screen and print
         if ( type !== this.lastscreen ) {
             this.lastscreen == type ;
             document.getElementById("splash_screen").style.display = "none";
             let showscreen = {
                 ".work_screen": type=="screen",
+                ".print_patient": type == "patient",
             };
             for ( let cl in showscreen ) {
                 document.querySelectorAll(cl)
@@ -99,60 +159,5 @@ class SimplePage { // singleton class
             }
         }
     }    
-
-
-    static setButtons() {
-        // Add Extra buttons
-        document.querySelector("#moreTop").querySelectorAll("button")
-        .forEach( b => document.querySelectorAll(".topButtons").forEach(t=>t.appendChild(b.cloneNode(true))) );
-
-        // set Help buttons
-        document.querySelectorAll(".Qmark").forEach( h => {
-            h.title = "Open explanation in another tab" ;
-            h.addEventListener("click",()=>objectPage.link());
-            });
-
-        // set Search buttons
-        document.querySelectorAll(".Search").forEach( s => {
-            s.title = "Search everywhere for a word or phrase" ;
-            s.addEventListener("click",()=>objectPage.show('SearchList'));
-            });
-    }
-}
-
-class SimplePagelist {
-    // list of subclasses = displayed "pages"
-    // Note that these classes are never "instantiated -- only used statically
-    static pages = {} ; // [pagetitle]->class -- pagetitle ise used by HTML to toggle display of "pages"
-    // prototype to add to pages
-    static AddPage() { Pagelist.pages[this.name]=this; }
-    // safeLanding -- safe to resume on this page
-    static safeLanding = true ; // default
-    
-    static show(extra="") {
-        // set up display
-        document.querySelectorAll(".topButtons")
-            .forEach( tb => tb.style.display = "block" );
-
-        document.querySelectorAll(".pageOverlay")
-            .forEach( po => po.style.display = po.classList.contains(this.name) ? "block" : "none" );
-
-        this.subshow(extra);
-    }
-    
-    static subshow(extra="") {
-        // default version, linkderived classes may overrule
-        // Simple menu page
-    }
-    
-    static subclass(pagetitle) {
-        let cls = Pagelist.pages[pagetitle] ?? null ;
-        if ( cls ) {
-            return cls ;
-        } else {
-            // unrecognized entry -- will force return to main
-            return null ;
-        }
-    } 
 }
 

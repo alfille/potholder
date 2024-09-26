@@ -44,10 +44,6 @@ export function cloneClass( fromClass, target ) {
 }
 
 export function setButtons() {
-    // Add Extra buttons
-    document.querySelector("#moreTop").querySelectorAll("button")
-    .forEach( b => document.querySelectorAll(".topButtons").forEach(t=>t.appendChild(b.cloneNode(true))) );
-
     // set Help buttons
     document.querySelectorAll(".Qmark").forEach( h => {
         h.title = "Open explanation in another tab" ;
