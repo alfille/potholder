@@ -48,7 +48,7 @@ import {
 
 import {
     Pot,
-    } from "./simple_mod.js" ;
+    } from "./pot_mod.js" ;
     
 import {
     Page,
