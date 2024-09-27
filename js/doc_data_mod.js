@@ -119,7 +119,12 @@ class PotDataRaw { // singleton class
                 break ;
 
             case "checkbox":
-                textnode=document.createTextNode( (preVal??[]).join(", ") );
+				if ( Array.isArray(preVal) && preVal.length>0 ) {
+					textnode=document.createTextNode( preVal.join(", ") );
+				} else {
+					textnode=document.createTextNode( "<empty>" );
+				}
+					
                 break;
 
             case "datetime":
@@ -139,7 +144,7 @@ class PotDataRaw { // singleton class
             case "radio":
             case "list":
             default:
-                textnode=document.createTextNode( preVal??"" );
+                textnode=document.createTextNode( preVal??"<empty>" );
                 break ;
         } 
         span.title = item.hint;               
@@ -655,7 +660,7 @@ class PotDataRaw { // singleton class
             case "datetime":
                 inp = document.createElement("input");
                 inp.type = "text";
-                inp.value = preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" ;
+                inp.value = preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"<empty>" ;
                 inp.title = "Date and time in format YYYY-MM-DD HH:MM AM";
                 lab.appendChild( inp );                    
                 flatpickr( inp,
@@ -671,11 +676,12 @@ class PotDataRaw { // singleton class
 
             case "date":
                 inp = document.createElement("input");
-                inp.classList.add("flatpickr","flatpickr-input");
+                //inp.classList.add("flatpickr","flatpickr-input");
                 inp.type = "text";
                 inp.size = 10;
-                inp.value = preVal??"";
+                inp.value = preVal ?? new Date().toISOString() ;
                 inp.title = "Date in format YYYY-MM-DD";
+                lab.appendChild( inp );                    
                 flatpickr( inp,
                     {
                         enableTime: false,
