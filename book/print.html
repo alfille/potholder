@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="Welcome.html"><strong aria-hidden="true">1.</strong> Welcome</a></li><li class="chapter-item "><a href="Schema.html"><strong aria-hidden="true">2.</strong> Schema</a></li><li class="chapter-item "><a href="List.html"><strong aria-hidden="true">3.</strong> List display</a></li><li class="chapter-item "><a href="Top.html"><strong aria-hidden="true">4.</strong> Top display</a></li><li class="chapter-item "><a href="MainMedu.html"><strong aria-hidden="true">5.</strong> Main Menu</a></li><li class="chapter-item "><a href="PotMenu.html"><strong aria-hidden="true">6.</strong> Pot Menu</a></li><li class="chapter-item "><a href="FieldTypes.html"><strong aria-hidden="true">7.</strong> Field Types</a></li><li class="chapter-item "><a href="Image.html"><strong aria-hidden="true">8.</strong> Image</a></li><li class="chapter-item "><a href="ChoicePlus.html"><strong aria-hidden="true">9.</strong> Choice Plus</a></li><li class="chapter-item "><a href="Id.html"><strong aria-hidden="true">10.</strong> ID</a></li><li class="chapter-item "><a href="Secondary.html"><strong aria-hidden="true">11.</strong> secondary indexes</a></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="Welcome.html"><strong aria-hidden="true">1.</strong> Welcome</a></li><li class="chapter-item "><a href="Intro.html"><strong aria-hidden="true">2.</strong> Brief Intro</a></li><li class="chapter-item "><a href="FirstTime.html"><strong aria-hidden="true">3.</strong> First Time</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="RemoteDatabaseInput.html"><strong aria-hidden="true">3.1.</strong> Credentials</a></li></ol></li><li class="chapter-item "><a href="Display.html"><strong aria-hidden="true">4.</strong> Explain the Display</a></li><li class="chapter-item "><a href="MainMenu.html"><strong aria-hidden="true">5.</strong> Main Menu</a></li><li class="chapter-item "><a href="ListMenu.html"><strong aria-hidden="true">6.</strong> List Choices</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="AllPieces.html"><strong aria-hidden="true">6.1.</strong> All Pieces</a></li><li class="chapter-item "><a href="ListSeries.html"><strong aria-hidden="true">6.2.</strong> List by Series</a></li><li class="chapter-item "><a href="ListFiring.html"><strong aria-hidden="true">6.3.</strong> List by Firing</a></li><li class="chapter-item "><a href="ListClay.html"><strong aria-hidden="true">6.4.</strong> List by Clay</a></li><li class="chapter-item "><a href="ListGlaze.html"><strong aria-hidden="true">6.5.</strong> List by Glaze</a></li></ol></li><li class="chapter-item "><a href="Photo.html"><strong aria-hidden="true">7.</strong> Take a picture</a></li><li class="chapter-item "><a href="PotMenu.html"><strong aria-hidden="true">8.</strong> Piece Menu</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="PotNew.html"><strong aria-hidden="true">8.1.</strong> New Piece</a></li><li class="chapter-item "><a href="PotEdit.html"><strong aria-hidden="true">8.2.</strong> General Info</a></li><li class="chapter-item "><a href="PotProcess.html"><strong aria-hidden="true">8.3.</strong> Process Details</a></li><li class="chapter-item "><a href="PotPix.html"><strong aria-hidden="true">8.4.</strong> Pictures</a></li></ol></li><li class="chapter-item "><a href="Search.html"><strong aria-hidden="true">9.</strong> Search</a></li><li class="chapter-item "><a href="Schema.html"><strong aria-hidden="true">10.</strong> Schema</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -174,295 +174,27 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="potholder"><a class="header" href="#potholder">Potholder</a></h1>
-<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<p>This is an online database for the avid potter and ceramicist. It can run on your phone or ipad or laptop.</p>
-<h2 id="special-features"><a class="header" href="#special-features">Special features</a></h2>
-<ul>
-<li>Stores photos and drawings</li>
-<li>Keeps track of ceramic-specific information like:
-<ul>
-<li>Kiln Firings</li>
-<li>Clay types</li>
-<li>Surface treatments</li>
-<li>Current Location</li>
-</ul>
-</li>
-<li>Works with server or disconnected</li>
-</ul>
-<p>And it's free and open-source!</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="schema"><a class="header" href="#schema">Schema</a></h1>
-<p>The database</p>
-<div class="table-wrapper"><table><thead><tr><th>name</th><th>field</th><th>format</th><th>arity</th><th>Comment</th><th>searchable</th></tr></thead><tbody>
-<tr><td>_id</td><td>id</td><td>date</td><td>1</td><td>for chronological display</td><td>no</td></tr>
-<tr><td>pot_name</td><td>name</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
-<tr><td>Series</td><td>series</td><td>text</td><td>1</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>type</td><td>item type</td><td>choice plus</td><td>1</td><td>pot/plate/bowl...</td><td>yes</td></tr>
-<tr><td>general_comment</td><td>comments</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
-<tr><td>mark</td><td>marking</td><td>text</td><td>1</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>start_date</td><td>date</td><td>1</td><td>date</td><td>no</td><td></td></tr>
-<tr><td>firing_type</td><td>firing type</td><td>radio</td><td>1</td><td>ox/red/soda/raku/garbage/none</td><td>yes</td></tr>
-<tr><td>construction</td><td>construction type</td><td>checkbox</td><td>1</td><td>wheel/slab/handbuilt/coil</td><td>yes</td></tr>
-<tr><td>images</td><td>image-array</td><td>multi</td><td>list</td><td></td><td></td></tr>
-<tr><td>images.name</td><td>text</td><td>link to binary attachments</td><td>1</td><td>filename or unique name</td><td>no</td></tr>
-<tr><td>images.comment</td><td>text</td><td></td><td>multi-link to "images"</td><td>list</td><td>yes</td></tr>
-<tr><td>images.date</td><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
-<tr><td>clay</td><td>clay-array</td><td>list</td><td>multi</td><td>list</td><td></td></tr>
-<tr><td>clay.type</td><td>-- type</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>clay.comment</td><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
-<tr><td>process</td><td>process-array</td><td>list</td><td>multi</td><td>list</td><td></td></tr>
-<tr><td>process.type</td><td>-- step</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>process.date</td><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
-<tr><td>glaze</td><td>glaze-array</td><td>list</td><td>multi</td><td>list</td><td></td></tr>
-<tr><td>glaze.type</td><td>-- glaze</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>glaze.comment</td><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
-<tr><td>kiln</td><td>kiln-array</td><td>list</td><td>multi</td><td>list</td><td></td></tr>
-<tr><td>kiln.type</td><td>-- type</td><td>text</td><td>array entry</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>kiln.date</td><td>-- date</td><td>date</td><td>array entry</td><td>date</td><td>no</td></tr>
-<tr><td>kiln.comment</td><td>-- comment</td><td>text</td><td>array entry</td><td>freeform</td><td>yes</td></tr>
-<tr><td>location</td><td>location</td><td>text</td><td>1</td><td>choice plus</td><td>yes</td></tr>
-<tr><td>dimensions</td><td></td><td>dimensions</td><td>text</td><td>1</td><td>freeform</td></tr>
-<tr><td>weight</td><td>weight</td><td>text</td><td>1</td><td>freeform</td><td>yes</td></tr>
-</tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h1 id="list-display"><a class="header" href="#list-display">List display</a></h1>
-<p>List display of pieces for selection.</p>
-<p>Used for every list and filter.</p>
-<p>Need top field showing current category
-Need button for "All"</p>
-<div class="table-wrapper"><table><thead><tr><th>field</th><th>width</th><th>sortable</th></tr></thead><tbody>
-<tr><td>thumbnail</td><td>50px</td><td>no</td></tr>
-<tr><td>date</td><td>m/d/y</td><td>yes</td></tr>
-<tr><td>name/series/desc</td><td>20</td><td>yes</td></tr>
-<tr><td>stage</td><td>20</td><td>yes</td></tr>
-<tr><td>type(firing type)</td><td>10</td><td>yes</td></tr>
-</tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h1 id="top-display"><a class="header" href="#top-display">Top display</a></h1>
-<p>Display buttons at top -- try to be consistent.</p>
-<h2 id="constant-elements"><a class="header" href="#constant-elements">Constant elements</a></h2>
-<h3 id="logo-upper-left"><a class="header" href="#logo-upper-left">Logo (Upper left)</a></h3>
-<ul>
-<li>Pothold logo for list pages
-<ul>
-<li>jump to main list</li>
-</ul>
-</li>
-<li>Current item thumbnail for current pot
-<ul>
-<li>jump to current pot menu</li>
-</ul>
-</li>
-</ul>
-<h3 id="help"><a class="header" href="#help">Help</a></h3>
-<h3 id="quick-pic"><a class="header" href="#quick-pic">Quick pic</a></h3>
-<h3 id="artist"><a class="header" href="#artist">Artist</a></h3>
-<h2 id="varying"><a class="header" href="#varying">Varying</a></h2>
-<h3 id="back"><a class="header" href="#back">"Back"</a></h3>
-<ul>
-<li>out of edit</li>
-<li>out of filter</li>
-<li>main list</li>
-</ul>
-<h3 id="new"><a class="header" href="#new">New</a></h3>
-<ul>
-<li>pot</li>
-<li>item</li>
-</ul>
+                        <h1 id="welcome"><a class="header" href="#welcome">Welcome</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="brief-intro"><a class="header" href="#brief-intro">Brief Intro</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="first-time"><a class="header" href="#first-time">First Time</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="credentials"><a class="header" href="#credentials">Credentials</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="explain-the-display"><a class="header" href="#explain-the-display">Explain the Display</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="main-menu"><a class="header" href="#main-menu">Main Menu</a></h1>
-<ul>
-<li>Pots by:
-<ul>
-<li>Date</li>
-<li>Stage</li>
-<li>Clay</li>
-<li>Firing type</li>
-<li>Construction</li>
-</ul>
-</li>
-<li>Help (Instructions)</li>
-<li>About</li>
-<li></li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="pot-menu"><a class="header" href="#pot-menu">Pot Menu</a></h1>
-<ul>
-<li>Details
-<ul>
-<li>Name / Series</li>
-<li>Clay</li>
-<li></li>
-</ul>
-</li>
-<li>Pictures
-<ul>
-<li>Stages</li>
-<li>Firings</li>
-<li>Glazing</li>
-</ul>
-</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="field-types"><a class="header" href="#field-types">Field Types</a></h1>
-<ul>
-<li>Free text
-<ul>
-<li>Standard Edit</li>
-</ul>
-</li>
-<li>Image
-<ul>
-<li>New (From Camera or Gallery)</li>
-<li>Thumbnail/Enlarge</li>
-<li>Download (intrisic)</li>
-<li>Import from depot</li>
-<li>Move to depot</li>
-<li>Delete</li>
-<li>Comment</li>
-<li>Date</li>
-</ul>
-</li>
-<li>Check box
-<ul>
-<li>multi fixed choice</li>
-</ul>
-</li>
-<li>Radio
-<ul>
-<li>Simgle fixed choice</li>
-</ul>
-</li>
-<li>Choice plus
-<ul>
-<li>Check box of past choices</li>
-<li>Add new choice</li>
-</ul>
-</li>
-<li>Date</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="image"><a class="header" href="#image">Image</a></h1>
-<p>Images stored as binary attachments in an array</p>
-<p>Linked Comments/Date Json array</p>
-<p>Creation:</p>
-<ul>
-<li>From Camera
-<ul>
-<li>open comment</li>
-<li>Add current date</li>
-</ul>
-</li>
-<li>From Gallery
-<ul>
-<li>open comment</li>
-<li>Add image date</li>
-</ul>
-</li>
-<li>From "Depot"
-<ul>
-<li>With comment</li>
-<li>With Date</li>
-</ul>
-</li>
-</ul>
-<p>Display:</p>
-<ul>
-<li>Thumbnail</li>
-<li>Small</li>
-<li>Large/small toggle on click</li>
-</ul>
-<p>Download etc</p>
-<ul>
-<li>Long press / Right click intrinsic from OS</li>
-</ul>
-<p>Manage:</p>
-<ul>
-<li>Edit Comment</li>
-<li>Edit Date</li>
-<li>Move to Depot
-<ul>
-<li>With comment</li>
-<li>With Date</li>
-</ul>
-</li>
-<li>Delete</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="choice-plus"><a class="header" href="#choice-plus">Choice Plus</a></h1>
-<h2 id="first-time"><a class="header" href="#first-time">First time</a></h2>
-<ul>
-<li>Radio buttons:
-<ul>
-<li>Prior entries (from index)</li>
-<li>Other (default)</li>
-<li>None</li>
-</ul>
-</li>
-<li>Freeform field
-<ul>
-<li>filled from radio button when pressed chosen</li>
-</ul>
-</li>
-</ul>
-<h2 id="edit--review"><a class="header" href="#edit--review">Edit / Review</a></h2>
-<ul>
-<li>Radio buttons:
-<ul>
-<li>Prior entries (from index)</li>
-<li>Current selection chosen</li>
-<li>Other</li>
-<li>None</li>
-</ul>
-</li>
-<li>Freeform field
-<ul>
-<li>filled with default entry</li>
-<li>filled from radio button when pressed chosen</li>
-</ul>
-</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="id"><a class="header" href="#id">ID</a></h1>
-<p>Couchdb (and Pouchdb) is ID-based, and strongly recommends using ID for function.</p>
-<p>ID wll include: ";" separated</p>
-<ul>
-<li>version</li>
-<li>record type</li>
-<li>artist</li>
-<li>unique pot identifier (Date/Time)</li>
-<li>random 3 digit number</li>
-</ul>
-<p>Assumptions (not required)</p>
-<ul>
-<li>version only changes for incompatible records
-<ul>
-<li><strong>0</strong> is initial version</li>
-</ul>
-</li>
-<li>record type
-<ul>
-<li><strong>p</strong> piece</li>
-<li><strong>d</strong> depot pictures</li>
-</ul>
-</li>
-<li>artist
-<ul>
-<li><strong>artist</strong> name</li>
-</ul>
-</li>
-<li>Piece
-<ul>
-<li>use creation ISO format UTC time</li>
-<li>random 3 digit number (rough tie-breaker)</li>
-</ul>
-</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="secondary-indexes"><a class="header" href="#secondary-indexes">secondary indexes</a></h1>
-<div class="table-wrapper"><table><thead><tr><th>Key</th><th>Elements</th><th>Comment</th></tr></thead><tbody>
-<tr><td>ID</td><td>Name</td><td>Possibly computed name</td></tr>
-<tr><td>Glazes</td><td></td><td>Unique List</td></tr>
-<tr><td>Location</td><td></td><td>Unique List</td></tr>
-<tr><td>Glazes</td><td></td><td>Unique List</td></tr>
-<tr><td>Marking</td><td></td><td>Unique List</td></tr>
-<tr><td>Clays</td><td></td><td>Unique List</td></tr>
-<tr><td>Steps</td><td></td><td>Unique List</td></tr>
-<tr><td>Firing</td><td></td><td>Unique List</td></tr>
-<tr><td>Location</td><td></td><td>Unique List</td></tr>
-</tbody></table>
-</div>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="list-choices"><a class="header" href="#list-choices">List Choices</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="all-pieces"><a class="header" href="#all-pieces">All Pieces</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="list-by-series"><a class="header" href="#list-by-series">List by Series</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="list-by-firing"><a class="header" href="#list-by-firing">List by Firing</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="list-by-clay"><a class="header" href="#list-by-clay">List by Clay</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="list-by-glaze"><a class="header" href="#list-by-glaze">List by Glaze</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="take-a-picture"><a class="header" href="#take-a-picture">Take a picture</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="piece-menu"><a class="header" href="#piece-menu">Piece Menu</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="new-piece"><a class="header" href="#new-piece">New Piece</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="general-info"><a class="header" href="#general-info">General Info</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="process-details"><a class="header" href="#process-details">Process Details</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="pictures"><a class="header" href="#pictures">Pictures</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="search"><a class="header" href="#search">Search</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="schema"><a class="header" href="#schema">Schema</a></h1>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

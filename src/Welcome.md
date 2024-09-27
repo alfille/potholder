@@ -1,16 +1,1 @@
-# Potholder
-
-## Summary
-This is an online database for the avid potter and ceramicist. It can run on your phone or ipad or laptop.
-
-## Special features
-
-* Stores photos and drawings
-* Keeps track of ceramic-specific information like:
-  * Kiln Firings
-  * Clay types
-  * Surface treatments
-  * Current Location
-* Works with server or disconnected
-
-And it's free and open-source!
+# Welcome
