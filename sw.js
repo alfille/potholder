@@ -20,7 +20,7 @@ const cacheList = [
     "/js/image_mod.js",
     "/js/cookie_mod.js",
     "/js/sorttable_mod.js",
-    "/js/patientdata_mod.js",
+    "/js/doc_data_mod.js",
     "/js/log_mod.js",
     "/js/pot_mod.js",
     "/js/doc_struct.js",

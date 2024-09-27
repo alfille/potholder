@@ -367,6 +367,3 @@ class SearchTable extends ThumbTable {
 		objectPage.show( page ) ;
     }
 }
-
-    
-        

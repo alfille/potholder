@@ -15,9 +15,16 @@ import {
     } from "./globals_mod.js" ;
 
 import {
-    Id,
     Id_pot,
     } from "./id_mod.js" ;
+
+// used to generate data entry pages "PotData" type
+import {
+	structGeneralPot,
+	structImages,
+	structNewPot,
+	structProcess,
+} from "./doc_struct.js" ;
 
 class Pot { // convenience class
     constructor() {

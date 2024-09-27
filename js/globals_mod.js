@@ -21,7 +21,6 @@ globalThis. objectTable = null ;
 globalThis. objectRemote = null ;
 globalThis. objectLog = null ;
 globalThis. objectPot = null ;
-globalThis. objectNote = null ;
 globalThis. objectCookie = null ;
 
 // Database handles

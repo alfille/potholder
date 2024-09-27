@@ -36,7 +36,6 @@ import {
     } from "./image_mod.js" ;
 
 import {
-    Id,
     Id_pot,
     } from "./id_mod.js";
 
@@ -55,7 +54,7 @@ import {
     PotData,
     PotDataEditMode,
     PotDataRaw,
-    } from "./patientdata_mod.js" ;
+    } from "./doc_data_mod.js" ;
 
 import {
     } from "./log_mod.js" ;

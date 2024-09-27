@@ -7,16 +7,16 @@
  * */
  
 export {
-    Id,
     Id_pot,
 } ;
 
-class Id {
+class Id_pot {
+    static type = "p";
     static version = 0;
     static start="";
     static end="\uffff";
     
-    static splitId( id ) {
+    static splitId( id=potId ) {
         if ( id ) {
             const spl = id.split(";");
             return {
@@ -52,8 +52,14 @@ class Id {
         return this.joinId( obj );
     }
     
-    static makeId( pid=potId ) { // Make a new Id for a note or operation using current time as the last field
-        return this.makeIdKey(pid);
+    static makeId( doc ) {
+        return [
+            this.version,
+            this.type,
+            doc.artist??remoteCouch.username,
+            new Date().toISOString(),
+            Math.floor( Math.random() * 1000 ),
+            ].join(";");
     }
     
     static allStart() { // Search entire database
@@ -71,22 +77,5 @@ class Id {
     static patEnd( pid=potId ) { // Search just this patient's records
         return this.makeIdKey( pid, this.end ) ;
     }    
-}
-      
-class Id_pot extends Id{
-    static type = "p";
-    static makeId( doc ) {
-        // remove any ';' in the name
-        return [
-            this.version,
-            this.type,
-            doc.artist??remoteCouch.username,
-            new Date().toISOString(),
-            Math.floor( Math.random() * 1000 ),
-            ].join(";");
-    }
-    static splitId( id=potId ) {
-        return super.splitId(id);
-    }
 }
 

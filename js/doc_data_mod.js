@@ -21,7 +21,6 @@ import {
     } from "./image_mod.js" ;
     
 // data entry page type
-// except for Noteslist and some html entries, this is the main type
 class PotDataRaw { // singleton class
     constructor(click,doc,struct) {
         // args is a list of "docs" to update"
