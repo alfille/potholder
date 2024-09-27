@@ -23,6 +23,8 @@ const cacheList = [
     "/js/patientdata_mod.js",
     "/js/log_mod.js",
     "/js/pot_mod.js",
+    "/js/doc_struct.js",
+    "js/query_mod.js",
     "/js/replicate_mod.js",
     "/js/flatpickr.min.js",
     "/js/pouchdb-9.0.0.min.js",
