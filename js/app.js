@@ -43,8 +43,6 @@ import {
     } from "./cookie_mod.js" ;
 
 import {
-    SortTable,
-    ThumbTable,
     PotTable,
     MultiTable,
     SearchTable,
@@ -58,145 +56,13 @@ import {
 
 import {
     } from "./log_mod.js" ;
-
-import {
-    Pot,
-    } from "./pot_mod.js" ;
     
 import {
-    Page,
     Pagelist
     } from "./page_mod.js" ;
     
 import {
     } from "./replicate_mod.js" ;
-
-class Search { // singleton class
-    constructor() {
-        this.select_id = null ;
-
-        this.field_alias={} ;
-        this.field_link={} ;
-		this.fields = [] ;
-
-        this.structStructure= ({
-			PotEdit:    structGeneralPot,
-			PotPix:     structImages,
-			PotProcess: structProcess,
-			});
-
-        // Extract fields fields
-        Object.entries(this.structStructure).forEach( ([k,v]) =>
-			this.structFields(v)
-			.forEach( fn => {
-				this.field_link[fn]=k ;
-				this.fields.push(fn);
-				})
-			);
-        console.log(this.field_link);
-        console.log(this.fields);
-    }
-
-    resetTable () {
-        this.setTable([]);
-    } 
-
-    select(id) {
-        this.select_id = id;
-    }
-
-    toTable() {
-        let needle = document.getElementById("searchtext").value;
-
-        if ( needle.length == 0 ) {
-            return this.resetTable();
-        }
-        db.search(
-			{ 
-				query: needle,
-				fields: this.fields,
-				highlighting: true,
-				mm: "80%",
-			})
-		.then( x => x.rows.map( r =>
-			Object.entries(r.highlighting)
-			.map( ([k,v]) => ({
-					_id:r.id,
-					Field:this.field_alias[k],
-					Text:v,
-					Link:this.field_link[k],
-				})
-				)) 
-			)
-		.then( res => res.flat() )
-        .then( res => res.map( r=>({doc:r}))) // encode as list of doc objects
-        .then( res=>this.setTable(res)) // fill the table
-        .catch(err=> {
-            objectLog.err(err);
-            this.resetTable();
-            });
-    }
-
-    setTable(docs=[]) {
-        objectTable.fill(docs);
-    }
-
-	structParse( struct ) {
-		return struct
-		.filter( e=>!(['date','image'].includes(e.type)))
-		.map(e=>{
-			const name=e.name;
-			const alias=e?.alias??name;
-			if ( ['array','image_array'].includes(e.type) ) {
-				return this.structParse(e.members)
-				.map(o=>({name:[name,o.name].join("."),alias:[alias,o.alias].join(".")})) ;
-			} else {
-				return ({name:name,alias:alias});
-			}
-			})
-		.flat();
-	}
-	
-	structFields( struct ) {
-		const sP = this.structParse( struct ) ;
-		sP.forEach( o => this.field_alias[o.name]=o.alias );
-		return sP.map( o => o.name ) ;
-	}
-}
-
-class DateMath { // convenience class
-    static prettyInterval(msec) {
-        let hours = msec / 1000 / 60 / 60;
-        if ( hours < 24 ) {
-            return `${hours.toFixed(1)} hours`;
-        }
-        let days = hours / 24 ;
-        if ( days < 14 ) {
-            return `${days.toFixed(1)} days`;
-        }
-        let weeks = days / 7;
-        if ( weeks < 8 ) {
-            return `${weeks.toFixed(1)} weeks`;
-        }
-        let months = days / 30.5;
-        if ( months < 13 ) {
-            return `${months.toFixed(1)} months`;
-        }
-        let years = days / 365.25;
-        return `${years.toFixed(1)} years`;
-    }
-
-    static age( dob, current=null ) {
-        let birthday = flatpickr.parseDate( dob, "Y-m-d") ;
-        let ref = Date.now();
-        if ( current ) {
-            ref = flatpickr.parseDate( current, "Y-m-d") ;
-        }
-        return DateMath.prettyInterval( ref - birthday );
-    }
-}
-
-objectPot = new Pot() ;
 
 class Administration extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
@@ -525,7 +391,6 @@ function URLparse() {
 window.onload = () => {
     // Get Cookies
     objectCookie.initialGet() ;
-    objectPage = new Page();
     
     setButtons(); // load some common html elements
 
@@ -555,9 +420,6 @@ window.onload = () => {
         db.viewCleanup()
         .then( () => objectThumb.getAll() )
         .catch( err => objectLog.err(err,"Query cleanup") );
-
-        // Set up text search
-        objectSearch = new Search();
 
         // now start listening for any changes to the database
         db.changes({ since: 'now', live: true, include_docs: true, })

@@ -6,14 +6,10 @@
  * MIT license
  * */
  
-export {
-    Log,
-} ;
-
 import {
     } from "./globals_mod.js" ;
 
-class Log{
+export class Log{
     constructor() {
         this.list = [];
     }

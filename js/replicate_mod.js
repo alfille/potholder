@@ -6,10 +6,6 @@
  * MIT license
  * */
 
-export {
-    RemoteReplicant,
-    } ;
-
 import {
     } from "./globals_mod.js" ;
 

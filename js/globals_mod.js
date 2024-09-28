@@ -22,18 +22,11 @@ globalThis. objectRemote = null ;
 globalThis. objectLog = null ;
 globalThis. objectPot = null ;
 globalThis. objectCookie = null ;
-
-// Database handles
-globalThis.db = null ; // will be Pouchdb local copy 
-
-// app only
 globalThis. objectSearch = null;
 globalThis. objectThumb = null;
 
-// download only
-// singleton class instances
-globalThis. objectPPTX = null;
-globalThis. objectZIP = null;
+// Database handles
+globalThis.db = null ; // will be Pouchdb local copy 
 
 // Commonly used function
 export function cloneClass( fromClass, target ) {

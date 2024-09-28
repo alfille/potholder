@@ -7,8 +7,6 @@
  * */
  
 export {
-    SortTable,
-    ThumbTable,
     PotTable,
     MultiTable,
     SearchTable,

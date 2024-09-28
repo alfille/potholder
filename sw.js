@@ -23,6 +23,7 @@ const cacheList = [
     "/js/doc_data_mod.js",
     "/js/log_mod.js",
     "/js/pot_mod.js",
+    "/js/search.js",
     "/js/doc_struct.js",
     "js/query_mod.js",
     "/js/replicate_mod.js",

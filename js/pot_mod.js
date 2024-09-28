@@ -6,10 +6,9 @@
  * MIT license
  * */
  
-export {
-    Pot,
-    } ;
-    
+import {
+    } from "./globals_mod.js" ;
+
 import {
     TitleBox,
     } from "./globals_mod.js" ;
@@ -181,4 +180,5 @@ class Pot { // convenience class
     }
 }
 
+objectPot = new Pot() ;
 

@@ -7,9 +7,11 @@
  * */
  
 export {
-	Page,
     Pagelist,
     } ;
+
+import {
+    } from "./globals_mod.js" ;
 
 class Pagelist {
     // list of subclasses = displayed "pages"
@@ -160,4 +162,6 @@ class Page { // singleton class
         }
     }    
 }
+
+objectPage = new Page();
 
