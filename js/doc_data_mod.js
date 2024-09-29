@@ -169,11 +169,17 @@ class PotDataRaw { // singleton class
         tab.querySelector(".Darray_back").onclick=()=>this.edit_doc();
 
         // table
-        this.doc[item.name].forEach( v => {
+        this.doc[item.name].forEach( (v,i) => {
             let tr = tab.insertRow(-1) ;
-            tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Edit this entry"><B>Edit</B></button>`;
+            // 1st col
             let td = tr.insertCell(-1);
-            td.style.width="100%";
+            td.innerText="Choose";
+            td.classList.add("Rotate");
+            tr.appendChild(td);
+            // second col
+            td = tr.insertCell(-1);
+            td.classList.add("Greedy");
+            tr.onclick = ()=>this.edit_array_entry(item,i) ;
             let ul = document.createElement("ul");
             td.appendChild(ul);
             item.members.forEach( m => {
@@ -182,7 +188,6 @@ class PotDataRaw { // singleton class
                 ul.appendChild(li);
                 }) ;
             });
-        tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>this.edit_array_entry(item,i) );
     }
 
     select_image_edit( item ) {
@@ -201,14 +206,22 @@ class PotDataRaw { // singleton class
         tab.querySelector(".Darray_back").onclick=()=>this.edit_doc();
 
         // table
-        this.doc[item.name].forEach( v => {
+        this.doc[item.name].forEach( (v,i) => {
             const tr = tab.insertRow(-1) ;
-            tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Edit this entry"><B>Edit</B></button>`;
+            let td = tr.insertCell(-1);
+            // first col
+            td.innerText="Choose";
+            td.classList.add("Rotate");
+            tr.appendChild(td)
+            // second col (image)
             tr.insertCell(-1).appendChild( this.Images.display(v.image) );
-            const td = tr.insertCell(-1);
+			// 3rd col
+            td = tr.insertCell(-1);
             td.style.width="100%";
+            td.classList.add("Greedy");
             const ul = document.createElement("ul");
             td.appendChild(ul);
+            tr.onclick = () => this.edit_array_entry(item,i) ;
             item.members
                 .filter( m => m.type != "image" )
                 .forEach( m => {
@@ -217,7 +230,6 @@ class PotDataRaw { // singleton class
                 ul.appendChild(li);
                 }) ;
             });
-        tab.querySelectorAll(".Darray_up").forEach( (b,i)=>b.onclick=()=>this.edit_array_entry(item,i) );
     }
 
     edit_array_entry( item, idx ) {

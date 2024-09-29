@@ -128,7 +128,6 @@ ul {
 .divbutton:hover, a:hover {
   color: yellow;
 }
-
 .small_pic {
   max-height: 60px;
   cursor: pointer;
@@ -379,6 +378,14 @@ legend {
 }
 .Darray_caption button, .Darray_div button {
   font-size: .8em;
+  margin: 1px;
+  padding: 3px;
+  border: 3px;
+  background: #3366FF;
+  vertical-align: baseline;
+  font-family: inherit;
+  color: white;
+  border-style: groove ;
 }
 .Darray_up, .Darray_down {
   background-color: blue;
@@ -387,6 +394,13 @@ legend {
 .Darray_up:hover, .Darray_down:hover {
   background-color: white;
   color: blue;
+}
+.Rotate {
+  transform: rotate(180deg);
+  writing-mode: vertical-rl;
+  }
+.Greedy {
+  width: 100%;
 }
 #FirstTimeContent p {
   margin-left: 5px;
