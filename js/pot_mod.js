@@ -7,15 +7,16 @@
  * */
  
 import {
-    } from "./globals_mod.js" ;
-
-import {
-    TitleBox,
+	TitleBox,
     } from "./globals_mod.js" ;
 
 import {
     Id_pot,
     } from "./id_mod.js" ;
+
+import {
+    PotImages,
+    } from "./image_mod.js" ;
 
 // used to generate data entry pages "PotData" type
 import {
@@ -34,9 +35,20 @@ class Pot { // convenience class
     potname( doc ) {
         return `piece type << ${doc?.type} >> of series << ${doc.series} >>`;
     }
-    
-    del() {
-        if ( this.isSelected() ) {        
+
+	create() {
+        // create new pot record
+		return ({
+			_id: Id_pot.makeId( this.doc ),
+			author: remoteCouch.username,
+			artist: remoteCouch.username,
+			start_date: new Date().toISOString(),
+			new: true, 
+           });
+	}
+   
+	del() {
+		if ( this.isSelected() ) {        
             this.getRecordIdPix(potId)
             .then( (doc) => {
                 // Confirm question
@@ -128,56 +140,130 @@ class Pot { // convenience class
     }
 
     newPhoto() {
+		if ( ! objectPot.isSelected() ) { 
+			objectPage.show("AssignPic") ;
+			return ;
+		}
         let inp = document.getElementById("HiddenFile") ;
         if ( inp.files.length == 0 ) {
             return ;
         }
         let members = structImages.members ;
-        if ( objectPot.isSelected() ) {
-            objectPot.select( potId );
-            objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => {
-                // make sure basic structure is there
-                if ( !("_attachments" in doc) ) {
-                    doc._attachments={} ;
-                }
-                if ( !("images" in doc) ) {
-                    doc.images=[] ;
-                }
-                console.log("DOC",doc);
-                console.log("INP",inp.files);
-                
-                // add number of pictures to picture button 
-                [...inp.files].forEach( f => {
-                    console.log("File",f);
-                    // Add to doc
-                    doc._attachments[f.name]={
-                        data: f,
-                        content_type: f.type,
-                    } ;
-                    const idx = doc.images.findIndex( a => a.image==f.name ) ;
-                    if ( idx == -1 ) {
-                        // put newest one first
-                        doc.images.unshift( {
-                            image: f.name,
-                            comment: "",
-                            date: f.lastModifiedDate.toISOString(),
-                            } );
-                    } else {
-                        // keep comment and name
-                        doc.images[idx].date = f.lastModifiedDate.toISOString() ;
-                    }
-                    })
-                    return db.put(doc) ;
-                })
-            .then( () => objectPot.select( potId ) )
-            .then( () => objectPage.show("PotPix") )
-            .catch( (err) => {
-                objectLog.err(err);
-                })
-            .finally( () => inp.value = "" ) ;
-        }
+		//objectPot.select( potId ); // seems redundant
+		objectPot.getRecordIdPix(potId,true)
+		.then( (doc) => {
+			// make sure basic structure is there
+			if ( !("_attachments" in doc) ) {
+				doc._attachments={} ;
+			}
+			if ( !("images" in doc) ) {
+				doc.images=[] ;
+			}
+			console.log("DOC",doc);
+			console.log("INP",inp.files);
+			
+			// add number of pictures to picture button 
+			[...inp.files].forEach( f => {
+				console.log("File",f);
+				// Add to doc
+				doc._attachments[f.name]={
+					data: f,
+					content_type: f.type,
+				} ;
+				const idx = doc.images.findIndex( a => a.image==f.name ) ;
+				if ( idx == -1 ) {
+					// put newest one first
+					doc.images.unshift( {
+						image: f.name,
+						comment: "",
+						date: f.lastModifiedDate.toISOString(),
+						} );
+				} else {
+					// keep comment and name
+					doc.images[idx].date = f.lastModifiedDate.toISOString() ;
+				}
+				})
+				return db.put(doc) ;
+			})
+		.then( () => objectPot.select( potId ) ) // to show new thumbnail
+		.then( () => objectPage.show("PotPix") )
+		.catch( (err) => {
+			objectLog.err(err);
+			})
+		.finally( () => inp.value = "" ) ;
     }
+    
+    AssignToNew() {
+		const doc = this.create() ;
+		potId = doc._id ;
+		db.put( doc )
+		.then( _ => this.AssignPhoto( doc._id ) )
+		.catch( err => {
+			objectLog(err),
+			objectPage.show('MainMenu');
+		}) ;
+	}
+		
+    
+    AssignPhoto(pid = potId) {
+        let inp = document.getElementById("HiddenFile") ;
+        if ( inp.files.length == 0 ) {
+            return ;
+        }
+        let members = structImages.members ;
+		//objectPot.select( potId ); // seems redundant
+		objectPot.getRecordIdPix(pid,true)
+		.then( doc => {
+			// make sure basic structure is there
+			if ( !("_attachments" in doc) ) {
+				doc._attachments={} ;
+			}
+			if ( !("images" in doc) ) {
+				doc.images=[] ;
+			}
+			console.log("DOC",doc);
+			console.log("INP",inp.files);
+			
+			// add number of pictures to picture button 
+			[...inp.files].forEach( f => {
+				console.log("File",f);
+				// Add to doc
+				doc._attachments[f.name]={
+					data: f,
+					content_type: f.type,
+				} ;
+				const idx = doc.images.findIndex( a => a.image==f.name ) ;
+				if ( idx == -1 ) {
+					// put newest one first
+					doc.images.unshift( {
+						image: f.name,
+						comment: "",
+						date: f.lastModifiedDate.toISOString(),
+						} );
+				} else {
+					// keep comment and name
+					doc.images[idx].date = f.lastModifiedDate.toISOString() ;
+				}
+				})
+				return db.put(doc) ;
+			})
+		.then( () => objectPot.select( potId ) ) // to show new thumbnail
+		.then( () => objectPage.show("PotPix") )
+		.catch( (err) => {
+			objectLog.err(err);
+			})
+		.finally( () => inp.value = "" ) ;
+    }
+    
+	showPictures(doc) {
+		// doc alreaady loaded
+		const pix = document.getElementById("PotPhotos");
+		const images = new PotImages(doc);
+		pix.innerHTML="";
+		//console.log("IMAGES",images);
+		//console.log("array",images.displayAll() ) ;
+		images.displayAll().forEach( i => pix.appendChild(i) ) ;
+	}
 }
 
 objectPot = new Pot() ;

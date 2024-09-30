@@ -45,8 +45,6 @@ class Search { // singleton class
 				this.fields.push(fn);
 				})
 			);
-        console.log(this.field_link);
-        console.log(this.fields);
     }
 
     resetTable () {

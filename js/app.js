@@ -46,6 +46,7 @@ import {
     PotTable,
     MultiTable,
     SearchTable,
+    AssignTable,
     } from "./sorttable_mod.js" ;
 
 import {
@@ -134,6 +135,19 @@ class AllPieces extends Pagelist {
         objectPot.unselect() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new PotTable();
+        objectPot.getAllIdDoc(true)
+        .then( (docs) => objectTable.fill(docs.rows ) )
+        .catch( (err) => objectLog.err(err) );
+    }
+}
+
+class AssignPic extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+		objectPage.forget(); // don't return here
+        objectPot.unselect() ; // Probably redundant
+        objectTable = new AssignTable();
         objectPot.getAllIdDoc(true)
         .then( (docs) => objectTable.fill(docs.rows ) )
         .catch( (err) => objectLog.err(err) );
@@ -234,21 +248,14 @@ class PotNew extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect();
-        objectPotData = new PotNewData(
-            {
-                author: remoteCouch.username,
-                artist: remoteCouch.username,
-                start_date: new Date().toISOString(),
-            }, structNewPot );
+        objectPotData = new PotNewData( objectPot.create(), structNewPot );
     }
 }
 
 class PotNewData extends PotDataEditMode {
     savePieceData() {
         this.loadDocData(this.struct,this.doc);
-        
-        // create new pot record
-        this.doc._id = Id_pot.makeId( this.doc );
+        this.doc.new = false ; // no longer new
         db.put( this.doc )
         .then( (response) => {
             objectPot.select(response.id);
@@ -264,8 +271,12 @@ class PotEdit extends Pagelist {
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structGeneralPot ) )
-            .then( _ => console.log("done") )
+            .then( (doc) => {
+				if ( doc?.new == true ) {
+					objectPage.show( "PotNew" ) ;
+				}
+				objectPotData = new PotData( doc, structGeneralPot ) ;
+				})
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -282,7 +293,12 @@ class PotProcess extends Pagelist {
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structProcess ) )
+            .then( (doc) => {
+				if ( doc?.new == true ) {
+					objectPage.show( "PotNew" ) ;
+				}
+				objectPotData = new PotData( doc, structProcess ) ;
+				})
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -299,7 +315,13 @@ class PotPix extends Pagelist {
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structImages ) )
+            .then( (doc) => { 
+				if ( doc?.new == true ) {
+					objectPage.show( "PotNew" ) ;
+				} else {
+					objectPotData = new PotData( doc, structImages ) ; 
+				}
+				})
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -318,12 +340,11 @@ class PotMenu extends Pagelist {
             objectPot.select( potId );
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
-                const pix = document.getElementById("PotPhotos");
-                const images = new PotImages(doc);
-                pix.innerHTML="";
-                //console.log("IMAGES",images);
-                //console.log("array",images.displayAll() ) ;
-                images.displayAll().forEach( i => pix.appendChild(i) ) ;
+				if ( doc?.new == true ) {
+					objectPage.show( "PotNew" ) ;
+				} else {
+					objectPot.showPictures(doc) ;
+				}
                 })
             .catch( (err) => {
                 objectLog.err(err);

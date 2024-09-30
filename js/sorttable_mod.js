@@ -10,6 +10,7 @@ export {
     PotTable,
     MultiTable,
     SearchTable,
+    AssignTable,
 } ;
 
 import {
@@ -65,7 +66,6 @@ class SortTable {
     }
 
     fill( doclist ) {
-        console.log("doclist",doclist);
         // typically called with doc.rows from allDocs
         let tbody = this.tbl.querySelector('tbody');
         tbody.innerHTML = "";
@@ -258,7 +258,6 @@ class MultiTable {
         const fieldset = document.getElementById("templates").querySelector(".MultiFieldset");
         
         this.apply_cat( cat_func )
-//        .then( () => console.log("MULTI",this.cat_ob ) )
         .then( () => Object.keys(this.cat_ob).forEach( cat => {
 			// fieldset holds a sorttable
             const fs = fieldset.cloneNode( true ) ;
@@ -314,6 +313,34 @@ class MultiTable {
         })
     }
 }
+
+class AssignTable extends ThumbTable {
+    constructor(
+        collist=["type","series","start_date" ],
+        tableId="AssignPic",
+        aliaslist=
+            [
+                ["Thumbnail","Picture", (doc)=> `${doc.artist}`],
+                ['start_date','Date',null],
+                ['series','Series',null],
+                ['type','Type',null]
+            ] ) {
+        super( collist, tableId, aliaslist ) ;
+    }
+
+    selectId() {
+        return potId;
+    }
+
+    selectFunc(id) {
+        objectPot.select(id) ;
+    }
+
+    editpage() {
+        objectPot.AssignPhoto();
+    }
+}
+
 
 class SearchTable extends ThumbTable {
     constructor() {

@@ -117,6 +117,10 @@ ul {
   appearance: none;
 }
 
+.NewCamera {
+  color: #e71111;
+  background: #3cebcd;
+}
 .Camera {
   background: purple;
 }

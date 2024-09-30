@@ -19,12 +19,13 @@
                 <div id="buttonheader">
                     <!-- top: MainMenu FirstTime -->
                     <div class="MainMenu FirstTime topButtons pageOverlay">
+                        <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
 						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton Qmark">Help</button>
                     </div>
                     <!-- top: PotMenu -->
                     <div class= "PotMenu topButtons pageOverlay">
-                        <button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
+                        <button type="button" class="divbutton Camera" title="Get image -- for this piece" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Return</button>
 						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton Qmark">Help</button>
@@ -41,6 +42,10 @@
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
 						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton Qmark">Help</button>
+                    </div>
+                    <!-- top: AssignPic -->
+                    <div class="AssignPic topButtons pageOverlay">
 						<button type="button" class="divbutton Qmark">Help</button>
                     </div>
                     <!-- top: ListMenu -->
@@ -177,6 +182,17 @@
             <div class="ListSeries ListFiring ListClay ListGlaze pageOverlay">
                 <div id="MultiTableContent" >
                 </div>
+            </div>
+            <!-- body: AssignPic -->
+            <div class="AssignPic pageOverlay">
+				<fieldset>
+					<legend>New Piece</legend>
+					<button type="button" class="divbutton" onclick="objectPot.AssignToNew()">New Piece</button>
+				</fieldset>
+				<fieldset>
+					<legend>Existing Piece</legend>
+					<table id="AssignPic"></table>
+				</fieldset>
             </div>
             <!-- body: SearchList -->
             <div class="SearchList pageOverlay">
