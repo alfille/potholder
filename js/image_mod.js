@@ -74,66 +74,64 @@ class Thumb {
     }
     
     _load( doc ) {
+		// attachments need not be included in doc -- will pull in separately
         const pid = doc._id ;
-        if ( ! ("_attachments" in doc) ) {
-            return ;
-        }
-        let image = Object.keys(doc._attachments)[0] ;
-        if ( image == undefined ) {
-            return
-        }
-        if ( "images" in doc && Array.isArray(doc.images) && doc.images.length>0) {
-            image = doc.images[0].image ;
+        if ( !( "images" in doc) || ! Array.isArray(doc.images) || doc.images.length==0) {
+			return ;
         }
 
-        const url = URL.createObjectURL(doc._attachments[image].data) ;
-        const t_img = document.createElement("img");
-        t_img.onload = () => {
-            URL.revokeObjectURL(url) ;
-            // center and crop to maintain 1:1 aspect ratio
-            let sw = t_img.naturalWidth;
-            let sh = t_img.naturalHeight ;
-            let sx = 0 ;
-            let sy = 0 ;
-            if (  sw > sh ) {
-                sx = (sw - sh) / 2;
-                sw = sh ;
-            } else {
-                sy = (sh - sw ) / 2 ;
-                sh = sw ;
-            }
-			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.drawImage( t_img, sx, sy, sw, sh, 0, 0, this.canvas.width, this.canvas.height ) ;
-            this.canvas.toBlob( (blob) => {
-                this.Thumbs[pid] = blob;
-                let img = this.pick.querySelector(`[data-id="${pid}"]`);
-                if ( img ) {
-                    this.display( img, pid ) ;
-                } else {
-                    img = document.createElement("img");
-                    this.display( img, pid ) ;
-                    img.classList.add("MainPhoto");
-                    img.onclick = () => {
-                        objectPot.select( pid )
-                        .then( () => objectPage.show("PotMenu") ) ;
-                    } ;
-                    this.pick.appendChild( img ) ;
-                    img.setAttribute("data-id",pid) ;
-                }
-                }) ;
-            };
-        t_img.src = url ;
+		db.getAttachment(pid, doc.images[0].image )
+		.then(data => {
+			const url = URL.createObjectURL(data) ;
+			const t_img = document.createElement("img");
+			t_img.onload = () => {
+				URL.revokeObjectURL(url) ;
+				// center and crop to maintain 1:1 aspect ratio
+				let sw = t_img.naturalWidth;
+				let sh = t_img.naturalHeight ;
+				let sx = 0 ;
+				let sy = 0 ;
+				if (  sw > sh ) {
+					sx = (sw - sh) / 2;
+					sw = sh ;
+				} else {
+					sy = (sh - sw ) / 2 ;
+					sh = sw ;
+				}
+				this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+				this.ctx.drawImage( t_img, sx, sy, sw, sh, 0, 0, this.canvas.width, this.canvas.height ) ;
+				this.canvas.toBlob( (blob) => {
+					this.Thumbs[pid] = blob;
+					let img = this.pick.querySelector(`[data-id="${pid}"]`);
+					if ( img ) {
+						this.display( img, pid ) ;
+					} else {
+						img = document.createElement("img");
+						this.display( img, pid ) ;
+						img.classList.add("MainPhoto");
+						img.onclick = () => {
+							objectPot.select( pid )
+							.then( () => objectPage.show("PotMenu") ) ;
+						} ;
+						this.pick.appendChild( img ) ;
+						img.setAttribute("data-id",pid) ;
+					}
+					}) ;
+				};
+			t_img.src = url ;
+		})
+		.catch( err => objectLog.err(err) );
     }
 
     getOne( pid = pot_Id ) {
-        return objectPot.getRecordIdPix( pid, true )
+        return objectPot.getRecordId( pid, true )
         .then( doc => this._load(doc) )
         .catch( err => objectLog.err(err) );
     }
 
     getAll() {
         this.pick.innerHTML="";
-        objectPot.getAllIdDocPix()
+        objectPot.getAllIdDoc()
         .then( docs => {
             docs.rows.forEach( r => this._load( r.doc ) ) ;
             })
