@@ -626,7 +626,6 @@ class PotDataRaw { // singleton class
                     
             case "radio":
                 choices.forEach( c => {
-                    console.log("Choice",c);
                     inp = document.createElement("input");
                     inp.type = item.type;
                     inp.name = localname;

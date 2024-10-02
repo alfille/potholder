@@ -244,24 +244,37 @@ class ListMenu extends Pagelist {
 }
 
 class PotNew extends Pagelist {
+	// record doesn't exist -- make one
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-        objectPot.unselect();
-        objectPotData = new PotNewData( objectPot.create(), structNewPot );
+		objectPage.forget();
+		if ( objectPot.isSelected() ) {
+			// existing but "new"
+			objectPot.getRecordIdPix(potId,true)
+			.then( doc => objectPotData = new PotNewData( doc, structNewPot ) )
+			.catch( err => objectLog.err(err) ) ;
+		} else {
+			objectPotData = new PotNewData( objectPot.create(), structNewPot ) ;
+		}
     }
 }
 
 class PotNewData extends PotDataEditMode {
+	constructor( ...args) {
+		super(...args);
+	}
+	
     savePieceData() {
         this.loadDocData(this.struct,this.doc);
         this.doc.new = false ; // no longer new
         db.put( this.doc )
         .then( (response) => {
-            objectPot.select(response.id);
-            objectPage.show( "PotMenu" );
+            objectPot.select(response.id)
+            .then( () => objectPage.show( "PotMenu" ) );
             })
-        .catch( (err) => objectLog.err(err) );
+        //.catch( (err) => objectLog.err(err) )
+        ;
     }
 }
 
@@ -273,6 +286,7 @@ class PotEdit extends Pagelist {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
 				if ( doc?.new == true ) {
+					objectPage.forget();
 					objectPage.show( "PotNew" ) ;
 				}
 				objectPotData = new PotData( doc, structGeneralPot ) ;
@@ -295,6 +309,7 @@ class PotProcess extends Pagelist {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
 				if ( doc?.new == true ) {
+					objectPage.forget();
 					objectPage.show( "PotNew" ) ;
 				}
 				objectPotData = new PotData( doc, structProcess ) ;
@@ -317,6 +332,7 @@ class PotPix extends Pagelist {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => { 
 				if ( doc?.new == true ) {
+					objectPage.forget();
 					objectPage.show( "PotNew" ) ;
 				} else {
 					objectPotData = new PotData( doc, structImages ) ; 
@@ -337,19 +353,21 @@ class PotMenu extends Pagelist {
 
     static subshow(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.select( potId );
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
 				if ( doc?.new == true ) {
+					objectPage.forget();
 					objectPage.show( "PotNew" ) ;
 				} else {
-					objectPot.showPictures(doc) ;
+					objectPot.select(potId) // update thumb
+					.then( () => objectPot.showPictures(doc) ) ; // pictures on bottom
 				}
                 })
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
-                });
+                })
+                ;
         } else {
             objectPage.show( "back" );
         }
@@ -398,8 +416,8 @@ function URLparse() {
     
     // first try the search field
     if ( qline && ( "potId" in qline ) ) {
-        objectPot.select( qline.potId );
-        objectPage.next("PotMenu");
+        objectPot.select( qline.potId )
+        .then( () => objectPage.next("PotMenu") );
     }
 
     if ( Object.keys(qline).length > 0 ) {
@@ -443,10 +461,15 @@ window.onload = () => {
         .catch( err => objectLog.err(err,"Query cleanup") );
 
         // now start listening for any changes to the database
-        db.changes({ since: 'now', live: true, include_docs: true, })
+        db.changes({ 
+			since: 'now', 
+			live: true, 
+			include_docs: false 
+			})
         .on('change', (change) => {
+			console.log("CHANGE",change);
             if ( change?.deleted ) {
-                obJectThumb.remove( change.id ) ;
+                objectThumb.remove( change.id ) ;
             } else {
                 objectThumb.getOne( change.id ) ;
             }

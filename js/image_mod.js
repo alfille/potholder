@@ -114,8 +114,8 @@ class Thumb {
                     this.display( img, pid ) ;
                     img.classList.add("MainPhoto");
                     img.onclick = () => {
-                        objectPot.select( pid ) ;
-                        objectPage.show("PotMenu") ;
+                        objectPot.select( pid )
+                        .then( () => objectPage.show("PotMenu") ) ;
                     } ;
                     this.pick.appendChild( img ) ;
                     img.setAttribute("data-id",pid) ;

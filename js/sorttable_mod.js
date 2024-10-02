@@ -388,7 +388,7 @@ class SearchTable extends ThumbTable {
     
     // for search -- go to a result of search
     selectandedit( id, page ) {
-		objectPot.select(id) ;
-		objectPage.show( page ) ;
+		objectPot.select(id)
+		.then( () => objectPage.show( page ) ) ;
     }
 }

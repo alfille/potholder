@@ -99,8 +99,9 @@ class Pot { // convenience class
         potId = pid ;
         objectCookie.set( "potId", pid );
         // Check pot existence
-        objectPot.getRecordIdPix(pid)
+        return objectPot.getRecordIdPix(pid)
         .then( (doc) => {
+			//console.log("Select",doc);
             // Top left Logo
             objectThumb.display( this.TL, pid ) ;
             // highlight the list row
@@ -108,6 +109,7 @@ class Pot { // convenience class
                 objectTable.highlight();
             }
             TitleBox(doc);
+            return doc ;
             })
         .catch( (err) => {
             objectLog.err(err,"pot select");
@@ -159,12 +161,12 @@ class Pot { // convenience class
 			if ( !("images" in doc) ) {
 				doc.images=[] ;
 			}
-			console.log("DOC",doc);
-			console.log("INP",inp.files);
+			//console.log("DOC",doc);
+			//console.log("INP",inp.files);
 			
 			// add number of pictures to picture button 
 			[...inp.files].forEach( f => {
-				console.log("File",f);
+				//console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
 					data: f,
@@ -195,9 +197,8 @@ class Pot { // convenience class
     
     AssignToNew() {
 		const doc = this.create() ;
-		potId = doc._id ;
 		db.put( doc )
-		.then( _ => this.AssignPhoto( doc._id ) )
+		.then( response => this.AssignPhoto( response.id ) )
 		.catch( err => {
 			objectLog(err),
 			objectPage.show('MainMenu');
@@ -211,8 +212,8 @@ class Pot { // convenience class
             return ;
         }
         let members = structImages.members ;
-		//objectPot.select( potId ); // seems redundant
-		objectPot.getRecordIdPix(pid,true)
+		objectPot.select( pid )
+		.then ( () => objectPot.getRecordIdPix(pid,true) )
 		.then( doc => {
 			// make sure basic structure is there
 			if ( !("_attachments" in doc) ) {
@@ -221,12 +222,12 @@ class Pot { // convenience class
 			if ( !("images" in doc) ) {
 				doc.images=[] ;
 			}
-			console.log("DOC",doc);
-			console.log("INP",inp.files);
+			//console.log("DOC",doc);
+			//console.log("INP",inp.files);
 			
 			// add number of pictures to picture button 
 			[...inp.files].forEach( f => {
-				console.log("File",f);
+				//console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
 					data: f,
