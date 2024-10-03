@@ -73,6 +73,10 @@ class Pot { // convenience class
         return db.get( id, { attachments:true, binary:binary } );
     }
 
+    getRecordId(id=potId ) {
+        return db.get( id, { attachments:false} );
+    }
+
     getAllIdDoc(binary=false) {
         let doc = {
             startkey: Id_pot.allStart(),
