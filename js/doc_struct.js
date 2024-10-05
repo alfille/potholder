@@ -11,68 +11,6 @@
 /* jshint esversion: 11 */
 
 // used to generate data entry pages "PotData" type
-export const structRemoteUser = [
-    {
-        name: "username",
-        hint: "Your user name for access",
-        type: "text",
-    },
-    {
-        name: "password",
-        hint: "Your password for access",
-        type: "text",
-    },    
-    {
-        name: "address",
-        alias: "Remote database server address",
-        hint: "emissionsystem.org -- don't include database name",
-        type: "text",
-    },
-    {
-        name: "raw",
-        alias: "  process address",
-        hint: "Fix URL with protocol and port",
-        type: "radio",
-        choices: ["fixed","raw"],
-    },
-    {
-        name: "database",
-        hint: 'Name of patient information database (e.g. "ukraine"',
-        type: "text",
-    },
-];
-
-export const structDatabaseInfo = [
-    {
-        name: "db_name",
-        alias: "Database name",
-        hint: "Name of underlying database",
-        type: "text",
-    },
-    {
-        name: "doc_count",
-        alias: "Document count",
-        hint: "Total number of undeleted documents",
-        type: "number",
-    },
-    {
-        name: "update_seq",
-        hint: "Sequence number",
-        type: "number",
-    },
-    {
-        name: "adapter",
-        alias: "Database adapter",
-        hint: "Actual database type used",
-        type: "text",
-    },
-    {
-        name: "auto_compaction",
-        alias: "Automatic compaction",
-        hint: "Database compaction done automaticslly?",
-        type: "text",
-    },
-];
 
 export const structNewPot = [
     {
@@ -186,7 +124,8 @@ export const structProcess = [
         alias: "Firing",
         hint:  "Type of firing",
         type:  "radio",
-        choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
+//        choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
+        choices: ["greenware","bisque","oxidation","reduction","soda","raku",],
     },
     {
         name:  "type",
@@ -195,6 +134,18 @@ export const structProcess = [
         type:  "list",
         choices:  ["bowl","plate","flowerpot"],
         query: "qType",
+    },
+    {
+        name:  "weight_start",
+        alias: "Starting weight",
+        hint:  "Weight (in pounds) of the raw clay",
+        type:  "text",
+    },
+    {
+        name:  "weight_end",
+        alias: "Final weight",
+        hint:  "Weight (in pound) of the finished piece",
+        type:  "text",
     },
     {
         name:  "construction",
@@ -266,6 +217,69 @@ export const structProcess = [
                 type: "textarea",
             },
         ],
+    },
+];
+
+export const structRemoteUser = [
+    {
+        name: "username",
+        hint: "Your user name for access",
+        type: "text",
+    },
+    {
+        name: "password",
+        hint: "Your password for access",
+        type: "text",
+    },    
+    {
+        name: "address",
+        alias: "Remote database server address",
+        hint: "emissionsystem.org -- don't include database name",
+        type: "text",
+    },
+    {
+        name: "raw",
+        alias: "  process address",
+        hint: "Fix URL with protocol and port",
+        type: "radio",
+        choices: ["fixed","raw"],
+    },
+    {
+        name: "database",
+        hint: 'Name of patient information database (e.g. "ukraine"',
+        type: "text",
+    },
+];
+
+export const structDatabaseInfo = [
+    {
+        name: "db_name",
+        alias: "Database name",
+        hint: "Name of underlying database",
+        type: "text",
+    },
+    {
+        name: "doc_count",
+        alias: "Document count",
+        hint: "Total number of undeleted documents",
+        type: "number",
+    },
+    {
+        name: "update_seq",
+        hint: "Sequence number",
+        type: "number",
+    },
+    {
+        name: "adapter",
+        alias: "Database adapter",
+        hint: "Actual database type used",
+        type: "text",
+    },
+    {
+        name: "auto_compaction",
+        alias: "Automatic compaction",
+        hint: "Database compaction done automaticslly?",
+        type: "text",
     },
 ];
 

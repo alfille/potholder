@@ -497,3 +497,7 @@ window.onload = () => {
         objectPage.show("FirstTime");
     }
 };
+
+// Picture stats
+const myimg = { map: function(doc) { emit( doc._id,('images' in doc) ? doc.images.length:0);}, reduce:'_stats' } ;
+db.query(myimg, {}).then( x => console.log(x) );
