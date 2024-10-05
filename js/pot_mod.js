@@ -7,8 +7,9 @@
  * */
  
 import {
-	TitleBox,
-    } from "./globals_mod.js" ;
+	PotBox,
+	BlankBox,
+    } from "./titlebox.js" ;
 
 import {
     Id_pot,
@@ -112,7 +113,7 @@ class Pot { // convenience class
             if ( objectPage.test('AllPieces') ) {
                 objectTable.highlight();
             }
-            TitleBox(doc);
+            PotBox(doc);
             return doc ;
             })
         .catch( (err) => {
@@ -138,7 +139,7 @@ class Pot { // convenience class
                 }
             }
         }
-        TitleBox();
+        new BlankBox();
     }
 
     pushPixButton() {

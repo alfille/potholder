@@ -77,15 +77,3 @@ export function setButtons() {
         })
         );
 }
-
-export function TitleBox( doc ) {
-    if ( doc == null ) {
-        document.getElementById( "titlebox" ).innerHTML = "" ;
-    } else if ( typeof(doc)=='string' ) {
-        document.getElementById( "titlebox" ).innerHTML = `<B>${doc}</B>` ;
-    } else {
-        document.getElementById( "titlebox" ).innerHTML = `<button type="button" onClick='objectPage.show("PotMenu")'>${[doc?.type,"from",doc?.series,"by",doc?.artist,doc?.start_date].join(" ")}</button>` ;
-    }
-}
-
-

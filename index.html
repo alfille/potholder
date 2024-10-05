@@ -137,6 +137,7 @@
         <div id="potholderbody" class="work_screen">
             <!-- body: MainMenu -->
             <div class="MainMenu pageOverlay">   
+				<span class=ContentTitle>Main Menu</span>
                 <div id="MainMenuContent" class="MainMenuRow" >
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListMenu' )">Lists</button>
@@ -151,6 +152,7 @@
             </div>
             <!-- body: ListMenu -->
             <div class="ListMenu pageOverlay">
+				<span class=ContentTitle>List Menu</span>
                 <div id="ListMenuContent" class="MainMenuRow" >
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPieces' )">All Pieces</button>
@@ -203,6 +205,7 @@
 
             <!-- body: SearchList -->
             <div class="SearchList pageOverlay">
+				<span class=ContentTitle>Search for...</span>
                 <div id="searchbar">
                     &nbsp;
                     <input type="search" id="searchtext" autofocus="true" value="" onsearch="objectSearch.toTable()">

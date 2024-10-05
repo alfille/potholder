@@ -13,8 +13,12 @@
 import {
     cloneClass,
     setButtons,
-    TitleBox,
     } from "./globals_mod.js" ;
+
+import {
+	StatBox,
+	BlankBox,
+} from "./titlebox.js" ;
     
 // used to generate data entry pages "PotData" type
 import {
@@ -73,6 +77,7 @@ class DatabaseInfo extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         db.info()
         .then( doc => {
             objectPotData = new DatabaseInfoData( doc, structDatabaseInfo );
@@ -85,6 +90,7 @@ class RemoteDatabaseInput extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         const doc = Object.assign({},remoteCouch) ;
         doc.raw = "fixed";
         objectPotData = new DatabaseData( doc, structRemoteUser );
@@ -114,6 +120,7 @@ class DatabaseData extends PotDataRaw {
             delete this.doc.raw ;
             objectCookie.set ( "remoteCouch", Object.assign({},this.doc) );
         }
+		new StatBox() ;
         objectPage.reset();
         location.reload(); // force reload
     }
@@ -133,6 +140,7 @@ class AllPieces extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect() ;
+		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new PotTable();
         objectPot.getAllIdDoc(true)
@@ -146,6 +154,7 @@ class AssignPic extends Pagelist {
 
     static subshow(extra="") {
 		objectPage.forget(); // don't return here
+		new StatBox() ;
         objectPot.unselect() ; // Probably redundant
         objectTable = new AssignTable();
         objectPot.getAllIdDoc(true)
@@ -158,6 +167,7 @@ class ListSeries extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new MultiTable( "by Series", (doc)=>[doc?.series??"Unknown"] ) ;
@@ -168,6 +178,7 @@ class ListFiring extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new MultiTable( "by Firing", (doc)=>[doc?.firing??"Unknown"] ) ;
@@ -178,6 +189,7 @@ class ListGlaze extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new MultiTable( "by Glaze", (doc)=>{ if ("glaze" in doc) { return doc.glaze.map(x=>x.type); }} ) ;
@@ -188,6 +200,7 @@ class ListClay extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new MultiTable( "by Clay", (doc)=>{ if ("clay" in doc) { return doc.clay.map(x=>x.type); } } ) ;
@@ -208,6 +221,7 @@ class FirstTime extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect() ;
         if ( db !== null ) {
             objectPage.show("MainMenu");
@@ -220,6 +234,7 @@ class InvalidPiece extends Pagelist {
     static safeLanding  = false ; // don't return here
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect();
         document.getElementById("MainPhotos").style.display="block";
     }
@@ -229,6 +244,7 @@ class MainMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect();
         document.getElementById("MainPhotos").style.display="block";
     }
@@ -238,6 +254,7 @@ class ListMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect();
         document.getElementById("MainPhotos").style.display="block";
     }
@@ -378,6 +395,7 @@ class SearchList extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
+		new StatBox() ;
         objectPot.unselect() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new SearchTable() ;
@@ -497,7 +515,3 @@ window.onload = () => {
         objectPage.show("FirstTime");
     }
 };
-
-// Picture stats
-const myimg = { map: function(doc) { emit( doc._id,('images' in doc) ? doc.images.length:0);}, reduce:'_stats' } ;
-db.query(myimg, {}).then( x => console.log(x) );

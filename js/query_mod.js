@@ -52,24 +52,6 @@ export function createQueries() {
         },
     },
     {
-        _id: "_design/qGlaze",
-        version: 1,
-        views: {
-            qGlaze: {
-                map: function (doc) {
-                    if ("glaze" in doc) {
-                        doc.glaze.forEach( g => {
-                            if ( "type" in g ) {
-                                emit( g.type ) ;
-                            }
-                        })
-                    }
-                }.toString(),
-                reduce: '_count',
-            },
-        },
-    },
-    {
         _id: "_design/qKiln",
         version: 1,
         views: {
@@ -179,6 +161,18 @@ export function createQueries() {
             },
         },
     },
+    {
+		_id: "_design/qPictures",
+		version: 2,
+		views: {
+			qPictures: {
+				map: function(doc) { 
+					emit( doc._id, ('images' in doc) ? doc.images.length : 0 ); 
+				}.toString(), 
+				reduce: '_stats',
+			},
+		},
+	}, 	
     ];
     Promise.all( ddoclist.map( (ddoc) => {
         db.get( ddoc._id )

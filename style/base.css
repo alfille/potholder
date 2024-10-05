@@ -132,6 +132,13 @@ ul {
 .divbutton:hover, a:hover {
   color: yellow;
 }
+.ContentTitle {
+  display: block;
+  text-align: center;
+  font-size: 2em;
+  color: white;
+  padding: 4px;
+}
 .small_pic {
   max-height: 60px;
   cursor: pointer;

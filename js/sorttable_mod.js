@@ -14,8 +14,8 @@ export {
 } ;
 
 import {
-    TitleBox,
-    } from "./globals_mod.js" ;
+    TextBox,
+    } from "./titlebox.js" ;
 
 class SortTable {
     constructor( collist, tableId, aliaslist=[] ) {
@@ -247,7 +247,7 @@ class MultiTable {
          *  new MultiTable( "Artist", (doc)=>[doc.artist], "series",document.getElementById("MultiTableContent") );
         */
 
-        TitleBox(title);
+        new TextBox(title);
 
         // catagories
         this.cat_ob = {} ;
