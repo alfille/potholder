@@ -113,7 +113,7 @@ class Pot { // convenience class
             if ( objectPage.test('AllPieces') ) {
                 objectTable.highlight();
             }
-            PotBox(doc);
+            new PotBox(doc);
             return doc ;
             })
         .catch( (err) => {
