@@ -16,7 +16,7 @@ class Cookie { //convenience class
         globalThis[cname] = value;
         let date = new Date();
         date.setTime(date.getTime() + (400 * 24 * 60 * 60 * 1000)); // > 1year
-        document.cookie = `${cname}=${encodeURIComponent(JSON.stringify(value))}; expires=${date.toUTCString()}; SameSite=None; Secure; path=/`;
+        document.cookie = `${cname}=${encodeURIComponent(JSON.stringify(value))}; expires=${date.toUTCString()}; SameSite=Secure; Secure; path=/`;
     }
 
     del( cname ) {
