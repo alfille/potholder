@@ -4,7 +4,7 @@
   - [Credentials](RemoteDatabaseInput.md)
 - [Explain the Display](Display.md)
 - [Main Menu](MainMenu.md)
-- [List Choices](ListMenu.md)
+- [List Menu](ListMenu.md)
   - [All Pieces](AllPieces.md)
   - [List by Series](ListSeries.md)
   - [List by Firing](ListFiring.md)
