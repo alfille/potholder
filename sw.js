@@ -25,12 +25,13 @@ const cacheList = [
     "/js/pot_mod.js",
     "/js/search.js",
     "/js/doc_struct.js",
-    "js/query_mod.js",
-    "js/titlebox.js",
+    "/js/query_mod.js",
+    "/js/titlebox.js",
     "/js/replicate_mod.js",
     "/js/flatpickr.min.js",
     "/js/pouchdb-9.0.0.min.js",
     "/js/pouchdb.quick-search.min.js",
+    "/js/qrious.min.js",
     ];
 
 // preload cache

@@ -97,6 +97,27 @@ class RemoteDatabaseInput extends Pagelist {
     }
 }
 
+class MakeURL extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static subshow(extra="") {
+		new StatBox() ;
+        let url = new URL( "/index.html", window.location.href ) ;
+        if ( url.hostname == 'localhost' ) {
+            url = new URL( "/index.html", remoteCouch.address ) ;
+            url.port = '';
+        }
+		Object.entries(remoteCouch)
+		.forEach( ([k,v]) => url.searchParams.append( k, v ) );
+		new QRious( {
+			value: url.toString(),
+			element: document.getElementById("qr"),
+			size: 300,
+		});
+		document.getElementById("MakeURLtext").href = url.toString() ;
+    }
+}
+
 class DatabaseInfoData extends PotData {
     savePieceData() {}
 }

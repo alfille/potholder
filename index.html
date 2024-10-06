@@ -17,8 +17,8 @@
             <div id="headerbox">
                 <div class="headerboxlink mainOnly"><img id="TopLeftImage" class="potholderLogo" src="images/potholder.png"></div>
                 <div id="buttonheader">
-                    <!-- top: MainMenu FirstTime -->
-                    <div class="MainMenu FirstTime topButtons pageOverlay">
+                    <!-- top: MainMenu FirstTime MakeURL-->
+                    <div class="MainMenu FirstTime MakeURL topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
 						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton Qmark">Help</button>
@@ -180,6 +180,15 @@
                     <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'RemoteDatabaseInput' )">Setup</button>
                 </div>
             </div>
+            <!-- body: MakeURL -->
+            <div class="MakeURL pageOverlay">
+				<span class=ContentTitle>Web Link</span>
+                <div id="MakeURLContent" class="buttonmenu">
+					<canvas id="qr" width=300 height=300></canvas>
+					<hr>
+					<a class="divbutton MainBold" id="MakeURLtext">Link</a>
+                </div>
+            </div>
             <!-- body: AllPiecess -->
             <div class="AllPieces pageOverlay">
                 <div id="AllPiecesContent" >
@@ -251,7 +260,7 @@
             <!-- body: Administration -->
             <div class="Administration pageOverlay">
                 <div id="AdministrationContent" class="buttonmenu" >
-                    <button type="button" class="divbutton"  style="visibility:hidden"> </button>
+                    <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'MakeURL' )">Web Link</button>
                     <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
                     <button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
@@ -338,6 +347,7 @@
         <!-- pouchdb --> <script src="js/pouchdb-9.0.0.min.js"></script>
         <!-- quick-search --> <script src="js/pouchdb.quick-search.min.js"></script>
         <!-- new data-time --> <script src="js/flatpickr.min.js"></script>
+        <!-- new data-time --> <script src="js/qrious.min.js"></script>
         <!-- application code --> <script type="module" src="js/globals_mod.js"></script>
         <!-- application code --> <script type="module" src="js/image_mod.js"></script>
         <!-- application code --> <script type="module" src="js/id_mod.js"></script>
