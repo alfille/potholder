@@ -91,7 +91,7 @@ class RemoteDatabaseInput extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
+		new TextBox("Your Credentials") ;
         const doc = Object.assign({},remoteCouch) ;
         doc.raw = "fixed";
         objectPotData = new DatabaseData( doc, structRemoteUser );
@@ -245,7 +245,7 @@ class FirstTime extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect() ;
-		new StatBox() ;
+		new TextBox("Welcome") ;
         if ( db !== null ) {
             objectPage.show("MainMenu");
         }
