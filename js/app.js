@@ -17,6 +17,7 @@ import {
 
 import {
 	StatBox,
+	TextBox,
 	BlankBox,
 } from "./titlebox.js" ;
     
@@ -175,8 +176,8 @@ class AssignPic extends Pagelist {
 
     static subshow(extra="") {
 		objectPage.forget(); // don't return here
-		new StatBox() ;
         objectPot.unselect() ; // Probably redundant
+		new StatBox() ;
         objectTable = new AssignTable();
         objectPot.getAllIdDoc(true)
         .then( (docs) => objectTable.fill(docs.rows ) )
@@ -188,10 +189,10 @@ class ListSeries extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect() ;
+		new TextBox("grouped by Series") ;
         document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( "by Series", (doc)=>[doc?.series??"Unknown"] ) ;
+        objectTable = new MultiTable( (doc)=>[doc?.series??"Unknown"] ) ;
     }
 }
 
@@ -199,10 +200,10 @@ class ListFiring extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect() ;
+		new TextBox("grouped by Firing") ;
         document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( "by Firing", (doc)=>[doc?.firing??"Unknown"] ) ;
+        objectTable = new MultiTable( (doc)=>[doc?.firing??"Unknown"] ) ;
     }
 }
 
@@ -210,10 +211,10 @@ class ListGlaze extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect() ;
+		new TextBox("grouped by Glaze") ;
         document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( "by Glaze", (doc)=>{ if ("glaze" in doc) { return doc.glaze.map(x=>x.type); }} ) ;
+        objectTable = new MultiTable( (doc)=>{ if ("glaze" in doc) { return doc.glaze.map(x=>x.type); }} ) ;
     }
 }
 
@@ -221,10 +222,10 @@ class ListClay extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect() ;
+		new TextBox("grouped by Clay") ;
         document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( "by Clay", (doc)=>{ if ("clay" in doc) { return doc.clay.map(x=>x.type); } } ) ;
+        objectTable = new MultiTable( (doc)=>{ if ("clay" in doc) { return doc.clay.map(x=>x.type); } } ) ;
     }
 }
 
@@ -233,6 +234,7 @@ class ErrorLog extends Pagelist {
 
     static subshow(extra="") {
         objectPot.unselect() ;
+        new TextBox("Error Log");
         objectLog.show() ;
         document.getElementById("MainPhotos").style.display="block";
     }
@@ -242,8 +244,8 @@ class FirstTime extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect() ;
+		new StatBox() ;
         if ( db !== null ) {
             objectPage.show("MainMenu");
         }
@@ -255,8 +257,8 @@ class InvalidPiece extends Pagelist {
     static safeLanding  = false ; // don't return here
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect();
+		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
 }
@@ -265,8 +267,8 @@ class MainMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect();
+		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
 }
@@ -275,8 +277,8 @@ class ListMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect();
+		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
 }
@@ -416,8 +418,8 @@ class SearchList extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static subshow(extra="") {
-		new StatBox() ;
         objectPot.unselect() ;
+		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new SearchTable() ;
         objectSearch.setTable();

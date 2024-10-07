@@ -13,10 +13,6 @@ export {
     AssignTable,
 } ;
 
-import {
-    TextBox,
-    } from "./titlebox.js" ;
-
 class SortTable {
     constructor( collist, tableId, aliaslist=[] ) {
         this.tbl = document.getElementById(tableId);
@@ -238,7 +234,7 @@ class PotTable extends ThumbTable {
 }
 
 class MultiTable {
-    constructor( title, cat_func, collist=["type","series","start_date" ], aliaslist=[] ) {
+    constructor( cat_func, collist=["type","series","start_date" ], aliaslist=[] ) {
         // cat_func outputs a category array:
         // [] or  [category] or [category1, category2,...]
         // sort_func operates on a doc record
@@ -246,8 +242,6 @@ class MultiTable {
         /* Example:
          *  new MultiTable( "Artist", (doc)=>[doc.artist], "series",document.getElementById("MultiTableContent") );
         */
-
-        new TextBox(title);
 
         // catagories
         this.cat_ob = {} ;

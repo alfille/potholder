@@ -1,5 +1,7 @@
 # Explaining the Display
 
+Here is a typical page:
+
 ![](Display.png)
 
 Each page in the program has some consistent elements:
@@ -8,7 +10,7 @@ Each page in the program has some consistent elements:
 
 ![](Display1.png)
 
-The picture in the upper lefthand corner will return you to the Main Menu.
+The picture in the upper lefthand corner will return you to the [_Main Menu_](MainMenu.md).
 
 When a particular piece is selected, it's picture will be the one shown.
 
@@ -19,28 +21,31 @@ When a particular piece is selected, it's picture will be the one shown.
 These are specific to each page, but commonly include 
 * _Help_ page-specific help
 * _Find_ full text search
-* _Photo_ to add a picture to the selected piece, or a picture that you then select the target.
+* [_Photo_](Photo.md) to add a picture from your camera or image gallery.
 
 ## Info Bar
 
 ![](Display3.png)
 
-Information about the database as a whole, of the selected piece.
+Information about the database as a whole, or the selected piece.
 
 ## Work Area
 
 ![](Display33.png)
 
-Varies with each page, but can be:
-* Navigation buttons
-* Display/Edit fields
-* Lists
+This is the cantral focus of the page. It varies with each page, of course, but can be:
+* Navigation buttons  
+![](Display4a.png)
+* Display/Edit fields  
+![](Display4b.png)
+* Lists  
+![](Display4c.png)
 
 ## Network Status
 
 ![](Display4.png)
 
-Shows the user name, and what current network activity is occuring. (Usually _quiescent_). Click on sync status to see the error log.
+Shows your user name, and what current network activity is occuring. (Usually _quiescent_). Click on sync status to see the error log.
 
 Note that data is saved locally. It is also sent to the server (and vise versa) periodically. 
 
