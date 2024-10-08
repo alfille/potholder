@@ -118,8 +118,25 @@ class Page { // singleton class
         this.back();
     }
 
-    link() {
-        window.open( new URL(`/book/${this.current()}.html`,location.href).toString(), '_blank' );
+    helpLink() {
+		const helpLoc = location.href ;
+		const helpDir = "/book/" ;
+		let   helpTopic = this.current() ;
+		switch (helpTopic) {
+			case "AssignPic":
+				helpTopic="Photo";
+				break ;
+			case 'ListType':
+			case 'ListSeries':
+			case 'ListGlaze':
+			case 'ListFiring':
+			case 'ListClay':
+				helpTopic = 'ListGroup';
+				break ;
+			default:
+				break ;
+		}
+        window.open( new URL(`${helpDir}${helpTopic}.html`,helpLoc).toString(), '_blank' );
     } 
     
     show( page, extra="" ) { // main routine for displaying different "pages" by hiding different elements
@@ -159,6 +176,18 @@ class Page { // singleton class
             }
         }
     }    
+
+	headerLink() {
+		if ( objectPage.current() != "MainMenu" ) {
+			objectPage.show("MainMenu") ;
+		} else {
+			if ( objectPage ) {
+				objectPage.reset();
+			}
+			window.location.href="/index.html"; // force reload
+		}
+	}
+
 }
 
 objectPage = new Page();

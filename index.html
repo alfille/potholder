@@ -15,117 +15,122 @@
     <body>
         <header class="work_screen">
             <div id="headerbox">
-                <div class="headerboxlink mainOnly"><img id="TopLeftImage" class="potholderLogo" src="images/potholder.png"></div>
+                <div class="headerboxlink mainOnly" onclick="objectPage.headerLink()"><img id="TopLeftImage" class="potholderLogo" src="images/potholder.png"></div>
                 <div id="buttonheader">
-                    <!-- top: MainMenu FirstTime MakeURL-->
-                    <div class="MainMenu FirstTime MakeURL topButtons pageOverlay">
+                    <!-- top: MainMenu MakeURL-->
+                    <div class="MainMenu MakeURL topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
+                    </div>
+                    <!-- top: FirstTime -->
+                    <div class="FirstTime topButtons pageOverlay">
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: PotMenu -->
                     <div class= "PotMenu topButtons pageOverlay">
                         <button type="button" class="divbutton Camera" title="Get image -- for this piece" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Return</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: AllPieces -->
                     <div class="AllPieces topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: ListSeries ListFiring ListClay ListGlaze ListType -->
                     <div class="ListSeries ListFiring ListClay ListGlaze ListType topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: AssignPic -->
                     <div class="AssignPic topButtons pageOverlay">
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: ListMenu -->
                     <div class="ListMenu topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: SearchList -->
                     <div class="SearchList topButtons pageOverlay">
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'MainMenu' )">Main Menu</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: PotNew -->
                     <div class="PotNew topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: PotData -->
                     <div class="PotData topButtons pageOverlay">
                         <button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton discarddata return" onclick="objectPage.show( 'back' )" title="Abandon this task">Cancel</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: PotEdit PotProcess PotPix -->
                     <div class="PotData PotEdit PotProcess topButtons PotPix pageOverlay">
                         <button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Back</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: InvalidPiece -->
                     <div class="InvalidPiece topButtons pageOverlay">
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'AllPieces' )">Return</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: ErrorLog -->
                     <div class="ErrorLog topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton delete" onclick="objectLog.clear()">Erase Log</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: EditMode (for any of the PotData derivatives -->
                     <div class="potDataEdit pageOverlay">
                         <button type="button" class="divbutton edit_data" disabled>Edit</button>
                         <button type="button" class="divbutton savedata">Save Changes</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: DatabaseInfo -->
                     <div class= "DatabaseInfo topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: Administration -->
                     <div class= "Administration topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'MainMenu' )" title="Show main menu">Return</button>
-						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
-						<button type="button" class="divbutton Qmark">Help</button>
+						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: RemoteDatabaseInput -->
                     <div class="RemoteDatabaseInput topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data">Edit</button>
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                 </div>
             </div>
@@ -138,6 +143,7 @@
 				<span class=ContentTitle>Main Menu</span>
                 <div id="MainMenuContent" class="MainMenuRow" >
                     <div class="PotProcButtons">
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListMenu' )">Lists</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListMenu' )">Lists</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
@@ -337,7 +343,7 @@
         </div>
          <!-- The Modal https://www.w3schools.com/css/tryit.asp?filename=trycss_image_modal_js -->
         <div id="modal_id" class="modal">
-          <span id="modal_close">&times;</span>
+          <span id="modal_close" onclick="(()=>document.getElementById('modal_id').style.display='none')()">&times;</span>
           <img class="modal-content" id="modal_img">
           <div id="modal_caption"></div>
         </div>

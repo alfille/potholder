@@ -37,17 +37,6 @@ export function cloneClass( fromClass, target ) {
 
 export function setButtons() {
     // set Help buttons
-    document.querySelectorAll(".Qmark").forEach( h => {
-        h.title = "Open explanation in another tab" ;
-        h.addEventListener("click",()=>objectPage.link());
-        });
-
-    // set Search buttons
-    document.querySelectorAll(".Search").forEach( s => {
-        s.title = "Search everywhere for a word or phrase" ;
-        s.addEventListener("click",()=>objectPage.show('SearchList'));
-        });
-
     // set edit details for PotData edit pages -- only for "top" portion
     document.querySelectorAll(".edit_data").forEach( e => {
         e.title = "Unlock record to allow changes" ;
@@ -60,20 +49,4 @@ export function setButtons() {
         s.addEventListener("click",()=>objectPotData.savePieceData());
         });
         
-    // modal picture display
-    document.getElementById("modal_close").onclick = 
-		() => document.getElementById("modal_id").style.display="none";
-        
-    document.querySelectorAll(".headerboxlink")
-    .forEach( q => q.addEventListener("click",() => {
-            if ( objectPage && objectPage.current() != "MainMenu" ) {
-                objectPage.show("MainMenu") ;
-            } else {
-                if ( objectPage ) {
-                    objectPage.reset();
-                }
-                window.location.href="/index.html"; // force reload
-            }
-        })
-        );
 }
