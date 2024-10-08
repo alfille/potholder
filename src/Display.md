@@ -10,7 +10,7 @@ Each page in the program has some consistent elements:
 
 ![](Display1.png)
 
-The picture in the upper lefthand corner will return you to the [_Main Menu_](MainMenu.md).
+The picture in the upper left hand corner will return you to the [_Main Menu_](MainMenu.md).
 
 When a particular piece is selected, it's picture will be the one shown.
 
@@ -20,7 +20,7 @@ When a particular piece is selected, it's picture will be the one shown.
 
 These are specific to each page, but commonly include 
 * _Help_ page-specific help
-* _Find_ full text search
+* [_Find_](Search.md) full text search
 * [_Photo_](Photo.md) to add a picture from your camera or image gallery.
 
 ## Info Bar
@@ -33,7 +33,7 @@ Information about the database as a whole, or the selected piece.
 
 ![](Display33.png)
 
-This is the cantral focus of the page. It varies with each page, of course, but can be:
+This is the central focus of the page. It varies with each page, of course, but can be:
 * Navigation buttons  
 ![](Display4a.png)
 * Display/Edit fields  
@@ -45,7 +45,7 @@ This is the cantral focus of the page. It varies with each page, of course, but 
 
 ![](Display4.png)
 
-Shows your user name, and what current network activity is occuring. (Usually _quiescent_). Click on sync status to see the error log.
+Shows your user name, and what current network activity is occuring. (Usually _quiescent_). Click on sync status to see the [_error log_](ErrorLog.md).
 
 Note that data is saved locally. It is also sent to the server (and vise versa) periodically. 
 
@@ -53,6 +53,6 @@ Note that data is saved locally. It is also sent to the server (and vise versa) 
 
 ![](Display5.png)
 
-For pieces with a picture, the thumbnail is a fast way to click and select the piece. You can then inspect and edit data on that piece.
+For pieces with a picture, the thumbnail is a fast way to click and select the piece. You can then [inspect and edit data](PotMenu.md) on that piece.
 
 When a piece is selected, images of that piece are shown instead of all thumbnails.

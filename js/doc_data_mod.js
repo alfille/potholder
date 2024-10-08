@@ -617,11 +617,7 @@ class PotDataRaw { // singleton class
         let preVal = doc[item.name] ;
         switch( item.type ) {
             case "image":
-                if ( preVal && this.Images.exists(preVal) ) {
-                    return_list.push( this.Images.display(preVal) ) ;
-                } else {
-                    return_list.push( document.createTextNode( "No Image" ) );
-                }
+				return_list.push( this.Images.display(preVal,"medium_pic") ) ;
                 break ;
                     
             case "radio":

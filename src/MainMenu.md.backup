@@ -2,25 +2,18 @@
 
 ![](MainMenu.png)
 
-The __Main Menu__ is the primary point for finding program features
+The __Main Menu__ is the primary point for navigating to the many program features. The _Home_ button (upper left icon) always takes you here.
 
-You can always get back here by clicking the icon on the upper lefthand corner once or twice.
+The _Main Menu_ page shares all the features of the standard [_Page Display_](Display.md) with feature buttons on top, status and Thumbnails.
 
-----
-The page has 3 main sections:
+The focus of the page is:
+
+## Menu Choices
 
 ![](MainMenu2.png)
 
-### 1 Buttons for special features
-*  _Photo_ will bring up the camera or gallery. You can assign the picture to a new piece or an existing one
-*  _Find_ brings up text search
-*  _Help_ Brings this page
-### 2 Navigation Choices
-* _Lists_ of the pieces organized in different ways
-* _New Piece_ to create an entry to a new piece
-* _Instructions_ for overall help
+* [_Lists_](ListMenu.md) of your pieces organized in different ways
+* [_New Piece_](PotNew.md) to create an entry for a new piece
+* [_Instructions_](https://alfille.github.io/potholder/) for overall help
 * _Name/Password_ to modify your credentials to the database
 * _Advanced Options_ informational but not normally needed in general usage
-### 3 Quick jump to individual pieces
-
-Thumbnail images for each piece. Click to jump directly.

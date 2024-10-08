@@ -12,7 +12,7 @@
   - [New Piece](PotNew.md)
   - [General Info](PotEdit.md)
   - [Process Details](PotProcess.md)
-  - [Pictures](PotPix.ms)
+  - [Pictures](PotPix.md)
 - [Search](Search.md)
 - [Error Log](ErrorLog.md)
 - [Schema](Schema.md)

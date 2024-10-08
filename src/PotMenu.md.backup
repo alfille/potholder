@@ -12,19 +12,19 @@ The icon in the upper corner shows the current piece.
 
 It's a thumbnail of the first picture in the list.
 
-Clicking it will return the the _Main Menu_
+Clicking it will return the the [_Main Menu_](MainMenu.md)
 
 ## Take Picture
 
 ![](PieceMenu2.png)
 
-The Purple _Photo_ will bring up the camera or gallery. The new picture will be added to the current piece.
+The Purple _Photo_ will bring up the camera or gallery of your device. The new picture will be added to the current piece.
 
 ## Info Bar
 
 ![](PieceMenu3.png)
 
-Information identifying the current piece. Thie also acts as a button returning to this _Piece Menu_
+Information identifying the current piece.
 
 ## Navigation
 
@@ -32,9 +32,10 @@ Information identifying the current piece. Thie also acts as a button returning 
 
 Information about the piece is split into 3 sections:
 
-* _Overview_ includes category, dates, weight and artist.
-* _Process Details_ includes materials and methods used in creation
-* _Images_ allows editing the images
+* [_Overview_](PotEdit.md) includes category, dates, weight and artist.
+* [_Process Details_](PotProcess.md) includes materials and methods used in creation
+* [_Images_](PotPix.md) allows editing the images
+* _Delete_ to delete this piece entirely! That includes data and pictures. You will be asked for confirmation.
 
 ## Pictures
 

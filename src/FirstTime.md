@@ -14,3 +14,7 @@ There are 2 menu item.
   * database
   
 If you got the potholder link directly or QR code with the credentials already entered, you will not need to see this page.
+
+--------
+
+To understand the other information on this page go to the [_Display_](Display.md) entry. All the pages have common elements.
