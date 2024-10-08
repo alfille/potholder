@@ -38,10 +38,10 @@ export function cloneClass( fromClass, target ) {
 export function setButtons() {
     // set Help buttons
     // set edit details for PotData edit pages -- only for "top" portion
-    document.querySelectorAll(".edit_data").forEach( e => {
-        e.title = "Unlock record to allow changes" ;
-        e.addEventListener("click",()=>objectPotData.edit_doc());
-        });
+//    document.querySelectorAll(".edit_data").forEach( e => {
+//        e.title = "Unlock record to allow changes" ;
+//        e.addEventListener("click",()=>objectPotData.edit_doc());
+//        });
 
     // set save details for PotData save pages
     document.querySelectorAll(".savedata").forEach( s => {

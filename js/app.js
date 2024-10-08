@@ -11,11 +11,6 @@
 /* jshint esversion: 11 */
 
 import {
-    cloneClass,
-    setButtons,
-    } from "./globals_mod.js" ;
-
-import {
 	StatBox,
 	TextBox,
 	BlankBox,
@@ -483,8 +478,6 @@ window.onload = () => {
     // Get Cookies
     objectCookie.initialGet() ;
     
-    setButtons(); // load some common html elements
-
     // Stuff into history to block browser BACK button
     window.history.pushState({}, '');
     window.addEventListener('popstate', ()=>window.history.pushState({}, '') );

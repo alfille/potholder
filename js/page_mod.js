@@ -123,9 +123,6 @@ class Page { // singleton class
 		const helpDir = "/book/" ;
 		let   helpTopic = this.current() ;
 		switch (helpTopic) {
-			case "AssignPic":
-				helpTopic="Photo";
-				break ;
 			case 'ListType':
 			case 'ListSeries':
 			case 'ListGlaze':
