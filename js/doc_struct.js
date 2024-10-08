@@ -128,14 +128,6 @@ export const structProcess = [
         choices: ["greenware","bisque","oxidation","reduction","soda","raku",],
     },
     {
-        name:  "type",
-        alias: "Type of piece",
-        hint:  "What will the piece be used for?",
-        type:  "list",
-        choices:  ["bowl","plate","flowerpot"],
-        query: "qType",
-    },
-    {
         name:  "weight_start",
         alias: "Starting weight",
         hint:  "Weight (in pounds) of the raw clay",

@@ -38,8 +38,8 @@
 						<button type="button" class="divbutton Search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton Qmark">Help</button>
                     </div>
-                    <!-- top: ListSeries ListFiring ListClay ListGlaze -->
-                    <div class="ListSeries ListFiring ListClay ListGlaze topButtons pageOverlay">
+                    <!-- top: ListSeries ListFiring ListClay ListGlaze ListType -->
+                    <div class="ListSeries ListFiring ListClay ListGlaze ListType topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
@@ -158,9 +158,10 @@
                     </div>
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListSeries' )">Series</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListType'   )">Type</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListFiring' )">Firing</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListClay' )">Clay</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListGlaze' )">Glaze</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListClay'   )">Clay</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListGlaze'  )">Glaze</button>
                     </div>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                 </div>
@@ -193,8 +194,8 @@
                     <table id="AllPieces"></table>
                 </div>
             </div>
-            <!-- body: ListSeries ListFiring ListClay ListGlaze -->
-            <div class="ListSeries ListFiring ListClay ListGlaze pageOverlay">
+            <!-- body: ListSeries ListFiring ListClay ListGlaze ListType -->
+            <div class="ListSeries ListFiring ListClay ListGlaze ListType pageOverlay">
                 <div id="MultiTableContent" >
                 </div>
             </div>

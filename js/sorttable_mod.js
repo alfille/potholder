@@ -255,7 +255,7 @@ class MultiTable {
         .then( () => Object.keys(this.cat_ob).forEach( cat => {
 			// fieldset holds a sorttable
             const fs = fieldset.cloneNode( true ) ;
-            fs.querySelector(".multiCat").innerText = cat ;
+            fs.querySelector(".multiCat").innerText = `${cat} (${this.cat_ob[cat].rows.length})` ;
 
 			// setup table
             const tb = fs.querySelector("table");
@@ -290,7 +290,7 @@ class MultiTable {
         const a2a = [] ;
         return objectPot.getAllIdDoc()
         .then( docs => docs.rows
-                        .forEach( r => (cat_func( r.doc )??[])
+                        .forEach( r => (cat_func( r.doc )??['unknown'])
                             .forEach( c => a2a.push( [c,r] ))
                              ))
         .then( () => this.arrays2object( a2a ) );

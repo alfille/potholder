@@ -19,24 +19,24 @@ class Pagelist {
     static pages = {} ; // [pagetitle]->class -- pagetitle is used by HTML to toggle display of "pages"
     // prototype to add to pages
     static AddPage() { Pagelist.pages[this.name]=this; }
-    // safeLanding -- safe to resume on this page
-    static safeLanding = true ; // default
     
-    static show(extra="") {
-        // set up specific page display
+    static show_page(extra="") {
+        // reset buttons from edit mode
         document.querySelector(".potDataEdit").style.display="none"; 
         document.querySelectorAll(".topButtons")
             .forEach( tb => tb.style.display = "block" );
 
+        // hide all but current page
         document.querySelectorAll(".pageOverlay")
             .forEach( po => po.style.display = po.classList.contains(this.name) ? "block" : "none" );
 
+        // hide Thumbnails
         document.getElementById("MainPhotos").style.display="none";
         
-        this.subshow(extra);
+        this.show_content(extra);
     }
     
-    static subshow(extra="") {
+    static show_content(extra="") {
         // default version, derived classes may overrule
         // Simple menu page
     }
@@ -76,15 +76,12 @@ class Page { // singleton class
     }
 
     back() {
+		// return to previous page (if any exist)
         this.path.shift() ;
         if ( this.path.length == 0 ) {
             this.reset();
         }
-        if ( Pagelist.subclass(this.path[0]).safeLanding ) {
-            objectCookie.set ( "displayState", this.path ) ;
-        } else {
-            this.back() ;
-        }
+		objectCookie.set ( "displayState", this.path ) ;
     }
 
     current() {
@@ -117,6 +114,7 @@ class Page { // singleton class
     }
 
     forget() {
+		// remove this page from the "back" list -- but don't actually go there
         this.back();
     }
 
@@ -143,7 +141,7 @@ class Page { // singleton class
         this.show_screen( "screen" ); // basic page display setup
 
         // send to page-specific code
-        (Pagelist.subclass(objectPage.current())).show(extra);
+        (Pagelist.subclass(objectPage.current())).show_page(extra);
     }
     
     show_screen( type ) { // switch between screen and print

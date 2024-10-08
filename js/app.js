@@ -77,7 +77,7 @@ class Administration extends Pagelist {
 class DatabaseInfo extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
 		new StatBox() ;
         db.info()
         .then( doc => {
@@ -90,7 +90,7 @@ class DatabaseInfo extends Pagelist {
 class RemoteDatabaseInput extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
 		new TextBox("Your Credentials") ;
         const doc = Object.assign({},remoteCouch) ;
         doc.raw = "fixed";
@@ -101,7 +101,7 @@ class RemoteDatabaseInput extends Pagelist {
 class MakeURL extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
 		new StatBox() ;
         let url = new URL( "/index.html", window.location.href ) ;
         if ( url.hostname == 'localhost' ) {
@@ -151,7 +151,7 @@ class DatabaseData extends PotDataRaw {
 class Help extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         window.open( new URL(`https://alfille.github.io/potholder`,location.href).toString(), '_blank' );
         objectPage.show("back");
     }
@@ -160,7 +160,7 @@ class Help extends Pagelist {
 class AllPieces extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect() ;
 		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -174,7 +174,7 @@ class AllPieces extends Pagelist {
 class AssignPic extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
 		objectPage.forget(); // don't return here
         objectPot.unselect() ; // Probably redundant
 		new StatBox() ;
@@ -188,29 +188,40 @@ class AssignPic extends Pagelist {
 class ListSeries extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect() ;
 		new TextBox("grouped by Series") ;
         document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( (doc)=>[doc?.series??"Unknown"] ) ;
+        objectTable = new MultiTable( (doc)=>[doc?.series??"unknown"] ) ;
+    }
+}
+
+class ListType extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static show_content(extra="") {
+        objectPot.unselect() ;
+		new TextBox("grouped by Type of Piece") ;
+        document.getElementById("MainPhotos").style.display="block";
+        objectTable = new MultiTable( (doc)=>[doc?.type??"unknown"] ) ;
     }
 }
 
 class ListFiring extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect() ;
 		new TextBox("grouped by Firing") ;
         document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( (doc)=>[doc?.firing??"Unknown"] ) ;
+        objectTable = new MultiTable( (doc)=>[doc?.firing??"unknown"] ) ;
     }
 }
 
 class ListGlaze extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect() ;
 		new TextBox("grouped by Glaze") ;
         document.getElementById("MainPhotos").style.display="block";
@@ -221,7 +232,7 @@ class ListGlaze extends Pagelist {
 class ListClay extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect() ;
 		new TextBox("grouped by Clay") ;
         document.getElementById("MainPhotos").style.display="block";
@@ -232,7 +243,7 @@ class ListClay extends Pagelist {
 class ErrorLog extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect() ;
         new TextBox("Error Log");
         objectLog.show() ;
@@ -243,7 +254,7 @@ class ErrorLog extends Pagelist {
 class FirstTime extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect() ;
 		new TextBox("Welcome") ;
         if ( db !== null ) {
@@ -254,9 +265,9 @@ class FirstTime extends Pagelist {
 
 class InvalidPiece extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static safeLanding  = false ; // don't return here
 
-    static subshow(extra="") {
+    static show_content(extra="") {
+		objectPage.forget() ; // don't return here
         objectPot.unselect();
 		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -266,7 +277,7 @@ class InvalidPiece extends Pagelist {
 class MainMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect();
 		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -276,7 +287,7 @@ class MainMenu extends Pagelist {
 class ListMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect();
 		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -287,7 +298,7 @@ class PotNew extends Pagelist {
 	// record doesn't exist -- make one
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
 		objectPage.forget();
 		if ( objectPot.isSelected() ) {
 			// existing but "new"
@@ -321,7 +332,7 @@ class PotNewData extends PotDataEditMode {
 class PotEdit extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
@@ -344,7 +355,7 @@ class PotEdit extends Pagelist {
 class PotProcess extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
@@ -367,7 +378,7 @@ class PotProcess extends Pagelist {
 class PotPix extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => { 
@@ -391,7 +402,7 @@ class PotPix extends Pagelist {
 class PotMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
@@ -417,7 +428,7 @@ class PotMenu extends Pagelist {
 class SearchList extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static subshow(extra="") {
+    static show_content(extra="") {
         objectPot.unselect() ;
 		new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
