@@ -27,26 +27,3 @@ globalThis. objectThumb = null;
 
 // Database handles
 globalThis.db = null ; // will be Pouchdb local copy 
-
-// Commonly used function
-export function cloneClass( fromClass, target ) {
-    let c = document.getElementById("templates").querySelector(fromClass);
-    target.innerHTML = "";
-    c.childNodes.forEach( cc => target.appendChild(cc.cloneNode(true) ) );
-}
-
-export function setButtons() {
-    // set Help buttons
-    // set edit details for PotData edit pages -- only for "top" portion
-//    document.querySelectorAll(".edit_data").forEach( e => {
-//        e.title = "Unlock record to allow changes" ;
-//        e.addEventListener("click",()=>objectPotData.edit_doc());
-//        });
-
-    // set save details for PotData save pages
-    document.querySelectorAll(".savedata").forEach( s => {
-        s.title = "Save your changes to this record" ;
-        s.addEventListener("click",()=>objectPotData.savePieceData());
-        });
-        
-}

@@ -13,10 +13,6 @@ export {
     } ;
 
 import {
-    cloneClass,
-    } from "./globals_mod.js" ;
-
-import {
         PotImages,
     } from "./image_mod.js" ;
     
@@ -161,7 +157,7 @@ class PotDataRaw { // singleton class
         parent.innerHTML = "";
             
         // Heading and buttons
-        cloneClass( ".Darray", parent ) ;
+        this.cloneClass( ".Darray", parent ) ;
         let tab = parent.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>Choose ${item.alias??item.name} item</i>`;
         [".Darray_back"].forEach(c=>tab.querySelector(c).hidden=false);
@@ -198,7 +194,7 @@ class PotDataRaw { // singleton class
         parent.innerHTML = "";
             
         // Heading and buttons
-        cloneClass( ".Darray", parent ) ;
+        this.cloneClass( ".Darray", parent ) ;
         let tab = parent.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>Choose ${item.alias??item.name} item</i>`;
         [".Darray_back"].forEach(c=>tab.querySelector(c).hidden=false);
@@ -251,7 +247,7 @@ class PotDataRaw { // singleton class
         if ( !(item.name in this.doc) || this.doc[item.name]==null ) {
             this.doc[item.name]=[];
         }
-        cloneClass( ".Darray_li", li1 ) ;
+        this.cloneClass( ".Darray_li", li1 ) ;
         li1.querySelector("span").innerHTML=`<i>${adding?"Add":"Edit"} ${title} entry</i>`;
         li1.classList.add("Darray_li1");
         (adding?[".Darray_ok",".Darray_cancel"]:[".Darray_ok",".Darray_cancel",".Darray_delete"]).forEach(c=>li1.querySelector(c).hidden=false);
@@ -303,7 +299,7 @@ class PotDataRaw { // singleton class
         parent.innerHTML = "";
                 
         // Heading and buttons
-        cloneClass( ".Darray", parent ) ;
+        this.cloneClass( ".Darray", parent ) ;
         let tab = parent.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} rearrange order</i>`;
         [".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
@@ -344,7 +340,7 @@ class PotDataRaw { // singleton class
         parent.innerHTML = "";
                 
         // Heading and buttons
-        cloneClass( ".Darray", parent ) ;
+        this.cloneClass( ".Darray", parent ) ;
         let tab = parent.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} rearrange order</i>`;
         [".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
@@ -399,7 +395,7 @@ class PotDataRaw { // singleton class
 
         // Heading and buttons
         let temp = document.createElement("span"); // hold clone
-        cloneClass( ".Darray", temp ) ;
+        this.cloneClass( ".Darray", temp ) ;
         let tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
         [".Darray_add",".Darray_edit",".Darray_rearrange"].forEach(c=>tab.querySelector(c).hidden=false);
@@ -446,7 +442,7 @@ class PotDataRaw { // singleton class
 
         // Heading and buttons
         let temp = document.createElement("span"); // hold clone
-        cloneClass( ".Darray", temp ) ;
+        this.cloneClass( ".Darray", temp ) ;
         let tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
         [".Darray_edit",".Darray_rearrange"].forEach(c=>tab.querySelector(c).hidden=false);
@@ -487,7 +483,7 @@ class PotDataRaw { // singleton class
         let preVal = this.doc[item.name] ;
 
         let temp = document.createElement("span"); // hold clone
-        cloneClass( ".Darray", temp ) ;
+        this.cloneClass( ".Darray", temp ) ;
         let tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
         tab.querySelectorAll("button").forEach(b=>b.style.display="none");
@@ -520,7 +516,7 @@ class PotDataRaw { // singleton class
         let preVal = this.doc[item.name] ;
 
         let temp = document.createElement("span"); // hold clone
-        cloneClass( ".Darray", temp ) ;
+        this.cloneClass( ".Darray", temp ) ;
         let tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>Saved Images</i>`;
         tab.querySelectorAll("button").forEach(b=>b.style.display="none");
@@ -847,6 +843,12 @@ class PotDataRaw { // singleton class
     savePieceData() {
         this.saveChanged( "PotMenu" );
     }
+
+	cloneClass( fromClass, target ) {
+		let c = document.getElementById("templates").querySelector(fromClass);
+		target.innerHTML = "";
+		c.childNodes.forEach( cc => target.appendChild(cc.cloneNode(true) ) );
+	}
 }
 
 class PotData extends PotDataRaw {

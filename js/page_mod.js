@@ -185,6 +185,10 @@ class Page { // singleton class
 		}
 	}
 
+	copy_to_clip() {
+		navigator.clipboard.writeText( document.getElementById("MakeURLtext").href )
+		.catch( err => objectLog.err(err) );
+	}
 }
 
 objectPage = new Page();
