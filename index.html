@@ -17,8 +17,8 @@
             <div id="headerbox">
                 <div class="headerboxlink mainOnly" onclick="objectPage.headerLink()"><img id="TopLeftImage" class="potholderLogo" src="images/potholder.png"></div>
                 <div id="buttonheader">
-                    <!-- top: MainMenu MakeURL-->
-                    <div class="MainMenu MakeURL topButtons pageOverlay">
+                    <!-- top: MainMenu-->
+                    <div class="MainMenu topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
@@ -54,8 +54,8 @@
                     <div class="AssignPic topButtons pageOverlay">
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: ListMenu -->
-                    <div class="ListMenu topButtons pageOverlay">
+                    <!-- top: ListMenu MakeURL-->
+                    <div class="ListMenu topButtons pageOverlay MakeURL">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
@@ -265,13 +265,17 @@
             </div>
             <!-- body: Administration -->
             <div class="Administration pageOverlay">
-                <div id="AdministrationContent" class="buttonmenu" >
-                    <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'MakeURL' )">Web Link</button>
-                    <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
-                    <button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
-                    <button type="button" class="divbutton"  style="visibility:hidden"> </button>
-                    <button type="button" class="divbutton" onClick="objectRemote.link()" hint="Open Couchdb Fauxton console">Database Console</button>
-                    <button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>
+                <div id="AdministrationContent" class="MainMenuRow">
+					<div class="PotProcButtons">
+						<button type="button" class="divbutton MainBold" onclick="objectPage.show( 'MakeURL' )">Web Link</button>
+						<button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
+					</div>
+					<div class="PotProcButtons">
+						<button type="button" class="divbutton" onClick="objectRemote.link()" hint="Open Couchdb Fauxton console">Database Console</button>
+						<button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>
+						<button type="button" class="divbutton"  style="visibility:hidden"> </button>
+						<button type="button" class="divbutton delete MainItalic" onclick="clearLocal()">Clear local data</button>
+					</div>
                 </div>
             </div>
         </div>
