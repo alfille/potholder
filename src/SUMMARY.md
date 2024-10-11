@@ -2,6 +2,7 @@
 - [Brief Intro](Intro.md)
 - [First Time](FirstTime.md)
   - [Credentials](RemoteDatabaseInput.md)
+  - [Web Link](MakeURL.md)
 - [Explain the Display](Display.md)
 - [Main Menu](MainMenu.md)
 - [List Menu](ListMenu.md)

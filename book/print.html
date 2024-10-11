@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="Welcome.html"><strong aria-hidden="true">1.</strong> Welcome</a></li><li class="chapter-item "><a href="Intro.html"><strong aria-hidden="true">2.</strong> Brief Intro</a></li><li class="chapter-item "><a href="FirstTime.html"><strong aria-hidden="true">3.</strong> First Time</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="RemoteDatabaseInput.html"><strong aria-hidden="true">3.1.</strong> Credentials</a></li></ol></li><li class="chapter-item "><a href="Display.html"><strong aria-hidden="true">4.</strong> Explain the Display</a></li><li class="chapter-item "><a href="MainMenu.html"><strong aria-hidden="true">5.</strong> Main Menu</a></li><li class="chapter-item "><a href="ListMenu.html"><strong aria-hidden="true">6.</strong> List Menu</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="AllPieces.html"><strong aria-hidden="true">6.1.</strong> All Pieces</a></li><li class="chapter-item "><a href="ListGroup.html"><strong aria-hidden="true">6.2.</strong> Grouped List</a></li></ol></li><li class="chapter-item "><a href="AssignPic.html"><strong aria-hidden="true">7.</strong> Take a picture</a></li><li class="chapter-item "><a href="PotMenu.html"><strong aria-hidden="true">8.</strong> Piece Menu</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="PotNew.html"><strong aria-hidden="true">8.1.</strong> New Piece</a></li><li class="chapter-item "><a href="PotEdit.html"><strong aria-hidden="true">8.2.</strong> General Info</a></li><li class="chapter-item "><a href="PotProcess.html"><strong aria-hidden="true">8.3.</strong> Process Details</a></li><li class="chapter-item "><a href="PotPix.html"><strong aria-hidden="true">8.4.</strong> Pictures</a></li></ol></li><li class="chapter-item "><a href="SearchList.html"><strong aria-hidden="true">9.</strong> Search</a></li><li class="chapter-item "><a href="ErrorLog.html"><strong aria-hidden="true">10.</strong> Error Log</a></li><li class="chapter-item "><a href="Schema.html"><strong aria-hidden="true">11.</strong> Schema</a></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="Welcome.html"><strong aria-hidden="true">1.</strong> Welcome</a></li><li class="chapter-item "><a href="Intro.html"><strong aria-hidden="true">2.</strong> Brief Intro</a></li><li class="chapter-item "><a href="FirstTime.html"><strong aria-hidden="true">3.</strong> First Time</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="RemoteDatabaseInput.html"><strong aria-hidden="true">3.1.</strong> Credentials</a></li><li class="chapter-item "><a href="MakeURL.html"><strong aria-hidden="true">3.2.</strong> Web Link</a></li></ol></li><li class="chapter-item "><a href="Display.html"><strong aria-hidden="true">4.</strong> Explain the Display</a></li><li class="chapter-item "><a href="MainMenu.html"><strong aria-hidden="true">5.</strong> Main Menu</a></li><li class="chapter-item "><a href="ListMenu.html"><strong aria-hidden="true">6.</strong> List Menu</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="AllPieces.html"><strong aria-hidden="true">6.1.</strong> All Pieces</a></li><li class="chapter-item "><a href="ListGroup.html"><strong aria-hidden="true">6.2.</strong> Grouped List</a></li></ol></li><li class="chapter-item "><a href="AssignPic.html"><strong aria-hidden="true">7.</strong> Take a picture</a></li><li class="chapter-item "><a href="PotMenu.html"><strong aria-hidden="true">8.</strong> Piece Menu</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="PotNew.html"><strong aria-hidden="true">8.1.</strong> New Piece</a></li><li class="chapter-item "><a href="PotEdit.html"><strong aria-hidden="true">8.2.</strong> General Info</a></li><li class="chapter-item "><a href="PotProcess.html"><strong aria-hidden="true">8.3.</strong> Process Details</a></li><li class="chapter-item "><a href="PotPix.html"><strong aria-hidden="true">8.4.</strong> Pictures</a></li></ol></li><li class="chapter-item "><a href="SearchList.html"><strong aria-hidden="true">9.</strong> Search</a></li><li class="chapter-item "><a href="ErrorLog.html"><strong aria-hidden="true">10.</strong> Error Log</a></li><li class="chapter-item "><a href="Schema.html"><strong aria-hidden="true">11.</strong> Schema</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -203,6 +203,36 @@
 <hr />
 <p>To understand the other information on this page go to the <a href="Display.html"><em>Display</em></a> entry. All the pages have common elements.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="credentials"><a class="header" href="#credentials">Credentials</a></h1>
+<p>Although <strong>Potholder</strong> without a can work freestanding, you generally want to run a database server so the data can be securely saved, shared, and used on more than one device.</p>
+<p><img src="RemoteDatabaseInput.png" alt="" /></p>
+<p>The server connection requires 4 items:</p>
+<ul>
+<li>username</li>
+<li>password</li>
+<li>server web location</li>
+<li>database name</li>
+</ul>
+<p>If this wasn't given to you in the initial link, you can enter it manually:</p>
+<p><img src="RemoteDatabaseInput2.png" alt="" /></p>
+<p>The program will try to fix up your server location (adding https and the port) unless you click <em>raw</em></p>
+<p>Remember to save your changes:</p>
+<p><img src="RemoteDatabaseInput3.png" alt="" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="web-link"><a class="header" href="#web-link">Web Link</a></h1>
+<p><img src="MakeURL.png" alt="" /></p>
+<p>An option from either the <a href="Administration.html">Advanced Menu</a> or the <a href="RemoteDatabaseInput.html">Credentials</a> pages. The Web link holds</p>
+<ul>
+<li>Your username</li>
+<li>Your password (!)</li>
+<li>The database server location</li>
+<li>The database name</li>
+</ul>
+<p>It's a web location and can be:</p>
+<ul>
+<li>Scanned as a QR code</li>
+<li>Clicked as a link</li>
+<li>Copied to the clipboard</li>
+</ul>
+<p>In this case, the wrong information was entered, for security.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="explaining-the-display"><a class="header" href="#explaining-the-display">Explaining the Display</a></h1>
 <p>Here is a typical page:</p>
 <p><img src="Display.png" alt="" /></p>
