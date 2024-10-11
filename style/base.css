@@ -116,6 +116,13 @@ ul {
   -o-appearance: none;
   appearance: none;
 }
+.divbutton:disabled {
+  color: grey;
+  background: #9eb6ff ;
+}
+.divbutton:hover, a:hover {
+  color: yellow;
+}
 
 .NewCamera {
   color: #e71111;
@@ -125,13 +132,6 @@ ul {
   background: purple;
 }
 
-.divbutton:disabled {
-  color: grey;
-  background: #9eb6ff ;
-}
-.divbutton:hover, a:hover {
-  color: yellow;
-}
 .ContentTitle {
   display: block;
   text-align: center;
@@ -236,10 +236,6 @@ ul {
         display: none !important;
     }
 }
-.titlediv {
-  overflow: auto;
-}
-
 .multiCat, .fill_show_data {
   font-weight: bold;
   color: black;
@@ -291,10 +287,6 @@ body {
   display: none ;
 }
 
-#userbutton, #remotebutton {
-  background: #99ddff;
-}
-
 .imageBar {
   display:none;
 }
@@ -305,14 +297,7 @@ body {
   border: 1px solid red;
   margin: 1px 3px 1px 1px ;
 }
-.inly {
-  display : inline-block;
-}
 .edit_data:disabled {
-  background: #ffffcc;
-  color: grey;
-}
-.tbardel:disabled {
   background: #ffffcc;
   color: grey;
 }
@@ -337,16 +322,6 @@ body {
 #splash_screen {
   display: block ;
   background: #3366CC;
-}
-  
-#PatientPhotoContent, #NoteChoiceButtons {
-  background: #b3b3ff ;
-  background-color: #b3b3ff ;
-}
-
-#PatientPhotoContent2 {
-    display: flex;
-    justify-content: center;
 }
 
 legend {
@@ -434,14 +409,6 @@ legend {
   font-style: italic;
   color: #d0d0d0;
 }
-#PatientPhotoButtons1{
-  display: flex;
-  color: white;
-  background: #b3b3ff;
-  padding-top: 2px;
-  flex-direction: row ;
-  justify-content: space-around;
-}
 #PotPhotos, #MainPhotos {
   display: flex;
   flex-wrap: wrap;
@@ -451,11 +418,11 @@ legend {
   border: 1px solid white;
   margin: 5px;
 }
-.PotProcButtons, .MainMenuButtons {
+.PotProcButtons {
   display: flex;
   flex-direction: column;
 }
-#InvalidPatientContent {
+#InvalidPotContent {
     padding: 5px ;
 }
 .PotData input {
@@ -492,9 +459,6 @@ legend {
   background: lightblue;
   border: 4px;
   width: 8em;
-}
-.nowrap {
-  white-space:nowrap;
 }
 .potholderLogo {
   max-height:100px;

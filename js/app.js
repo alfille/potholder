@@ -137,7 +137,6 @@ class DatabaseData extends PotDataRaw {
             delete this.doc.raw ;
             objectCookie.set ( "remoteCouch", Object.assign({},this.doc) );
         }
-		new StatBox() ;
         objectPage.reset();
         location.reload(); // force reload
     }
@@ -295,6 +294,7 @@ class PotNew extends Pagelist {
 
     static show_content(extra="") {
 		objectPage.forget();
+		new TextBox("New Piece");
 		if ( objectPot.isSelected() ) {
 			// existing but "new"
 			objectPot.getRecordIdPix(potId,true)
