@@ -83,7 +83,7 @@ class Pot { // convenience class
             startkey: Id_pot.allStart(),
             endkey:   Id_pot.allEnd(),
             include_docs: true,
-            attachments: true,
+            attachments: binary,
             binary: binary,
         };
         return db.allDocs(doc);

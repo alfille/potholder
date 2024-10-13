@@ -15,5 +15,7 @@
   - [Process Details](PotProcess.md)
   - [Pictures](PotPix.md)
 - [Search](SearchList.md)
-- [Error Log](ErrorLog.md)
+- [Advanced Options](Administration.md)
+  - [Error Log](ErrorLog.md)
+  - [Database Information](DatabaseInfo.md)
 - [Schema](Schema.md)

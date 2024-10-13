@@ -20,3 +20,4 @@ The program will try to fix up your server location (adding https and the port) 
 Remember to save your changes:
 
 ![](RemoteDatabaseInput3.png)
+

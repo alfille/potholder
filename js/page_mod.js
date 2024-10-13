@@ -12,6 +12,10 @@ export {
 
 import {
     } from "./globals_mod.js" ;
+    
+import {
+	CSV,
+	} from "./app.js" ;
 
 class Pagelist {
     // list of subclasses = displayed "pages"
@@ -188,6 +192,10 @@ class Page { // singleton class
 	copy_to_clip() {
 		navigator.clipboard.writeText( document.getElementById("MakeURLtext").href )
 		.catch( err => objectLog.err(err) );
+	}
+	
+	csv() {
+		new CSV() ;
 	}
 }
 
