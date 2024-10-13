@@ -86,7 +86,7 @@
                     <div class="PotData PotEdit PotProcess topButtons PotPix pageOverlay">
                         <button type="button" class="divbutton Camera" title="Get image" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton edit_data" onclick="objectPotData.edit_doc()" title="Start editing these entries">Edit</button>
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Back</button>
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Back</button>
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
@@ -108,7 +108,7 @@
                     <div class="potDataEdit pageOverlay">
                         <button type="button" class="divbutton edit_data" onclick="objectPotData.edit_doc()" title="Start editing these entries" disabled>Edit</button>
                         <button type="button" class="divbutton savedata" onclick="objectPotData.savePieceData()" title="Save your changes to the database">Save Changes</button>
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Cancel</button>
+						<button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Do NOT save changes">Cancel</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: DatabaseInfo -->
@@ -285,6 +285,20 @@
             <img id="LogoPicture" src="images/potholder.png" />
             <canvas id="thumbnail" width=64 height=64>
             </canvas>
+            <!-- Extra Edit buttons -->
+            <div class="ExtraEdit">
+				<div class="MainMenuRow">
+					<button type="button" class="divbutton edit_data" onclick="objectPotData.edit_doc()" title="Start editing these entries">Edit</button>
+					<button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Back</button>
+				</div>
+            </div>
+            <!-- Extra save buttons -->
+            <div class="ExtraSave">
+				<div class="MainMenuRow">
+					<button type="button" class="divbutton savedata" onclick="objectPotData.savePieceData()" title="Save your changes to the database">Save Changes</button>
+					<button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Do NOT save changes">Cancel</button>
+				</div>
+            </div>
             <!-- Property Array Table Caption -->
             <div class="Darray">
                 <table class="Darray_table">

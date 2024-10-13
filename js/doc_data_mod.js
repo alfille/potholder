@@ -83,6 +83,7 @@ class PotDataRaw { // singleton class
         });
 
         parent.appendChild(this.ul) ;
+        this.cloneClass( ".ExtraEdit", parent ) ;
     }
 
     show_item(item,doc) {
@@ -398,12 +399,17 @@ class PotDataRaw { // singleton class
         this.cloneClass( ".Darray", temp ) ;
         let tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
-        [".Darray_add",".Darray_edit",".Darray_rearrange"].forEach(c=>tab.querySelector(c).hidden=false);
+        tab.querySelector(".Darray_add").hidden=false;
         tab.querySelector(".Darray_add").onclick=()=>this.edit_array_entry( item, -1 );
-        tab.querySelector(".Darray_edit").disabled=(elements<1);
-        tab.querySelector(".Darray_edit").onclick=(elements==1)?(()=>this.edit_array_entry( item, 0 )):(()=>this.select_edit(item));
-        tab.querySelector(".Darray_rearrange").disabled=(elements<2);
-        tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange(item);
+        if ( elements == 1 ) {
+			tab.querySelector(".Darray_edit").hidden=false;
+			tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( item, 0 );
+		} else if ( elements > 1 ) {
+			tab.querySelector(".Darray_edit").hidden=false;
+			tab.querySelector(".Darray_edit").onclick=()=>this.select_edit(item);
+			tab.querySelector(".Darray_rearrange").hidden=false;
+			tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange(item);
+		}
 
         // table
         if ( Array.isArray(preVal) && (preVal.length>0) ) {
@@ -596,6 +602,7 @@ class PotDataRaw { // singleton class
             });
             
             parent.appendChild(this.ul) ;
+            this.cloneClass( ".ExtraSave", parent ) ;
         });
     }
     
@@ -846,7 +853,6 @@ class PotDataRaw { // singleton class
 
 	cloneClass( fromClass, target ) {
 		let c = document.getElementById("templates").querySelector(fromClass);
-		target.innerHTML = "";
 		c.childNodes.forEach( cc => target.appendChild(cc.cloneNode(true) ) );
 	}
 }
