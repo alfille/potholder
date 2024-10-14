@@ -60,18 +60,15 @@ tr:nth-child(odd), li:nth-child(odd) {
   padding: 4px 0 0 0;
   background: #E6F2FF ;
 }
-tr:nth-child(odd), li:nth-child(odd) {
-  margin: 4px 0 0 0;
-  border-style: double none none none ;
-  padding: 4px 0 0 0;
-  background: #E6F2FF ;
-}
 tr.choice, li.choice, div.choice {
   background: gold !important;
 }
 tr:nth-child(odd):hover, li:nth-child(even):hover {
   background: lightyellow ;
 }
+.print_pot {
+	color: white;
+	}
 
 .PotData li {
   background: #E6F2FF ;
@@ -177,7 +174,7 @@ ul {
 }
 
 /* Modal Content (image) */
-.modal-content {
+.modal_content {
   margin: auto;
   display: block;
   width: 80%;
@@ -197,7 +194,7 @@ ul {
 }
 
 /* Add Animation */
-.modal-content, #modal_caption {  
+.modal_content, #modal_caption {  
   animation-name: zoom;
   animation-duration: 0.6s;
 }
@@ -227,14 +224,9 @@ ul {
 
 /* 100% Image Width on Smaller Screens */
 @media only screen and (max-width: 700px){
-  .modal-content {
+  .modal_content {
     width: 100%;
   }
-}
-@media print {
-    header, footer, aside, form {
-        display: none !important;
-    }
 }
 .multiCat, .fill_show_data {
   font-weight: bold;

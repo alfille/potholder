@@ -69,13 +69,5 @@ class Id_pot {
     static allEnd() { // Search entire database
         return [this.version, this.type, this.end].join(";");
     }
-
-    static patStart( pid=potId ) { // Search just this patient's records
-        return this.makeIdKey( pid, this.start ) ;
-    }    
-
-    static patEnd( pid=potId ) { // Search just this patient's records
-        return this.makeIdKey( pid, this.end ) ;
-    }    
 }
 

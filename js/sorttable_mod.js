@@ -55,7 +55,7 @@ class SortTable {
                     return transformfunction(record) ;
                 }
             } catch(e) {
-                console.log(e);
+				objectLog.err(e) ;
                 return "";
             }
             }) ;

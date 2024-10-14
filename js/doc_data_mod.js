@@ -20,7 +20,6 @@ import {
 class PotDataRaw { // singleton class
     constructor(click,doc,struct) {
         // args is a list of "docs" to update"
-        this.parent = document.getElementById("PotDataContent");
         this.Images = new PotImages(doc);
         
         this.doc = doc;
@@ -71,7 +70,7 @@ class PotDataRaw { // singleton class
         document.querySelectorAll(".edit_data").forEach( (e) => {
             e.disabled = false;
         });
-        let parent = document.getElementById("PotDataContent");
+        const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
         this.ul = document.createElement('ul');
@@ -154,7 +153,7 @@ class PotDataRaw { // singleton class
         this.array_buttons();
         // Insert a table, and pull label into caption
         // separate return because the flow is different
-        let parent = document.getElementById("PotDataContent");
+        const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
             
         // Heading and buttons
@@ -191,7 +190,7 @@ class PotDataRaw { // singleton class
         this.array_buttons();
         // Insert a table, and pull label into caption
         // separate return because the flow is different
-        let parent = document.getElementById("PotDataContent");
+        const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
             
         // Heading and buttons
@@ -239,7 +238,7 @@ class PotDataRaw { // singleton class
         }
         // Insert a table, and pull label into caption
         // separate return because the flow is different
-        let parent = document.getElementById("PotDataContent");
+        const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
                 
         this.ul = document.createElement('ul');
@@ -296,7 +295,7 @@ class PotDataRaw { // singleton class
         this.array_buttons();
         // Insert a table, and pull label into caption
         // separate return because the flow is different
-        let parent = document.getElementById("PotDataContent");
+        const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
                 
         // Heading and buttons
@@ -337,7 +336,7 @@ class PotDataRaw { // singleton class
             this.array_buttons();
         // Insert a table, and pull label into caption
         // separate return because the flow is different
-        let parent = document.getElementById("PotDataContent");
+        const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
                 
         // Heading and buttons
@@ -451,11 +450,15 @@ class PotDataRaw { // singleton class
         this.cloneClass( ".Darray", temp ) ;
         let tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
-        [".Darray_edit",".Darray_rearrange"].forEach(c=>tab.querySelector(c).hidden=false);
-        tab.querySelector(".Darray_edit").disabled=(elements<1);
-        tab.querySelector(".Darray_edit").onclick=(elements==1)?(()=>this.edit_array_entry( item, 0 )):(()=>this.select_image_edit(item));
-        tab.querySelector(".Darray_rearrange").disabled=(elements<2);
-        tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange_images(item);
+        if ( elements == 1 ) {
+			tab.querySelector(".Darray_edit").hidden=false;
+			tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( item, 0 );
+		} else if ( elements > 1 ) {
+			tab.querySelector(".Darray_edit").hidden=false;
+			tab.querySelector(".Darray_edit").onclick=()=>this.select_image_edit(item);
+			tab.querySelector(".Darray_rearrange").hidden=false;
+			tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange_images(item);
+		}
 
         // table
         if ( Array.isArray(preVal) ) {
@@ -585,7 +588,7 @@ class PotDataRaw { // singleton class
         document.querySelectorAll(".edit_data").forEach( (e) => {
             e.disabled = true;
         });
-        let parent = document.getElementById("PotDataContent");
+        const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
 
         this.choicePromise( this.struct ).then( choices => { 
@@ -736,25 +739,6 @@ class PotDataRaw { // singleton class
         return return_list ;
     }
     
-    static HMtoMin ( inp ) {
-        if ( typeof inp != 'string' ) {
-            throw "bad";
-        }
-        let d = inp.match( /\d+/g );
-        if ( (d == null) || d.length < 2 ) {
-            throw "bad";
-        }
-        return parseInt(d[0]) * 60 + parseInt(d[1]);
-    }
-        
-    static HMfromMin ( min ) {
-        if ( typeof min == 'number' ) {
-            return (Math.floor(min/60)+100).toString().substr(-2) + ":" + ((min%60)+100).toString().substr(-2);
-        } else {
-            return "00:00";
-        }
-    }
-        
     loadDocData_local(struct,doc) {
         //return true if any real change
         let changed = false; 

@@ -15,7 +15,7 @@ import {
     
 import {
 	CSV,
-	} from "./app.js" ;
+	} from "./csv_mod.js" ;
 
 class Pagelist {
     // list of subclasses = displayed "pages"
@@ -61,7 +61,7 @@ class Page { // singleton class
     constructor() {
         // get page history from cookies
         let path = [] ;
-        this.lastscreen = null ; // splash/screen/patient for show_screen
+        this.lastscreen = null ; // splash/screen/print for show_screen
         this.path = [];
         // stop at repeat of a page          
         for( const p of path ) {
@@ -168,13 +168,13 @@ class Page { // singleton class
             document.getElementById("splash_screen").style.display = "none";
             let showscreen = {
                 ".work_screen": type=="screen",
-                ".print_patient": type == "patient",
+                ".print_pot": type == "print",
             };
-            for ( let cl in showscreen ) {
+			Object.keys(showscreen).forEach( cl => {
                 document.querySelectorAll(cl)
                 .forEach( (v)=> v.style.display=showscreen[cl]?"block":"none"
                 );
-            }
+            });
         }
     }    
 

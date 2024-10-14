@@ -48,6 +48,19 @@ class PotImages {
 		return img ;
 	}
 
+    print_display( name, small_class="small_pic" ) {
+        const img = document.createElement( "img" ) ;
+        db.getAttachment( this.pid, name )
+        .then( data => {
+			const url = URL.createObjectURL(data) ;
+			img.onload = () => URL.revokeObjectURL(url) ;
+			img.src=url ;
+			img.classList.add(small_class);
+			})
+		.catch( err => objectLog.err(err)) ;
+		return img ;
+	}
+
     displayAll() {
         return this.images.map( k=> this.display(k.image,"medium_pic") ) ;
     }    

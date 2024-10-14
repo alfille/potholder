@@ -238,7 +238,7 @@ export const structRemoteUser = [
     },
     {
         name: "database",
-        hint: 'Name of patient information database (e.g. "ukraine"',
+        hint: 'Name of ceramic database (e.g. "potholder"',
         type: "text",
     },
 ];

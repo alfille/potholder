@@ -7,7 +7,7 @@ This page hold general information about the piece, including the type, artistic
 
 ![](PotEdit1.png)
 
-Click the _Edit_ button to allow changing data.
+Click the _Edit_ button (either one) to allow changing data.
 
 ## Edit Fields
 
@@ -23,4 +23,4 @@ Some fields (like _Type_ and _Series_ offer a choice of previous selections (as 
 
 ![](PotEdit4.png)
 
-The data isn't seved until you click _Save Changes_
+The data isn't seved until you click _Save Changes_ (either button).

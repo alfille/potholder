@@ -5,8 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PotHolder &mdash; Ceramic Production Tracker</title>
-        <link rel="stylesheet" href="style/base.css">
-        <link rel="manifest" href="manifest.json" />
+        <link rel="stylesheet" media="screen" href="style/base.css">
+		<link rel="stylesheet" media="print" href="style/print.css" />
+		<link rel="manifest" href="manifest.json" />
         <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
@@ -242,6 +243,8 @@
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotProcess' )" title="How the pot was made">Process Details</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotPix' )" title="Photo gallery">Images</button>
                         <button type="button" class="divbutton"  style="visibility:hidden"> </button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotPrint' )" title="Print this piece's information">Print</button>
+                        <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                         <button type="button" class="divbutton delete MainItalic" onclick="objectPot.del()" title="Delete this piece from the database">Delete Piece</button>
                     </div>
                 </div>
@@ -252,8 +255,8 @@
             <!-- body: InvalidPiece -->
             <div class="InvalidPiece pageOverlay">
                 <div id="InvalidPotContent" >
-                    <H2>Not a valid patient ID</H2>
-                    <p>Possble causes include your data not yet synced, or changes since this patient was selected</p>
+                    <H2>Not a valid piece ID</H2>
+                    <p>Possble causes include your data not yet synced, or changes since this piece was selected</p>
                     <center><button type="button" class="divbutton" onclick="objectPage.show('AllPieces')">Ok</button></center>
                 </div>
             </div>
@@ -276,6 +279,16 @@
 					</div>
                 </div>
             </div>
+        </div>
+        <div class="print_pot">
+			<div class="MainMenuRow">
+				<button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Back</button>
+			</div>
+			<div id="print_space">
+			</div>
+			<div class="MainMenuRow">
+				<button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Back</button>
+			</div>
         </div>
         <!-- copyable parts -->
         <div id="templates" class="pageOverlay">
@@ -361,7 +374,7 @@
          <!-- The Modal https://www.w3schools.com/css/tryit.asp?filename=trycss_image_modal_js -->
         <div id="modal_id" class="modal">
           <span id="modal_close" onclick="(()=>document.getElementById('modal_id').style.display='none')()">&times;</span>
-          <img class="modal-content" id="modal_img">
+          <img class="modal_content" id="modal_img">
           <div id="modal_caption"></div>
         </div>
        
@@ -376,7 +389,9 @@
         <!-- application code --> <script type="module" src="js/cookie_mod.js"></script>
         <!-- application code --> <script type="module" src="js/sorttable_mod.js"></script>
         <!-- application code --> <script type="module" src="js/doc_data_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/print_data_mod.js"></script>
         <!-- application code --> <script type="module" src="js/log_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/csv_mod.js"></script>
         <!-- application code --> <script type="module" src="js/pot_mod.js"></script>
         <!-- application code --> <script type="module" src="js/search.js"></script>
         <!-- application code --> <script type="module" src="js/doc_struct.js"></script>
