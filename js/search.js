@@ -1,8 +1,8 @@
-/* eMission project
- * Medical mission database application
- * See https://github.com/alfille/eMission
- * or https://emissionsystem.org
- * by Paul H Alfille 2023
+/* Potholder project
+ * Ceramic production database application
+ * See https://github.com/alfille/potholder
+ * or https://alfille.online
+ * by Paul H Alfille 2024
  * MIT license
  * */
 
