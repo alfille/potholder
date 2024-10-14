@@ -2,7 +2,7 @@
 
 ![](MakeURL.png)
 
-An option from either the [Advanced Menu](Administration.md) or the [Credentials](RemoteDatabaseInput.md) pages. The Web link holds
+An option from the  [Credentials](RemoteDatabaseInput.md) page. The _Web Link_ holds:
 * Your username
 * Your password (!)
 * The database server location
