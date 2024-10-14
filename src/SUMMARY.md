@@ -14,6 +14,7 @@
   - [General Info](PotEdit.md)
   - [Process Details](PotProcess.md)
   - [Pictures](PotPix.md)
+  - [Print](PotPrint.md)
 - [Search](SearchList.md)
 - [Advanced Options](Administration.md)
   - [Error Log](ErrorLog.md)
