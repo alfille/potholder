@@ -274,9 +274,9 @@ body {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
         0 25px 50px 0 rgba(0, 0, 0, 0.15);
 }
-
 .pageOverlay {
   display: none ;
+  width: 100%
 }
 
 .imageBar {
@@ -304,12 +304,19 @@ body {
     background: "darkblue";
     width: 100%;
     display: flex;
-    overflow: hidden;
+    flex-wrap: nowrap;
 }
 #searchtext {
-    background: "paleblue";
+    background: white;
     font-size: 2em;
-    flex: 1;
+    flex-grow: 1;
+}
+#searchclick {
+  float: right ;
+  color: black ;
+  display: inline-block;
+  background: yellow;
+  flex-grow: 0;
 }
 #splash_screen {
   display: block ;
