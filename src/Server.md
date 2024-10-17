@@ -4,24 +4,27 @@
 
 ## Client
 
-* Technically _Potholder_ runs on any web browser  
+* _Potholder_ runs in any web browser  
   * e.g. Chrome, Edge, Safari, Firefox,...
-* Usually the _device_ is a
+* The _device_ can be a
   * Phone e.g. iPhone,, Android, ...
   * Pad e.g. iPad, Surface, ...
   * Computer
     * Laptop or Desktop
     * Mac, Windows, Chromebook, Linux...
- * The program _Potholder_ is loaded automatically from the website and stored in the _device_
- * Data (e.g. all your records and pictures) are kept on the _device_
+ * The program _Potholder_ is loaded automatically from the website and stored in the browser cache
+ * Data (e.g. all your records and pictures) are kept on the browser database
     * You can optionally [clear the local data](Administration.md) if you have it backed up to a server
-  * _For the technically minded_ 
+    
+## Technical details
+For the technically minded
+
     * _Potholder_ is a pure javascript program 
-    * The code is stored in local cache
-    * The data is stored in the browser database (IndexDB)
-    * _PouchDB_ is the (javascript) database component
-    * _PouchDB_ automatically replicates the data to a server periodically (And back)
+    * [_pouchdb_](https://pouchdb.com/) is the (javascript) database component
+    * [couchdb](https://couchdb.apache.org/) is the server-side master database
+    * your data is automatically replicated to your server. (And back)
     * All the code is free and open source
+    * Communication to the server is via SSL-secure _https://_
     
 ## Server
 
@@ -51,11 +54,12 @@ _Potholder_ is actually quite secure
 
 * The web browser protects your device from programs running in it
 * No second-hand updates or code is run
-  * Libraries are hosted by the _potholder_ website
+  * Libraries are entirely hosted by the _potholder_ website
+  * No Ads, No Tracking, No sale of metadata
 * Communication to the server uses _https_ encryption
-* Network communication
+* Network targets:
   * server for data
   * website for help pages
-* Access to your device is solely to get a picture (camera or file) using standard browser methods.
+* Access to your device is solely to get a picture (camera or file) using standard browser methods
 * Cookies are used only for the credentials to access the server
 
