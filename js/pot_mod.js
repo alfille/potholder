@@ -23,7 +23,6 @@ import {
 import {
 	structGeneralPot,
 	structImages,
-	structNewPot,
 	structProcess,
 } from "./doc_struct.js" ;
 
@@ -39,12 +38,14 @@ class Pot { // convenience class
 
 	create() {
         // create new pot record
+        const date = new Date() ;
 		return ({
 			_id: Id_pot.makeId( this.doc ),
+			type:"",
+			series:"",
 			author: remoteCouch.username,
 			artist: remoteCouch.username,
-			start_date: new Date().toISOString(),
-			new: true, 
+			start_date: [date.getFullYear(),date.getMonth()+1,date.getDate()].join("-"),
            });
 	}
    
@@ -151,12 +152,13 @@ class Pot { // convenience class
     }
 
     newPhoto(target) {
+		console.log("PIX",target);
 		if ( ! objectPot.isSelected() ) { 
 			objectPage.show("AssignPic") ;
 			return ;
 		}
-//        let inp = document.getElementById("HiddenPix") ;
-        if ( target.files.length == 0 ) {
+		let inp = document.getElementById(target) ;
+        if ( inp.files.length == 0 ) {
             return ;
         }
         let members = structImages.members ;
@@ -174,7 +176,7 @@ class Pot { // convenience class
 			//console.log("INP",inp.files);
 			
 			// add number of pictures to picture button 
-			[...target.files].forEach( f => {
+			[...inp.files].forEach( f => {
 				//console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
@@ -201,7 +203,7 @@ class Pot { // convenience class
 		.catch( (err) => {
 			objectLog.err(err);
 			})
-		.finally( () => target.value = "" ) ;
+		.finally( () => inp.value = "" ) ;
     }
     
     AssignToNew() {
@@ -216,11 +218,11 @@ class Pot { // convenience class
 		
     
     AssignPhoto(pid = potId) {
-        let inp = document.getElementById("HiddenPix") ;
+        const inp = document.getElementById("HiddenPix") ;
         if ( inp.files.length == 0 ) {
             return ;
         }
-        let members = structImages.members ;
+        const members = structImages.members ;
 		objectPot.select( pid )
 		.then ( () => objectPot.getRecordIdPix(pid,true) )
 		.then( doc => {
@@ -232,11 +234,11 @@ class Pot { // convenience class
 				doc.images=[] ;
 			}
 			//console.log("DOC",doc);
-			//console.log("INP",inp.files);
+			console.log("INP",inp.files);
 			
 			// add number of pictures to picture button 
 			[...inp.files].forEach( f => {
-				//console.log("File",f);
+				console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
 					data: f,

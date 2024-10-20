@@ -292,8 +292,8 @@
         </div>
         <!-- copyable parts -->
         <div id="templates" class="pageOverlay">
-            <input type="file" id="HiddenPix" accept="image/*" class="imageBar" onchange="objectPot.newPhoto(this)" capture="environment">
-            <input type="file" id="HiddenGallery" accept="image/*" class="imageBar" onchange="objectPot.newPhoto(this)">
+            <input type="file" id="HiddenPix" accept="image/*" class="imageBar" onchange="objectPot.newPhoto('HiddenPix')" capture="environment">
+            <input type="file" id="HiddenGallery" accept="image/*" class="imageBar" onchange="objectPot.newPhoto('HiddenGallery')">
             <img id="NoPicture" src="images/NoPicture.png" />
             <img id="LogoPicture" src="images/potholder.png" />
             <canvas id="thumbnail" width=64 height=64>

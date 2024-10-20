@@ -18,7 +18,6 @@ import {
 	structDatabaseInfo,
 	structGeneralPot,
 	structImages,
-	structNewPot,
 	structProcess,
 	structRemoteUser,
 } from "./doc_struct.js" ;

@@ -21,7 +21,6 @@ import {
 	structDatabaseInfo,
 	structGeneralPot,
 	structImages,
-	structNewPot,
 	structProcess,
 	structRemoteUser,
 } from "./doc_struct.js" ;
@@ -192,7 +191,7 @@ class AssignPic extends Pagelist {
     static show_content(extra="") {
 		objectPage.forget(); // don't return here
         objectPot.unselect() ; // Probably redundant
-		new StatBox() ;
+		new TextBox("Assign this picture to which piece?") ;
         objectTable = new AssignTable();
         objectPot.getAllIdDoc(false)
         .then( (docs) => objectTable.fill(docs.rows ) )
@@ -319,10 +318,10 @@ class PotNew extends Pagelist {
 		if ( objectPot.isSelected() ) {
 			// existing but "new"
 			objectPot.getRecordIdPix(potId,true)
-			.then( doc => objectPotData = new PotNewData( doc, structNewPot ) )
+			.then( doc => objectPotData = new PotNewData( doc, structGeneralPot ) )
 			.catch( err => objectLog.err(err) ) ;
 		} else {
-			objectPotData = new PotNewData( objectPot.create(), structNewPot ) ;
+			objectPotData = new PotNewData( objectPot.create(), structGeneralPot ) ;
 		}
     }
 }
@@ -334,7 +333,6 @@ class PotNewData extends PotDataEditMode {
 	
     savePieceData() {
         this.loadDocData(this.struct,this.doc);
-        this.doc.new = false ; // no longer new
         db.put( this.doc )
         .then( (response) => {
             objectPot.select(response.id)
@@ -351,13 +349,7 @@ class PotEdit extends Pagelist {
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => {
-				if ( doc?.new == true ) {
-					objectPage.forget();
-					objectPage.show( "PotNew" ) ;
-				}
-				objectPotData = new PotData( doc, structGeneralPot ) ;
-				})
+            .then( (doc) => objectPotData = new PotData( doc, structGeneralPot ))
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -374,13 +366,7 @@ class PotProcess extends Pagelist {
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => {
-				if ( doc?.new == true ) {
-					objectPage.forget();
-					objectPage.show( "PotNew" ) ;
-				}
-				objectPotData = new PotData( doc, structProcess ) ;
-				})
+            .then( (doc) => objectPotData = new PotData( doc, structProcess ))
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -397,14 +383,7 @@ class PotPix extends Pagelist {
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => { 
-				if ( doc?.new == true ) {
-					objectPage.forget();
-					objectPage.show( "PotNew" ) ;
-				} else {
-					objectPotData = new PotData( doc, structImages ) ; 
-				}
-				})
+            .then( (doc) => objectPotData = new PotData( doc, structImages ))
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -420,16 +399,12 @@ class PotMenu extends Pagelist {
 
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
+			console.log("MENU",potId);
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
-				if ( doc?.new == true ) {
-					objectPage.forget();
-					objectPage.show( "PotNew" ) ;
-				} else {
-					objectPot.select(potId) // update thumb
-					.then( () => objectPot.showPictures(doc) ) ; // pictures on bottom
-				}
-                })
+				objectPot.select(potId) // update thumb
+				.then( () => objectPot.showPictures(doc) ) ; // pictures on bottom
+			})
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );

@@ -12,43 +12,6 @@
 
 // used to generate data entry pages "PotData" type
 
-export const structNewPot = [
-    {
-        name:  "type",
-        alias: "Type of piece",
-        hint:  "What will the piece be used for?",
-        type:  "list",
-        choices:  ["bowl","plate","flowerpot"],
-        query: "qType",
-    },
-    {
-        name:  "series",
-        alias: "Series",    
-        hint:  "Which creative wave?",
-        type:  "list",
-        query: "qSeries",
-    },
-    {
-        name:  "start_date",
-        alias: "Start date",
-        type:  "date",
-        hint:  "Date work started",
-    },
-    {
-        name:  "artist",
-        alias: "Artist",
-        hint:  "Creator of this piece",
-        type:  "list",
-        query: "qArtist",
-    },
-    {
-        name:  "general_comment",
-        alias: "General comments",
-        hint:  "Overall comments on piece",
-        type:  "textarea",
-    },
-];
-    
 export const structGeneralPot = [
     {
         name:  "type",
