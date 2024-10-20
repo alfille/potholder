@@ -21,6 +21,7 @@
                     <!-- top: MainMenu-->
                     <div class="MainMenu topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
+                        <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()">Gallery &#128247;</button>            
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
@@ -291,7 +292,8 @@
         </div>
         <!-- copyable parts -->
         <div id="templates" class="pageOverlay">
-            <input type="file" id="HiddenFile" accept="image/*" class="imageBar" onchange="objectPot.newPhoto()" capture="environment">
+            <input type="file" id="HiddenPix" accept="image/*" class="imageBar" onchange="objectPot.newPhoto(this)" capture="environment">
+            <input type="file" id="HiddenGallery" accept="image/*" class="imageBar" onchange="objectPot.newPhoto(this)">
             <img id="NoPicture" src="images/NoPicture.png" />
             <img id="LogoPicture" src="images/potholder.png" />
             <canvas id="thumbnail" width=64 height=64>

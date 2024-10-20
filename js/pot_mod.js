@@ -143,16 +143,20 @@ class Pot { // convenience class
     }
 
     pushPixButton() {
-        document.getElementById("HiddenFile").click() ;
+        document.getElementById("HiddenPix").click() ;
     }
 
-    newPhoto() {
+    pushGalleryButton() {
+        document.getElementById("HiddenGallery").click() ;
+    }
+
+    newPhoto(target) {
 		if ( ! objectPot.isSelected() ) { 
 			objectPage.show("AssignPic") ;
 			return ;
 		}
-        let inp = document.getElementById("HiddenFile") ;
-        if ( inp.files.length == 0 ) {
+//        let inp = document.getElementById("HiddenPix") ;
+        if ( target.files.length == 0 ) {
             return ;
         }
         let members = structImages.members ;
@@ -170,7 +174,7 @@ class Pot { // convenience class
 			//console.log("INP",inp.files);
 			
 			// add number of pictures to picture button 
-			[...inp.files].forEach( f => {
+			[...target.files].forEach( f => {
 				//console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
@@ -197,7 +201,7 @@ class Pot { // convenience class
 		.catch( (err) => {
 			objectLog.err(err);
 			})
-		.finally( () => inp.value = "" ) ;
+		.finally( () => target.value = "" ) ;
     }
     
     AssignToNew() {
@@ -212,7 +216,7 @@ class Pot { // convenience class
 		
     
     AssignPhoto(pid = potId) {
-        let inp = document.getElementById("HiddenFile") ;
+        let inp = document.getElementById("HiddenPix") ;
         if ( inp.files.length == 0 ) {
             return ;
         }
