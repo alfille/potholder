@@ -15,6 +15,7 @@ export {
 
 class TitleBox {
 	show(html) {
+		//console.log("TITLEBOX",html);
 		document.getElementById( "titlebox" ).innerHTML = html ;
 	}
 }
@@ -36,7 +37,7 @@ class PotBox extends TitleBox {
 class TextBox extends TitleBox {
 	constructor( text ) {
 		super();
-		this.show( text ) ;
+		this.show( `<B>${text}</B>` ) ;
 	}
 }
 

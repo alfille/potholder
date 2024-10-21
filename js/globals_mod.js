@@ -13,6 +13,7 @@ globalThis. remoteCouch = null ;
 
 // other globals
 globalThis. credentialList = ["database", "username", "password", "address" ] ;
+globalThis. pictureSource = document.getElementById("HiddenPix");
 
 // singleton class instances
 globalThis. objectPage = null ;

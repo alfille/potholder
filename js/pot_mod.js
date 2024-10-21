@@ -144,23 +144,23 @@ class Pot { // convenience class
     }
 
     pushPixButton() {
-        document.getElementById("HiddenPix").click() ;
+        pictureSource = document.getElementById("HiddenPix");
+        pictureSource.click() ;
     }
 
     pushGalleryButton() {
-        document.getElementById("HiddenGallery").click() ;
+        pictureSource=document.getElementById("HiddenGallery");
+        pictureSource.click() ;
     }
 
-    newPhoto(target) {
-		console.log("PIX",target);
+    newPhoto() {
 		if ( ! objectPot.isSelected() ) { 
 			objectPage.show("AssignPic") ;
 			return ;
 		}
-		let inp = document.getElementById(target) ;
-        if ( inp.files.length == 0 ) {
-            return ;
-        }
+		if (inp.files.length==0 ) {
+			return ;
+		}
         let members = structImages.members ;
 		//objectPot.select( potId ); // seems redundant
 		objectPot.getRecordIdPix(potId,true)
@@ -173,10 +173,9 @@ class Pot { // convenience class
 				doc.images=[] ;
 			}
 			//console.log("DOC",doc);
-			//console.log("INP",inp.files);
 			
 			// add number of pictures to picture button 
-			[...inp.files].forEach( f => {
+			[...pictureSource.files].forEach( f => {
 				//console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
@@ -203,7 +202,7 @@ class Pot { // convenience class
 		.catch( (err) => {
 			objectLog.err(err);
 			})
-		.finally( () => inp.value = "" ) ;
+		.finally( () => pictureSource.value = "" ) ;
     }
     
     AssignToNew() {
@@ -218,8 +217,7 @@ class Pot { // convenience class
 		
     
     AssignPhoto(pid = potId) {
-        const inp = document.getElementById("HiddenPix") ;
-        if ( inp.files.length == 0 ) {
+        if ( pictureSource.files.length == 0 ) {
             return ;
         }
         const members = structImages.members ;
@@ -233,11 +231,9 @@ class Pot { // convenience class
 			if ( !("images" in doc) ) {
 				doc.images=[] ;
 			}
-			//console.log("DOC",doc);
-			console.log("INP",inp.files);
 			
 			// add number of pictures to picture button 
-			[...inp.files].forEach( f => {
+			[...pictureSource.files].forEach( f => {
 				console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
@@ -264,7 +260,7 @@ class Pot { // convenience class
 		.catch( (err) => {
 			objectLog.err(err);
 			})
-		.finally( () => inp.value = "" ) ;
+		.finally( () => pictureSource.value = "" ) ;
     }
     
 	showPictures(doc) {

@@ -13,7 +13,6 @@
 import {
 	StatBox,
 	TextBox,
-	BlankBox,
 } from "./titlebox.js" ;
     
 // used to generate data entry pages "PotData" type
@@ -190,8 +189,22 @@ class AssignPic extends Pagelist {
 
     static show_content(extra="") {
 		objectPage.forget(); // don't return here
-        objectPot.unselect() ; // Probably redundant
-		new TextBox("Assign this picture to which piece?") ;
+		// new TextBox("Assign this picture to which piece?") ;
+		const pType = (pictureSource.id=="HiddenPix") ? "photo" : "picture" ;
+        switch (pictureSource.files.length ) {
+			case 0:
+				console.log("none");
+				// To pictures taken/chosen
+				return ;
+			case 1:
+				console.log("one");
+				new TextBox( `1 ${pType}. Assign to which piece?` ) ;
+				break ;
+			default:
+				console.log("many");
+				new TextBox( `${pictureSource.files.length} ${pType}s. Assign to which piece?` ) ;
+				break ;
+		}
         objectTable = new AssignTable();
         objectPot.getAllIdDoc(false)
         .then( (docs) => objectTable.fill(docs.rows ) )
