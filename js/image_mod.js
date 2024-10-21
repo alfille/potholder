@@ -91,6 +91,7 @@ class Thumb {
 		// attachments need not be included in doc -- will pull in separately
         const pid = doc._id ;
         if ( !( "images" in doc) || ! Array.isArray(doc.images) || doc.images.length==0) {
+			this.remove(pid) ;
 			return ;
         }
 

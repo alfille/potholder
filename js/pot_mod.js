@@ -60,6 +60,7 @@ class Pot { // convenience class
                     throw "Cancel";
                 }           
             })
+            .then( _ => objectThumb.remove( potId ) )
             .then( _ => this.unselect() )
             .then( _ => objectPage.show( "back" ) )
             .catch( (err) => {
@@ -158,7 +159,7 @@ class Pot { // convenience class
 			objectPage.show("AssignPic") ;
 			return ;
 		}
-		if (inp.files.length==0 ) {
+		if (pictureSource.files.length==0 ) {
 			return ;
 		}
         let members = structImages.members ;

@@ -189,19 +189,20 @@ class AssignPic extends Pagelist {
 
     static show_content(extra="") {
 		objectPage.forget(); // don't return here
-		// new TextBox("Assign this picture to which piece?") ;
-		const pType = (pictureSource.id=="HiddenPix") ? "photo" : "picture" ;
-        switch (pictureSource.files.length ) {
-			case 0:
-				// To pictures taken/chosen
-				return ;
-			case 1:
-				new TextBox( `1 ${pType}. Assign to which piece?` ) ;
-				break ;
-			default:
-				new TextBox( `${pictureSource.files.length} ${pType}s. Assign to which piece?` ) ;
-				break ;
+		// Title adjusted to source and number
+		if ( pictureSource.files.length == 0 ) {
+			// No pictures taken/chosen
+			return ;
+		} else if (pictureSource.id=="HiddenPix") {
+			new TextBox( `New Photo. Assign to which piece?` ) ;
+		} else {
+			if (pictureSource.files.length == 1 ) {
+				new TextBox( "1 image selected. Assign to which piece?" ) ;
+			} else {
+				new TextBox( `${pictureSource.files.length} images selected. Assign to which piece?` ) ;
+			}
 		}
+		// make table
         objectTable = new AssignTable();
         objectPot.getAllIdDoc(false)
         .then( (docs) => objectTable.fill(docs.rows ) )

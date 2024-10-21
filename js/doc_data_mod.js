@@ -384,7 +384,7 @@ class PotDataRaw { // singleton class
         if ( !(item.name in this.doc) ||  !Array.isArray(this.doc[item.name]) ) {
             this.doc[item.name] = [] ;
         }
-        let preVal = this.doc[item.name] ;
+        const preVal = this.doc[item.name] ;
         if ( !(item.name in this.array_preVals) ) {
             this.array_preVals[item.name] = JSON.stringify(preVal) ;
         }
@@ -394,9 +394,9 @@ class PotDataRaw { // singleton class
         }
 
         // Heading and buttons
-        let temp = document.createElement("span"); // hold clone
+        const temp = document.createElement("span"); // hold clone
         this.cloneClass( ".Darray", temp ) ;
-        let tab = temp.querySelector( ".Darray_table" ) ;
+        const tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
         tab.querySelector(".Darray_add").hidden=false;
         tab.querySelector(".Darray_add").onclick=()=>this.edit_array_entry( item, -1 );
@@ -412,9 +412,11 @@ class PotDataRaw { // singleton class
 
         // table
         if ( Array.isArray(preVal) && (preVal.length>0) ) {
-            preVal.forEach( v => {
-            let td = tab.insertRow(-1).insertCell(0);
-            let ul = document.createElement("ul");
+            preVal.forEach( (v,i) => {
+            const tr = tab.insertRow(-1);
+            tr.onclick = () => this.edit_array_entry( item, i );
+            const td = tr.insertCell(-1);
+            const ul = document.createElement("ul");
             td.appendChild(ul);
             item.members.forEach( m => {
                 let li = document.createElement("li");
@@ -436,7 +438,7 @@ class PotDataRaw { // singleton class
         if ( !(item.name in this.doc) ||  !Array.isArray(this.doc[item.name]) ) {
             this.doc[item.name] = [] ;
         }
-        let preVal = this.doc[item.name] ;
+        const preVal = this.doc[item.name] ;
         if ( !(item.name in this.array_preVals) ) {
             this.array_preVals[item.name] = JSON.stringify(preVal) ;
         }
@@ -446,13 +448,12 @@ class PotDataRaw { // singleton class
         }
 
         // Heading and buttons
-        let temp = document.createElement("span"); // hold clone
+        const temp = document.createElement("span"); // hold clone
         this.cloneClass( ".Darray", temp ) ;
-        let tab = temp.querySelector( ".Darray_table" ) ;
+        const tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
         if ( elements == 1 ) {
-			tab.querySelector(".Darray_edit").hidden=false;
-			tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( item, 0 );
+			this.edit_array_entry( item, 0 );
 		} else if ( elements > 1 ) {
 			tab.querySelector(".Darray_edit").hidden=false;
 			tab.querySelector(".Darray_edit").onclick=()=>this.select_image_edit(item);
@@ -462,8 +463,9 @@ class PotDataRaw { // singleton class
 
         // table
         if ( Array.isArray(preVal) ) {
-            preVal.forEach( v => {
+            preVal.forEach( (v,i) => {
             const tr = tab.insertRow(-1);
+            tr.onclick = () => this.edit_array_entry( item, i ); ; 
             tr.insertCell(-1).appendChild( this.Images.display(v.image) );
             const td = tr.insertCell(-1);
             const ul = document.createElement("ul");
