@@ -234,7 +234,7 @@ class Pot { // convenience class
 			
 			// add number of pictures to picture button 
 			[...pictureSource.files].forEach( f => {
-				console.log("File",f);
+				//console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
 					data: f,

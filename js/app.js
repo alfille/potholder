@@ -193,15 +193,12 @@ class AssignPic extends Pagelist {
 		const pType = (pictureSource.id=="HiddenPix") ? "photo" : "picture" ;
         switch (pictureSource.files.length ) {
 			case 0:
-				console.log("none");
 				// To pictures taken/chosen
 				return ;
 			case 1:
-				console.log("one");
 				new TextBox( `1 ${pType}. Assign to which piece?` ) ;
 				break ;
 			default:
-				console.log("many");
 				new TextBox( `${pictureSource.files.length} ${pType}s. Assign to which piece?` ) ;
 				break ;
 		}
@@ -412,7 +409,6 @@ class PotMenu extends Pagelist {
 
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
-			console.log("MENU",potId);
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
 				objectPot.select(potId) // update thumb
