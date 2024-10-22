@@ -361,10 +361,13 @@ class PotEdit extends Pagelist {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structGeneralPot ))
-            .catch( (err) => {
+/*
+ *             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
                 });
+*/
+;
         } else {
             objectPage.show( "back" );
         }

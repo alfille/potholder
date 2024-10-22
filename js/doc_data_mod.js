@@ -25,6 +25,7 @@ class PotDataRaw { // singleton class
         this.doc = doc;
         this.struct = struct;
         this.array_preVals={} ;
+        this.double_tap = false ;
 
         // Add dummy entries for extra images
         if ( "_attachments" in doc ) {
@@ -81,9 +82,23 @@ class PotDataRaw { // singleton class
             this.ul.appendChild( li );
         });
 
+		this.ul.onclick = () => this.pre_edit_doc() ;
         parent.appendChild(this.ul) ;
         this.cloneClass( ".ExtraEdit", parent ) ;
     }
+
+	pre_edit_doc() {
+		// fake double-tap (phones don't have ondblclick)
+		if ( this.double_tap ) {
+			// second tap
+			this.double_tap = false ;
+			this.edit_doc() ;
+		} else {
+			// first tap
+			this.double_tap = true ;
+			setTimeout( ()=>objectPotData.double_tap = false, 500 ) ;
+		}
+	}
 
     show_item(item,doc) {
         // return an array to attach
@@ -442,10 +457,7 @@ class PotDataRaw { // singleton class
         if ( !(item.name in this.array_preVals) ) {
             this.array_preVals[item.name] = JSON.stringify(preVal) ;
         }
-        let elements = 0 ;
-        if ( Array.isArray(preVal) ) {
-            elements = preVal.length ;
-        }
+        const elements = preVal.length ;
 
         // Heading and buttons
         const temp = document.createElement("span"); // hold clone
@@ -453,7 +465,8 @@ class PotDataRaw { // singleton class
         const tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
         if ( elements == 1 ) {
-			this.edit_array_entry( item, 0 );
+			tab.querySelector(".Darray_edit").hidden=false;
+			tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( item, 0 );
 		} else if ( elements > 1 ) {
 			tab.querySelector(".Darray_edit").hidden=false;
 			tab.querySelector(".Darray_edit").onclick=()=>this.select_image_edit(item);
@@ -462,24 +475,22 @@ class PotDataRaw { // singleton class
 		}
 
         // table
-        if ( Array.isArray(preVal) ) {
-            preVal.forEach( (v,i) => {
-            const tr = tab.insertRow(-1);
-            tr.onclick = () => this.edit_array_entry( item, i ); ; 
-            tr.insertCell(-1).appendChild( this.Images.display(v.image) );
-            const td = tr.insertCell(-1);
-            const ul = document.createElement("ul");
-            td.appendChild(ul);
-            td.style.width="100%";
-            item.members
-                .filter( m => m.type != "image" )
-                .forEach( m => {
-                const li = document.createElement("li");
-                this.show_item(m,v).forEach( e => li.appendChild(e)) ;
-                ul.appendChild(li);
-                }) ;
-            });
-        }
+		preVal.forEach( (v,i) => {
+		const tr = tab.insertRow(-1);
+		tr.onclick = () => this.edit_array_entry( item, i ); ; 
+		tr.insertCell(-1).appendChild( this.Images.display(v.image) );
+		const td = tr.insertCell(-1);
+		const ul = document.createElement("ul");
+		td.appendChild(ul);
+		td.style.width="100%";
+		item.members
+			.filter( m => m.type != "image" )
+			.forEach( m => {
+			const li = document.createElement("li");
+			this.show_item(m,v).forEach( e => li.appendChild(e)) ;
+			ul.appendChild(li);
+			}) ;
+		});
         return [tab];
     }
         
@@ -596,6 +607,7 @@ class PotDataRaw { // singleton class
         this.choicePromise( this.struct ).then( choices => { 
             //console.log("Map",choices);
             this.ul = document.createElement('ul');
+            this.ul.innerHTML = "";
             this.struct.forEach( ( item, idx ) => {
                 const c = (choices.find(c=>c[0]==item.name)??[null,null])[1] ;
                 //console.log("Mapped Choices", item.name, c );
@@ -728,7 +740,6 @@ class PotDataRaw { // singleton class
                 return this.edit_array( item, doc ) ;
 
             case "image_array":
-                return this.edit_image_array( item, doc ) ;
                 return this.edit_image_array( item, doc ) ;
 
             default:
