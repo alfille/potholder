@@ -138,7 +138,7 @@ class Thumb {
 		.catch( err => objectLog.err(err) );
     }
 
-    getOne( pid = pot_Id ) {
+    getOne( pid = potId ) {
         return objectPot.getRecordId( pid )
         .then( doc => this._load(doc) )
         .catch( err => objectLog.err(err) );
@@ -153,7 +153,7 @@ class Thumb {
         .catch( err => objectLog.err(err) ) ;
     }
 
-    display( target, pid = pot_Id ) {
+    display( target, pid = potId ) {
         const url = URL.createObjectURL( (pid in this.Thumbs ) ? this.Thumbs[pid] : this.NoPicture ) ;
         target.onload = () => URL.revokeObjectURL( url ) ;
         target.src = url ;

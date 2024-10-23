@@ -257,6 +257,7 @@ class Pot { // convenience class
 				return db.put(doc) ;
 			})
 		.then( () => objectPot.select( potId ) ) // to show new thumbnail
+		.then( () => objectThumb.getOne( potId ) )
 		.then( () => objectPage.show("PotPix") )
 		.catch( (err) => {
 			objectLog.err(err);
