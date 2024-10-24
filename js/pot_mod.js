@@ -189,11 +189,11 @@ class Pot { // convenience class
 					doc.images.unshift( {
 						image: f.name,
 						comment: "",
-						date: f.lastModifiedDate.toISOString(),
+						date: (f?.lastModifiedDate ?? (new Date())).toISOString(),
 						} );
 				} else {
 					// keep comment and name
-					doc.images[idx].date = f.lastModifiedDate.toISOString() ;
+					doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
 				}
 				})
 				return db.put(doc) ;
@@ -247,11 +247,11 @@ class Pot { // convenience class
 					doc.images.unshift( {
 						image: f.name,
 						comment: "",
-						date: f.lastModifiedDate.toISOString(),
+						date: (f?.lastModifiedDate ?? (new Date())).toISOString(),
 						} );
 				} else {
 					// keep comment and name
-					doc.images[idx].date = f.lastModifiedDate.toISOString() ;
+					doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
 				}
 				})
 				return db.put(doc) ;
