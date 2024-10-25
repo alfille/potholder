@@ -112,7 +112,7 @@ class Pot { // convenience class
             // Top left Logo
             objectThumb.display( this.TL, pid ) ;
             // highlight the list row
-            if ( objectPage.test('AllPieces') ) {
+            if ( objectPage.isThis('AllPieces') ) {
                 objectTable.highlight();
             }
             new PotBox(doc);
@@ -132,7 +132,7 @@ class Pot { // convenience class
         potId = null;
         objectCookie.del ( "potId" );
         this.TL.src = this.LOGO.src;
-        if ( objectPage.test("AllPieces") ) {
+        if ( objectPage.isThis("AllPieces") ) {
             let pt = document.getElementById("PotTable");
             if ( pt ) {
                 let rows = pt.rows;
@@ -199,6 +199,7 @@ class Pot { // convenience class
 				return db.put(doc) ;
 			})
 		.then( () => objectPot.select( potId ) ) // to show new thumbnail
+		.then( () => objectPage.add( "PotMenu" ) )
 		.then( () => objectPage.show("PotPix") )
 		.catch( (err) => {
 			objectLog.err(err);
@@ -258,6 +259,7 @@ class Pot { // convenience class
 			})
 		.then( () => objectPot.select( potId ) ) // to show new thumbnail
 		.then( () => objectThumb.getOne( potId ) )
+		.then( () => objectPage.add("PotMenu" ) )
 		.then( () => objectPage.show("PotPix") )
 		.catch( (err) => {
 			objectLog.err(err);

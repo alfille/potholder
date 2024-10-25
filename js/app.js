@@ -473,7 +473,7 @@ function URLparse() {
     // first try the search field
     if ( qline && ( "potId" in qline ) ) {
         objectPot.select( qline.potId )
-        .then( () => objectPage.next("PotMenu") );
+        .then( () => objectPage.add("PotMenu") );
     }
 
     if ( Object.keys(qline).length > 0 ) {
@@ -527,7 +527,7 @@ window.onload = () => {
                 objectThumb.getOne( change.id ) ;
             }
             // update screen display
-            if ( objectPage.test("AllPieces") ) {
+            if ( objectPage.isThis("AllPieces") ) {
                 objectPage.show("AllPieces");
             }
             })

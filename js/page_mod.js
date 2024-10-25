@@ -95,7 +95,7 @@ class Page { // singleton class
         return this.path[0];
     }
 
-    next( page = null ) {
+    add( page = null ) {
         if ( page == "back" ) {
             this.back();
         } else if ( page == null ) {
@@ -113,7 +113,7 @@ class Page { // singleton class
         }
     }
 
-    test( page ) {
+    isThis( page ) {
         return this.current()==page ;
     }
 
@@ -150,7 +150,7 @@ class Page { // singleton class
             }
         }
 
-        this.next(page) ; // place in reversal list
+        this.add(page) ; // place in reversal list
 
         // clear display objects
         objectPotData = null;

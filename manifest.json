@@ -80,6 +80,6 @@
   "lang": "en",
   "prefer_related_applications": false,
   "edge_side_panel": {
-    "preferred_width": -1
+    "preferred_width": 0
   }
 }
