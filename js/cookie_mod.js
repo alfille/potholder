@@ -14,19 +14,31 @@ class Cookie { //convenience class
     set( cname, value ) {
         // From https://www.tabnine.com/academy/javascript/how-to-set-cookies-javascript/
         globalThis[cname] = value;
-        let date = new Date();
-        date.setTime(date.getTime() + (400 * 24 * 60 * 60 * 1000)); // > 1year
-        document.cookie = `${cname}=${encodeURIComponent(JSON.stringify(value))}; expires=${date.toUTCString()}; SameSite=Secure; Secure; path=/`;
+        localStorage.setItem( cname, JSON.stringify(value) );
     }
 
     del( cname ) {
         globalThis[cname] = null;
-        document.cookie = cname +  "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+        localStorage.removeItem(cname);
     }
 
     get( cname ) {
-        const name = `${cname}=`;
+		// local storage
+		const ls = localStorage.getItem(cname);
         let ret = null;
+		console.log("LS",cname,ls);
+		if ( ls ) {
+			try {
+				ret = JSON.parse( ls ) ;
+			}
+			catch(err) {
+				ret - ls ;
+			}
+			globalThis[cname] = ret;
+			return ret ;
+		}
+		// legacy cookie
+        const name = `${cname}=`;
         decodeURIComponent(document.cookie).split('; ').filter( val => val.indexOf(name) === 0 ).forEach( val => {
             try {
                 ret = JSON.parse( val.substring(name.length) );
@@ -35,7 +47,7 @@ class Cookie { //convenience class
                 ret =  val.substring(name.length);
                 }
         });
-        globalThis[cname] = ret;
+        this.set(cname,ret) ; // put in local storage
         return ret;
     }
 
