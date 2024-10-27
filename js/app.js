@@ -349,7 +349,8 @@ class PotNewData extends PotDataEditMode {
             objectPot.select(response.id)
             .then( () => objectPage.show( "PotMenu" ) );
             })
-        //.catch( (err) => objectLog.err(err) )
+		.then( () => objectThumb.getOne( this.doc._id ) )
+        .catch( (err) => objectLog.err(err) )
         ;
     }
 }
@@ -361,13 +362,10 @@ class PotEdit extends Pagelist {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structGeneralPot ))
-/*
- *             .catch( (err) => {
+			 .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
                 });
-*/
-;
         } else {
             objectPage.show( "back" );
         }
@@ -450,19 +448,6 @@ function parseURL() {
     }
     return r;
 }
-
-function clearLocal() {
-    const remove = confirm("Remove the eMission data and your credentials from this device?\nThe central database will not be affected.") ;
-    if ( remove ) {
-        objectCookie.clear();
-        // clear (local) database
-        db.destroy()
-        .finally( _ => location.reload() ); // force reload
-    } else {
-        objectPage.show( "MainMenu" );
-    }
-}
-globalThis. clearLocal = clearLocal ;
 
 function URLparse() {
     // need to establish remote db and credentials

@@ -198,7 +198,7 @@ class Pot { // convenience class
 				})
 				return db.put(doc) ;
 			})
-		.then( () => objectPot.select( potId ) ) // to show new thumbnail
+		.then( () => objectThumb.getOne( potId ) )
 		.then( () => objectPage.add( "PotMenu" ) )
 		.then( () => objectPage.show("PotPix") )
 		.catch( (err) => {
@@ -209,6 +209,7 @@ class Pot { // convenience class
     
     AssignToNew() {
 		const doc = this.create() ;
+		//console.log("new",doc);
 		db.put( doc )
 		.then( response => this.AssignPhoto( response.id ) )
 		.catch( err => {
@@ -257,7 +258,6 @@ class Pot { // convenience class
 				})
 				return db.put(doc) ;
 			})
-		.then( () => objectPot.select( potId ) ) // to show new thumbnail
 		.then( () => objectThumb.getOne( potId ) )
 		.then( () => objectPage.add("PotMenu" ) )
 		.then( () => objectPage.show("PotPix") )

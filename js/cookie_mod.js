@@ -6,6 +6,8 @@
  * MIT license
  * */
  
+/* Althought this is lavbeled as "Cookie" we've switched to localStarage */ 
+ 
 export {
     Cookie,
 } ;
@@ -26,7 +28,7 @@ class Cookie { //convenience class
 		// local storage
 		const ls = localStorage.getItem(cname);
         let ret = null;
-		console.log("LS",cname,ls);
+		//console.log("LS",cname,ls);
 		if ( ls ) {
 			try {
 				ret = JSON.parse( ls ) ;
@@ -56,7 +58,7 @@ class Cookie { //convenience class
     }
 
     clear() {
-        [ "potId", "remoteCouch", "displayState" ].forEach( c => this.del(c) );
+        localStorage.clear();
     }
 }
 objectCookie = new Cookie() ;

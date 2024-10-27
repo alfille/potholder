@@ -153,5 +153,18 @@ class RemoteReplicant { // convenience class
     link() {
         window.open( `${remoteCouch.address}/_utils`, '_blank' );
     }
+    
+    clearLocal() {
+		const remove = confirm("Remove the eMission data and your credentials from this device?\nThe central database will not be affected.") ;
+		if ( remove ) {
+			objectCookie.clear();
+			// clear (local) database
+			db.destroy()
+			.finally( _ => location.reload() ); // force reload
+		} else {
+			objectPage.show( "MainMenu" );
+		}
+	}
+
 }
 objectRemote = new RemoteReplicant() ;

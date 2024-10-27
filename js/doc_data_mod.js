@@ -837,6 +837,7 @@ class PotDataRaw { // singleton class
         if ( this.loadDocData(this.struct,this.doc) ) {
             // doc is changed
             db.put( this.doc )
+            .then( () => objectThumb.getOne( this.doc._id ) )
             .catch( (err) => objectLog.err(err) )
             .finally( () => objectPage.show( state ) );
         } else {
