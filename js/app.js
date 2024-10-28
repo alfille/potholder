@@ -439,39 +439,8 @@ class SearchList extends Pagelist {
     }
 }
 
-function parseURL() {
-    // returns a dict of keys/values or null
-    let url = new URL(location.href);
-    let r = {};
-    for ( let [n,v] of url.searchParams) {
-        r[n] = v;
-    }
-    return r;
-}
-
-function URLparse() {
-    // need to establish remote db and credentials
-    // first try the search field
-    const qline = parseURL();
-    objectRemote.start( qline ) ;
-    
-    // first try the search field
-    if ( qline && ( "potId" in qline ) ) {
-        objectPot.select( qline.potId )
-        .then( () => objectPage.add("PotMenu") );
-    }
-
-    if ( Object.keys(qline).length > 0 ) {
-        // reload without search params -- placed in Cookies
-        window.location.href = "/index.html" ;
-    }
-}
-
 // Application starting point
 window.onload = () => {
-    // Get Cookies
-    objectCookie.initialGet() ;
-    
     // Stuff into history to block browser BACK button
     window.history.pushState({}, '');
     window.addEventListener('popstate', ()=>window.history.pushState({}, '') );
@@ -483,8 +452,13 @@ window.onload = () => {
         .catch( err => objectLog.err(err,"Service worker registration") );
     }
     
-    // set state from URL
-    URLparse() ; // look for remoteCouch and other cookies
+    // set Credentials from Storage / URL
+    objectRemote.start() ; // look for remoteCouch and other cookies
+
+    if ( new URL(location.href).searchParams.size > 0 ) {
+        // reload without search params -- placed in Cookies
+        window.location.href = "/index.html" ;
+    }
 
     // Start pouchdb database       
     if ( credentialList.every( c => remoteCouch[c] !== "" ) ) {
@@ -521,14 +495,8 @@ window.onload = () => {
         // start sync with remote database
         objectRemote.foreverSync();
 
-        // now jump to proper page
-        objectPage.show( null ) ;
-
-        // Set piece -- need page shown first
-        if ( objectPot.isSelected() ) { // mission too
-            objectPot.select() ;
-        }
-
+		objectPage.show("MainMenu") ;
+		
     } else {
         db = null;
         objectPage.reset();

@@ -17,31 +17,26 @@ class RemoteReplicant { // convenience class
         this.synctext = document.getElementById("syncstatus");
     }
     
-    start( qline={} ) {        
-        // Get remote DB from cookies if available
+    start() {        
+        // Get remote DB from localStorage if available
+        objectCookie.get("remoteCouch");
         if ( remoteCouch == null ) {
             remoteCouch = {} ;
             credentialList.forEach( c => remoteCouch[c] = "" );
         }
 
         // Get Remote DB fron command line if available
-        if ( credentialList.every( k => k in qline ) ) {
-            let updateCouch = false ;
-            credentialList
-            .filter( f => f in qline )
-            .filter( f => remoteCouch[f] != qline[f] )
-            .forEach( f => {
-                updateCouch = true ;
-                remoteCouch[f] = qline[f] ;
-                });
-            // Changed, so reset page
-            if ( updateCouch ) {
-                objectPage.reset() ;               
-                objectCookie.set( "remoteCouch", remoteCouch );
-            }
-        }
-        
-
+        const params = new URL(location.href).searchParams;
+        credentialList.forEach( c => {
+			const gc = params.get(c) ;
+			//console.log(c,gc);
+			if ( ( gc!==null ) && ( gc !== remoteCouch[c] ) ) {
+				remoteCouch[c] = gc ;
+				objectPage.reset() ;               
+			}
+		});
+		objectCookie.set( "remoteCouch", remoteCouch );
+			 
         // set up monitoring
         window.addEventListener("offline", _ => this.not_present() );
         window.addEventListener("online", _ => this.present() );

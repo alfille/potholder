@@ -103,8 +103,7 @@ class Pot { // convenience class
     }
 
     select( pid = potId ) {
-        potId = pid ;
-        objectCookie.set( "potId", pid );
+		potId = pid ;
         // Check pot existence
         return objectPot.getRecordIdPix(pid)
         .then( (doc) => {
@@ -130,7 +129,6 @@ class Pot { // convenience class
 
     unselect() {
         potId = null;
-        objectCookie.del ( "potId" );
         this.TL.src = this.LOGO.src;
         if ( objectPage.isThis("AllPieces") ) {
             let pt = document.getElementById("PotTable");

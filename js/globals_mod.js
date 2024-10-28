@@ -8,7 +8,6 @@
 
 // globals cookie backed
 globalThis. potId = null ;
-globalThis. displayState = null ;
 globalThis. remoteCouch = null ;
 
 // other globals

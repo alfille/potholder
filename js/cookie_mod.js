@@ -53,10 +53,6 @@ class Cookie { //convenience class
         return ret;
     }
 
-    initialGet() {
-        [ "potId", "remoteCouch", "displayState" ].forEach( c => this.get(c) );
-    }
-
     clear() {
         localStorage.clear();
     }

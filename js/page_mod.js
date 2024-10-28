@@ -76,7 +76,6 @@ class Page { // singleton class
     reset() {
         // resets to just MainMenu
         this.path = [ "MainMenu" ] ;
-        objectCookie.set ( "displayState", this.path ) ;
     }
 
     back() {
@@ -85,7 +84,6 @@ class Page { // singleton class
         if ( this.path.length == 0 ) {
             this.reset();
         }
-		objectCookie.set ( "displayState", this.path ) ;
     }
 
     current() {
@@ -109,7 +107,6 @@ class Page { // singleton class
                 // trim page list back to prior occurence of this page (no loops, finite size)
                 this.path = this.path.slice( iop ) ;
             }
-            objectCookie.set ( "displayState", this.path ) ;
         }
     }
 
@@ -141,7 +138,7 @@ class Page { // singleton class
     } 
     
     show( page, extra="" ) { // main routine for displaying different "pages" by hiding different elements
-        console.log("SHOW",page,"STATE",displayState,this.path);
+        console.log("SHOW",page,"STATE",this.path);
         // test that database is selected
         if ( db == null || credentialList.some( c => remoteCouch[c]=='' ) ) {
             // can't bypass this! test if database exists
