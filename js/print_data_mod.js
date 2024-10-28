@@ -18,7 +18,6 @@ import {
 class PotDataPrint { // singleton class
     constructor(doc,struct) {
         // args is a list of "docs" to update"
-        objectPage.show_screen("print")
         this.Images = new PotImages(doc);
         
         this.doc = doc;
@@ -56,7 +55,7 @@ class PotDataPrint { // singleton class
         }
 
 		this.show_doc() ;
-		objectPage.show_screen("print");
+		objectPage.show_print();
 		setTimeout( this.print, 500 ) ;
     }
     

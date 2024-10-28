@@ -61,7 +61,7 @@ class Page { // singleton class
     constructor() {
         // get page history from cookies
         let path = [] ;
-        this.lastscreen = null ; // splash/screen/print for show_screen
+        this.normal_screen = false ; // splash/screen/print for show_screen
         this.path = [];
         // stop at repeat of a page          
         for( const p of path ) {
@@ -153,26 +153,36 @@ class Page { // singleton class
         objectPotData = null;
         objectTable = null;
 
-        this.show_screen( "screen" ); // basic page display setup
+        this.show_normal(); // basic page display setup
 
         // send to page-specific code
         (Pagelist.subclass(objectPage.current())).show_page(extra);
     }
     
-    show_screen( type ) { // switch between screen and print
-        if ( type !== this.lastscreen ) {
-            this.lastscreen == type ;
-            document.getElementById("splash_screen").style.display = "none";
-            let showscreen = {
-                ".work_screen": type=="screen",
-                ".print_pot": type == "print",
-            };
-			Object.keys(showscreen).forEach( cl => {
-                document.querySelectorAll(cl)
-                .forEach( (v)=> v.style.display=showscreen[cl]?"block":"none"
-                );
-            });
-        }
+    show_normal() { // switch between screen and print
+		if ( this.normal_screen ) {
+			return ;
+		}
+		this.normal_screen = true ;
+		// Clear Splash once really.
+		document.getElementById("splash_screen").style.display = "none";
+		
+		document.querySelectorAll(".work_screen").forEach( v => v.style.display="block" ) ;
+		document.querySelectorAll(".picture_screen").forEach( v => v.style.display="block" ) ;
+		document.querySelectorAll(".print_screen").forEach( v => v.style.display="none" ) ;
+    }    
+
+    show_print() { // switch between screen and print
+		if ( !this.normal_screen ) {
+			return ;
+		}
+		this.normal_screen = false ;
+		// Clear Splash once really.
+		document.getElementById("splash_screen").style.display = "none";
+		
+		document.querySelectorAll(".work_screen").forEach( v => v.style.display="none" ) ;
+		document.querySelectorAll(".picture_screen").forEach( v => v.style.display="none" ) ;
+		document.querySelectorAll(".print_screen").forEach( v => v.style.display="block" ) ;
     }    
 
 	headerLink() {
