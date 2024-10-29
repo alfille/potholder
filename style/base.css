@@ -434,10 +434,20 @@ legend {
     rows: 3;
     cols: 35;
 }
-.work_screen {
+.work_screen, .picture_screen {
     display: none ;
     max-width: 600px ;
 }
+@media screen and (min-width: 762px) {
+.picture_screen {
+    display: none;
+    position: absolute;
+    top: 112px;
+    margin-left: 610px;
+    width: auto;
+    }
+}
+
 #footer {
   color: darkblue;
   position: absolute;
