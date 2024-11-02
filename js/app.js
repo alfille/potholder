@@ -406,6 +406,25 @@ class PotPix extends Pagelist {
     }
 }
 
+class PotPixLoading extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static show_content(extra="") {
+		document.querySelector(".ContentTitleHidden").style.display = "block";
+		objectPage.forget() ;
+        if ( objectPot.isSelected() ) {
+            objectPot.getRecordIdPix(potId,true)
+            .then( (doc) => objectPotData = new PotData( doc, structImages ))
+            .catch( (err) => {
+                objectLog.err(err);
+                objectPage.show( "back" );
+                });
+        } else {
+            objectPage.show( "back" );
+        }
+    }
+}
+
 class PotMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 

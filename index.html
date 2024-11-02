@@ -98,6 +98,10 @@
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
+                    <!-- top: PotPixLoading -->
+                    <div class="topButtons PotPixLoading pageOverlay">
+						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
+                    </div>
                     <!-- top: InvalidPiece -->
                     <div class="InvalidPiece topButtons pageOverlay">
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'AllPieces' )">Return</button>
@@ -150,7 +154,7 @@
         <div id="potholderbody" class="work_screen">
             <!-- body: MainMenu -->
             <div class="MainMenu pageOverlay">   
-				<span class=ContentTitle>Main Menu</span>
+				<span class="ContentTitle">Main Menu</span>
                 <div id="MainMenuContent" class="MainMenuRow" >
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListMenu' )">Lists</button>
@@ -166,7 +170,7 @@
             </div>
             <!-- body: ListMenu -->
             <div class="ListMenu pageOverlay">
-				<span class=ContentTitle>List Menu</span>
+				<span class="ContentTitle">List Menu</span>
                 <div id="ListMenuContent" class="MainMenuRow" >
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPieces' )">All Pieces</button>
@@ -197,7 +201,7 @@
             </div>
             <!-- body: MakeURL -->
             <div class="MakeURL pageOverlay">
-				<span class=ContentTitle>Web Link</span>
+				<span class="ContentTitle">Web Link</span>
                 <div id="MakeURLContent" class="buttonmenu">
 					<canvas id="qr" width=300 height=300></canvas>
 					<hr>
@@ -230,7 +234,7 @@
 
             <!-- body: SearchList -->
             <div class="SearchList pageOverlay">
-				<span class=ContentTitle>Search for...</span>
+				<span class="ContentTitle">Search for...</span>
                 <div id="searchbar">
                     <input type="search" id="searchtext" autofocus="true" value="" onsearch="objectSearch.toTable()">
                     <button type="button" id="searchclick" onclick="objectSearch.toTable()">Search</button>
@@ -240,12 +244,13 @@
                 </div>
             </div>
             <!-- body: PotNew PotEdit PotProcess PotPix DatabaseInfo RemoteDatabaseInput -->
-            <div class="PotData PotNew PotEdit PotProcess PotPix DatabaseInfo RemoteDatabaseInput pageOverlay">
+            <div class="PotData PotNew PotEdit PotProcess PotPix PotPixLoading DatabaseInfo RemoteDatabaseInput pageOverlay">
+				<span class="ContentTitle ContentTitleHidden">Loading...</span>
                 <div id="PotDataContent" ></div>
             </div>
             <!-- body: PotMenu -->
             <div class="PotMenu pageOverlay">
-				<span class=ContentTitle>Piece Menu</span>
+				<span class="ContentTitle">Piece Menu</span>
                 <div id="PotMenuContent" class="MainMenuRow" >
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotEdit' )">Overview</button>

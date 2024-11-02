@@ -152,6 +152,7 @@ class Page { // singleton class
         // clear display objects
         objectPotData = null;
         objectTable = null;
+		document.querySelector(".ContentTitleHidden").style.display = "none";
 
         this.show_normal(); // basic page display setup
 

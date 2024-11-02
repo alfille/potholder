@@ -220,6 +220,7 @@ class Pot { // convenience class
         if ( pictureSource.files.length == 0 ) {
             return ;
         }
+        objectPage.show("PotPixLoading");
         const members = structImages.members ;
 		objectPot.select( pid )
 		.then ( () => objectPot.getRecordIdPix(pid,true) )
