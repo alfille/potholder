@@ -80,7 +80,7 @@ class Pot { // convenience class
     }
 
     getAllIdDoc(binary=false) {
-        let doc = {
+        const doc = {
             startkey: Id_pot.allStart(),
             endkey:   Id_pot.allEnd(),
             include_docs: true,
@@ -91,7 +91,7 @@ class Pot { // convenience class
     }
         
     getAllIdDocPix() {
-        let doc = {
+        const doc = {
             startkey: Id_pot.allStart(),
             endkey:   Id_pot.allEnd(),
             include_docs: true,
@@ -130,12 +130,9 @@ class Pot { // convenience class
         potId = null;
         this.TL.src = this.LOGO.src;
         if ( objectPage.isThis("AllPieces") ) {
-            let pt = document.getElementById("PotTable");
+            const pt = document.getElementById("PotTable");
             if ( pt ) {
-                let rows = pt.rows;
-                for ( let i = 0; i < rows.length; ++i ) {
-                    rows[i].classList.remove('choice');
-                }
+				pt.rows.forEach( r => r.classList.remove('choice'));
             }
         }
         new BlankBox();
@@ -160,8 +157,6 @@ class Pot { // convenience class
 			return ;
 		}
 		objectPage.show("PotPixLoading");
-        let members = structImages.members ;
-		//objectPot.select( potId ); // seems redundant
 		objectPot.getRecordIdPix(potId,true)
 		.then( (doc) => {
 			// make sure basic structure is there

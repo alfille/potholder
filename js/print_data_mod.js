@@ -74,7 +74,7 @@ class PotDataPrint { // singleton class
         this.ul = document.createElement('ul');
         
         this.struct.forEach( item => {
-            let li = document.createElement("li");
+            const li = document.createElement("li");
             this.show_item(item,this.doc).forEach( e => li.appendChild(e)) ;
             this.ul.appendChild( li );
         });
@@ -86,11 +86,11 @@ class PotDataPrint { // singleton class
         // return an array to attach
         
         // possibly use an alias instead of database field name
-        let span0 = document.createElement('span');
+        const span0 = document.createElement('span');
         span0.classList.add('fill_show_label');
         span0.innerHTML=`<i>${item.alias??item.name}:&nbsp;&nbsp;</i>`;
         span0.title=item.hint??"data entry";
-        let return_list=[span0];
+        const return_list=[span0];
                         
         // get value and make type-specific input field with filled in value
         let preVal = null ;
@@ -99,7 +99,7 @@ class PotDataPrint { // singleton class
         } else {
                 doc[item.name]=null ;
         }
-        let span = document.createElement('span');
+        const span = document.createElement('span');
         span.classList.add('fill_show_data');
         let textnode="";
         switch( item.type ) {
@@ -152,21 +152,21 @@ class PotDataPrint { // singleton class
         if ( !(item.name in this.doc ) ) {
             this.doc[item.name] = null ;
         }
-        let preVal = this.doc[item.name] ;
+        const preVal = this.doc[item.name] ;
 
-        let temp = document.createElement("span"); // hold clone
+        const temp = document.createElement("span"); // hold clone
         this.cloneClass( ".Darray", temp ) ;
-        let tab = temp.querySelector( ".Darray_table" ) ;
+        const tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
         tab.querySelectorAll("button").forEach(b=>b.style.display="none");
 
         if ( Array.isArray(preVal) && (preVal.length>0) ) {
             preVal.forEach( v => {
-            let td = tab.insertRow(-1).insertCell(0);
-            let ul = document.createElement("ul");
+            const td = tab.insertRow(-1).insertCell(0);
+            const ul = document.createElement("ul");
             td.appendChild(ul);
             item.members.forEach( m => {
-                let li = document.createElement("li");
+                const li = document.createElement("li");
                 this.show_item(m,v).forEach( e => li.appendChild(e)) ;
                 ul.appendChild(li);
                 }) ;
@@ -185,11 +185,11 @@ class PotDataPrint { // singleton class
         if ( !(item.name in this.doc ) ) {
                 this.doc[item.name] = null ;
         }
-        let preVal = this.doc[item.name] ;
+        const preVal = this.doc[item.name] ;
 
-        let temp = document.createElement("span"); // hold clone
+        const temp = document.createElement("span"); // hold clone
         this.cloneClass( ".Darray", temp ) ;
-        let tab = temp.querySelector( ".Darray_table" ) ;
+        const tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>Saved Images</i>`;
         tab.querySelectorAll("button").forEach(b=>b.style.display="none");
 
@@ -216,7 +216,7 @@ class PotDataPrint { // singleton class
         }
                     
 	cloneClass( fromClass, target ) {
-		let c = document.getElementById("templates").querySelector(fromClass);
+		const c = document.getElementById("templates").querySelector(fromClass);
 		c.childNodes.forEach( cc => target.appendChild(cc.cloneNode(true) ) );
 	}
 }

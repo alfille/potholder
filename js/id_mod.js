@@ -41,7 +41,7 @@ class Id_pot {
     }
     
     static makeIdKey( pid, key=null ) {
-        let obj = this.splitId( pid ) ;
+        const obj = this.splitId( pid ) ;
         if ( key==null ) {
             obj.date = new Date().toISOString();
             obj.rand = Math.floor( Math.random() * 1000 ) ;

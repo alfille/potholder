@@ -48,7 +48,7 @@ self.addEventListener('install', event =>
 // Selected Fetch
 self.addEventListener('fetch', event => {
     if ( event.request.method === 'GET' ) {
-        let url = new URL(event.request.url) ;
+        const url = new URL(event.request.url) ;
         if ( cacheList.includes(url.pathname) ) {
             event.respondWith(
                 fetch(event.request)
@@ -56,7 +56,7 @@ self.addEventListener('fetch', event => {
                     if ( !response.ok ) {
                         throw 404;
                     }
-                    let rc = response.clone() ;
+                    const rc = response.clone() ;
                     caches.open(cacheName)
                     .then( cache => {
                         cache.put( event.request, rc );

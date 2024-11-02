@@ -160,7 +160,7 @@ class Thumb {
     }
 
     remove( pid ) {
-        let img = this.pick.querySelector(`[data-id="${pid}"]`);
+        const img = this.pick.querySelector(`[data-id="${pid}"]`);
         if ( img ) {
             this.pick.removeChild( img ) ;
         }

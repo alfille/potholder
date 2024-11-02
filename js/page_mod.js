@@ -46,7 +46,7 @@ class Pagelist {
     }
     
     static subclass(pagetitle) {
-        let cls = Pagelist.pages[pagetitle] ?? null ;
+        const cls = Pagelist.pages[pagetitle] ?? null ;
         if ( cls ) {
             return cls ;
         } else {
@@ -59,18 +59,8 @@ class Pagelist {
 
 class Page { // singleton class
     constructor() {
-        // get page history from cookies
-        let path = [] ;
         this.normal_screen = false ; // splash/screen/print for show_screen
         this.path = [];
-        // stop at repeat of a page          
-        for( const p of path ) {
-            if ( this.path.includes(p) ) {
-                break ;
-            } else {
-                this.path.push(p);
-            }
-        }
     }
     
     reset() {
@@ -99,7 +89,7 @@ class Page { // singleton class
         } else if ( page == null ) {
             return ;
         } else {
-            let iop = this.path.indexOf( page ) ;
+            const iop = this.path.indexOf( page ) ;
             if ( iop < 0 ) {
                 // add to from of page list
                 this.path.unshift( page ) ;

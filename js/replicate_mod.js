@@ -127,7 +127,7 @@ class RemoteReplicant { // convenience class
         let prot = "https";
         let addr = url;
         let port = "6984";
-        let spl = url.split("://") ;
+        const spl = url.split("://") ;
         if (spl.length < 2 ) {
             addr=spl[0];
         } else {

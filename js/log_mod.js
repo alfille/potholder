@@ -16,8 +16,8 @@ export class Log{
     
     err( err, title=null ) {
         // generic console.log of error
-        let ttl = title ?? objectPage.current() ;
-        let msg = err.message ?? err ;
+        const ttl = title ?? objectPage.current() ;
+        const msg = err.message ?? err ;
         this.list.push(`${ttl}: ${msg}`);
         console.group() ;
         console.log( ttl, msg ) ;
@@ -35,13 +35,13 @@ export class Log{
     }
     
     show() {
-        let cont = document.getElementById("ErrorLogContent") ;
+        const cont = document.getElementById("ErrorLogContent") ;
         cont.innerHTML="";
-        let ul = document.createElement('ul');
+        const ul = document.createElement('ul');
         cont.appendChild(ul);
         this.list
         .forEach( e => {
-            let l = document.createElement('li');
+            const l = document.createElement('li');
             l.innerText=e;
             //l.appendChild( document.createTextNode(e) ) ;
             ul.appendChild(l) ;

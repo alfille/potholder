@@ -77,7 +77,7 @@ class PotDataRaw { // singleton class
         this.ul = document.createElement('ul');
         
         this.struct.forEach( item => {
-            let li = document.createElement("li");
+            const li = document.createElement("li");
             this.show_item(item,this.doc).forEach( e => li.appendChild(e)) ;
             this.ul.appendChild( li );
         });
@@ -104,11 +104,11 @@ class PotDataRaw { // singleton class
         // return an array to attach
         
         // possibly use an alias instead of database field name
-        let span0 = document.createElement('span');
+        const span0 = document.createElement('span');
         span0.classList.add('fill_show_label');
         span0.innerHTML=`<i>${item.alias??item.name}:&nbsp;&nbsp;</i>`;
         span0.title=item.hint??"data entry";
-        let return_list=[span0];
+        const return_list=[span0];
                         
         // get value and make type-specific input field with filled in value
         let preVal = null ;
@@ -117,7 +117,7 @@ class PotDataRaw { // singleton class
         } else {
                 doc[item.name]=null ;
         }
-        let span = document.createElement('span');
+        const span = document.createElement('span');
         span.classList.add('fill_show_data');
         let textnode="";
         switch( item.type ) {
@@ -171,7 +171,7 @@ class PotDataRaw { // singleton class
             
         // Heading and buttons
         this.cloneClass( ".Darray", parent ) ;
-        let tab = parent.querySelector( ".Darray_table" ) ;
+        const tab = parent.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>Choose ${item.alias??item.name} item</i>`;
         [".Darray_back"].forEach(c=>tab.querySelector(c).hidden=false);
 
@@ -179,20 +179,20 @@ class PotDataRaw { // singleton class
 
         // table
         this.doc[item.name].forEach( (v,i) => {
-            let tr = tab.insertRow(-1) ;
+            const tr = tab.insertRow(-1) ;
             // 1st col
-            let td = tr.insertCell(-1);
-            td.innerText="Choose";
-            td.classList.add("Rotate");
-            tr.appendChild(td);
+            const td1 = tr.insertCell(-1);
+            td1.innerText="Choose";
+            td1.classList.add("Rotate");
+            tr.appendChild(td1);
             // second col
-            td = tr.insertCell(-1);
-            td.classList.add("Greedy");
+            const td2 = tr.insertCell(-1);
+            td2.classList.add("Greedy");
             tr.onclick = ()=>this.edit_array_entry(item,i) ;
-            let ul = document.createElement("ul");
-            td.appendChild(ul);
+            const ul = document.createElement("ul");
+            td2.appendChild(ul);
             item.members.forEach( m => {
-                let li = document.createElement("li");
+                const li = document.createElement("li");
                 this.show_item(m,v).forEach( e => li.appendChild(e)) ;
                 ul.appendChild(li);
                 }) ;
@@ -208,7 +208,7 @@ class PotDataRaw { // singleton class
             
         // Heading and buttons
         this.cloneClass( ".Darray", parent ) ;
-        let tab = parent.querySelector( ".Darray_table" ) ;
+        const tab = parent.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>Choose ${item.alias??item.name} item</i>`;
         [".Darray_back"].forEach(c=>tab.querySelector(c).hidden=false);
 
@@ -217,7 +217,7 @@ class PotDataRaw { // singleton class
         // table
         this.doc[item.name].forEach( (v,i) => {
             const tr = tab.insertRow(-1) ;
-            let td = tr.insertCell(-1);
+            const td = tr.insertCell(-1);
             // first col
             td.innerText="Choose";
             td.classList.add("Rotate");
@@ -244,8 +244,8 @@ class PotDataRaw { // singleton class
     edit_array_entry( item, idx ) {
         this.array_buttons();
 
-        let doc={} ;
-        let adding = idx==-1 ; // flag for adding rather than editing
+        const doc={} ;
+        const adding = idx==-1 ; // flag for adding rather than editing
         if ( !adding ) {
             Object.assign(doc,this.doc[item.name][idx]);
         }
@@ -255,8 +255,8 @@ class PotDataRaw { // singleton class
         parent.innerHTML = "";
                 
         this.ul = document.createElement('ul');
-        let li1 = document.createElement('li');
-        let title = item.alias??item.name ;
+        const li1 = document.createElement('li');
+        const title = item.alias??item.name ;
         if ( !(item.name in this.doc) || this.doc[item.name]==null ) {
             this.doc[item.name]=[];
         }
@@ -294,7 +294,7 @@ class PotDataRaw { // singleton class
         this.choicePromise( item.members ).then( choices => {
             item.members.forEach( ( m, idx ) => {
                 const c = (choices.find(c=>c[0]==m.name)??[null,null])[1] ;
-                let li = document.createElement("li");
+                const li = document.createElement("li");
                 li.classList.add("MainEditList");
                 this.edit_item(m,c,doc).forEach( e => li.appendChild(e)) ;
                 this.ul.appendChild( li );
@@ -313,7 +313,7 @@ class PotDataRaw { // singleton class
                 
         // Heading and buttons
         this.cloneClass( ".Darray", parent ) ;
-        let tab = parent.querySelector( ".Darray_table" ) ;
+        const tab = parent.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} rearrange order</i>`;
         [".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
 
@@ -322,15 +322,15 @@ class PotDataRaw { // singleton class
         // table
         const elements = this.doc[item.name].length ;
         this.doc[item.name].forEach( v => {
-            let tr = tab.insertRow(-1) ;
+            const tr = tab.insertRow(-1) ;
             tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
             tr.insertCell(-1).innerHTML=`<button type="button"  class="Darray_down" title="Move this entry down"><B>&#8659;</B></button>`;
-            let td = tr.insertCell(-1);
+            const td = tr.insertCell(-1);
             td.style.width="100%";
-            let ul = document.createElement("ul");
+            const ul = document.createElement("ul");
             td.appendChild(ul);
             item.members.forEach( m => {
-                let li = document.createElement("li");
+                const li = document.createElement("li");
                 this.show_item(m,v).forEach( e => li.appendChild(e)) ;
                 ul.appendChild(li);
                 }) ;
@@ -354,7 +354,7 @@ class PotDataRaw { // singleton class
                 
         // Heading and buttons
         this.cloneClass( ".Darray", parent ) ;
-        let tab = parent.querySelector( ".Darray_table" ) ;
+        const tab = parent.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} rearrange order</i>`;
         [".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
 
@@ -401,10 +401,7 @@ class PotDataRaw { // singleton class
         if ( !(item.name in this.array_preVals) ) {
             this.array_preVals[item.name] = JSON.stringify(preVal) ;
         }
-        let elements = 0 ;
-        if ( Array.isArray(preVal) ) {
-            elements = preVal.length ;
-        }
+        const elements = Array.isArray(preVal) ? preVal.length : 0 ;
 
         // Heading and buttons
         const temp = document.createElement("span"); // hold clone
@@ -432,7 +429,7 @@ class PotDataRaw { // singleton class
             const ul = document.createElement("ul");
             td.appendChild(ul);
             item.members.forEach( m => {
-                let li = document.createElement("li");
+                const li = document.createElement("li");
                 this.show_item(m,v).forEach( e => li.appendChild(e)) ;
                 ul.appendChild(li);
                 }) ;
@@ -500,21 +497,21 @@ class PotDataRaw { // singleton class
         if ( !(item.name in this.doc ) ) {
             this.doc[item.name] = null ;
         }
-        let preVal = this.doc[item.name] ;
+        const preVal = this.doc[item.name] ;
 
-        let temp = document.createElement("span"); // hold clone
+        const temp = document.createElement("span"); // hold clone
         this.cloneClass( ".Darray", temp ) ;
-        let tab = temp.querySelector( ".Darray_table" ) ;
+        const tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${item.alias??item.name} list</i>`;
         tab.querySelectorAll("button").forEach(b=>b.style.display="none");
 
         if ( Array.isArray(preVal) && (preVal.length>0) ) {
             preVal.forEach( v => {
-            let td = tab.insertRow(-1).insertCell(0);
-            let ul = document.createElement("ul");
+            const td = tab.insertRow(-1).insertCell(0);
+            const ul = document.createElement("ul");
             td.appendChild(ul);
             item.members.forEach( m => {
-                let li = document.createElement("li");
+                const li = document.createElement("li");
                 this.show_item(m,v).forEach( e => li.appendChild(e)) ;
                 ul.appendChild(li);
                 }) ;
@@ -533,11 +530,11 @@ class PotDataRaw { // singleton class
         if ( !(item.name in this.doc ) ) {
                 this.doc[item.name] = null ;
         }
-        let preVal = this.doc[item.name] ;
+        const preVal = this.doc[item.name] ;
 
-        let temp = document.createElement("span"); // hold clone
+        const temp = document.createElement("span"); // hold clone
         this.cloneClass( ".Darray", temp ) ;
-        let tab = temp.querySelector( ".Darray_table" ) ;
+        const tab = temp.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>Saved Images</i>`;
         tab.querySelectorAll("button").forEach(b=>b.style.display="none");
 
@@ -609,7 +606,7 @@ class PotDataRaw { // singleton class
             this.struct.forEach( ( item, idx ) => {
                 const c = (choices.find(c=>c[0]==item.name)??[null,null])[1] ;
                 //console.log("Mapped Choices", item.name, c );
-                let li = document.createElement("li");
+                const li = document.createElement("li");
                 li.classList.add("MainEditList");
                 this.edit_item( item, c, this.doc)
                     .forEach( e => li.appendChild(e)) ;
@@ -628,11 +625,11 @@ class PotDataRaw { // singleton class
         // possibly use an alias instead of database field name
         lab.appendChild( document.createTextNode(`${item.alias??item.name}: `) );
         lab.title = item.hint;
-        let return_list=[lab];
+        const return_list=[lab];
 
         // get value and make type-specific input field with filled in value
         let inp = null;
-        let preVal = doc[item.name] ;
+        const preVal = doc[item.name] ;
         switch( item.type ) {
             case "image":
 				return_list.push( this.Images.display(preVal,"medium_pic") ) ;
@@ -669,7 +666,7 @@ class PotDataRaw { // singleton class
                 break;
 
             case "list":
-                let dlist = document.createElement("datalist");
+                const dlist = document.createElement("datalist");
                 dlist.id = localname ;
                 inp = document.createElement("input");
                 //inp.type = "text";
@@ -712,8 +709,8 @@ class PotDataRaw { // singleton class
         let changed = false; 
         this.ul.querySelectorAll(".MainEditList").forEach( (li,idx) => {
             let postVal = "";
-            let name = struct[idx].name;
-            let localname = `UNIQUE${name}`;
+            const name = struct[idx].name;
+            const localname = `UNIQUE${name}`;
             // first pass for value
             switch ( struct[idx].type ) {
                 case "image":
@@ -804,8 +801,10 @@ class PotDataRaw { // singleton class
     }
 
 	cloneClass( fromClass, target ) {
-		let c = document.getElementById("templates").querySelector(fromClass);
-		c.childNodes.forEach( cc => target.appendChild(cc.cloneNode(true) ) );
+		document.getElementById("templates").
+		querySelector(fromClass)
+		.childNodes
+		.forEach( cc => target.appendChild(cc.cloneNode(true) ) );
 	}
 }
 

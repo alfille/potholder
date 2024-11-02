@@ -27,13 +27,13 @@ class SortTable {
         aliaslist.forEach( a => this.aliasAdd(a[0],a[1],a[2]) );
 
         // Table Head
-        let header = this.tbl.createTHead();
-        let row = header.insertRow(0);
+        const header = this.tbl.createTHead();
+        const row = header.insertRow(0);
         row.classList.add('head');
         this.collist.forEach( (f,i) => row.insertCell(i).outerHTML=`<th>${this.aliases[f].name}</th>` );
 
         // Table Body
-        let tbody = document.createElement('tbody');
+        const tbody = document.createElement('tbody');
         this.tbl.appendChild(tbody);
 
         this.dir = 1;
@@ -63,18 +63,18 @@ class SortTable {
 
     fill( doclist ) {
         // typically called with doc.rows from allDocs
-        let tbody = this.tbl.querySelector('tbody');
+        const tbody = this.tbl.querySelector('tbody');
         tbody.innerHTML = "";
         //let collist = this.collist;
         doclist.forEach( (doc) => {
-            let row = tbody.insertRow(-1);
-            let record = doc.doc;
+            const row = tbody.insertRow(-1);
+            const record = doc.doc;
             row.setAttribute("data-id",record._id);
             /* Select and edit -- need to make sure selection is complete*/
             ['click']
             .forEach( (e) => row.addEventListener( e, () => this.selectandedit( record._id ) ) ) ;
             this.collist.forEach( (colname,i) => {
-                let c = row.insertCell(i);
+                const c = row.insertCell(i);
                 c.innerHTML=(this.aliases[colname].value)(record) ;
             });
         });
@@ -101,7 +101,7 @@ class SortTable {
     }
 
     sortClick(e) {
-        let th = e.target;
+        const th = e.target;
         if ( th.cellIndex == this.lastth ) {
             this.dir = -this.dir;
         } else {
@@ -116,17 +116,17 @@ class SortTable {
     }
 
     sortGrid(colNum) {
-        let tbody = this.tbl.querySelector('tbody');
+        const tbody = this.tbl.querySelector('tbody');
         if ( tbody == null ) {
             // empty table
             return;
         }
 
-        let rowsArray = Array.from(tbody.rows);
+        const rowsArray = Array.from(tbody.rows);
 
         let type = "number";
         rowsArray.some( (r) => {
-            let c = r.cells[colNum].innerText;
+            const c = r.cells[colNum].innerText;
             if ( c == "" ) {
                 //empty
             } else if ( isNaN( Number(r.cells[colNum].innerText) ) ) {
@@ -138,7 +138,7 @@ class SortTable {
         });
 
         // compare(a, b) compares two rows, need for sorting
-        let dir = this.dir;
+        const dir = this.dir;
         let compare;
 
         switch (type) {
@@ -158,11 +158,11 @@ class SortTable {
     }
 
     highlight() {
-        let Rs = Array.from(this.tbl.rows);
+        const Rs = Array.from(this.tbl.rows);
         Rs.forEach( r => r.classList.remove('choice'));
-        let id = this.selectId();
+        const id = this.selectId();
         if ( id ) {
-            let sr = Rs.filter( r => r.getAttribute('data-id')==id );
+            const sr = Rs.filter( r => r.getAttribute('data-id')==id );
             if ( sr.length > 0 ) {
                 sr.forEach( r => r.classList.add('choice'));
                 sr[0].scrollIntoView();
@@ -181,7 +181,6 @@ class ThumbTable extends SortTable {
         // typically called with doc.rows from allDocs
         const tbody = this.tbl.querySelector('tbody');
         tbody.innerHTML = "";
-        //let collist = this.collist;
         doclist.forEach( (doc) => {
             const row = tbody.insertRow(-1);
             const record = doc.doc;
@@ -348,7 +347,6 @@ class SearchTable extends ThumbTable {
         // typically called with doc.rows from allDocs
         const tbody = this.tbl.querySelector('tbody');
         tbody.innerHTML = "";
-        //let collist = this.collist;
         doclist.forEach( (doc) => {
             const row = tbody.insertRow(-1);
             const record = doc.doc;

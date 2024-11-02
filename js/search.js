@@ -55,7 +55,7 @@ class Search { // singleton class
     }
 
     toTable() {
-        let needle = document.getElementById("searchtext").value;
+        const needle = document.getElementById("searchtext").value;
 
         if ( needle.length == 0 ) {
             return this.resetTable();
