@@ -159,6 +159,7 @@ class Pot { // convenience class
 		if (pictureSource.files.length==0 ) {
 			return ;
 		}
+		objectPage.show("PotPixLoading");
         let members = structImages.members ;
 		//objectPot.select( potId ); // seems redundant
 		objectPot.getRecordIdPix(potId,true)
