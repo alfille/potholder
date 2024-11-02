@@ -35,7 +35,7 @@ class RemoteReplicant { // convenience class
 				objectPage.reset() ;               
 			}
 		});
-		objectCookie.set( "remoteCouch", remoteCouch );
+		objectCookie.set( "remoteCouch", remoteCouch ); // actually localStorage
 			 
         // set up monitoring
         window.addEventListener("offline", _ => this.not_present() );
@@ -145,7 +145,7 @@ class RemoteReplicant { // convenience class
     }
 
     // Fauxton link
-    link() {
+    fauxton() {
         window.open( `${remoteCouch.address}/_utils`, '_blank' );
     }
     

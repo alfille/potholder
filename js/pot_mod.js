@@ -38,14 +38,13 @@ class Pot { // convenience class
 
 	create() {
         // create new pot record
-        const date = new Date() ;
 		return ({
 			_id: Id_pot.makeId( this.doc ),
 			type:"",
 			series:"",
 			author: remoteCouch.username,
 			artist: remoteCouch.username,
-			start_date: [date.getFullYear(),date.getMonth()+1,date.getDate()].join("-"),
+			start_date: (new Date()).toISOString().split("T")[0],
            });
 	}
    

@@ -120,10 +120,6 @@ class PotDataPrint { // singleton class
 					
                 break;
 
-            case "datetime":
-                textnode=document.createTextNode( preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" );
-                break ;
-                    
             case "array":
                 // Insert a table, and pull label into caption
                 // separate return because the flow is different
@@ -133,7 +129,9 @@ class PotDataPrint { // singleton class
                 return this.show_image_array( item, doc ) ;
 
             case "date":
-            case "time":
+				textnode=document.createTextNode( typeof(preVal)=="string" ? preVal.split("T")[0] : "" ) ;
+				break ;
+				
             case "radio":
             case "list":
             default:

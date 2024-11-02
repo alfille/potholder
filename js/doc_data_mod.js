@@ -138,10 +138,6 @@ class PotDataRaw { // singleton class
 					
                 break;
 
-            case "datetime":
-                textnode=document.createTextNode( preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"" );
-                break ;
-                    
             case "array":
                 // Insert a table, and pull label into caption
                 // separate return because the flow is different
@@ -151,7 +147,9 @@ class PotDataRaw { // singleton class
                 return this.show_image_array( item, doc ) ;
 
             case "date":
-            case "time":
+				textnode=document.createTextNode( typeof(preVal)=="string" ? preVal.split("T")[0] : "" ) ;
+				break ;
+				
             case "radio":
             case "list":
             default:
@@ -684,24 +682,8 @@ class PotDataRaw { // singleton class
                 return_list.push(inp);
                 break;
                     
-            case "datetime":
-                inp = document.createElement("input");
-                inp.type = "text";
-                inp.value = preVal ? flatpickr.formatDate(new Date(preVal), "Y-m-d h:i K"):"<empty>" ;
-                inp.title = "Date and time in format YYYY-MM-DD HH:MM AM";
-                lab.appendChild( inp );                    
-                flatpickr( inp,
-                    {
-                        time_24hr: false,
-                        enableTime: true,
-                        noCalendar: false,
-                        dateFormat: "Y-m-d h:i K",
-                        //defaultDate: Date.now(),
-                    });
-                return_list.push(inp);
-                break;
-
             case "date":
+            /*
                 inp = document.createElement("input");
                 //inp.classList.add("flatpickr","flatpickr-input");
                 inp.type = "text";
@@ -716,23 +698,12 @@ class PotDataRaw { // singleton class
                         dateFormat: "Y-m-d",
                         //defaultDate: Date.now(),
                     });
-                return_list.push(inp);
-                break;
-                    
-            case "time":
+                    */
                 inp = document.createElement("input");
-                inp.classList.add("flatpickr","flatpickr-input");
-                inp.type = "text";
-                inp.size = 9;
-                inp.value = preVal??"";
-                inp.title = "Time in format HH:MM PM or HH:MM AM";
-                flatpickr( inp,
-                    {
-                        enableTime: true,
-                        noCalendar: true,
-                        dateFormat: "h:i K",
-                        //defaultDate: "9:00",
-                    });
+                inp.type = "date";
+                inp.name = localname ;
+                inp.title = item.hint;
+                inp.value = typeof(preVal)=="string" ? preVal.split("T")[0] : "" ;
                 return_list.push(inp);
                 break;
                     
@@ -769,13 +740,6 @@ class PotDataRaw { // singleton class
                         .filter( i => i.checked )
                         .map(i=>i.value)[0];
                     break;
-                case "datetime":
-                    try {
-                        postVal = new Date(flatpickr.parseDate(li.querySelector("input").value, "Y-m-d h:i K")).toISOString();
-                    } catch {
-                        postVal="";
-                    }
-                    break;
                 case "checkbox":
                     postVal = [...document.getElementsByName(localname)]
                         .filter( i => i.checked )
@@ -789,6 +753,12 @@ class PotDataRaw { // singleton class
                 case "textarea":
                     postVal = li.querySelector("textarea").value;
                     break;
+                case "date":
+					postVal = li.querySelector("input").value ;
+					if (new Date(postVal) !== "Invalid Date" ) {
+						postVal = new Date( postVal ).toISOString() ;
+					}
+					break ;
                 default:
                     postVal = li.querySelector("input").value;
                     break;
