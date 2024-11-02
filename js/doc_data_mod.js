@@ -683,22 +683,6 @@ class PotDataRaw { // singleton class
                 break;
                     
             case "date":
-            /*
-                inp = document.createElement("input");
-                //inp.classList.add("flatpickr","flatpickr-input");
-                inp.type = "text";
-                inp.size = 10;
-                inp.value = preVal ?? new Date().toISOString() ;
-                inp.title = "Date in format YYYY-MM-DD";
-                lab.appendChild( inp );                    
-                flatpickr( inp,
-                    {
-                        enableTime: false,
-                        noCalendar: false,
-                        dateFormat: "Y-m-d",
-                        //defaultDate: Date.now(),
-                    });
-                    */
                 inp = document.createElement("input");
                 inp.type = "date";
                 inp.name = localname ;
