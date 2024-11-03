@@ -33,6 +33,7 @@ export function createQueries() {
             },
         },
     },
+    /*
     {
         _id: "_design/qClay",
         version: 1,
@@ -51,6 +52,7 @@ export function createQueries() {
             },
         },
     },
+    * */
     {
         _id: "_design/qKiln",
         version: 1,

@@ -250,7 +250,7 @@ class ListGlaze extends Pagelist {
         objectPot.unselect() ;
 		new TextBox("grouped by Glaze") ;
         document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( (doc)=>{ if ("glaze" in doc) { return doc.glaze.map(x=>x.type); }} ) ;
+        objectTable = new MultiTable( (doc)=>doc?.clay ?? ["unknown"] ) ;
     }
 }
 

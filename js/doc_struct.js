@@ -109,6 +109,20 @@ export const structProcess = [
         choices: ["wheel","slab","handbuilt","coil","pinch"],
     },
     {
+		name:  "clay",
+		alias: "Clay",
+		hint:  "Clays used in piece",
+		type:  "checkbox",
+		choices: ["B-mix","Brown","Black","Brooklyn Red","Porcelain","Other"],
+	},
+	{
+		name: "clay_comment",
+		alias: "Clay notes",
+		hint: "Comments on the clays",
+		type: "textarea",
+	},
+	/*
+    {
         name:  "clay",
         alias: "Clays",
         type:  "array",
@@ -127,6 +141,7 @@ export const structProcess = [
             }
         ],
     },
+    * */
     {
         name:  "glaze",
         alias: "Glazes",
