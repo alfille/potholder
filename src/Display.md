@@ -21,13 +21,17 @@ When a particular piece is selected, it's picture will be the one shown.
 These are specific to each page, but commonly include 
 * _Help_ page-specific help
 * [_Find_](Search.md) full text search
-* [_Photo_](Photo.md) to add a picture from your camera or image gallery.
+* [_Photo_](Photo.md) to add a picture from your camera
+* [_Gallery_](Photo.md) to select pictures already stored on your device
 
 ## Info Bar
 
 ![](Display3.png)
 
-Information about the database as a whole, or the selected piece.
+Information about 
+* the database as a whole
+* the selected piece
+* actions to take
 
 ## Work Area
 
@@ -55,4 +59,4 @@ Note that data is saved locally. It is also sent to the server (and vise versa) 
 
 For pieces with a picture, the thumbnail is a fast way to click and select the piece. You can then [inspect and edit data](PotMenu.md) on that piece.
 
-When a piece is selected, images of that piece are shown instead of all thumbnails.
+When a piece is selected, images of just that piece are shown.

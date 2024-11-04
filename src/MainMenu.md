@@ -15,5 +15,5 @@ The focus of the page is:
 * [_Lists_](ListMenu.md) of your pieces organized in different ways
 * [_New Piece_](PotNew.md) to create an entry for a new piece
 * [_Instructions_](https://alfille.github.io/potholder/) for overall help
-* [_Name/Password_](RemoteDatabaseInput.md) to modify your credentials to the database
+* [_Name/Password_](RemoteDatabaseInput.md) to modify your credentials to the database or generate a web link
 * _Advanced Options_ informational but not normally needed in general usage
