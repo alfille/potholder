@@ -110,8 +110,8 @@ class Page { // singleton class
     }
 
     helpLink() {
-		const helpLoc = location.href ;
-		const helpDir = "/book/" ;
+		const helpLoc = "https://alfille.github.io/" ;
+		const helpDir = "/potholder/" ;
 		let   helpTopic = this.current() ;
 		switch (helpTopic) {
 			case 'ListType':
