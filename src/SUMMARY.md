@@ -16,6 +16,7 @@
   - [Pictures](PotPix.md)
   - [Print](PotPrint.md)
 - [Search](SearchList.md)
+- [Help](Help.md)
 - [Advanced Options](Administration.md)
   - [Error Log](ErrorLog.md)
   - [Database Information](DatabaseInfo.md)
