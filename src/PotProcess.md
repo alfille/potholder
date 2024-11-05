@@ -16,7 +16,8 @@ A particular feature is that some fields can have more than one entry -- actuall
 
 ![](PotProcess2.png)
 
-Click the Edit button to make changes. (Either button).
+* Click the Edit button to make changes (either button)
+* Or, just double click on the data
 
 ### Field Types
 
