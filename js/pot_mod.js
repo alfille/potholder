@@ -21,9 +21,7 @@ import {
 
 // used to generate data entry pages "PotData" type
 import {
-	structGeneralPot,
 	structImages,
-	structProcess,
 } from "./doc_struct.js" ;
 
 class Pot { // convenience class

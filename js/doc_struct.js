@@ -29,12 +29,6 @@ export const structGeneralPot = [
         query: "qSeries",
     },
     {
-        name: "location",
-        hint: "Current location",
-        type: "list",
-        query: "qLocation",
-    },
-    {
         name:  "start_date",
         alias: "Start date",
         type:  "date",
@@ -52,6 +46,76 @@ export const structGeneralPot = [
         alias: "General comments",
         hint:  "Overall comments on piece",
         type:  "textarea",
+    },
+    {
+		name: "stage",
+		alias: "Stage",
+		hint: "Stage of creation",
+		type: "radio",
+		choices: ["greenware","bisqued","kiln","finished"],
+	},
+    {
+        name:  "kiln",
+        alias: "Kiln",
+        hint:  "Kiln firing type",
+        type:  "radio",
+//        choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
+        choices: ["none","oxidation","reduction","soda","raku",],
+    },
+    {
+        name:  "weight_start",
+        alias: "Starting weight",
+        hint:  "Weight (in pounds) of the raw clay",
+        type:  "text",
+    },
+    {
+        name:  "construction",
+        hint:  "techniques",
+        type:  "checkbox",
+        choices: ["wheel","slab","handbuilt","coil","pinch"],
+    },
+    {
+		name:  "clay",
+		alias: "Clay",
+		hint:  "Clays used in piece",
+		type:  "checkbox",
+		choices: ["B-mix","Brown","Black","Brooklyn Red","Porcelain","Other"],
+	},
+	{
+		name: "clay_comment",
+		alias: "Clay notes",
+		hint: "Comments on the clays",
+		type: "textarea",
+	},
+    {
+        name:  "glaze",
+        alias: "Glazes",
+        type:  "array",
+        members: [
+            {
+                name:  "type",
+                alias: "Glaze",
+                type:  "list",
+                query: "qGlaze",
+            },
+            {
+                name:  "comment",
+                alias: "Notes",
+                type:  "textarea",
+            }
+        ],
+    },
+    {
+        name:  "weight_end",
+        alias: "Final weight",
+        hint:  "Weight (in pound) of the finished piece",
+        type:  "text",
+    },
+    {
+        name: "location",
+        hint: "Current location",
+        type: "list",
+        query: "qLocation",
     },
 ];
 
@@ -81,115 +145,6 @@ export const structImages = [
     }
 ];
         
-export const structProcess = [
-    {
-        name:  "firing",
-        alias: "Firing",
-        hint:  "Type of firing",
-        type:  "radio",
-//        choices: ["greenware","bisque","oxidation","reduction","soda","raku","garbage","salt"],
-        choices: ["greenware","bisque","oxidation","reduction","soda","raku",],
-    },
-    {
-        name:  "weight_start",
-        alias: "Starting weight",
-        hint:  "Weight (in pounds) of the raw clay",
-        type:  "text",
-    },
-    {
-        name:  "weight_end",
-        alias: "Final weight",
-        hint:  "Weight (in pound) of the finished piece",
-        type:  "text",
-    },
-    {
-        name:  "construction",
-        hint:  "techniques",
-        type:  "checkbox",
-        choices: ["wheel","slab","handbuilt","coil","pinch"],
-    },
-    {
-		name:  "clay",
-		alias: "Clay",
-		hint:  "Clays used in piece",
-		type:  "checkbox",
-		choices: ["B-mix","Brown","Black","Brooklyn Red","Porcelain","Other"],
-	},
-	{
-		name: "clay_comment",
-		alias: "Clay notes",
-		hint: "Comments on the clays",
-		type: "textarea",
-	},
-	/*
-    {
-        name:  "clay",
-        alias: "Clays",
-        type:  "array",
-        members: [
-            {
-                name:  "type",
-                alias: "Clay body",
-                hint:  "Which clay type used?",
-                type:  "list",
-                query: "qClay",
-            },
-            {
-                name:  "comment",
-                hint:  "Clay comments",
-                type:  "textarea",
-            }
-        ],
-    },
-    * */
-    {
-        name:  "glaze",
-        alias: "Glazes",
-        type:  "array",
-        members: [
-            {
-                name:  "type",
-                alias: "Glaze",
-                type:  "list",
-                query: "qGlaze",
-            },
-            {
-                name:  "comment",
-                alias: "Notes",
-                type:  "textarea",
-            }
-        ],
-    },
-    {
-        name: "kilns",
-        type: "array",
-        members: [
-            {
-                name: "kiln",
-                hint: "Which kiln used?",
-                type: "list",
-                query: "qKiln",
-            },
-            {
-                name: "cone",
-                hint: "firing cone",
-                type: "list",
-                query: "qCone",
-            },
-            {
-                name: "date",
-                hint: "firing date",
-                type: "date",
-            },
-            {
-                name: "comment",
-                hint: "Comments on firing",
-                type: "textarea",
-            },
-        ],
-    },
-];
-
 export const structRemoteUser = [
     {
         name: "username",

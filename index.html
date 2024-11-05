@@ -46,8 +46,8 @@
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: ListSeries ListFiring ListClay ListGlaze ListType -->
-                    <div class="ListSeries ListFiring ListClay ListGlaze ListType topButtons pageOverlay">
+                    <!-- top: ListSeries ListStage ListKiln ListClay ListGlaze ListType -->
+                    <div class="ListSeries ListStage ListKiln ListClay ListGlaze ListType topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >Gallery &#128444;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
@@ -89,8 +89,8 @@
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: PotEdit PotProcess PotPix -->
-                    <div class="PotData PotEdit PotProcess topButtons PotPix pageOverlay">
+                    <!-- top: PotEdit PotPix -->
+                    <div class="PotData PotEdit topButtons PotPix pageOverlay">
                         <button type="button" class="divbutton Camera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton Camera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >Gallery &#128444;</button>            
                         <button type="button" class="divbutton edit_data" onclick="objectPotData.edit_doc()" title="Start editing these entries">Edit</button>
@@ -179,7 +179,8 @@
                     <div class="PotProcButtons">
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListSeries' )">Series</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListType'   )">Type</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListFiring' )">Firing</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListStage'  )">Stage</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListKiln'   )">Kiln</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListClay'   )">Clay</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListGlaze'  )">Glaze</button>
                     </div>
@@ -215,8 +216,8 @@
                     <table id="AllPieces"></table>
                 </div>
             </div>
-            <!-- body: ListSeries ListFiring ListClay ListGlaze ListType -->
-            <div class="ListSeries ListFiring ListClay ListGlaze ListType pageOverlay">
+            <!-- body: ListSeries ListStage ListKiln ListClay ListGlaze ListType -->
+            <div class="ListSeries ListStage ListKiln ListClay ListGlaze ListType pageOverlay">
                 <div id="MultiTableContent" >
                 </div>
             </div>
@@ -243,8 +244,8 @@
                     <table id="SearchList"></table>
                 </div>
             </div>
-            <!-- body: PotNew PotEdit PotProcess PotPix DatabaseInfo RemoteDatabaseInput -->
-            <div class="PotData PotNew PotEdit PotProcess PotPix PotPixLoading DatabaseInfo RemoteDatabaseInput pageOverlay">
+            <!-- body: PotNew PotEdit PotPix DatabaseInfo RemoteDatabaseInput -->
+            <div class="PotData PotNew PotEdit PotPix PotPixLoading DatabaseInfo RemoteDatabaseInput pageOverlay">
 				<span class="ContentTitle ContentTitleHidden">Loading...</span>
                 <div id="PotDataContent" ></div>
             </div>
@@ -253,8 +254,7 @@
 				<span class="ContentTitle">Piece Menu</span>
                 <div id="PotMenuContent" class="MainMenuRow" >
                     <div class="PotProcButtons">
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotEdit' )">Overview</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotProcess' )" title="How the pot was made">Process Details</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotEdit' )">Information</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotPix' )" title="Photo gallery">Images</button>
                         <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotPrint' )" title="Print this piece's information">Print</button>

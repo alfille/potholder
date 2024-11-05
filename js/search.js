@@ -18,7 +18,6 @@ import {
 	structDatabaseInfo,
 	structGeneralPot,
 	structImages,
-	structProcess,
 	structRemoteUser,
 } from "./doc_struct.js" ;
 
@@ -33,7 +32,6 @@ class Search { // singleton class
         this.structStructure= ({
 			PotEdit:    structGeneralPot,
 			PotPix:     structImages,
-			PotProcess: structProcess,
 			});
 
         // Extract fields fields

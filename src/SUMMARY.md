@@ -12,7 +12,6 @@
 - [Piece Menu](PotMenu.md)
   - [New Piece](PotNew.md)
   - [General Info](PotEdit.md)
-  - [Process Details](PotProcess.md)
   - [Pictures](PotPix.md)
   - [Print](PotPrint.md)
 - [Search](SearchList.md)

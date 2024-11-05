@@ -20,7 +20,6 @@ import {
 	structDatabaseInfo,
 	structGeneralPot,
 	structImages,
-	structProcess,
 	structRemoteUser,
 } from "./doc_struct.js" ;
 
@@ -122,7 +121,7 @@ class PotPrint extends Pagelist {
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotDataPrint( doc, structGeneralPot.concat(structProcess,structImages) ) )
+            .then( (doc) => objectPotData = new PotDataPrint( doc, structGeneralPot.concat(structImages) ) )
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -210,59 +209,81 @@ class AssignPic extends Pagelist {
     }
 }
 
-class ListSeries extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+class ListGroup extends Pagelist {
+	// static "field_name" from struct in derived classes
 
     static show_content(extra="") {
         objectPot.unselect() ;
-		new TextBox("grouped by Series") ;
-        document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( (doc)=>[doc?.series??"unknown"] ) ;
-    }
+        const item = structGeneralPot.find( i => i.name == this.field_name ) ;
+        console.log("item",item) ;
+        if ( item ) {
+			new TextBox(`grouped by ${item?.alias ?? item.name}`) ;
+			document.getElementById("MainPhotos").style.display="block";
+			switch (item.type) {
+				case "radio":
+				case "list":
+				case "text":
+					objectTable = new MultiTable( (doc)=> {
+						if ( (item.name in doc) && (doc[item.name]!=="") ) {
+							return [doc[item.name] ] ;
+						} else {
+							return ["unknown"] ;
+						}
+						});
+					break ;
+				case "checkbox":
+					objectTable = new MultiTable( (doc)=> {
+						if ( (item.name in doc) && (doc[item.name].length > 0) ) {
+							return doc[item.name] ;
+						} else {
+							return ["unknown"] ;
+						}
+						});
+					break ;
+				case "array":
+					objectTable = new MultiTable( (doc)=> {
+						if ( (item.name in doc) && (doc[item.name].length>0) ) {
+							return doc[item.name].map( t => t.type ) ;
+						} else {
+							return ["unknown"] ;
+						}
+						});
+					break ;
+			}
+		} else {
+			objectPage.show("ListMenu");
+		}
+	}
 }
 
-class ListType extends Pagelist {
+class ListSeries extends ListGroup {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content(extra="") {
-        objectPot.unselect() ;
-		new TextBox("grouped by Type of Piece") ;
-        document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( (doc)=>[doc?.type??"unknown"] ) ;
-    }
+    static field_name = "series" ;
 }
 
-class ListFiring extends Pagelist {
+class ListType extends ListGroup {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content(extra="") {
-        objectPot.unselect() ;
-		new TextBox("grouped by Firing") ;
-        document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( (doc)=>[doc?.firing??"unknown"] ) ;
-    }
+    static field_name = "type" ;
 }
 
-class ListGlaze extends Pagelist {
+class ListStage extends ListGroup {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content(extra="") {
-        objectPot.unselect() ;
-		new TextBox("grouped by Glaze") ;
-        document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( (doc)=>{ if ("glaze" in doc) { return doc.glaze.map(x=>x.type); } } ) ;
-    }
+    static field_name = "stage" ;
 }
 
-class ListClay extends Pagelist {
+class ListKiln extends ListGroup {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static field_name = "kiln" ;
+}
 
-    static show_content(extra="") {
-        objectPot.unselect() ;
-		new TextBox("grouped by Clay") ;
-        document.getElementById("MainPhotos").style.display="block";
-        objectTable = new MultiTable( (doc)=>doc?.clay ?? ["unknown"] ) ;
-    }
+class ListGlaze extends ListGroup {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static field_name = "glaze" ;
+}
+
+class ListClay extends ListGroup {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static field_name = "clay" ;
 }
 
 class ErrorLog extends Pagelist {
@@ -363,23 +384,6 @@ class PotEdit extends Pagelist {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structGeneralPot ))
 			 .catch( (err) => {
-                objectLog.err(err);
-                objectPage.show( "back" );
-                });
-        } else {
-            objectPage.show( "back" );
-        }
-    }
-}
-
-class PotProcess extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content(extra="") {
-        if ( objectPot.isSelected() ) {
-            objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structProcess ))
-            .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
                 });
