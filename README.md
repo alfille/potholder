@@ -5,8 +5,11 @@ Potter's database. Web based, phone friendly, visual, and free!
 
 ## Screen Shots:
 
-![](src/MainMenu.png) ![](src/PieceMenu.png)
-![](src/ListGroup.png) ![](src/PotProcess3.png)
+![](src/SS1.png) ![](src/SS2.png)
+
+![](src/SS3.png) ![](src/SS4.png)
+
+![](src/SS5.png) ![](src/SS6.png)
 
 ## Code
 
