@@ -43,6 +43,8 @@ class Pot { // convenience class
 			author: remoteCouch.username,
 			artist: remoteCouch.username,
 			start_date: (new Date()).toISOString().split("T")[0],
+			stage: "greenware",
+			kiln: "none",
            });
 	}
    

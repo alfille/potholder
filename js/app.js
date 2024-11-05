@@ -215,7 +215,6 @@ class ListGroup extends Pagelist {
     static show_content(extra="") {
         objectPot.unselect() ;
         const item = structGeneralPot.find( i => i.name == this.field_name ) ;
-        console.log("item",item) ;
         if ( item ) {
 			new TextBox(`grouped by ${item?.alias ?? item.name}`) ;
 			document.getElementById("MainPhotos").style.display="block";

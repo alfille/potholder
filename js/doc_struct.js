@@ -15,8 +15,8 @@
 export const structGeneralPot = [
     {
         name:  "type",
-        alias: "Type of piece",
-        hint:  "What will the piece be used for?",
+        alias: "Form",
+        hint:  "Form of the piece",
         type:  "list",
         choices:  ["bowl","plate","flowerpot"],
         query: "qType",
