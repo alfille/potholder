@@ -114,10 +114,11 @@ class Page { // singleton class
 		const helpDir = "/potholder/" ;
 		let   helpTopic = this.current() ;
 		switch (helpTopic) {
-			case 'ListType':
+			case 'ListForm':
 			case 'ListSeries':
 			case 'ListGlaze':
-			case 'ListFiring':
+			case 'ListKiln':
+			case "ListStage":
 			case 'ListClay':
 				helpTopic = 'ListGroup';
 				break ;

@@ -1,40 +1,27 @@
-# Edit Piece -- Process Details
+# Editing Piece
 
-![](PotProcess.png)
+You are now able to change the piece's data (you got here from [Piece Information](PotEdit.md) )
 
-The _Process_ page holds a lot of information about the materials and methods used to make the piece.
 
-The page has similarities to the simpler _General Info_ page, with the same buttons on top and bottom.
+![](PotEditX1.png)
 
-### Lists
+## Field Types
 
-![](PotProcess1.png)
+![](PotEditX2.png)
 
-A particular feature is that some fields can have more than one entry -- actually it's limited only by your creativity and artistic instinct.
-
-### Edit
-
-![](PotProcess2.png)
-
-* Click the Edit button to make changes (either button)
-* Or, just double click on the data
-
-### Field Types
-
-![](PotProcess4.png)
-
-* Radio button fields -- choose only one.
+* Radiobutton fields -- choose only one.
 * Text fields -- free text (searchable)
+* Date -- click the box to get a calendar picker
 * Checkbox -- choose any number
-* List -- Need to do another step to alter
+* List -- Allows multiple entries, but needs another step to change
 
 ## List choices
 
 Note that the options shown depend on the number of entries currently in the list.
 
-![](PotProcess5.png)
+![](PotEditX3.png)
 
-### Add to list
+## Add to list
 
 Click the _Add_ button
 
@@ -42,7 +29,7 @@ Click the _Add_ button
 
 and _Ok_ after filling in data
 
-### Edit a List entry
+## Edit a List entry
 
 If there is an existing entry, you can click the _Modify_ button and
 
@@ -54,7 +41,7 @@ then click on the list entry to edit (if there is more than one existing entry)
 
 You can then accept the change (_Ok_), _Cancel_ it, or even _Delete_ this list entry altogether,
 
-### Rearrange the List
+## Rearrange the List
 
 If there is more than 2 entries, you can click the _Rearrange_ button
 
@@ -62,8 +49,8 @@ If there is more than 2 entries, you can click the _Rearrange_ button
 
 The arrows on the left of each entry are active
 
-### Remember to _Save_
+## Remember to _Save_
 
-![](PotProcess9.png)
+![](PotEditX4.png)
 
 (Either button).

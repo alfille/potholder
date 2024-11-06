@@ -2,7 +2,7 @@
 
 ![](ListGroup.png)
 
-Rather than one long list, your pieces can be listed by _Groups_ like "Clay", "Glaze", "Series", "Firing", etc. The available choices are seen in the [_List Menu_](ListMenu.md).
+Rather than one long list, your pieces can be listed by _Groups_ like "Clay", "Glaze", "Series", "Form", "Stage", etc. The available choices are seen in the [_List Menu_](ListMenu.md).
 
 ### Groups
 

@@ -260,7 +260,7 @@ class ListSeries extends ListGroup {
     static field_name = "series" ;
 }
 
-class ListType extends ListGroup {
+class ListForm extends ListGroup {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     static field_name = "type" ;
 }

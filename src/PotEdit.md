@@ -1,26 +1,12 @@
-# Edit Piece -- General Info
+# Edit Piece -- General Information
 ![](PotEdit.png)
 
-This page hold general information about the piece, including the type, artistic series, current location and date.
+This page hold general information about the piece, including the type, artistic series, current location and date and production process.
 
 ## Edit
 
 ![](PotEdit1.png)
 
-Click the _Edit_ button (either one) to allow changing data.
+Click the _Edit_ button (either one) to allow changing data. Double-clicking data should work as well.
 
-## Edit Fields
-
-![](PotEdit2.png)
-
-The fields are mostly text (except the date field) and esily edited.
-
-Some fields (like _Type_ and _Series_ offer a choice of previous selections (as well as allowing new entries)
-
-![](PotEdit3.png)
-
-## Save
-
-![](PotEdit4.png)
-
-The data isn't seved until you click _Save Changes_ (either button).
+## [Editing](PotProcess.md)
