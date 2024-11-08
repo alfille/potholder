@@ -18,7 +18,6 @@ import {
 	structDatabaseInfo,
 	structGeneralPot,
 	structImages,
-	structRemoteUser,
 } from "./doc_struct.js" ;
 
 class Search { // singleton class

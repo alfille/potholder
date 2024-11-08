@@ -146,6 +146,13 @@ export const structImages = [
 ];
         
 export const structRemoteUser = [
+	{
+		name: "local",
+		alias: "Local only",
+		hint: "No CouchDB server to replicate with",
+		type: "checkbox",
+		choices: ["yes",],
+	},
     {
         name: "username",
         hint: "Your user name for access",
