@@ -111,12 +111,8 @@ class PotDataRaw { // singleton class
         const return_list=[span0];
                         
         // get value and make type-specific input field with filled in value
-        let preVal = null ;
-        if ( item.name in doc ) {
-                preVal = doc[item.name];
-        } else {
-                doc[item.name]=null ;
-        }
+        const preVal = ( item.name in doc ) ? doc[item.name] : null ;
+        console.log("Show item", item.name, preVal, doc ) ;
         const span = document.createElement('span');
         span.classList.add('fill_show_data');
         let textnode="";
@@ -148,6 +144,10 @@ class PotDataRaw { // singleton class
 
             case "date":
 				textnode=document.createTextNode( typeof(preVal)=="string" ? preVal.split("T")[0] : "" ) ;
+				break ;
+				
+			case "bool":
+				textnode=document.createTextNode( (preVal=="true") ? "yes" : "no" ) ;
 				break ;
 				
             case "radio":
@@ -629,7 +629,7 @@ class PotDataRaw { // singleton class
 
         // get value and make type-specific input field with filled in value
         let inp = null;
-        const preVal = doc[item.name] ;
+        const preVal = (item.name in doc) ? doc[item.name] : null ;
         switch( item.type ) {
             case "image":
 				return_list.push( this.Images.display(preVal,"medium_pic") ) ;
@@ -647,6 +647,26 @@ class PotDataRaw { // singleton class
                     inp.title = item.hint;
                     return_list.push(inp);
                     return_list.push(document.createTextNode(c));
+                    });
+                break ;
+
+            case "bool":
+                [true,false].forEach( c => {
+                    inp = document.createElement("input");
+                    inp.type = "radio";
+                    inp.name = localname;
+                    inp.value = c;
+                    switch (c) {
+						case true:
+							inp.checked = (preVal == "true") ;
+							break ;
+						default:
+							inp.checked = (preVal !== "true") ;
+							break ;
+					}
+                    inp.title = item.hint;
+                    return_list.push(inp);
+                    return_list.push(document.createTextNode(c?"yes":"no"));
                     });
                 break ;
 
@@ -717,6 +737,7 @@ class PotDataRaw { // singleton class
                     // handle separately
                     break;
                 case "radio":
+                case "bool":
                     postVal = [...document.getElementsByName(localname)]
                         .filter( i => i.checked )
                         .map(i=>i.value)[0];

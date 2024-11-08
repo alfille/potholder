@@ -150,8 +150,7 @@ export const structRemoteUser = [
 		name: "local",
 		alias: "Local only",
 		hint: "No CouchDB server to replicate with",
-		type: "checkbox",
-		choices: ["yes",],
+		type: "bool",
 	},
     {
         name: "username",

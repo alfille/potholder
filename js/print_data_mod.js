@@ -132,6 +132,10 @@ class PotDataPrint { // singleton class
 				textnode=document.createTextNode( typeof(preVal)=="string" ? preVal.split("T")[0] : "" ) ;
 				break ;
 				
+			case "bool":
+				textnode=document.createTextNode( (preVal=="true") ? "yes" : "no" ) ;
+				break ;
+				
             case "radio":
             case "list":
             default:
