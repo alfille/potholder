@@ -1,14 +1,10 @@
 # Help
 
-This _Help_ page describes the comprehensive _Potholder_ instructions.
-
-_Help_ is shown in your browser using the common [_mdbook_](https://rust-lang.github.io/mdBook/) format.
-
-## Display elements
+This page in part of the comprehensive Help / Instructions for using _Potholder_. It is built to view in your Web Browser using [_mdbook_](https://rust-lang.github.io/mdBook/) -- visual and menu-driven.
 
 ![](Help.png)
 
-This is typical page with several elements:
+A typical page with several elements:
 
 * Title and Features on top
 * An example of the _Help_ button on every page
@@ -17,13 +13,9 @@ This is typical page with several elements:
 
 ## Context 
 
-On each page of _Potholder_ the _Help_ button takes you to the specific Help section explaining that page.
-
 ## Feature Bar
 
 ![](Help1.png)
-
-Menu and search can be very useful.
 
 ## Menu
 
