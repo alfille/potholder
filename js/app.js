@@ -150,7 +150,7 @@ class DatabaseData extends PotDataRaw {
     savePieceData() {
         if ( this.loadDocData(this.struct,this.doc) ) {
             if ( this.doc.raw=="fixed" ) {
-                this.doc.address=objectRemote.SecureURLparse(this.doc.address); // fix up URL
+                this.doc.address=objectDatabase.SecureURLparse(this.doc.address); // fix up URL
             }
             delete this.doc.raw ;
             objectCookie.set ( "remoteCouch", Object.assign({},this.doc) );
@@ -475,7 +475,7 @@ window.onload = () => {
     }
     
     // set Credentials from Storage / URL
-    objectRemote.start() ; // look for remoteCouch and other cookies
+    objectDatabase.acquire_and_listen() ; // look for remoteCouch and other cookies
 
     if ( new URL(location.href).searchParams.size > 0 ) {
         // reload without search params -- placed in Cookies
@@ -515,7 +515,7 @@ window.onload = () => {
         .catch( err => objectLog.err(err,"Initial search database") );
 
         // start sync with remote database
-        objectRemote.foreverSync();
+        objectDatabase.foreverSync();
 
 		objectPage.show("MainMenu") ;
 		

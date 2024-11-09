@@ -9,7 +9,7 @@
 import {
     } from "./globals_mod.js" ;
 
-class RemoteReplicant { // convenience class
+class DatabaseManager { // convenience class
     // Access to remote (cloud) version of database
     constructor() {
         this.remoteDB = null;
@@ -17,7 +17,7 @@ class RemoteReplicant { // convenience class
         this.synctext = document.getElementById("syncstatus");
     }
     
-    start() {        
+    acquire_and_listen() {        
         // Get remote DB from localStorage if available
         objectCookie.get("remoteCouch");
         if ( remoteCouch == null ) {
@@ -162,4 +162,4 @@ class RemoteReplicant { // convenience class
 	}
 
 }
-objectRemote = new RemoteReplicant() ;
+objectDatabase = new DatabaseManager() ;
