@@ -24,6 +24,3 @@ globalThis. objectPot = null ;
 globalThis. objectCookie = null ;
 globalThis. objectSearch = null;
 globalThis. objectThumb = null;
-
-// Database handles
-globalThis.db = null ; // will be Pouchdb local copy 

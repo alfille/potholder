@@ -286,7 +286,7 @@ class PotDataRaw { // singleton class
             if ( "choices" in m ) {
                 return m.choices ;
             } else if ( "query" in m ) {
-                return db.query(m.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) ) ;
+                return objectDatabase.db.query(m.query,{group:true,reduce:true}).then( q=>q.rows.map(qq=>qq.key).filter(c=>c.length>0) ) ;
             } else {
                 return [];
             }
@@ -573,7 +573,7 @@ class PotDataRaw { // singleton class
             .forEach( item => choices.push([item.name,item.choices] ) ) ;
         return Promise.all( struct
             .filter( item => "query"   in item )
-            .map( item => db.query(item.query,{group:true,reduce:true})
+            .map( item => objectDatabase.db.query(item.query,{group:true,reduce:true})
                 .then( q=>[item.name,q.rows.map(qq=>qq.key).filter(c=>c.length>0)] ) ) )
                 .then( x => {
                     struct
@@ -808,7 +808,7 @@ class PotDataRaw { // singleton class
     saveChanged ( state ) {
         if ( this.loadDocData(this.struct,this.doc) ) {
             // doc is changed
-            db.put( this.doc )
+            objectDatabase.db.put( this.doc )
             .then( () => objectThumb.getOne( this.doc._id ) )
             .catch( (err) => objectLog.err(err) )
             .finally( () => objectPage.show( state ) );

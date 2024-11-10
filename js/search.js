@@ -57,7 +57,7 @@ class Search { // singleton class
         if ( needle.length == 0 ) {
             return this.resetTable();
         }
-        db.search(
+        objectDatabase.db.search(
 			{ 
 				query: needle,
 				fields: this.fields,

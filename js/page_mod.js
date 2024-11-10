@@ -131,7 +131,7 @@ class Page { // singleton class
     show( page, extra="" ) { // main routine for displaying different "pages" by hiding different elements
         console.log("SHOW",page,"STATE",this.path);
         // test that database is selected
-        if ( db == null || credentialList.some( c => remoteCouch[c]=='' ) ) {
+        if ( objectDatabase.db == null || credentialList.some( c => remoteCouch[c]=='' ) ) {
             // can't bypass this! test if database exists
             if ( page != "FirstTime" && page != "RemoteDatabaseInput" ) {
                 this.show("RemoteDatabaseInput");

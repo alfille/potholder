@@ -24,12 +24,12 @@ class PotImages {
     
     display( name, small_class="small_pic" ) {
         const img = document.createElement( "img" ) ;
-        db.getAttachment( this.pid, name )
+        objectDatabase.db.getAttachment( this.pid, name )
         .then( data => {
 			const url = URL.createObjectURL(data) ;
 			img.onload = () => URL.revokeObjectURL(url) ;
 			img.onclick=()=>{
-					db.getAttachment( this.pid, name )
+					objectDatabase.db.getAttachment( this.pid, name )
 					.then( data => {
 						const img2 = document.getElementById("modal_img") ;
 						const url2 = URL.createObjectURL(data) ;
@@ -50,7 +50,7 @@ class PotImages {
 
     print_display( name, small_class="small_pic" ) {
         const img = document.createElement( "img" ) ;
-        db.getAttachment( this.pid, name )
+        objectDatabase.db.getAttachment( this.pid, name )
         .then( data => {
 			const url = URL.createObjectURL(data) ;
 			img.onload = () => URL.revokeObjectURL(url) ;
@@ -95,7 +95,7 @@ class Thumb {
 			return ;
         }
 
-		db.getAttachment(pid, doc.images[0].image )
+		objectDatabase.db.getAttachment(pid, doc.images[0].image )
 		.then(data => {
 			const url = URL.createObjectURL(data) ;
 			const t_img = document.createElement("img");

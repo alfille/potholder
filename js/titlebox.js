@@ -44,7 +44,7 @@ class TextBox extends TitleBox {
 class StatBox extends TitleBox {
 	constructor() {
 		super();
-		db.query("qPictures", { reduce:true, group: false })
+		objectDatabase.db.query("qPictures", { reduce:true, group: false })
 		.then( stat => this.show( `Pieces: ${stat.rows[0].value.count}, Pictures: ${stat.rows[0].value.sum}` ) )
 		.catch( err => objectLog.err(err) );
 	}

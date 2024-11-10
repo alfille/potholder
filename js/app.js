@@ -75,7 +75,7 @@ class DatabaseInfo extends Pagelist {
 
     static show_content(extra="") {
 		new StatBox() ;
-        db.info()
+        objectDatabase.db.info()
         .then( doc => {
             objectPotData = new DatabaseInfoData( doc, structDatabaseInfo );
             })
@@ -302,7 +302,7 @@ class FirstTime extends Pagelist {
     static show_content(extra="") {
         objectPot.unselect() ;
 		new TextBox("Welcome") ;
-        if ( db !== null ) {
+        if ( objectDatabase.db !== null ) {
             objectPage.show("MainMenu");
         }
     }
@@ -364,7 +364,7 @@ class PotNewData extends PotDataEditMode {
 	
     savePieceData() {
         this.loadDocData(this.struct,this.doc);
-        db.put( this.doc )
+        objectDatabase.db.put( this.doc )
         .then( (response) => {
             objectPot.select(response.id)
             .then( () => objectPage.show( "PotMenu" ) );
@@ -482,21 +482,20 @@ window.onload = () => {
         window.location.href = "/index.html" ;
     }
 
-    // Start pouchdb database       
-    if ( credentialList.every( c => remoteCouch[c] !== "" ) ) {
-        db = new PouchDB( remoteCouch.database, {auto_compaction: true} ); // open local copy
-
+    // Start pouchdb database
+    objectDatabase.open() ;       
+    if ( objectDatabase.db ) {
         // Thumbnails
         objectThumb = new Thumb() ;
 
         // Secondary indexes
         createQueries();
-        db.viewCleanup()
+        objectDatabase.db.viewCleanup()
         .then( () => objectThumb.getAll() )
         .catch( err => objectLog.err(err,"Query cleanup") );
 
         // now start listening for any changes to the database
-        db.changes({ 
+        objectDatabase.db.changes({ 
 			since: 'now', 
 			live: true, 
 			include_docs: false 
@@ -520,7 +519,6 @@ window.onload = () => {
 		objectPage.show("MainMenu") ;
 		
     } else {
-        db = null;
         objectPage.reset();
         objectPage.show("FirstTime");
     }

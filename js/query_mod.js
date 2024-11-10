@@ -177,18 +177,18 @@ export function createQueries() {
 	}, 	
     ];
     Promise.all( ddoclist.map( (ddoc) => {
-        db.get( ddoc._id )
+        objectDatabase.db.get( ddoc._id )
         .then( doc => {
             if ( ddoc.version !== doc.version ) {
                 ddoc._rev = doc._rev;
-                return db.put( ddoc );
+                return objectDatabase.db.put( ddoc );
             } else {
                 return Promise.resolve(true);
             }
             })
         .catch( () => {
             // assume because this is first time and cannot "get"
-            return db.put( ddoc );
+            return objectDatabase.db.put( ddoc );
             });
         }))
     .catch( (err) => objectLog.err(err) );

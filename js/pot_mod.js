@@ -54,7 +54,7 @@ class Pot { // convenience class
             .then( (doc) => {
                 // Confirm question
                 if (confirm(`WARNING -- about to delete this piece\n ${this.potname(doc)}\nPress CANCEL to back out`)==true) {
-                    return db.remove(doc) ;
+                    return objectDatabase.db.remove(doc) ;
                 } else {
                     throw "Cancel";
                 }           
@@ -72,11 +72,11 @@ class Pot { // convenience class
     }
 
     getRecordIdPix(id=potId, binary=false ) {
-        return db.get( id, { attachments:true, binary:binary } );
+        return objectDatabase.db.get( id, { attachments:true, binary:binary } );
     }
 
     getRecordId(id=potId ) {
-        return db.get( id, { attachments:false} );
+        return objectDatabase.db.get( id, { attachments:false} );
     }
 
     getAllIdDoc(binary=false) {
@@ -87,7 +87,7 @@ class Pot { // convenience class
             attachments: binary,
             binary: binary,
         };
-        return db.allDocs(doc);
+        return objectDatabase.db.allDocs(doc);
     }
         
     getAllIdDocPix() {
@@ -98,7 +98,7 @@ class Pot { // convenience class
             binary: true,
             attachments: true,
         };
-        return db.allDocs(doc);
+        return objectDatabase.db.allDocs(doc);
     }
 
     select( pid = potId ) {
@@ -189,7 +189,7 @@ class Pot { // convenience class
 					doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
 				}
 				})
-				return db.put(doc) ;
+				return objectDatabase.db.put(doc) ;
 			})
 		.then( () => objectThumb.getOne( potId ) )
 		.then( () => objectPage.add( "PotMenu" ) )
@@ -203,7 +203,7 @@ class Pot { // convenience class
     AssignToNew() {
 		const doc = this.create() ;
 		//console.log("new",doc);
-		db.put( doc )
+		objectDatabase.db.put( doc )
 		.then( response => this.AssignPhoto( response.id ) )
 		.catch( err => {
 			objectLog(err),
@@ -250,7 +250,7 @@ class Pot { // convenience class
 					doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
 				}
 				})
-				return db.put(doc) ;
+				return objectDatabase.db.put(doc) ;
 			})
 		.then( () => objectThumb.getOne( potId ) )
 		.then( () => objectPage.add("PotMenu" ) )

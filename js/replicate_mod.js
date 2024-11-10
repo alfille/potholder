@@ -15,6 +15,7 @@ class DatabaseManager { // convenience class
         this.remoteDB = null;
         this.problem = false ; // separates real connection problem from just network offline
         this.synctext = document.getElementById("syncstatus");
+        this.db = null ;
     }
     
     acquire_and_listen() {        
@@ -45,6 +46,13 @@ class DatabaseManager { // convenience class
         navigator.onLine ? this.present() : this.not_present() ;
     }
     
+    open() {
+		if ( credentialList.every( c => remoteCouch[c] !== "" ) ) {
+			this.db = new PouchDB( remoteCouch.database, {auto_compaction: true} ); // open local copy
+		}
+	}
+
+    
     present() {
         this.status( "good", "--network present--" ) ;
     }
@@ -59,7 +67,7 @@ class DatabaseManager { // convenience class
         document.getElementById( "userstatus" ).value = remoteCouch.username;
         if ( this.remoteDB ) {
             this.status( "good","download remote database");
-            db.replicate.from( this.remoteDB )
+            this.db.replicate.from( this.remoteDB )
                 .catch( (err) => this.status("problem",`Replication from remote error ${err.message}`) )
                 .finally( _ => this.syncer() );
         } else {
@@ -69,7 +77,7 @@ class DatabaseManager { // convenience class
     
     syncer() {
         this.status("good","Starting database intermittent sync");
-        db.sync( this.remoteDB ,
+        objectDatabase.db.sync( this.remoteDB ,
             {
                 live: true,
                 retry: true,
@@ -154,7 +162,7 @@ class DatabaseManager { // convenience class
 		if ( remove ) {
 			objectCookie.clear();
 			// clear (local) database
-			db.destroy()
+			objectDatabase.db.destroy()
 			.finally( _ => location.reload() ); // force reload
 		} else {
 			objectPage.show( "MainMenu" );
