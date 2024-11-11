@@ -12,31 +12,48 @@ import {
 class DatabaseManager { // convenience class
     // Access to remote (cloud) version of database
     constructor() {
+		// remoteCouch contents
+		this.username = null ;
+		this.password = null ;
+		this.database = null ;
+		this.address  = null ;
+		this.local    = null ;
+		
         this.remoteDB = null;
         this.problem = false ; // separates real connection problem from just network offline
         this.synctext = document.getElementById("syncstatus");
         this.db = null ;
+        
     }
+    
+    load() {
+		["username","password","database","address","local"].forEach( x => this[x]=objectCookie.local_get(x) );
+	}
+    
+    store() {
+		["username","password","database","address","local"].forEach( x => objectCookie.local_set(x,this[x]) );
+	}
     
     acquire_and_listen() {        
         // Get remote DB from localStorage if available
-        objectCookie.get("remoteCouch");
-        if ( remoteCouch == null ) {
-            remoteCouch = {} ;
-            credentialList.forEach( c => remoteCouch[c] = "" );
-        }
-
+        this.load();
+        const cookie = objectCookie.get("remoteCouch");
+        if ( cookie !== null ) { // legacy
+			["username","password","database","address"].forEach( x => this[x] = this[x] ?? cookie[x] );
+			objectCookie.del("remoteCouch") ;
+		}
+			
         // Get Remote DB fron command line if available
         const params = new URL(location.href).searchParams;
-        credentialList.forEach( c => {
+        ["username","password","database","address","local"].forEach( c => {
 			const gc = params.get(c) ;
 			//console.log(c,gc);
-			if ( ( gc!==null ) && ( gc !== remoteCouch[c] ) ) {
-				remoteCouch[c] = gc ;
+			if ( ( gc!==null ) && ( gc !== this[c] ) ) {
+				this[c] = gc ;
 				objectPage.reset() ;               
 			}
 		});
-		objectCookie.set( "remoteCouch", remoteCouch ); // actually localStorage
+		this.store();
 			 
         // set up monitoring
         window.addEventListener("offline", _ => this.not_present() );
@@ -46,9 +63,9 @@ class DatabaseManager { // convenience class
         navigator.onLine ? this.present() : this.not_present() ;
     }
     
-    open() {
-		if ( credentialList.every( c => remoteCouch[c] !== "" ) ) {
-			this.db = new PouchDB( remoteCouch.database, {auto_compaction: true} ); // open local copy
+    open() { // local
+		if ( this.database && (this.database !== "") ) {
+			this.db = new PouchDB( this.database, {auto_compaction: true} ); // open local copy
 		}
 	}
 
@@ -63,8 +80,25 @@ class DatabaseManager { // convenience class
 
     // Initialise a sync process with the remote server
     foreverSync() {
-        this.remoteDB = this.openRemoteDB( remoteCouch ); // null initially
-        document.getElementById( "userstatus" ).value = remoteCouch.username;
+        document.getElementById( "userstatus" ).value = this.username;
+
+		if ( this.local ) { // local -- no sync
+            this.status("good","Local database only (no replication)");
+            return ;
+		}
+			
+        if ( this.username && this.password && this.database && this.address  ) {
+            this.remoteDB = new PouchDB( [this.address, this.database].join("/") , {
+                "skip_setup": "true",
+                "auth": {
+                    "username": this.username,
+                    "password": this.password,
+                    },
+                });
+        } else {
+            objectLog.err("Bad DB specification");
+            this.remoteDB = null;
+        }
         if ( this.remoteDB ) {
             this.status( "good","download remote database");
             this.db.replicate.from( this.remoteDB )
@@ -154,7 +188,7 @@ class DatabaseManager { // convenience class
 
     // Fauxton link
     fauxton() {
-        window.open( `${remoteCouch.address}/_utils`, '_blank' );
+        window.open( `${objectDatabase.address}/_utils`, '_blank' );
     }
     
     clearLocal() {

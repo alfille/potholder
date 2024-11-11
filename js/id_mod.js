@@ -56,7 +56,7 @@ class Id_pot {
         return [
             this.version,
             this.type,
-            remoteCouch.username,
+            objectDatabase.username,
             new Date().toISOString(),
             Math.floor( Math.random() * 1000 ),
             ].join(";");

@@ -15,7 +15,7 @@ export class CSV { // convenience class
 	}
 	
     download( csv ) {
-		const filename = `${remoteCouch.database}_${remoteCouch.username}.csv` ;
+		const filename = `${objectDatabase.database}_${objectDatabase.username}.csv` ;
 		const htype = "text/csv" ;
         //htype the file type i.e. text/csv
         const blub = new Blob([csv], {type: htype});

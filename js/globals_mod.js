@@ -8,7 +8,6 @@
 
 // globals cookie backed
 globalThis. potId = null ;
-globalThis. remoteCouch = null ;
 
 // other globals
 globalThis. credentialList = ["database", "username", "password", "address" ] ;

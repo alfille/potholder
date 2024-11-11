@@ -88,7 +88,8 @@ class RemoteDatabaseInput extends Pagelist {
 
     static show_content(extra="") {
 		new TextBox("Your Credentials") ;
-        const doc = Object.assign({},remoteCouch) ;
+        const doc = {} ;
+		["username","password","database","address","local"].forEach( x => doc[x] = objectDatabase[x] ) ;
         doc.raw = "fixed";
         objectPotData = new DatabaseData( doc, structRemoteUser );
     }
@@ -101,11 +102,10 @@ class MakeURL extends Pagelist {
 		new StatBox() ;
         let url = new URL( "/index.html", window.location.href ) ;
         if ( url.hostname == 'localhost' ) {
-            url = new URL( "/index.html", remoteCouch.address ) ;
+            url = new URL( "/index.html", objectDatabase.address ) ;
             url.port = '';
         }
-		Object.entries(remoteCouch)
-		.forEach( ([k,v]) => url.searchParams.append( k, v ) );
+		["username","password","database","address","local"].forEach( x => url.searchParams.append( x, objectDatabase[x] ) );
 		new QRious( {
 			value: url.toString(),
 			element: document.getElementById("qr"),
@@ -139,7 +139,7 @@ class DatabaseInfoData extends PotData {
 class DatabaseData extends PotDataRaw {
     // starts with "EDIT" clicked
     constructor(doc,struct) {
-        if ( remoteCouch.database=="" ) {
+        if ( objectDatabase.database=="" ) {
             // First time
             super(true,doc,struct); // clicked = true
         } else {
@@ -152,8 +152,8 @@ class DatabaseData extends PotDataRaw {
             if ( this.doc.raw=="fixed" ) {
                 this.doc.address=objectDatabase.SecureURLparse(this.doc.address); // fix up URL
             }
-            delete this.doc.raw ;
-            objectCookie.set ( "remoteCouch", Object.assign({},this.doc) );
+			["username","password","database","address","local"].forEach( x => objectDatabase[x] = this.doc[x] ) ;
+			objectDatabase.store() ;
         }
         objectPage.reset();
         location.reload(); // force reload
@@ -475,7 +475,7 @@ window.onload = () => {
     }
     
     // set Credentials from Storage / URL
-    objectDatabase.acquire_and_listen() ; // look for remoteCouch and other cookies
+    objectDatabase.acquire_and_listen() ; // look for database
 
     if ( new URL(location.href).searchParams.size > 0 ) {
         // reload without search params -- placed in Cookies
