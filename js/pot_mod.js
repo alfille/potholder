@@ -28,6 +28,7 @@ class Pot { // convenience class
     constructor() {
         this.TL=document.getElementById("TopLeftImage");
         this.LOGO = document.getElementById("LogoPicture");
+		this.pictureSource = document.getElementById("HiddenPix");
     }
     
     potname( doc ) {
@@ -139,13 +140,13 @@ class Pot { // convenience class
     }
 
     pushPixButton() {
-        pictureSource = document.getElementById("HiddenPix");
-        pictureSource.click() ;
+        this.pictureSource = document.getElementById("HiddenPix");
+        this.pictureSource.click() ;
     }
 
     pushGalleryButton() {
-        pictureSource=document.getElementById("HiddenGallery");
-        pictureSource.click() ;
+        this.pictureSource=document.getElementById("HiddenGallery");
+        this.pictureSource.click() ;
     }
 
     newPhoto() {
@@ -153,7 +154,7 @@ class Pot { // convenience class
 			objectPage.show("AssignPic") ;
 			return ;
 		}
-		if (pictureSource.files.length==0 ) {
+		if (this.pictureSource.files.length==0 ) {
 			return ;
 		}
 		objectPage.show("PotPixLoading");
@@ -169,7 +170,7 @@ class Pot { // convenience class
 			//console.log("DOC",doc);
 			
 			// add number of pictures to picture button 
-			[...pictureSource.files].forEach( f => {
+			[...this.pictureSource.files].forEach( f => {
 				//console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
@@ -197,7 +198,7 @@ class Pot { // convenience class
 		.catch( (err) => {
 			objectLog.err(err);
 			})
-		.finally( () => pictureSource.value = "" ) ;
+		.finally( () => this.pictureSource.value = "" ) ;
     }
     
     AssignToNew() {
@@ -213,7 +214,7 @@ class Pot { // convenience class
 		
     
     AssignPhoto(pid = potId) {
-        if ( pictureSource.files.length == 0 ) {
+        if ( this.pictureSource.files.length == 0 ) {
             return ;
         }
         objectPage.show("PotPixLoading");
@@ -230,7 +231,7 @@ class Pot { // convenience class
 			}
 			
 			// add number of pictures to picture button 
-			[...pictureSource.files].forEach( f => {
+			[...this.pictureSource.files].forEach( f => {
 				//console.log("File",f);
 				// Add to doc
 				doc._attachments[f.name]={
@@ -258,7 +259,7 @@ class Pot { // convenience class
 		.catch( (err) => {
 			objectLog.err(err);
 			})
-		.finally( () => pictureSource.value = "" ) ;
+		.finally( () => this.pictureSource.value = "" ) ;
     }
     
 	showPictures(doc) {

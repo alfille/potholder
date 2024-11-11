@@ -189,16 +189,16 @@ class AssignPic extends Pagelist {
     static show_content(extra="") {
 		objectPage.forget(); // don't return here
 		// Title adjusted to source and number
-		if ( pictureSource.files.length == 0 ) {
+		if ( objectPot.pictureSource.files.length == 0 ) {
 			// No pictures taken/chosen
 			return ;
-		} else if (pictureSource.id=="HiddenPix") {
+		} else if (objectPot.pictureSource.id=="HiddenPix") {
 			new TextBox( `New Photo. Assign to which piece?` ) ;
 		} else {
-			if (pictureSource.files.length == 1 ) {
+			if (objectPot.pictureSource.files.length == 1 ) {
 				new TextBox( "1 image selected. Assign to which piece?" ) ;
 			} else {
-				new TextBox( `${pictureSource.files.length} images selected. Assign to which piece?` ) ;
+				new TextBox( `${objectPot.pictureSource.files.length} images selected. Assign to which piece?` ) ;
 			}
 		}
 		// make table

@@ -150,21 +150,6 @@ class DatabaseManager { // convenience class
         this.synctext.value = msg ;
     }
             
-    openRemoteDB( DBstruct ) {
-        if ( DBstruct && credentialList.every( k => k in DBstruct )  ) {
-            return new PouchDB( [DBstruct.address, DBstruct.database].join("/") , {
-                "skip_setup": "true",
-                "auth": {
-                    "username": DBstruct.username,
-                    "password": DBstruct.password,
-                    },
-                });
-        } else {
-            objectLog.err("Bad DB specification");
-            return null;
-        }
-    }
-            
     SecureURLparse( url ) {
         let prot = "https";
         let addr = url;
