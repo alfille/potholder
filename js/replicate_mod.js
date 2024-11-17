@@ -26,12 +26,12 @@ class DatabaseManager { // convenience class
         
     }
     
-    load() {
-		["username","password","database","address","local"].forEach( x => this[x]=objectCookie.local_get(x) );
+    show(type) {
+		console.log(`for ${type}:`,"user:",this.username,"pwd:",this.password,"dtb:",this.database,"serve:",this.address,"local:",this.local);
 	}
     
-    store() {
-		["username","password","database","address","local"].forEach( x => objectCookie.local_set(x,this[x]) );
+    load() {
+		["username","password","database","address","local"].forEach( x => this[x]=objectCookie.local_get(x) );
 	}
     
     acquire_and_listen() {        
@@ -82,7 +82,7 @@ class DatabaseManager { // convenience class
     foreverSync() {
         document.getElementById( "userstatus" ).value = this.username;
 
-		if ( this.local ) { // local -- no sync
+		if ( this.local=="true" ) { // local -- no sync
             this.status("good","Local database only (no replication)");
             return ;
 		}
