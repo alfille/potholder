@@ -26,10 +26,6 @@ class DatabaseManager { // convenience class
         
     }
     
-    show(type) {
-		console.log(`for ${type}:`,"user:",this.username,"pwd:",this.password,"dtb:",this.database,"serve:",this.address,"local:",this.local);
-	}
-    
     load() {
 		["username","password","database","address","local"].forEach( x => this[x]=objectCookie.local_get(x) );
 	}

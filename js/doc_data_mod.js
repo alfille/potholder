@@ -112,7 +112,7 @@ class PotDataRaw { // singleton class
                         
         // get value and make type-specific input field with filled in value
         const preVal = ( item.name in doc ) ? doc[item.name] : null ;
-        console.log("Show item", item.name, preVal, doc ) ;
+        //console.log("Show item", item.name, preVal, doc ) ;
         const span = document.createElement('span');
         span.classList.add('fill_show_data');
         let textnode="";
