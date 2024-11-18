@@ -30,6 +30,10 @@ class DatabaseManager { // convenience class
 		["username","password","database","address","local"].forEach( x => this[x]=objectCookie.local_get(x) );
 	}
     
+    store() {
+		["username","password","database","address","local"].forEach( x => objectCookie.local_set(x,this[x]) );
+	}
+    
     acquire_and_listen() {        
         // Get remote DB from localStorage if available
         this.load();

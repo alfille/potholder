@@ -13,6 +13,7 @@
 import {
 	StatBox,
 	TextBox,
+	ListBox,
 } from "./titlebox.js" ;
     
 // used to generate data entry pages "PotData" type
@@ -216,7 +217,7 @@ class ListGroup extends Pagelist {
         objectPot.unselect() ;
         const item = structGeneralPot.find( i => i.name == this.field_name ) ;
         if ( item ) {
-			new TextBox(`grouped by ${item?.alias ?? item.name}`) ;
+			new ListBox(`grouped by ${item?.alias ?? item.name}`) ;
 			document.getElementById("MainPhotos").style.display="block";
 			switch (item.type) {
 				case "radio":

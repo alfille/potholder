@@ -11,6 +11,7 @@ export {
 	PotBox,
 	StatBox,
 	TextBox,
+	ListBox,
 } ;
 
 class TitleBox {
@@ -38,6 +39,13 @@ class TextBox extends TitleBox {
 	constructor( text ) {
 		super();
 		this.show( `<B>${text}</B>` ) ;
+	}
+}
+
+class ListBox extends TitleBox {
+	constructor( text ) {
+		super();
+		this.show( `<B><button type="button" class="allGroup" onclick="objectTable.close_all()">&#10134;</button>&nbsp;&nbsp;<button type="button" class="allGroup" onclick="objectTable.open_all()">&#10133;</button>&nbsp;&nbsp;${text}</B>` ) ;
 	}
 }
 

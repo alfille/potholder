@@ -24,7 +24,10 @@ html, body {
   color: black ;
   height: 1em;
   text-align: center;
-  padding: 3px;
+  padding: 3px 3px 8px 3px;
+}
+.allGroup {
+  background-color: #edf6af;
 }
 table {
   border-collapse: collapse;

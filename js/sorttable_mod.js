@@ -270,6 +270,7 @@ class MultiTable {
 			// fieldset open/close toggle
             this.cat_ob[cat].visible=true ;
             const plus = fs.querySelector(".triggerbutton") ;
+            this.cat_ob[cat].button = plus;
             plus.onclick = () => {
                 if ( this.cat_ob[cat].visible ) {
                     plus.innerHTML= "&#10133;" ;
@@ -305,6 +306,22 @@ class MultiTable {
             }
         })
     }
+    
+    open_all() {
+		Object.keys(this.cat_ob).forEach(cat => {
+			if ( ! this.cat_ob[cat].visible ) {
+				this.cat_ob[cat].button.click() ;
+			}
+		});
+	}
+				
+    close_all() {
+		Object.keys(this.cat_ob).forEach(cat => {
+			if ( this.cat_ob[cat].visible ) {
+				this.cat_ob[cat].button.click() ;
+			}
+		});
+	}
 }
 
 class AssignTable extends ThumbTable {
