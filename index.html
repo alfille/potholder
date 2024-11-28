@@ -46,8 +46,8 @@
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: ListSeries ListStage ListKiln ListClay ListGlaze ListForm -->
-                    <div class="ListSeries ListStage ListKiln ListClay ListGlaze ListForm topButtons pageOverlay">
+                    <!-- top: ListSeries ListStage ListKiln ListClay ListGlaze ListForm ListConstruction -->
+                    <div class="ListSeries ListStage ListKiln ListClay ListGlaze ListForm ListConstruction topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushPixButton()">Photo &#128247;</button>            
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >Gallery &#128444;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
@@ -183,6 +183,7 @@
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListKiln'   )">Kiln</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListClay'   )">Clay</button>
                         <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListGlaze'  )">Glaze</button>
+                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListConstruction'  )">Construction</button>
                     </div>
                     <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                 </div>
@@ -216,8 +217,8 @@
                     <table id="AllPieces"></table>
                 </div>
             </div>
-            <!-- body: ListSeries ListStage ListKiln ListClay ListGlaze ListForm -->
-            <div class="ListSeries ListStage ListKiln ListClay ListGlaze ListForm pageOverlay">
+            <!-- body: ListSeries ListStage ListKiln ListClay ListGlaze ListForm ListConstruction -->
+            <div class="ListSeries ListStage ListKiln ListClay ListGlaze ListForm ListConstruction pageOverlay">
                 <div id="MultiTableContent" >
                 </div>
             </div>

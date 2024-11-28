@@ -266,6 +266,11 @@ class ListForm extends ListGroup {
     static field_name = "type" ;
 }
 
+class ListConstruction extends ListGroup {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static field_name = "construction" ;
+}
+
 class ListStage extends ListGroup {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     static field_name = "stage" ;
