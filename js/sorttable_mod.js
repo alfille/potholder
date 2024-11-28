@@ -333,7 +333,7 @@ class AssignTable extends ThumbTable {
                 ["Thumbnail","Picture", (doc)=> `${doc.artist}`],
                 ['start_date','Date',null],
                 ['series','Series',null],
-                ['type','Type',null]
+                ['type','Form',null]
             ] ) {
         super( collist, tableId, aliaslist ) ;
     }
