@@ -72,7 +72,7 @@ function isAndroid() {
 
 class Thumb {
     constructor() {
-        this.canvas = document.getElementById("thumbnail");
+        this.canvas = document.getElementById("thumbnail"); // defines the thumbnail size
         this.pick = document.getElementById("MainPhotos");
         this.ctx = this.canvas.getContext( "2d" ) ;
         this.Thumbs = {} ;
