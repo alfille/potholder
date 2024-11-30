@@ -251,7 +251,7 @@ class MultiTable {
         const fieldset = document.getElementById("templates").querySelector(".MultiFieldset");
         
         this.apply_cat( cat_func )
-        .then( () => Object.keys(this.cat_ob).forEach( cat => {
+        .then( () => Object.keys(this.cat_ob).toSorted().forEach( cat => {
 			// fieldset holds a sorttable
             const fs = fieldset.cloneNode( true ) ;
             fs.querySelector(".multiCat").innerText = `${cat} (${this.cat_ob[cat].rows.length})` ;
