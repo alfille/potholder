@@ -16,6 +16,9 @@ table, th, td {
   border: 1px solid;
   border-collapse: collapse;
 }
+ul {
+  list-style-type: none;
+}
 tr {
   background: white ;
   min-height: 1em;
