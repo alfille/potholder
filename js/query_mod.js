@@ -17,7 +17,7 @@ export function createQueries() {
     let ddoclist = [
     {
         _id: "_design/qGlaze",
-        version: 1,
+        version: 3,
         views: {
             qGlaze: {
                 map: function (doc) {
@@ -33,29 +33,9 @@ export function createQueries() {
             },
         },
     },
-    /*
-    {
-        _id: "_design/qClay",
-        version: 1,
-        views: {
-            qClay: {
-                map: function (doc) {
-                    if ("clay" in doc) {
-                        doc.clay.forEach( g => {
-                            if ( "type" in g ) {
-                                emit( g.type ) ;
-                            }
-                        })
-                    }
-                }.toString(),
-                reduce: '_count',
-            },
-        },
-    },
-    * */
     {
         _id: "_design/qKiln",
-        version: 1,
+        version: 3,
         views: {
             qKiln: {
                 map: function (doc) {
@@ -73,7 +53,7 @@ export function createQueries() {
     },
     {
         _id: "_design/qCone",
-        version: 1,
+        version: 3,
         views: {
             qCone: {
                 map: function (doc) {
@@ -91,7 +71,7 @@ export function createQueries() {
     },
     {
         _id: "_design/qProcess",
-        version: 1,
+        version: 3,
         views: {
             qProcess: {
                 map: function (doc) {
@@ -109,7 +89,7 @@ export function createQueries() {
     },
     {
         _id: "_design/qType" ,
-        version: 1,
+        version: 3,
         views: {
             qType: {
                 map: function( doc ) {
@@ -123,7 +103,7 @@ export function createQueries() {
     },
     {
         _id: "_design/qSeries" ,
-        version: 2,
+        version: 3,
         views: {
             qSeries: {
                 map: function( doc ) {
@@ -137,7 +117,7 @@ export function createQueries() {
     },
     {
         _id: "_design/qArtist" ,
-        version: 2,
+        version: 3,
         views: {
             qArtist: {
                 map: function( doc ) {
@@ -151,7 +131,7 @@ export function createQueries() {
     },
     {
         _id: "_design/qLocation" ,
-        version: 2,
+        version: 3,
         views: {
             qLocation: {
                 map: function( doc ) {
@@ -165,7 +145,7 @@ export function createQueries() {
     },
     {
 		_id: "_design/qPictures",
-		version: 2,
+		version: 3,
 		views: {
 			qPictures: {
 				map: function(doc) { 

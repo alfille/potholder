@@ -149,7 +149,7 @@ class DatabaseData extends PotDataRaw {
     }
 
     savePieceData() {
-        if ( this.loadDocData(this.struct,this.doc) ) {
+        if ( this.loadDocData() ) {
             if ( this.doc.raw=="fixed" ) {
                 this.doc.address=objectDatabase.SecureURLparse(this.doc.address); // fix up URL
             }
@@ -369,7 +369,7 @@ class PotNewData extends PotDataEditMode {
 	}
 	
     savePieceData() {
-        this.loadDocData(this.struct,this.doc);
+        this.loadDocData();
         objectDatabase.db.put( this.doc )
         .then( (response) => {
             objectPot.select(response.id)
@@ -392,6 +392,7 @@ class PotEdit extends Pagelist {
                 objectLog.err(err);
                 objectPage.show( "back" );
                 });
+
         } else {
             objectPage.show( "back" );
         }
@@ -409,6 +410,7 @@ class PotPix extends Pagelist {
                 objectLog.err(err);
                 objectPage.show( "back" );
                 });
+
         } else {
             objectPage.show( "back" );
         }
