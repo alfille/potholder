@@ -12,6 +12,7 @@ const cacheList = [
     "/sw.js",
     "/images/NoPicture.png",
     "/images/potholder.png",
+    "/images/wheel.png",
     "/style/base.css",
     "/style/print.css",
     "/js/app.js",

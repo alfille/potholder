@@ -473,7 +473,7 @@ class SearchList extends Pagelist {
 window.onload = () => {
     // Stuff into history to block browser BACK button
     window.history.pushState({}, '');
-    window.addEventListener('popstate', ()=>window.history.pushState({}, '') );
+    window.addEventListener('popstate', ()=>window.history.replaceState({}, '') );
 
     // Service worker (to manage cache for off-line function)
     if ( 'serviceWorker' in navigator ) {
