@@ -295,6 +295,17 @@
                 </div>
             </div>
         </div>
+		<div id="crop_page">
+			<canvas id="under_canvas" width=350px height=600px></canvas>
+			<img id="crop_image" width=100% height=600px>
+			<canvas id="crop_canvas" width=350px height=600px></canvas>
+			<div id="crop_buttons">
+				<span class="Darray_span">Drag edges</span>
+				<button class="divbutton" onclick="objectCrop.ok()" title="Crop complete">Ok</button>
+				<button class="divbutton" onclick="objectCrop.full()" title="Restore full picture">Full</button>
+				<button class="divbutton return" hiont="No changes">Cancel</button>
+			</div>
+		</div>
         <div class="print_screen">
 			<div class="MainMenuRow">
 				<button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Back</button>
@@ -403,6 +414,7 @@
         <!-- application code --> <script type="module" src="js/globals_mod.js"></script>
         <!-- application code --> <script type="module" src="js/image_mod.js"></script>
         <!-- application code --> <script type="module" src="js/id_mod.js"></script>
+        <!-- application code --> <script type="module" src="js/crop.js"></script>
         <!-- application code --> <script type="module" src="js/cookie_mod.js"></script>
         <!-- application code --> <script type="module" src="js/sorttable_mod.js"></script>
         <!-- application code --> <script type="module" src="js/field_mod.js"></script>

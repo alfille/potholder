@@ -8,17 +8,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-		<div>
-			<canvas id="under_canvas" width=355px height=600px></canvas>
-			<img id="crop_image" width=355px height=600px src="images/potholder.png">
-			<canvas id="crop_canvas" width=355px height=600px></canvas>
+		<div id="crop_div">
+			<canvas id="under_canvas" width=350px height=600px></canvas>
+			<img id="crop_image" width=100% height=600px src="images/potholder.png">
+			<canvas id="crop_canvas" width=350px height=600px></canvas>
+			<div id="crop_buttons">
+				<span class="Darray_span">Drag edges</span>
+				<button class="divbutton" onclick="objectCrop.ok()" title="Crop complete">Ok</button>
+				<button class="divbutton" onclick="objectCrop.full()" title="Restore full picture">Full</button>
+				<button class="divbutton return" hiont="No changes">Cancel</button>
+			</div>
 		</div>
-		<span id="crop_buttons">
-			<span>( Drag edges )</span>
-			<button class="divbutton" onclick="objectCrop.ok()" title="Crop complete">Ok</button>
-			<button class="divbutton" onclick="objectCrop.full()" title="Restore full picture">Full</button>
-			<button class="divbutton return" hiont="No changes">Cancel</button>
-		</span>
 	<!-- crop --> <script src="js/crop.js"></script>
     </body>
 </html>

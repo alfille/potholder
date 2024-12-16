@@ -37,6 +37,9 @@ class Pagelist {
         // hide Thumbnails
         document.getElementById("MainPhotos").style.display="none";
         
+        // hide Crop
+        document.getElementById("crop_page").style.display="none" ;
+        
         this.show_content(extra);
     }
     

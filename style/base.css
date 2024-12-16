@@ -492,4 +492,5 @@ legend {
 }
 #crop_image {
   object-fit: contain;
+  max-width: 900px;
 }

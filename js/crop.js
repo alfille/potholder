@@ -9,7 +9,7 @@
 class Crop {
 	constructor() {
 		// canvas and context
-		this.background() ;
+		this.under = document.getElementById("under_canvas") ;
         this.canvas = document.getElementById("crop_canvas");
         this.ctx = this.canvas.getContext( "2d" ) ;
         console.log("Canvas WH:",this.canvas.width,this.canvas.height);
@@ -33,6 +33,11 @@ class Crop {
 	}
 	
 	startCrop() {
+		// reset dimensions
+		this.under.width = this.image.width ;
+		this.canvas.width = this.image.width ;
+		this.background() ;
+
         // only started after image load
         this.startBounds( 0,0,this.image.width,this.image.height ) ;
         
@@ -47,25 +52,24 @@ class Crop {
     }
     
     background() {
-		const under = document.getElementById("under_canvas") ;
-		const ctx = under.getContext("2d");
+		const ctx = this.under.getContext("2d");
 		ctx.fillStyle = "lightgray" ;
-		ctx.fillRect(0,0,under.width,under.height) ;
+		ctx.fillRect(0,0,this.under.width,this.under.height) ;
 		ctx.strokeStyle = "white" ;
 		ctx.lineWidth = 1 ;
 		const grd = 10 ; // grid size
-		for ( let i = grd; i <= under.width ; i += grd ) {
+		for ( let i = grd; i <= this.under.width ; i += grd ) {
 			// grid
 			ctx.beginPath() ;
 			ctx.moveTo( i,0 ) ;
-			ctx.lineTo( i,under.height ) ;
+			ctx.lineTo( i,this.under.height ) ;
 			ctx.stroke() ;
 		}
-		for ( let i = grd; i <= under.height ; i += grd ) {
+		for ( let i = grd; i <= this.under.height ; i += grd ) {
 			// grid
 			ctx.beginPath() ;
 			ctx.moveTo( 0,i ) ;
-			ctx.lineTo( under.width,i ) ;
+			ctx.lineTo( this.under.width,i ) ;
 			ctx.stroke() ;
 		}
 	}
@@ -175,7 +179,6 @@ class Crop {
 	}
 	
 	getXY( e ) {
-		console.log("X",e.clientX,e.clientY);
 		return [
 			(e.clientX - this.boundX) * this.ratioX,
 			(e.clientY - this.boundY) * this.ratioY 
@@ -183,7 +186,6 @@ class Crop {
 	}
 	
 	find_edge( x, y) {
-		console.log( "find",x,y) ;
 		if ( x < this.edges[0]-this.blur ) {
 			return this.find_edgeY( y ) ;
 		} else if ( x > this.edges[2]+this.blur ) {
@@ -228,14 +230,12 @@ class Crop {
 	
 	start_drag( e ) {
 		const xy = this.getXY(e) ;
-		console.log("startdrag",xy);
 		if ( xy == null ) {
 			this.undrag() ;
 			return ;
 		}
 		
 		this.active_edge = this.find_edge( xy[0], xy[1] ) ;
-		console.log("Found",this.active_edge);
 		this.showBounds() ;
 	}
 	
@@ -257,7 +257,6 @@ class Crop {
 
 	drag(e) {
 		const xy = this.getXY(e) ;
-		console.log("drag",xy,"button",e.buttons);
 		if ( xy == null ) {
 			this.undrag() ;
 			return ;
