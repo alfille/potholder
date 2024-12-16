@@ -19,3 +19,4 @@ globalThis. objectPot = null ;
 globalThis. objectCookie = null ;
 globalThis. objectSearch = null;
 globalThis. objectThumb = null;
+globalThis. objectCrop = null ;

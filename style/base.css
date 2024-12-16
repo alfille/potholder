@@ -479,3 +479,17 @@ legend {
   height:400px;
   width:auto;
 }
+#crop_buttons {
+  color: white;
+  position: absolute;
+  top: 605px;
+  left: 20px;
+}
+#under_canvas, #crop_image, #crop_canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+#crop_image {
+  object-fit: contain;
+}
