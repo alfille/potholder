@@ -295,15 +295,15 @@
                 </div>
             </div>
         </div>
+        <!-- picture cropping page -->
 		<div id="crop_page">
 			<canvas id="under_canvas" width=350px height=600px></canvas>
-			<img id="crop_image" width=100% height=600px>
 			<canvas id="crop_canvas" width=350px height=600px></canvas>
 			<div id="crop_buttons">
 				<span class="Darray_span">Drag edges</span>
 				<button class="divbutton" onclick="objectCrop.ok()" title="Crop complete">Ok</button>
-				<button class="divbutton" onclick="objectCrop.full()" title="Restore full picture">Full</button>
-				<button class="divbutton return" hiont="No changes">Cancel</button>
+				<button class="divbutton" onclick="objectCrop.full()" title="Restore full image">Full</button>
+				<button class="divbutton return" onclick="objectCrop.cancel()" title="No changes">Cancel</button>
 			</div>
 		</div>
         <div class="print_screen">
@@ -344,13 +344,14 @@
                     <caption class="Darray_caption">
                         <div class="Darray_div">
                             <span class="Darray_span"></span>
-                            <button type="button" class="Darray_add" onClick="objectPotData.addArray()" title="Add a new entry to the list" hidden>Add</button>
-                            <button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry" hidden>Modify</button>
+                            <button type="button" class="Darray_add" title="Add a new entry to the list" hidden>Add</button>
+                            <button type="button" class="Darray_edit" title="Modify (or delete) a list entry" hidden>Modify</button>
+                            <button type="button" class="Darray_crop" title="Crop this image" hidden>Crop</button>
                             <button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
                             <button type="button" class="Darray_ok savedata" title="Keep this change" hidden>Ok</button>
-							<button type="button" class="Darray_delete delete" onClick="objectPotData.deleteArray()" title="Delete this entry" hidden>Delete</button>
-                            <button type="button" class="Darray_cancel return" onClick="objectPotData.cancelArray()" title="Cancel any changes" hidden>Cancel</button>
-                            <button type="button" class="Darray_back return" onClick="objectPotData.backArray()" title="Return to previous screen" hidden>Back</button>
+							<button type="button" class="Darray_delete delete" title="Delete this entry" hidden>Delete</button>
+                            <button type="button" class="Darray_cancel return" title="Cancel any changes" hidden>Cancel</button>
+                            <button type="button" class="Darray_back return" title="Return to previous screen" hidden>Back</button>
                         </div>
                     </caption>
                 </table>
@@ -359,13 +360,14 @@
             <div class="Darray_li">
                 <div class="Darray_div">
                     <span class="Darray_span"></span>
-                    <button type="button" class="Darray_add savedata" onClick="objectPotData.addArray()" title="Add a new entry to the list" hidden>Add</button>
-                    <button type="button" class="Darray_edit" onClick="objectPotData.editArray()" title="Modify (or delete) a list entry" hidden>Edit</button>
+                    <button type="button" class="Darray_add savedata" title="Add a new entry to the list" hidden>Add</button>
+                    <button type="button" class="Darray_edit" title="Modify (or delete) a list entry" hidden>Edit</button>
+					<button type="button" class="Darray_crop" title="Crop this image" hidden>Crop</button>
                     <button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
                     <button type="button" class="Darray_ok savedata" title="Keep this change" hidden>Ok</button>
-                    <button type="button" class="Darray_delete delete" onClick="objectPotData.deleteArray()" title="Delete this entry" hidden>Delete</button>
+                    <button type="button" class="Darray_delete delete" title="Delete this entry" hidden>Delete</button>
                     <button type="button" class="Darray_cancel return" onClick="objectPotData.cancelArray()" title="Cancel any changes" hidden>Cancel</button>
-                    <button type="button" class="Darray_back return" onClick="objectPotData.backArray()" title="Return to previous screen" hidden>Back</button>
+                    <button type="button" class="Darray_back return" title="Return to previous screen" hidden>Back</button>
                 </div>
             </div>
             <!-- MultiSortTable fieldsets -->

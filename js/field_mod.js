@@ -9,6 +9,10 @@
 export {
     EntryList,
     } ;
+    
+import {
+	Crop,
+} from "./crop.js" ;    
 
 function cloneClass( fromClass, target ) {
 	document.getElementById("templates").
@@ -326,7 +330,7 @@ class ImageEntry extends Entry {
 			return this.img.complete ;
 		}
 	}
-	
+		
 	edit_item() {
 		return [this.Images.display(this.new_val,"medium_pic") ] ;
 	}
@@ -755,6 +759,8 @@ class ImageArrayEntry extends ArrayEntry {
 			case 1:
 				tab.querySelector(".Darray_edit").hidden=false;
 				tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( 0 );
+				tab.querySelector(".Darray_crop").hidden=false;
+				tab.querySelector(".Darray_crop").onclick=()=>this.crop( 0 );
 				break ;
 			default:
 				tab.querySelector(".Darray_edit").hidden=false;
@@ -830,5 +836,40 @@ class ImageArrayEntry extends ArrayEntry {
         tab.querySelectorAll(".Darray_up"  ).forEach( (b,i)=>b.onclick=()=> this.swap( i, (i+elements-1)%elements ) ) ;
         tab.querySelectorAll(".Darray_down").forEach( (b,i)=>b.onclick=()=> this.swap( i, (i+1)%elements )  );
 	}
-        
+	
+    edit_array_entry( idx ) {
+		// image version, no add, crop enabled
+		const parent = this.fake_page() ;
+        const local_list = this.new_val[idx] ;
+
+		// controls to be added to top
+		const control_li = document.createElement('li');
+		cloneClass( ".Darray_li", control_li ) ;
+		control_li.querySelector("span").innerHTML=`<i>Edit Image</i>`;
+		control_li.classList.add("Darray_li1");
+		[".Darray_ok",".Darray_crop",".Darray_cancel",".Darray_delete"].forEach(c=>control_li.querySelector(c).hidden=false);
+		control_li.querySelector(".Darray_ok").onclick=()=>{
+			local_list.form2value() ;
+			this.enclosing.edit_doc() ;
+		};
+		control_li.querySelector(".Darray_crop").onclick=()=>this.crop(idx);
+		control_li.querySelector(".Darray_cancel").onclick=()=>this.enclosing.edit_doc();
+		control_li.querySelector(".Darray_delete").onclick=()=>{
+			if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
+				this.new_val.splice(idx,1);
+				this.enclosing.edit_doc();
+			}
+		};
+
+        // Insert edit fields and put controls at top
+        local_list.edit_doc_inner()
+        .then( ul => {
+			ul.insertBefore( control_li, ul.children[0] );
+			parent.appendChild(ul) ;
+		}) ;
+    }
+    
+    crop(idx) {
+		objectCrop.crop(this.new_val[idx]) ;
+	}
 }

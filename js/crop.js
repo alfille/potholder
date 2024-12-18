@@ -6,91 +6,137 @@
  * MIT license
  * */
 
-class Crop {
+import {
+	EntryList,
+} from "./field_mod.js" ;
+    
+export class Crop {
 	constructor() {
 		// canvas and context
 		this.under = document.getElementById("under_canvas") ;
+		this.underctx = this.under.getContext("2d");
+        //this.image = document.getElementById( "crop_image" ) ;
         this.canvas = document.getElementById("crop_canvas");
         this.ctx = this.canvas.getContext( "2d" ) ;
-        console.log("Canvas WH:",this.canvas.width,this.canvas.height);
-        
-        // bounding box precalculations box 
-        const bounding = this.canvas.getBoundingClientRect() ;
-		this.boundX = bounding.left ;
-		this.boundY = bounding.top ;
-		this.ratioX = this.canvas.width / bounding.width ;
-		this.ratioY = this.canvas.height / bounding.height ;
         
         // edge blur (1/2 width for easier clicking
         this.blur = 10 ; 
         
         // edges [left,top,right,bottom]
         this.active_edge = null ;
+        
+        this.observer = new ResizeObserver( _ => this.cacheBounds() ) ;
+	}
+
+	crop( entrylist ) {
+		this.entrylist = entrylist ; // entry list holds image
+		const imageentry = entrylist.members.find( m => m.struct.type == "image" ) ;
+		if ( imageentry == null ) {
+			this.cancel() ; 
+		}
+		const name = imageentry.new_val ;
+		const image = new Image() ; // temporary image
 
         // Load Image
-        this.image = document.getElementById( "crop_image" ) ;
-        this.image.onload = this.startCrop() ;
+        imageentry.Images.getURL( name )
+        .then( url => {
+			image.onload = () => {
+				// clear url
+				URL.revokeObjectURL(url) ;
+				
+				// figure size if canvas and image
+				this.natW = image.naturalWidth;
+				this.natH = image.naturalHeight;
+				this.canW = window.innerWidth ;
+				this.canH = 600 ;
+				this.H = this.canH ;
+				// max size preseve aspect
+				this.W = this.natW * this.H / this.natH ;
+				if ( this.W > this.canW ) {
+					this.W = this.canW ;
+					this.H = this.natH * this.W / this.natW ;
+				}
+				this.under.width = this.canW ;
+				this.canvas.width = this.canW ;
+				this.under.height = this.canH ;
+				this.canvas.height = this.canH ; 
+				this.background() ;
+				// show scaled image
+				this.underctx.drawImage( image, 0, 0, this.W, this.H ) ;
+
+				// only started after image load
+				this.startEdges( 0,0,this.W,this.H ) ;
+				
+				// bounding box precalculations box 
+				this.cacheBounds() ;
+				
+				// handlers
+				this.canvas.ontouchstart = (e) => this.start_drag_t(e);
+				this.canvas.ontouchmove  = (e) => this.drag_t(e);
+				this.canvas.ontouchend   = (e) => this.undrag();
+				this.canvas.onmousedown  = (e) => this.start_drag(e);
+				this.canvas.onmousemove  = (e) => this.drag_m(e);
+				this.canvas.onmouseup    = (e) => this.undrag();
+				this.canvas.oncontextmenu= (e) => e.preventDefault() ;
+				
+				// Show
+				this.show(true);
+			}
+			image.src = url ;
+			})
+		.catch( err => {
+			objectLog.err(err) ;
+			this.cancel() ;
+			}) ;
 	}
 	
-	startCrop() {
-		// reset dimensions
-		this.under.width = this.image.width ;
-		this.canvas.width = this.image.width ;
-		this.background() ;
-
-        // only started after image load
-        this.startBounds( 0,0,this.image.width,this.image.height ) ;
-        
-        // handlers
-        this.canvas.ontouchstart = (e) => this.start_drag_t(e);
-        this.canvas.ontouchmove  = (e) => this.drag_t(e);
-        this.canvas.ontouchend   = (e) => this.undrag();
-        this.canvas.onmousedown  = (e) => this.start_drag(e);
-        this.canvas.onmousemove  = (e) => this.drag_m(e);
-        this.canvas.onmouseup    = (e) => this.undrag();
-        this.canvas.oncontextmenu= (e) => e.preventDefault() ;
-    }
+    cacheBounds() {
+        const bounding = this.canvas.getBoundingClientRect() ;
+		this.boundX = bounding.left ;
+		this.boundY = bounding.top ;
+		this.ratioX = this.canW / bounding.width ;
+		this.ratioY = this.canH / bounding.height ;
+	}
     
     background() {
-		const ctx = this.under.getContext("2d");
-		ctx.fillStyle = "lightgray" ;
-		ctx.fillRect(0,0,this.under.width,this.under.height) ;
-		ctx.strokeStyle = "white" ;
-		ctx.lineWidth = 1 ;
+		this.underctx.fillStyle = "lightgray" ;
+		this.underctx.fillRect(0,0,this.canW,this.canH) ;
+		this.underctx.strokeStyle = "white" ;
+		this.underctx.lineWidth = 1 ;
 		const grd = 10 ; // grid size
-		for ( let i = grd; i <= this.under.width ; i += grd ) {
+		for ( let i = grd; i <= this.canW ; i += grd ) {
 			// grid
-			ctx.beginPath() ;
-			ctx.moveTo( i,0 ) ;
-			ctx.lineTo( i,this.under.height ) ;
-			ctx.stroke() ;
+			this.underctx.beginPath() ;
+			this.underctx.moveTo( i,0 ) ;
+			this.underctx.lineTo( i,this.canH ) ;
+			this.underctx.stroke() ;
 		}
-		for ( let i = grd; i <= this.under.height ; i += grd ) {
+		for ( let i = grd; i <= this.canH ; i += grd ) {
 			// grid
-			ctx.beginPath() ;
-			ctx.moveTo( 0,i ) ;
-			ctx.lineTo( this.under.width,i ) ;
-			ctx.stroke() ;
+			this.underctx.beginPath() ;
+			this.underctx.moveTo( 0,i ) ;
+			this.underctx.lineTo( this.canW,i ) ;
+			this.underctx.stroke() ;
 		}
 	}
 	
-	startBounds( left,top,right,bottom ) {
+	startEdges( left,top,right,bottom ) {
 		this.edges=[left,top,right,bottom];
-		this.setBounds() ;
+		this.testEdges() ;
 	}
 	
-	setBounds() {
+	testEdges() {
 		if ( this.edges[0] < 0 ) {
 			this.edges[0] = 0 ;
 		}
 		if ( this.edges[1] < 0 ) {
 			this.edges[1] = 0 ;
 		}
-		if ( this.edges[2] >= this.image.width ) {
-			this.edges[2] = this.image.width-1 ;
+		if ( this.edges[2] >= this.W ) {
+			this.edges[2] = this.W-1 ;
 		}
-		if ( this.edges[3] >= this.image.height ) {
-			this.edges[3] = this.image.height-1 ;
+		if ( this.edges[3] >= this.H ) {
+			this.edges[3] = this.H-1 ;
 		}
 		if ( this.edges[0] > this.edges[2] ) {
 			this.edges[0] = this.edges[2] ;
@@ -98,76 +144,76 @@ class Crop {
 		if ( this.edges[1] > this.edges[3] ) {
 			this.edges[1] = this.edges[3] ;
 		}
-		this.showBounds() ;
+		this.showEdges() ;
 	}
 	
-	showBounds() {
-		this.ctx.clearRect(0,0,this.image.width,this.image.height);
+	showEdges() {
+		this.ctx.clearRect(0,0,this.canW,this.canH);
 		
 		this.ctx.fillStyle = `rgba( 23,43,174,0.3 )` ; // big shadow
-		this.ctx.fillRect( 0,0,this.edges[0],this.image.height ) ; // left
-		this.ctx.fillRect( this.edges[2],0,this.image.width-this.edges[0],this.image.height ) ; // right
-		this.ctx.fillRect( 0,0,this.image.width, this.edges[1] ) ; // top
-		this.ctx.fillRect( 0,this.edges[3],this.image.width,this.image.height-this.edges[3] ) ; // bottom
+		this.ctx.fillRect( 0,0,this.edges[0],this.canH ) ; // left
+		this.ctx.fillRect( this.edges[2],0,this.canW-this.edges[0],this.canH ) ; // right
+		this.ctx.fillRect( 0,0,this.canW, this.edges[1] ) ; // top
+		this.ctx.fillRect( 0,this.edges[3],this.canW,this.canH-this.edges[3] ) ; // bottom
 		
 		this.ctx.strokeStyle = (0 == this.active_edge) ? "yellow" : "black" ;
 		this.ctx.beginPath() ;
 		this.ctx.moveTo( this.edges[0],0 ) ;
-		this.ctx.lineTo( this.edges[0], this.image.height ) ;
+		this.ctx.lineTo( this.edges[0], this.canH ) ;
 		this.ctx.moveTo( this.edges[0]-2,0 ) ;
-		this.ctx.lineTo( this.edges[0]-2, this.image.height ) ;
+		this.ctx.lineTo( this.edges[0]-2, this.canH ) ;
 		this.ctx.moveTo( this.edges[0]-4,0 ) ;
-		this.ctx.lineTo( this.edges[0]-4, this.image.height ) ;
+		this.ctx.lineTo( this.edges[0]-4, this.canH ) ;
 		this.ctx.stroke() ;
 		this.ctx.strokeStyle = "white" ;
 		this.ctx.beginPath() ;
 		this.ctx.moveTo( this.edges[0]-1,0 ) ;
-		this.ctx.lineTo( this.edges[0]-1, this.image.height ) ;
+		this.ctx.lineTo( this.edges[0]-1, this.H ) ;
 		this.ctx.stroke() ;
 		
 		this.ctx.strokeStyle = (2 == this.active_edge) ? "yellow" : "black" ;
 		this.ctx.beginPath() ;
 		this.ctx.moveTo( this.edges[2],0 ) ;
-		this.ctx.lineTo( this.edges[2], this.image.height ) ;
+		this.ctx.lineTo( this.edges[2], this.canH ) ;
 		this.ctx.moveTo( this.edges[2]+2,0 ) ;
-		this.ctx.lineTo( this.edges[2]+2, this.image.height ) ;
+		this.ctx.lineTo( this.edges[2]+2, this.canH ) ;
 		this.ctx.moveTo( this.edges[2]+4,0 ) ;
-		this.ctx.lineTo( this.edges[2]+4, this.image.height ) ;
+		this.ctx.lineTo( this.edges[2]+4, this.canH ) ;
 		this.ctx.stroke() ;
 		this.ctx.strokeStyle = "white" ;
 		this.ctx.beginPath() ;
 		this.ctx.moveTo( this.edges[2]+1,0 ) ;
-		this.ctx.lineTo( this.edges[2]+1, this.image.height ) ;
+		this.ctx.lineTo( this.edges[2]+1, this.H ) ;
 		this.ctx.stroke() ;
 		
 		this.ctx.strokeStyle = (1 == this.active_edge) ? "yellow" : "black" ;
 		this.ctx.beginPath() ;
 		this.ctx.moveTo( 0, this.edges[1] ) ;
-		this.ctx.lineTo( this.image.width, this.edges[1] ) ;
+		this.ctx.lineTo( this.canW, this.edges[1] ) ;
 		this.ctx.moveTo( 0, this.edges[1]-2 ) ;
-		this.ctx.lineTo( this.image.width, this.edges[1]-2 ) ;
+		this.ctx.lineTo( this.canW, this.edges[1]-2 ) ;
 		this.ctx.moveTo( 0, this.edges[1]-4 ) ;
-		this.ctx.lineTo( this.image.width, this.edges[1]-4 ) ;
+		this.ctx.lineTo( this.canW, this.edges[1]-4 ) ;
 		this.ctx.stroke() ;
 		this.ctx.strokeStyle = "white" ;
 		this.ctx.beginPath() ;
 		this.ctx.moveTo( 0, this.edges[1]-1 ) ;
-		this.ctx.lineTo( this.image.width, this.edges[1]-1 ) ;
+		this.ctx.lineTo( this.W, this.edges[1]-1 ) ;
 		this.ctx.stroke() ;
 		
 		this.ctx.strokeStyle = (3 == this.active_edge) ? "yellow" : "black" ;
 		this.ctx.beginPath() ;
 		this.ctx.moveTo( 0, this.edges[3] ) ;
-		this.ctx.lineTo( this.image.width, this.edges[3] ) ;
+		this.ctx.lineTo( this.canW, this.edges[3] ) ;
 		this.ctx.moveTo( 0, this.edges[3]+2 ) ;
-		this.ctx.lineTo( this.image.width, this.edges[3]+2 ) ;
+		this.ctx.lineTo( this.canW, this.edges[3]+2 ) ;
 		this.ctx.moveTo( 0, this.edges[3]+4 ) ;
-		this.ctx.lineTo( this.image.width, this.edges[3]+4 ) ;
+		this.ctx.lineTo( this.canW, this.edges[3]+4 ) ;
 		this.ctx.stroke() ;
 		this.ctx.strokeStyle = "white" ;
 		this.ctx.beginPath() ;
 		this.ctx.moveTo( 0, this.edges[3]+1 ) ;
-		this.ctx.lineTo( this.image.width, this.edges[3]+1 ) ;
+		this.ctx.lineTo( this.W, this.edges[3]+1 ) ;
 		this.ctx.stroke() ;
 	}		
 
@@ -217,7 +263,7 @@ class Crop {
 	
 	undrag() {
 		this.active_edge = null ;
-		this.showBounds() ;
+		this.showEdges() ;
 	}
 	
 	start_drag_t(e) {
@@ -236,7 +282,7 @@ class Crop {
 		}
 		
 		this.active_edge = this.find_edge( xy[0], xy[1] ) ;
-		this.showBounds() ;
+		this.showEdges() ;
 	}
 	
 	drag_t(e) {
@@ -279,24 +325,35 @@ class Crop {
 				this.edges[3] = xy[1] ;
 				break ;
 		}
-		this.setBounds() ;
+		this.testEdges() ;
 	}
 	
+	cancel() {
+		this.show(false);
+	}
+
 	full() {
-		console.log("full") ;
+		this.show(false);
 	}
 	
 	ok() {
-		console.log( [
-		this.edges[0] * this.image.naturalWidth / this.image.width ,
-		this.edges[1] * this.image.naturalHeight / this.image.height ,
-		this.edges[2] * this.image.naturalWidth / this.image.width ,
-		this.edges[3] * this.image.naturalHeight / this.image.height ,
+		this.edges[0] * this.natW / this.W ,
+		this.edges[1] * this.natH / this.H ,
+		this.edges[2] * this.natW / this.W ,
+		this.edges[3] * this.natH / this.H ,
 		]);
+		this.show(false);
 	}
+	
+	show(state) {
+        document.getElementById("crop_page").style.display=state ? "block" : "none" ;
+        if ( state ) {
+			this.observer.observe( this.canvas) ;
+		} else {
+			this.observer.unobserve( this.canvas) ;
+		}
+	}
+		
 }
 
-// Application starting point
-window.onload = () => {
-	globalThis.objectCrop = new Crop() ;
-} 
+objectCrop = new Crop() ;

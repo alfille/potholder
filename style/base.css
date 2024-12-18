@@ -485,12 +485,9 @@ legend {
   top: 605px;
   left: 20px;
 }
-#under_canvas, #crop_image, #crop_canvas {
+#under_canvas, #crop_canvas {
   position: absolute;
+  display: block;
   top: 0px;
   left: 0px;
-}
-#crop_image {
-  object-fit: contain;
-  max-width: 900px;
 }

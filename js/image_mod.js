@@ -22,24 +22,27 @@ class PotImages {
         return (name in this.images) ;
     }
     
+    getURL( name ) {
+        return objectDatabase.db.getAttachment( this.pid, name )
+        .then( data => URL.createObjectURL(data) ) ;
+	}
+    
     display( name, small_class="small_pic" ) {
         const img = document.createElement( "img" ) ;
-        objectDatabase.db.getAttachment( this.pid, name )
-        .then( data => {
-			const url = URL.createObjectURL(data) ;
+        this.getURL( name )
+        .then( url => {
 			img.onload = () => URL.revokeObjectURL(url) ;
 			img.onclick=()=>{
-					objectDatabase.db.getAttachment( this.pid, name )
-					.then( data => {
-						const img2 = document.getElementById("modal_img") ;
-						const url2 = URL.createObjectURL(data) ;
-						img2.onload = () => URL.revokeObjectURL(url2) ;
-						img2.src=url2;
-						document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
-						document.getElementById("modal_id").style.display="block";
-						})
-					.catch( err => objectLog.err(err) ) ;
-				};
+				this.getURL( name )
+				.then( url2 => {
+					const img2 = document.getElementById("modal_img") ;
+					img2.onload = () => URL.revokeObjectURL(url2) ;
+					img2.src=url2;
+					document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
+					document.getElementById("modal_id").style.display="block";
+					})
+				.catch( err => objectLog.err(err) ) ;
+			};
 
 			img.src=url ;
 			img.classList.add(small_class);
@@ -50,9 +53,8 @@ class PotImages {
 
     print_display( name, small_class="small_pic" ) {
         const img = document.createElement( "img" ) ;
-        objectDatabase.db.getAttachment( this.pid, name )
-        .then( data => {
-			const url = URL.createObjectURL(data) ;
+        this.getURL( name )
+        .then( url => {
 			img.onload = () => URL.revokeObjectURL(url) ;
 			img.src=url ;
 			img.classList.add(small_class);
