@@ -48,12 +48,12 @@ export const structGeneralPot = [
         type:  "textarea",
     },
     {
-		name:  "stage",
-		alias: "Stage",
-		hint:  "Stage of creation",
-		type:  "radio",
-		choices: ["greenware","bisqued","kiln","finished"],
-	},
+        name:  "stage",
+        alias: "Stage",
+        hint:  "Stage of creation",
+        type:  "radio",
+        choices: ["greenware","bisqued","kiln","finished"],
+    },
     {
         name:  "kiln",
         alias: "Kiln",
@@ -75,18 +75,18 @@ export const structGeneralPot = [
         choices: ["wheel","slab","handbuilt","coil","pinch"],
     },
     {
-		name:  "clay",
-		alias: "Clay",
-		hint:  "Clays used in piece",
-		type:  "checkbox",
-		choices: ["B-mix","Brown","Black","Brooklyn Red","Porcelain","Other"],
-	},
-	{
-		name:  "clay_comment",
-		alias: "Clay notes",
-		hint:  "Comments on the clays",
-		type:  "textarea",
-	},
+        name:  "clay",
+        alias: "Clay",
+        hint:  "Clays used in piece",
+        type:  "checkbox",
+        choices: ["B-mix","Brown","Black","Brooklyn Red","Porcelain","Other"],
+    },
+    {
+        name:  "clay_comment",
+        alias: "Clay notes",
+        hint:  "Comments on the clays",
+        type:  "textarea",
+    },
     {
         name:  "glaze",
         alias: "Glazes",
@@ -140,18 +140,22 @@ export const structImages = [
                 type:  "date",
                 alias: "Date",
                 hint:  "Date photo was taken",
-            }
+            },
+            {
+                name:  "crop",
+                type:  "crop",
+            },
         ]
     }
 ];
         
 export const structRemoteUser = [
-	{
-		name:  "local",
-		alias: "Local only",
-		hint:  "No CouchDB server to replicate with",
-		type:  "bool",
-	},
+    {
+        name:  "local",
+        alias: "Local only",
+        hint:  "No CouchDB server to replicate with",
+        type:  "bool",
+    },
     {
         name:  "username",
         hint:  "Your user name for access",

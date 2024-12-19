@@ -11,21 +11,21 @@
 /* jshint esversion: 11 */
 
 import {
-	StatBox,
-	TextBox,
-	ListBox,
+    StatBox,
+    TextBox,
+    ListBox,
 } from "./titlebox.js" ;
     
 // used to generate data entry pages "PotData" type
 import {
-	structDatabaseInfo,
-	structGeneralPot,
-	structImages,
-	structRemoteUser,
+    structDatabaseInfo,
+    structGeneralPot,
+    structImages,
+    structRemoteUser,
 } from "./doc_struct.js" ;
 
 import {
-	createQueries,
+    createQueries,
 } from "./query_mod.js" ;
 
 import {
@@ -75,7 +75,7 @@ class DatabaseInfo extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static show_content(extra="") {
-		new StatBox() ;
+        new StatBox() ;
         objectDatabase.db.info()
         .then( doc => {
             objectPotData = new DatabaseInfoData( doc, structDatabaseInfo );
@@ -88,9 +88,9 @@ class RemoteDatabaseInput extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static show_content(extra="") {
-		new TextBox("Your Credentials") ;
+        new TextBox("Your Credentials") ;
         const doc = {} ;
-		["username","password","database","address","local"].forEach( x => doc[x] = objectDatabase[x] ) ;
+        ["username","password","database","address","local"].forEach( x => doc[x] = objectDatabase[x] ) ;
         doc.raw = "fixed";
         objectPotData = new DatabaseData( doc, structRemoteUser );
     }
@@ -100,19 +100,19 @@ class MakeURL extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static show_content(extra="") {
-		new StatBox() ;
+        new StatBox() ;
         let url = new URL( "/index.html", window.location.href ) ;
         if ( url.hostname == 'localhost' ) {
             url = new URL( "/index.html", objectDatabase.address ) ;
             url.port = '';
         }
-		["username","password","database","address","local"].forEach( x => url.searchParams.append( x, objectDatabase[x] ) );
-		new QRious( {
-			value: url.toString(),
-			element: document.getElementById("qr"),
-			size: 300,
-		});
-		document.getElementById("MakeURLtext").href = url.toString() ;
+        ["username","password","database","address","local"].forEach( x => url.searchParams.append( x, objectDatabase[x] ) );
+        new QRious( {
+            value: url.toString(),
+            element: document.getElementById("qr"),
+            size: 300,
+        });
+        document.getElementById("MakeURLtext").href = url.toString() ;
     }
 }
 
@@ -153,8 +153,8 @@ class DatabaseData extends PotDataRaw {
             if ( this.doc.raw=="fixed" ) {
                 this.doc.address=objectDatabase.SecureURLparse(this.doc.address); // fix up URL
             }
-			["username","password","database","address","local"].forEach( x => objectDatabase[x] = this.doc[x] ) ;
-			objectDatabase.store() ;
+            ["username","password","database","address","local"].forEach( x => objectDatabase[x] = this.doc[x] ) ;
+            objectDatabase.store() ;
         }
         objectPage.reset();
         location.reload(); // force reload
@@ -175,7 +175,7 @@ class AllPieces extends Pagelist {
 
     static show_content(extra="") {
         objectPot.unselect() ;
-		new StatBox() ;
+        new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new PotTable();
         objectPot.getAllIdDoc(false)
@@ -188,21 +188,21 @@ class AssignPic extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static show_content(extra="") {
-		objectPage.forget(); // don't return here
-		// Title adjusted to source and number
-		if ( objectPot.pictureSource.files.length == 0 ) {
-			// No pictures taken/chosen
-			return ;
-		} else if (objectPot.pictureSource.id=="HiddenPix") {
-			new TextBox( `New Photo. Assign to which piece?` ) ;
-		} else {
-			if (objectPot.pictureSource.files.length == 1 ) {
-				new TextBox( "1 image selected. Assign to which piece?" ) ;
-			} else {
-				new TextBox( `${objectPot.pictureSource.files.length} images selected. Assign to which piece?` ) ;
-			}
-		}
-		// make table
+        objectPage.forget(); // don't return here
+        // Title adjusted to source and number
+        if ( objectPot.pictureSource.files.length == 0 ) {
+            // No pictures taken/chosen
+            return ;
+        } else if (objectPot.pictureSource.id=="HiddenPix") {
+            new TextBox( `New Photo. Assign to which piece?` ) ;
+        } else {
+            if (objectPot.pictureSource.files.length == 1 ) {
+                new TextBox( "1 image selected. Assign to which piece?" ) ;
+            } else {
+                new TextBox( `${objectPot.pictureSource.files.length} images selected. Assign to which piece?` ) ;
+            }
+        }
+        // make table
         objectTable = new AssignTable();
         objectPot.getAllIdDoc(false)
         .then( (docs) => objectTable.fill(docs.rows ) )
@@ -211,49 +211,49 @@ class AssignPic extends Pagelist {
 }
 
 class ListGroup extends Pagelist {
-	// static "field_name" from struct in derived classes
+    // static "field_name" from struct in derived classes
 
     static show_content(extra="") {
         objectPot.unselect() ;
         const item = structGeneralPot.find( i => i.name == this.field_name ) ;
         if ( item ) {
-			new ListBox(`grouped by ${item?.alias ?? item.name}`) ;
-			document.getElementById("MainPhotos").style.display="block";
-			switch (item.type) {
-				case "radio":
-				case "list":
-				case "text":
-					objectTable = new MultiTable( (doc)=> {
-						if ( (item.name in doc) && (doc[item.name]!=="") ) {
-							return [doc[item.name] ] ;
-						} else {
-							return ["unknown"] ;
-						}
-						});
-					break ;
-				case "checkbox":
-					objectTable = new MultiTable( (doc)=> {
-						if ( (item.name in doc) && (doc[item.name].length > 0) ) {
-							return doc[item.name] ;
-						} else {
-							return ["unknown"] ;
-						}
-						});
-					break ;
-				case "array":
-					objectTable = new MultiTable( (doc)=> {
-						if ( (item.name in doc) && (doc[item.name].length>0) ) {
-							return doc[item.name].map( t => t.type ) ;
-						} else {
-							return ["unknown"] ;
-						}
-						});
-					break ;
-			}
-		} else {
-			objectPage.show("ListMenu");
-		}
-	}
+            new ListBox(`grouped by ${item?.alias ?? item.name}`) ;
+            document.getElementById("MainPhotos").style.display="block";
+            switch (item.type) {
+                case "radio":
+                case "list":
+                case "text":
+                    objectTable = new MultiTable( (doc)=> {
+                        if ( (item.name in doc) && (doc[item.name]!=="") ) {
+                            return [doc[item.name] ] ;
+                        } else {
+                            return ["unknown"] ;
+                        }
+                        });
+                    break ;
+                case "checkbox":
+                    objectTable = new MultiTable( (doc)=> {
+                        if ( (item.name in doc) && (doc[item.name].length > 0) ) {
+                            return doc[item.name] ;
+                        } else {
+                            return ["unknown"] ;
+                        }
+                        });
+                    break ;
+                case "array":
+                    objectTable = new MultiTable( (doc)=> {
+                        if ( (item.name in doc) && (doc[item.name].length>0) ) {
+                            return doc[item.name].map( t => t.type ) ;
+                        } else {
+                            return ["unknown"] ;
+                        }
+                        });
+                    break ;
+            }
+        } else {
+            objectPage.show("ListMenu");
+        }
+    }
 }
 
 class ListSeries extends ListGroup {
@@ -307,7 +307,7 @@ class FirstTime extends Pagelist {
 
     static show_content(extra="") {
         objectPot.unselect() ;
-		new TextBox("Welcome") ;
+        new TextBox("Welcome") ;
         if ( objectDatabase.db !== null ) {
             objectPage.show("MainMenu");
         }
@@ -318,9 +318,9 @@ class InvalidPiece extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static show_content(extra="") {
-		objectPage.forget() ; // don't return here
+        objectPage.forget() ; // don't return here
         objectPot.unselect();
-		new StatBox() ;
+        new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
 }
@@ -330,7 +330,7 @@ class MainMenu extends Pagelist {
 
     static show_content(extra="") {
         objectPot.unselect();
-		new StatBox() ;
+        new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
 }
@@ -340,34 +340,34 @@ class ListMenu extends Pagelist {
 
     static show_content(extra="") {
         objectPot.unselect();
-		new StatBox() ;
+        new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
 }
 
 class PotNew extends Pagelist {
-	// record doesn't exist -- make one
+    // record doesn't exist -- make one
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static show_content(extra="") {
-		objectPage.forget();
-		new TextBox("New Piece");
-		if ( objectPot.isSelected() ) {
-			// existing but "new"
-			objectPot.getRecordIdPix(potId,true)
-			.then( doc => objectPotData = new PotNewData( doc, structGeneralPot ) )
-			.catch( err => objectLog.err(err) ) ;
-		} else {
-			objectPotData = new PotNewData( objectPot.create(), structGeneralPot ) ;
-		}
+        objectPage.forget();
+        new TextBox("New Piece");
+        if ( objectPot.isSelected() ) {
+            // existing but "new"
+            objectPot.getRecordIdPix(potId,true)
+            .then( doc => objectPotData = new PotNewData( doc, structGeneralPot ) )
+            .catch( err => objectLog.err(err) ) ;
+        } else {
+            objectPotData = new PotNewData( objectPot.create(), structGeneralPot ) ;
+        }
     }
 }
 
 class PotNewData extends PotDataEditMode {
-	constructor( ...args) {
-		super(...args);
-	}
-	
+    constructor( ...args) {
+        super(...args);
+    }
+    
     savePieceData() {
         this.loadDocData();
         objectDatabase.db.put( this.doc )
@@ -375,7 +375,7 @@ class PotNewData extends PotDataEditMode {
             objectPot.select(response.id)
             .then( () => objectPage.show( "PotMenu" ) );
             })
-		.then( () => objectThumb.getOne( this.doc._id ) )
+        .then( () => objectThumb.getOne( this.doc._id ) )
         .catch( (err) => objectLog.err(err) )
         ;
     }
@@ -388,7 +388,7 @@ class PotEdit extends Pagelist {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structGeneralPot ))
-			 .catch( (err) => {
+             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
                 });
@@ -421,8 +421,8 @@ class PotPixLoading extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
     static show_content(extra="") {
-		document.querySelector(".ContentTitleHidden").style.display = "block";
-		objectPage.forget() ;
+        document.querySelector(".ContentTitleHidden").style.display = "block";
+        objectPage.forget() ;
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => objectPotData = new PotData( doc, structImages ))
@@ -443,9 +443,9 @@ class PotMenu extends Pagelist {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
             .then( (doc) => {
-				objectPot.select(potId) // update thumb
-				.then( () => objectPot.showPictures(doc) ) ; // pictures on bottom
-			})
+                objectPot.select(potId) // update thumb
+                .then( () => objectPot.showPictures(doc) ) ; // pictures on bottom
+            })
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -462,7 +462,7 @@ class SearchList extends Pagelist {
 
     static show_content(extra="") {
         objectPot.unselect() ;
-		new StatBox() ;
+        new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new SearchTable() ;
         objectSearch.setTable();
@@ -504,10 +504,10 @@ window.onload = () => {
 
         // now start listening for any changes to the database
         objectDatabase.db.changes({ 
-			since: 'now', 
-			live: true, 
-			include_docs: false 
-			})
+            since: 'now', 
+            live: true, 
+            include_docs: false 
+            })
         .on('change', (change) => {
             if ( change?.deleted ) {
                 objectThumb.remove( change.id ) ;
@@ -524,8 +524,8 @@ window.onload = () => {
         // start sync with remote database
         objectDatabase.foreverSync();
 
-		objectPage.show("MainMenu") ;
-		
+        objectPage.show("MainMenu") ;
+        
     } else {
         objectPage.reset();
         objectPage.show("FirstTime");

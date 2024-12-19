@@ -13,8 +13,8 @@ export {
 } ;
 
 class Cookie { //convenience class
-	// 2 versions, one with values placed in global scope, the other purely local values
-	
+    // 2 versions, one with values placed in global scope, the other purely local values
+    
     set( cname, value ) {
         // From https://www.tabnine.com/academy/javascript/how-to-set-cookies-javascript/
         this.local_set( cname, value ) ;
@@ -23,7 +23,7 @@ class Cookie { //convenience class
     
     local_set( cname, value ) {
         localStorage.setItem( cname, JSON.stringify(value) );
-	}
+    }
 
     del( cname ) {
         this.local_del(cname);
@@ -32,17 +32,17 @@ class Cookie { //convenience class
     
     local_del( cname ) {
         localStorage.removeItem(cname);
-	}
-	
+    }
+    
     get( cname ) {
-		// local storage
-		const ls = this.local_get( cname ) ;
-		if ( ls ) {
-			globalThis[cname] = ls;
-			return ls ;
-		}
+        // local storage
+        const ls = this.local_get( cname ) ;
+        if ( ls ) {
+            globalThis[cname] = ls;
+            return ls ;
+        }
 
-		// legacy cookie
+        // legacy cookie
         const name = `${cname}=`;
         let ret = null ;
         decodeURIComponent(document.cookie).split('; ').filter( val => val.indexOf(name) === 0 ).forEach( val => {
@@ -54,26 +54,26 @@ class Cookie { //convenience class
                 }
         });
         this.set(cname,ret) ; // put in local storage
-		globalThis[cname] = ret;
-		// Now delete cookie version
-		// From https://www.w3schools.com/js/js_cookies.asp
-		document.cookie = `${cname}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=None; Secure; path=/;` ;
+        globalThis[cname] = ret;
+        // Now delete cookie version
+        // From https://www.w3schools.com/js/js_cookies.asp
+        document.cookie = `${cname}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=None; Secure; path=/;` ;
         return ret;
     }
     
     local_get( cname ) {
-		// local storage
-		const ls = localStorage.getItem(cname);
-		if ( ls ) {
-			try {
-				return JSON.parse( ls ) ;
-			}
-			catch(err) {
-				return ls ;
-			}
-		}
-		return null ;
-	}
+        // local storage
+        const ls = localStorage.getItem(cname);
+        if ( ls ) {
+            try {
+                return JSON.parse( ls ) ;
+            }
+            catch(err) {
+                return ls ;
+            }
+        }
+        return null ;
+    }
 
     clear() {
         this.local_clear();

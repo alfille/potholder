@@ -15,7 +15,7 @@ import {
     } from "./image_mod.js" ;
 
 import {
-	EntryList,
+    EntryList,
 } from "./field_mod.js" ;
     
 class PotDataPrint { // singleton class
@@ -31,18 +31,18 @@ class PotDataPrint { // singleton class
         // Load the objects with doc data 
         this.list.load_from_doc( this.doc ) ;
 
-		this.list.print_doc() ;
-		objectPage.show_print();
-		setTimeout( this.print, 500 ) ;
+        this.list.print_doc() ;
+        objectPage.show_print();
+        setTimeout( this.print, 500 ) ;
 
     }
 
     print() {
-		if ( objectPotData.list.complete() ) {
-			window.print() ;
-		} else {
-			setTimeout( objectPotData.print, 500 ) ;
-		}
-	} 
+        if ( objectPotData.list.complete() ) {
+            window.print() ;
+        } else {
+            setTimeout( objectPotData.print, 500 ) ;
+        }
+    } 
     
 }

@@ -55,7 +55,7 @@ class SortTable {
                     return transformfunction(record) ;
                 }
             } catch(e) {
-				objectLog.err(e) ;
+                objectLog.err(e) ;
                 return "";
             }
             }) ;
@@ -245,18 +245,18 @@ class MultiTable {
         // catagories
         this.cat_ob = {} ;
 
-		// parent container
+        // parent container
         const parent = document.getElementById("MultiTableContent") ;
         parent.innerHTML="";
         const fieldset = document.getElementById("templates").querySelector(".MultiFieldset");
         
         this.apply_cat( cat_func )
         .then( () => Object.keys(this.cat_ob).toSorted().forEach( cat => {
-			// fieldset holds a sorttable
+            // fieldset holds a sorttable
             const fs = fieldset.cloneNode( true ) ;
             fs.querySelector(".multiCat").innerText = `${cat} (${this.cat_ob[cat].rows.length})` ;
 
-			// setup table
+            // setup table
             const tb = fs.querySelector("table");
             tb.id = `MT${cat}` ;
             tb.style.display="";
@@ -264,10 +264,10 @@ class MultiTable {
             const cl = [...collist] ;
             this.cat_ob[cat].table=new PotTable( cl, tb.id ) ;
 
-			// put data in it
+            // put data in it
             this.cat_ob[cat].table.fill(this.cat_ob[cat].rows)
 
-			// fieldset open/close toggle
+            // fieldset open/close toggle
             this.cat_ob[cat].visible=true ;
             const plus = fs.querySelector(".triggerbutton") ;
             this.cat_ob[cat].button = plus;
@@ -296,7 +296,7 @@ class MultiTable {
         .then( () => this.arrays2object( a2a ) );
     }
         
-	// split into separate records per category
+    // split into separate records per category
     arrays2object( arrays ) {
         arrays.forEach( ([k,v]) => {
             if ( k in this.cat_ob ) {
@@ -308,20 +308,20 @@ class MultiTable {
     }
     
     open_all() {
-		Object.keys(this.cat_ob).forEach(cat => {
-			if ( ! this.cat_ob[cat].visible ) {
-				this.cat_ob[cat].button.click() ;
-			}
-		});
-	}
-				
+        Object.keys(this.cat_ob).forEach(cat => {
+            if ( ! this.cat_ob[cat].visible ) {
+                this.cat_ob[cat].button.click() ;
+            }
+        });
+    }
+                
     close_all() {
-		Object.keys(this.cat_ob).forEach(cat => {
-			if ( this.cat_ob[cat].visible ) {
-				this.cat_ob[cat].button.click() ;
-			}
-		});
-	}
+        Object.keys(this.cat_ob).forEach(cat => {
+            if ( this.cat_ob[cat].visible ) {
+                this.cat_ob[cat].button.click() ;
+            }
+        });
+    }
 }
 
 class AssignTable extends ThumbTable {
@@ -397,7 +397,7 @@ class SearchTable extends ThumbTable {
     
     // for search -- go to a result of search
     selectandedit( id, page ) {
-		objectPot.select(id)
-		.then( () => objectPage.show( page ) ) ;
+        objectPot.select(id)
+        .then( () => objectPage.show( page ) ) ;
     }
 }

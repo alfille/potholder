@@ -16,7 +16,16 @@ class PotImages {
         // Clear existing Images in memory
         this.images = doc?.images ?? [] ;
         this.pid = doc._id ;
-    }   
+    }
+
+    rightSize( imgW, imgH, limitW, limitH ) {
+        const h = limitW * imgH / imgW ;
+        if ( h > limitH ) {
+            return [ limitH * imgW / imgH , limitH ] ;
+        } else {
+            return [limitW, h ] ;
+        }
+    }
     
     exists(name) {
         return (name in this.images) ;
@@ -25,43 +34,43 @@ class PotImages {
     getURL( name ) {
         return objectDatabase.db.getAttachment( this.pid, name )
         .then( data => URL.createObjectURL(data) ) ;
-	}
+    }
     
     display( name, small_class="small_pic" ) {
         const img = document.createElement( "img" ) ;
         this.getURL( name )
         .then( url => {
-			img.onload = () => URL.revokeObjectURL(url) ;
-			img.onclick=()=>{
-				this.getURL( name )
-				.then( url2 => {
-					const img2 = document.getElementById("modal_img") ;
-					img2.onload = () => URL.revokeObjectURL(url2) ;
-					img2.src=url2;
-					document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
-					document.getElementById("modal_id").style.display="block";
-					})
-				.catch( err => objectLog.err(err) ) ;
-			};
+            img.onload = () => URL.revokeObjectURL(url) ;
+            img.onclick=()=>{
+                this.getURL( name )
+                .then( url2 => {
+                    const img2 = document.getElementById("modal_img") ;
+                    img2.onload = () => URL.revokeObjectURL(url2) ;
+                    img2.src=url2;
+                    document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
+                    document.getElementById("modal_id").style.display="block";
+                    })
+                .catch( err => objectLog.err(err) ) ;
+            };
 
-			img.src=url ;
-			img.classList.add(small_class);
-			})
-		.catch( err => objectLog.err(err)) ;
-		return img ;
-	}
+            img.src=url ;
+            img.classList.add(small_class);
+            })
+        .catch( err => objectLog.err(err)) ;
+        return img ;
+    }
 
     print_display( name, small_class="small_pic" ) {
         const img = document.createElement( "img" ) ;
         this.getURL( name )
         .then( url => {
-			img.onload = () => URL.revokeObjectURL(url) ;
-			img.src=url ;
-			img.classList.add(small_class);
-			})
-		.catch( err => objectLog.err(err)) ;
-		return img ;
-	}
+            img.onload = () => URL.revokeObjectURL(url) ;
+            img.src=url ;
+            img.classList.add(small_class);
+            })
+        .catch( err => objectLog.err(err)) ;
+        return img ;
+    }
 
     displayAll() {
         return this.images.map( k=> this.display(k.image,"medium_pic") ) ;
@@ -90,54 +99,54 @@ class Thumb {
     }
     
     _load( doc ) {
-		// attachments need not be included in doc -- will pull in separately
+        // attachments need not be included in doc -- will pull in separately
         const pid = doc._id ;
         if ( !( "images" in doc) || ! Array.isArray(doc.images) || doc.images.length==0) {
-			this.remove(pid) ;
-			return ;
+            this.remove(pid) ;
+            return ;
         }
 
-		objectDatabase.db.getAttachment(pid, doc.images[0].image )
-		.then(data => {
-			const url = URL.createObjectURL(data) ;
-			const t_img = document.createElement("img");
-			t_img.onload = () => {
-				URL.revokeObjectURL(url) ;
-				// center and crop to maintain 1:1 aspect ratio
-				let sw = t_img.naturalWidth;
-				let sh = t_img.naturalHeight ;
-				let sx = 0 ;
-				let sy = 0 ;
-				if (  sw > sh ) {
-					sx = (sw - sh) / 2;
-					sw = sh ;
-				} else {
-					sy = (sh - sw ) / 2 ;
-					sh = sw ;
-				}
-				this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-				this.ctx.drawImage( t_img, sx, sy, sw, sh, 0, 0, this.canvas.width, this.canvas.height ) ;
-				this.canvas.toBlob( (blob) => {
-					this.Thumbs[pid] = blob;
-					let img = this.pick.querySelector(`[data-id="${pid}"]`);
-					if ( img ) {
-						this.display( img, pid ) ;
-					} else {
-						img = document.createElement("img");
-						this.display( img, pid ) ;
-						img.classList.add("MainPhoto");
-						img.onclick = () => {
-							objectPot.select( pid )
-							.then( () => objectPage.show("PotMenu") ) ;
-						} ;
-						this.pick.appendChild( img ) ;
-						img.setAttribute("data-id",pid) ;
-					}
-					}) ;
-				};
-			t_img.src = url ;
-		})
-		.catch( err => objectLog.err(err) );
+        objectDatabase.db.getAttachment(pid, doc.images[0].image )
+        .then(data => {
+            const url = URL.createObjectURL(data) ;
+            const t_img = document.createElement("img");
+            t_img.onload = () => {
+                URL.revokeObjectURL(url) ;
+                // center and crop to maintain 1:1 aspect ratio
+                let sw = t_img.naturalWidth;
+                let sh = t_img.naturalHeight ;
+                let sx = 0 ;
+                let sy = 0 ;
+                if (  sw > sh ) {
+                    sx = (sw - sh) / 2;
+                    sw = sh ;
+                } else {
+                    sy = (sh - sw ) / 2 ;
+                    sh = sw ;
+                }
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.drawImage( t_img, sx, sy, sw, sh, 0, 0, this.canvas.width, this.canvas.height ) ;
+                this.canvas.toBlob( (blob) => {
+                    this.Thumbs[pid] = blob;
+                    let img = this.pick.querySelector(`[data-id="${pid}"]`);
+                    if ( img ) {
+                        this.display( img, pid ) ;
+                    } else {
+                        img = document.createElement("img");
+                        this.display( img, pid ) ;
+                        img.classList.add("MainPhoto");
+                        img.onclick = () => {
+                            objectPot.select( pid )
+                            .then( () => objectPage.show("PotMenu") ) ;
+                        } ;
+                        this.pick.appendChild( img ) ;
+                        img.setAttribute("data-id",pid) ;
+                    }
+                    }) ;
+                };
+            t_img.src = url ;
+        })
+        .catch( err => objectLog.err(err) );
     }
 
     getOne( pid = potId ) {
