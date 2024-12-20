@@ -31,7 +31,10 @@ export class Crop {
     crop( entrylist ) {
         this.entrylist = entrylist ; // entry list holds image
         const imageentry = entrylist.members.find( m => m.struct.type == "image" ) ;
+        const cropentry = entrylist.members.find( m => m.struct.type == "crop" ) ;
+        console.log("entrylist",entrylist);
         console.log("imageentry",imageentry);
+        console.log("cropentry",cropentry);
         if ( imageentry == null ) {
             this.cancel() ; 
         }
