@@ -14,13 +14,6 @@ import {
         Crop,
 } from "./crop.js" ;    
 
-function cloneClass( fromClass, target ) {
-        document.getElementById("templates").
-        querySelector(fromClass)
-                .childNodes
-                .forEach( cc => target.appendChild(cc.cloneNode(true) ) );
-}
-
 class EntryList {
     constructor( struct_list, Images=null ) {
         this.double_tap = false ;
@@ -190,15 +183,16 @@ class EntryList {
     }    
 }
 
-class Entry {
+class InvisibleEntry {
+		// base class for basic (non-visible) entries
         static unique = 0 ;
         // class (s) for data entry items
         constructor( struct ) {
                 this.struct = struct ;
                 this._name = struct.name ;
                 this._alias = struct?.alias ?? this._name ;
-                this.localname = `LOCAL_${Entry.unique}`;
-                Entry.unique += 1 ;
+                this.localname = `LOCAL_${InvisibleEntry.unique}`;
+                InvisibleEntry.unique += 1 ;
         }
         
         changed() {
@@ -207,7 +201,7 @@ class Entry {
         }
         
         complete() {
-                // for image rondering
+                // for image rendering
                 return true ;
         }
         
@@ -225,6 +219,24 @@ class Entry {
                 return [this._name, this.new_val] ;
         }
         
+        print_item() {
+                return this.show_item() ;
+        }
+
+    show_item() {
+		return [] ;
+    }
+    
+    edit_item() {
+		return [] ;
+    }
+}
+
+class VisibleEntry extends InvisibleEntry {
+        default_value() {
+                return "" ;
+        }
+        
         form2value() {
                 const local = [...document.getElementsByName(this.localname)] ;
                 if ( local.length > 0 ) {
@@ -240,10 +252,6 @@ class Entry {
         return span ;
         }
                         
-        print_item() {
-                return this.show_item() ;
-        }
-
     show_item() {
         // Wrap with label and specific display
         const span = document.createElement('span');
@@ -281,7 +289,7 @@ class Entry {
     }
 }
 
-class TextEntry extends Entry {
+class TextEntry extends VisibleEntry {
     edit_flatten() {
         // get value and make type-specific input field with filled in value
         const inp = document.createElement( "input" );
@@ -293,7 +301,7 @@ class TextEntry extends Entry {
     }
 }
                 
-class TextAreaEntry extends Entry {
+class TextAreaEntry extends VisibleEntry {
     edit_flatten() {
         // get value and make type-specific input field with filled in value
         const inp = document.createElement( "textarea" );
@@ -305,7 +313,7 @@ class TextAreaEntry extends Entry {
     }
 }
                 
-class ImageEntry extends Entry {
+class ImageEntry extends VisibleEntry {
     constructor( struct, Images ) {
         super( struct ) ;
         this.Images = Images ;
@@ -337,7 +345,7 @@ class ImageEntry extends Entry {
     }
 }
                 
-class ListEntry extends Entry {
+class ListEntry extends VisibleEntry {
     edit_flatten() {
         const dlist = document.createElement("datalist");
         dlist.id = this.localname ;
@@ -355,7 +363,7 @@ class ListEntry extends Entry {
     }
 }
 
-class RadioEntry extends Entry {
+class RadioEntry extends VisibleEntry {
     form2value() {
         this.new_val = [...document.getElementsByName(this.localname)]
             .filter( i => i.checked )
@@ -378,7 +386,7 @@ class RadioEntry extends Entry {
     }
 }
 
-class DateEntry extends Entry {
+class DateEntry extends VisibleEntry {
     default_value() {
         return new Date().toISOString() ;
     }
@@ -394,28 +402,13 @@ class DateEntry extends Entry {
     }
 }
 
-class CropEntry extends Entry {
+class CropEntry extends InvisibleEntry {
     default_value() {
-        return [] ;
-    }
-
-    show_item() {
-        // invisible
-        return [] ;
-    }
-
-    edit_item() {
-        // edit in crop, not here
-        return [] ;
-    }
-
-    print_item() {
-        // not visible
         return [] ;
     }
 }
 
-class BoolEntry extends Entry {
+class BoolEntry extends VisibleEntry {
         default_value() {
                 return "false" ;
         }
@@ -451,7 +444,7 @@ class BoolEntry extends Entry {
         }
 }
 
-class CheckboxEntry extends Entry {
+class CheckboxEntry extends VisibleEntry {
         default_value() {
                 return [] ;
         }
@@ -488,7 +481,7 @@ class CheckboxEntry extends Entry {
         }
 }               
                                 
-class NumberEntry extends Entry {
+class NumberEntry extends VisibleEntry {
         default_value() {
                 return null ;
         }
@@ -498,7 +491,7 @@ class NumberEntry extends Entry {
         }
 }               
 
-class ArrayEntry extends Entry {
+class ArrayEntry extends VisibleEntry {
         constructor( struct, enclosing, Images=null ) {
                 super( struct ) ;
                 this.initial_val=[] ;

@@ -18,15 +18,6 @@ class PotImages {
         this.pid = doc._id ;
     }
 
-    rightSize( imgW, imgH, limitW, limitH ) {
-        const h = limitW * imgH / imgW ;
-        if ( h > limitH ) {
-            return [ limitH * imgW / imgH , limitH ] ;
-        } else {
-            return [limitW, h ] ;
-        }
-    }
-    
     exists(name) {
         return (name in this.images) ;
     }
