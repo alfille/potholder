@@ -49,6 +49,7 @@ class PotImages {
 				}
 				const h = canvas.width * crop[3] / crop[2] ;
 				canvas.height = h ;
+				console.log("image",crop,canvas.width,canvas.height,h);
 				canvas.getContext("2d").drawImage( img, crop[0], crop[1], crop[2], crop[3], 0, 0, canvas.width, h ) ;
 				}
             canvas.onclick=()=>{
@@ -63,6 +64,25 @@ class PotImages {
 						canvas2.getContext("2d").drawImage( img2, crop[0], crop[1], crop[2], crop[3], 0, 0, cw, ch ) ;
 						} ;
 					img2.src=url2;
+					document.getElementById("modal_down").onclick=()=> {
+						this.getURL( name )
+						.then( url => {
+							const link = document.createElement("a");
+							link.download = name;
+							link.href = url;
+							link.style.display = "none";
+
+							document.body.appendChild(link);
+							link.click(); // press invisible button
+							
+							// clean up
+							// Add "delay" see: https://www.stefanjudis.com/snippets/how-trigger-file-downloads-with-javascript/
+							setTimeout( () => {
+								window.URL.revokeObjectURL(link.href) ;
+								document.body.removeChild(link) ;
+							});
+						}) ;
+					} ;
 					document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
 					document.getElementById("modal_id").style.display="block";
 					})

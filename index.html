@@ -404,7 +404,8 @@
         </div>
          <!-- The Modal https://www.w3schools.com/css/tryit.asp?filename=trycss_image_modal_js -->
         <div id="modal_id" class="modal">
-          <span id="modal_close" onclick="(()=>document.getElementById('modal_id').style.display='none')()">&times;</span>
+          <button id="modal_down" class="modal_button" title="Download picture">&#10515;</button>
+          <button id="modal_close" class="modal_button" onclick="(()=>document.getElementById('modal_id').style.display='none')()" title="Back">&times;</button>
           <canvas class="modal_content" width=350, height=500 id="modal_canvas"></canvas>
           <div id="modal_caption"></div>
         </div>

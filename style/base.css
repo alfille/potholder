@@ -211,18 +211,28 @@ ul {
 }
 
 /* The Close Button */
-#modal_close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
+.modal_button {
   color: white;
   font-size: 40px;
   font-weight: bold;
   transition: 0.3s;
+  background-color: rgba(0,0,0,0);
 }
 
-#modal_close:hover,
-#modal_close:focus {
+#modal_close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+}
+
+#modal_down {
+  position: absolute;
+  top: 5px;
+  left: 35px;
+}
+
+.modal_button:hover,
+.modal_button:focus {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
@@ -410,6 +420,7 @@ legend {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;  
+  align-items: flex-start;
 }
 .MainPhoto {
   border: 1px solid white;
