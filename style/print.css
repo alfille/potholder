@@ -12,6 +12,11 @@ html, body {
 	print-color-adjust:exact !important;
 }
 
+.print_pic {
+	max-width: 80%;
+	max-height: 80%;
+}
+
 table, th, td {
   border: 1px solid;
   border-collapse: collapse;

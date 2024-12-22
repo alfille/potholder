@@ -190,7 +190,7 @@ class ThumbTable extends SortTable {
             .forEach( (e) => row.addEventListener( e, () => this.selectandedit( record._id ) ) ) ;
             // thumb
             const img = document.createElement("img");
-            objectThumb.display( img, record._id ) ;
+            objectThumb.displayThumb( img, record._id ) ;
             row.insertCell(-1).appendChild(img);
             // cells
             this.collist
@@ -373,7 +373,7 @@ class SearchTable extends ThumbTable {
             .forEach( (e) => row.addEventListener( e, () => this.selectandedit( record._id, record.Link ) ) ) ;
             // thumb
             const img = document.createElement("img");
-            objectThumb.display( img, record._id ) ;
+            objectThumb.displayThumb( img, record._id ) ;
             row.insertCell(-1).appendChild(img);
             // cells
             this.collist

@@ -21,20 +21,26 @@ globalThis. objectSearch = null;
 globalThis. objectThumb = null;
 globalThis. objectCrop = null ;
 
+globalThis. rightRatio = ( imgW, imgH, limitW, limitH ) => {
+    // return image * ratio = limits
+    const h = limitW * imgH / imgW ;
+    if ( h > limitH ) {
+        return limitH / imgH ;
+    } else {
+        return limitW / imgW ;
+    }
+} ;
+
 globalThis. rightSize = ( imgW, imgH, limitW, limitH ) => {
-        const h = limitW * imgH / imgW ;
-        if ( h > limitH ) {
-            return [ limitH * imgW / imgH , limitH ] ;
-        } else {
-            return [limitW, h ] ;
-        }
-    } ;
+    const r = rightRatio( imgW, imgH, limitW, limitH ) ;
+    return [ r * imgW, r * imgH ] ;
+} ;
 
 globalThis. cloneClass = ( fromClass, target ) => {
-        document.getElementById("templates").
-        querySelector(fromClass)
-                .childNodes
-                .forEach( cc => target.appendChild(cc.cloneNode(true) ) );
-	} ;
+    document.getElementById("templates").
+    querySelector(fromClass)
+        .childNodes
+        .forEach( cc => target.appendChild(cc.cloneNode(true) ) );
+} ;
 
 

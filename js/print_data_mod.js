@@ -33,16 +33,11 @@ class PotDataPrint { // singleton class
 
         this.list.print_doc() ;
         objectPage.show_print();
-        setTimeout( this.print, 500 ) ;
-
+        setTimeout( this.print, 1000 ) ;
     }
 
     print() {
-        if ( objectPotData.list.complete() ) {
             window.print() ;
-        } else {
-            setTimeout( objectPotData.print, 500 ) ;
-        }
     } 
     
 }

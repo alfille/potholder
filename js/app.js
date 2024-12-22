@@ -30,7 +30,6 @@ import {
 
 import {
     PotImages,
-    Thumb,
     } from "./image_mod.js" ;
 
 import {
@@ -494,7 +493,7 @@ window.onload = () => {
     objectDatabase.open() ;       
     if ( objectDatabase.db ) {
         // Thumbnails
-        objectThumb = new Thumb() ;
+        objectThumb.setup() ; // just getting canvas from doc
 
         // Secondary indexes
         createQueries();
@@ -523,6 +522,9 @@ window.onload = () => {
 
         // start sync with remote database
         objectDatabase.foreverSync();
+        
+        // modal picture
+        document.getElementById("modal_canvas").width = window.innerWidth ;
 
         objectPage.show("MainMenu") ;
         

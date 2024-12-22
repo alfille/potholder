@@ -18,6 +18,7 @@ export class Crop {
         //this.image = document.getElementById( "crop_image" ) ;
         this.canvas = document.getElementById("crop_canvas");
         this.ctx = this.canvas.getContext( "2d" ) ;
+        this.edges = [] ;
         
         // edge blur (1/2 width for easier clicking
         this.blur = 10 ; 
@@ -31,11 +32,11 @@ export class Crop {
     crop( entrylist ) {
         this.entrylist = entrylist ; // entry list holds image
         const imageentry = entrylist.members.find( m => m.struct.type == "image" ) ;
-        const cropentry = entrylist.members.find( m => m.struct.type == "crop" ) ;
+        this.cropentry = entrylist.members.find( m => m.struct.type == "crop" ) ;
         console.log("entrylist",entrylist);
         console.log("imageentry",imageentry);
-        console.log("cropentry",cropentry);
-        if ( imageentry == null ) {
+        console.log("cropentry",this.cropentry);
+        if ( imageentry == null || this.cropentry == null ) {
             this.cancel() ; 
         }
         const name = imageentry.new_val ;
@@ -51,15 +52,18 @@ export class Crop {
                 // figure size if canvas and image
                 this.natW = image.naturalWidth;
                 this.natH = image.naturalHeight;
+                
+                if ( this.cropentry.new_val.length != 4 ) {
+					this.cropentry.new_val = [ 0, 0, this.natW, this.natH ] ;
+					console.log("new:",this.cropentry.new_val) ;
+				} else {
+					console.log("old:",this.cropentry.new_val) ;
+				}
                 this.canW = window.innerWidth ;
                 this.canH = 600 ;
-                this.H = this.canH ;
-                // max size preseve aspect
-                this.W = this.natW * this.H / this.natH ;
-                if ( this.W > this.canW ) {
-                    this.W = this.canW ;
-                    this.H = this.natH * this.W / this.natW ;
-                }
+                [this.W, this.H] = rightSize( this.natW, this.natH, this.canW, this.canH ) ;
+                console.log("scale", this.W, this.H);
+
                 this.under.width = this.canW ;
                 this.canvas.width = this.canW ;
                 this.under.height = this.canH ;
@@ -69,7 +73,7 @@ export class Crop {
                 this.underctx.drawImage( image, 0, 0, this.W, this.H ) ;
 
                 // only started after image load
-                this.startEdges( 0,0,this.W,this.H ) ;
+                this.startEdges() ;
                 
                 // bounding box precalculations box 
                 this.cacheBounds() ;
@@ -124,8 +128,12 @@ export class Crop {
         }
     }
     
-    startEdges( left,top,right,bottom ) {
-        this.edges=[left,top,right,bottom];
+    startEdges() {
+		// convert picture scale to shown scale
+		this.edges[0] = this.cropentry.new_val[0] * this.W / this.natW ;
+		this.edges[1] = this.cropentry.new_val[1] * this.H / this.natH ;
+		this.edges[2] = this.cropentry.new_val[2] * this.W / this.natW + this.edges[0] ;
+		this.edges[3] = this.cropentry.new_val[3] * this.H / this.natH + this.edges[1] ;
         this.testEdges() ;
     }
     
@@ -337,15 +345,16 @@ export class Crop {
     }
 
     full() {
+		this.cropentry.new_val = [ 0, 0, this.natW, this.natH ] ;
         this.show(false);
     }
     
     ok() {
-        const ret = [
-        this.edges[0] * this.natW / this.W ,
-        this.edges[1] * this.natH / this.H ,
-        this.edges[2] * this.natW / this.W ,
-        this.edges[3] * this.natH / this.H ,
+        this.cropentry.new_val = [
+			this.edges[0] * this.natW / this.W ,
+			this.edges[1] * this.natH / this.H ,
+			(this.edges[2]-this.edges[0]) * this.natW / this.W ,
+			(this.edges[3]-this.edges[1]) * this.natH / this.H ,
         ];
         this.show(false);
     }

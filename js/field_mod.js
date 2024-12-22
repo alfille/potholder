@@ -64,11 +64,6 @@ class EntryList {
         return this.members.some( m => m.changed() ) ;
     }
     
-    complete() {
-        // for image rendering
-        return this.members.every( m => m.complete() ) ;
-    }
-    
     get_doc() {
         const doc = {} ;
         this.members.forEach( m => {
@@ -200,14 +195,12 @@ class InvisibleEntry {
                 return this.initial_val != this.new_val ;
         }
         
-        complete() {
-                // for image rendering
-                return true ;
-        }
-        
         default_value() {
                 return "" ;
         }
+        
+        form2value() {
+		}
         
         load_from_doc( doc ) {
                 this.initial_val = (this._name in doc) ? doc[this._name] : this.default_value() ;
@@ -322,26 +315,16 @@ class ImageEntry extends VisibleEntry {
     
     show_item_element() {
         // image or comment
-        return this.Images.display(this.new_val) ;
+        return this.Images.displayClickable(this.new_val) ;
     }
     
     print_item() {
-        this.img = this.Images.print_display( this.new_val, "print_pic" ) ;
+        this.img = this.Images.print_display( this.new_val ) ;
         return [this.img] ;
-    }
-    
-    complete() {
-        // completely rendered?
-        if ( this.img == null ) {
-            this.print_item() // to load pic
-            return false ;
-        } else {
-            return this.img.complete ;
-        }
     }
             
     edit_item() {
-        return [this.Images.display(this.new_val,"medium_pic") ] ;
+        return [this.Images.displayClickable(this.new_val,"medium_pic") ] ;
     }
 }
                 
@@ -508,12 +491,6 @@ class ArrayEntry extends VisibleEntry {
                         ;
         }
 
-        complete() {
-                // for image rendering
-                return this.new_val.every( e => e.complete() ) ;
-        }
-        
-        
         get_doc() {
                 return [ this._name, this.new_val.map( e => e.get_doc() ) ] ;
         }

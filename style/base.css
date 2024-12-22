@@ -139,6 +139,12 @@ ul {
   color: white;
   padding: 4px;
 }
+.click_pic {
+  cursor: pointer;
+  transition: 0.3s;
+  display: inline-block;
+  border-radius: 5px;
+}
 .small_pic {
   max-height: 60px;
   cursor: pointer;
@@ -166,22 +172,19 @@ ul {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  padding-top: 75px; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(23,43,174); /* Fallback color */
-  background-color: rgba(23,43,174,0.9); /* Black w/ opacity */
+  background-color: rgb(23,43,174);
 }
 
 /* Modal Content (image) */
 .modal_content {
   margin: auto;
   display: block;
-  width: 80%;
-  max-width: 700px;
 }
 
 /* Caption of Modal Image */
@@ -193,7 +196,7 @@ ul {
   text-align: center;
   color: #ccc;
   padding: 10px 0;
-  height: 150px;
+  height: 100px;
 }
 
 /* Add Animation */
@@ -225,12 +228,6 @@ ul {
   cursor: pointer;
 }
 
-/* 100% Image Width on Smaller Screens */
-@media only screen and (max-width: 700px){
-  .modal_content {
-    width: 100%;
-  }
-}
 .multiCat, .fill_show_data {
   font-weight: bold;
   color: black;

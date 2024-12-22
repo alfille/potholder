@@ -8,7 +8,6 @@
  
 export {
     PotImages,
-    Thumb,
 } ;
 
 class PotImages {    
@@ -27,44 +26,81 @@ class PotImages {
         .then( data => URL.createObjectURL(data) ) ;
     }
     
-    display( name, small_class="small_pic" ) {
-        const img = document.createElement( "img" ) ;
+    displayClickable( name, small_class="small_pic" ) {
+        const img = new Image() ;
+        const canvas = document.createElement("canvas");
+        switch ( small_class ) {
+			case "small_pic":
+				canvas.width = 60 ;
+				break;
+			default:
+				canvas.width = 120 ;
+				break ;
+		}
+		canvas.classList.add("click_pic") ;
+        let crop = [] ;
         this.getURL( name )
         .then( url => {
-            img.onload = () => URL.revokeObjectURL(url) ;
-            img.onclick=()=>{
+            img.onload = () => {
+				URL.revokeObjectURL(url) ;
+                crop = this.images.find( i => i.image==name)?.crop ?? null ;
+                if ( !crop || crop.length!=4 ) {
+					crop = [0,0,img.naturalWidth,img.naturalHeight] ;
+				}
+				const h = canvas.width * crop[3] / crop[2] ;
+				canvas.height = h ;
+				canvas.getContext("2d").drawImage( img, crop[0], crop[1], crop[2], crop[3], 0, 0, canvas.width, h ) ;
+				}
+            canvas.onclick=()=>{
+				const img2 = new Image() ; // temp image
                 this.getURL( name )
                 .then( url2 => {
-                    const img2 = document.getElementById("modal_img") ;
-                    img2.onload = () => URL.revokeObjectURL(url2) ;
-                    img2.src=url2;
-                    document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
-                    document.getElementById("modal_id").style.display="block";
-                    })
+                    img2.onload = () => {
+						URL.revokeObjectURL(url2) ;
+						const canvas2 = document.getElementById("modal_canvas");
+						const [cw,ch] = rightSize( crop[2], crop[3], window.innerWidth, window.innerHeight-75 ) ;
+						canvas2.height = ch ;
+						canvas2.getContext("2d").drawImage( img2, crop[0], crop[1], crop[2], crop[3], 0, 0, cw, ch ) ;
+						} ;
+					img2.src=url2;
+					document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
+					document.getElementById("modal_id").style.display="block";
+					})
                 .catch( err => objectLog.err(err) ) ;
             };
 
             img.src=url ;
-            img.classList.add(small_class);
             })
         .catch( err => objectLog.err(err)) ;
-        return img ;
+        return canvas ;
     }
 
-    print_display( name, small_class="small_pic" ) {
-        const img = document.createElement( "img" ) ;
+    print_display( name ) {
+		// full sized but cropped
+        const img = new Image() ;
+        const canvas = document.createElement("canvas");
+        let crop = [] ;
         this.getURL( name )
         .then( url => {
-            img.onload = () => URL.revokeObjectURL(url) ;
+            img.onload = () => {
+				URL.revokeObjectURL(url) ;
+                crop = this.images.find( i => i.image==name)?.crop ?? null ;
+                if ( !crop || crop.length!=4 ) {
+					crop = [0,0,img.naturalWidth,img.naturalHeight] ;
+				}
+				canvas.width = crop[2] ;
+				canvas.height = crop[3] ;
+				canvas.getContext("2d").drawImage( img, crop[0], crop[1], crop[2], crop[3], 0, 0, crop[2], crop[3] ) ;
+				} ;
             img.src=url ;
-            img.classList.add(small_class);
+            canvas.classList.add("print_pic");
             })
         .catch( err => objectLog.err(err)) ;
-        return img ;
+        return canvas ;
     }
 
     displayAll() {
-        return this.images.map( k=> this.display(k.image,"medium_pic") ) ;
+        return this.images.map( k=> this.displayClickable(k.image,"medium_pic") ) ;
     }    
 }
 
@@ -74,10 +110,14 @@ function isAndroid() {
 
 class Thumb {
     constructor() {
+        this.Thumbs = {} ;
+    }
+
+    setup() {
+		// after onload
         this.canvas = document.getElementById("thumbnail"); // defines the thumbnail size
         this.pick = document.getElementById("MainPhotos");
         this.ctx = this.canvas.getContext( "2d" ) ;
-        this.Thumbs = {} ;
         this.NoPicture = this._no_picture() ;
     }
 
@@ -103,28 +143,23 @@ class Thumb {
             const t_img = document.createElement("img");
             t_img.onload = () => {
                 URL.revokeObjectURL(url) ;
+                let crop = doc.images[0]?.crop ;
+                if ( !crop || crop.length!=4 ) {
+					crop = [0,0,t_img.naturalWidth,t_img.naturalHeight] ;
+				}
+				// sw/sh in canvas units
+				const [iw,ih] = rightSize( this.canvas.width, this.canvas.height, crop[2], crop[3]  ) ;
                 // center and crop to maintain 1:1 aspect ratio
-                let sw = t_img.naturalWidth;
-                let sh = t_img.naturalHeight ;
-                let sx = 0 ;
-                let sy = 0 ;
-                if (  sw > sh ) {
-                    sx = (sw - sh) / 2;
-                    sw = sh ;
-                } else {
-                    sy = (sh - sw ) / 2 ;
-                    sh = sw ;
-                }
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.drawImage( t_img, sx, sy, sw, sh, 0, 0, this.canvas.width, this.canvas.height ) ;
+                this.ctx.drawImage( t_img, crop[0] + (crop[2]-iw)/2, crop[1] + (crop[3]-ih)/2, iw, ih, 0, 0, this.canvas.width, this.canvas.height ) ;
                 this.canvas.toBlob( (blob) => {
                     this.Thumbs[pid] = blob;
                     let img = this.pick.querySelector(`[data-id="${pid}"]`);
                     if ( img ) {
-                        this.display( img, pid ) ;
+                        this.displayThumb( img, pid ) ;
                     } else {
                         img = document.createElement("img");
-                        this.display( img, pid ) ;
+                        this.displayThumb( img, pid ) ;
                         img.classList.add("MainPhoto");
                         img.onclick = () => {
                             objectPot.select( pid )
@@ -155,7 +190,7 @@ class Thumb {
         .catch( err => objectLog.err(err) ) ;
     }
 
-    display( target, pid = potId ) {
+    displayThumb( target, pid = potId ) {
         const url = URL.createObjectURL( (pid in this.Thumbs ) ? this.Thumbs[pid] : this.NoPicture ) ;
         target.onload = () => URL.revokeObjectURL( url ) ;
         target.src = url ;
@@ -168,3 +203,5 @@ class Thumb {
         }
     }
 }
+
+objectThumb = new Thumb() ;

@@ -109,7 +109,7 @@ class Pot { // convenience class
         .then( (doc) => {
 			//console.log("Select",doc);
             // Top left Logo
-            objectThumb.display( this.TL, pid ) ;
+            objectThumb.displayThumb( this.TL, pid ) ;
             // highlight the list row
             if ( objectPage.isThis('AllPieces') ) {
                 objectTable.highlight();
@@ -267,8 +267,6 @@ class Pot { // convenience class
 		const pix = document.getElementById("PotPhotos");
 		const images = new PotImages(doc);
 		pix.innerHTML="";
-		//console.log("IMAGES",images);
-		//console.log("array",images.displayAll() ) ;
 		images.displayAll().forEach( i => pix.appendChild(i) ) ;
 	}
 }
