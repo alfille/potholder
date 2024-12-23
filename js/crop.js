@@ -23,7 +23,7 @@ export class Crop {
         // edge blur (1/2 width for easier clicking
         this.blur = 10 ; 
         this.radius = 25 ;
-        this.radius2 = this.radius ** 2 ;
+        this.radii= this.radius ;
         
         // edges [left,top,right,bottom]
         this.active_edge = null ;
@@ -146,22 +146,35 @@ export class Crop {
         if ( this.edges[1] < 0 ) {
             this.edges[1] = 0 ;
         }
+        if ( this.edges[2] <= this.blur ) {
+            this.edges[2] = this.blur ;
+        }
+        if ( this.edges[3] <= this.blur ) {
+            this.edges[3] = this.blur ;
+        }
         if ( this.edges[2] >= this.W ) {
             this.edges[2] = this.W-1 ;
         }
         if ( this.edges[3] >= this.H ) {
             this.edges[3] = this.H-1 ;
         }
-        if ( this.edges[0] > this.edges[2] ) {
-            this.edges[0] = this.edges[2] ;
+        if ( this.edges[0] >= this.edges[2]-this.blur ) {
+            this.edges[0] = this.edges[2]-this.blur ;
         }
-        if ( this.edges[1] > this.edges[3] ) {
-            this.edges[1] = this.edges[3] ;
+        if ( this.edges[1] >= this.edges[3]-this.blur ) {
+            this.edges[1] = this.edges[3]-this.blur ;
         }
-        this.ball[0] = (this.edges[1]+this.edges[3]) / 2 ;
-        this.ball[2] = this.ball[0] ;
-        this.ball[1] = (this.edges[0]+this.edges[2]) / 2 ;
-        this.ball[3] = this.ball[1] ;
+        this.ball = [0,1,2,3]
+            .map( i => ( this.edges[(i+1)%4] + this.edges[(i+3)%4] ) / 2 ) ;
+        const R2 = Math.min(
+            (this.ball[0]-this.edges[1])**2 + (this.edges[0]-this.ball[1])**2 ,
+            (this.ball[0]-this.edges[3])**2 + (this.edges[0]-this.ball[3])**2 ,
+            (this.ball[2]-this.edges[1])**2 + (this.edges[2]-this.ball[1])**2 ,
+            (this.ball[2]-this.edges[3])**2 + (this.edges[2]-this.ball[3])**2 ,
+            (this.ball[0]-this.ball[2])**2 + (this.edges[0]-this.edges[2])**2 ,
+            (this.ball[1]-this.ball[3])**2 + (this.edges[1]-this.edges[3])**2 );
+        this.radii = Math.min( this.radius, (R2**.5)/2 ) ;
+        
         this.showEdges() ;
     }
     
@@ -190,8 +203,8 @@ export class Crop {
         this.ctx.lineTo( this.edges[0]-1, this.H ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.edges[0], this.ball[0], this.radius, 0, 2*Math.PI )
-        this.ctx.arc( this.edges[0], this.ball[0], this.radiu5-5, 0, 2*Math.PI )
+        this.ctx.arc( this.edges[0], this.ball[0], this.radii, 0, 2*Math.PI )
+        this.ctx.arc( this.edges[0], this.ball[0], this.radii-5, 0, 2*Math.PI )
         this.ctx.stroke() ;
         
         
@@ -210,8 +223,8 @@ export class Crop {
         this.ctx.lineTo( this.edges[2]+1, this.H ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.edges[2], this.ball[2], this.radius, 0, 2*Math.PI )
-        this.ctx.arc( this.edges[2], this.ball[2], this.radius-5, 0, 2*Math.PI )
+        this.ctx.arc( this.edges[2], this.ball[2], this.radii, 0, 2*Math.PI )
+        this.ctx.arc( this.edges[2], this.ball[2], this.radii-5, 0, 2*Math.PI )
         this.ctx.stroke() ;
         
         this.ctx.strokeStyle = (1 == this.active_edge) ? "yellow" : "black" ;
@@ -229,8 +242,8 @@ export class Crop {
         this.ctx.lineTo( this.W, this.edges[1]-1 ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.ball[1], this.edges[1], this.radius, 0, 2*Math.PI )
-        this.ctx.arc( this.ball[1], this.edges[1], this.radius-5, 0, 2*Math.PI )
+        this.ctx.arc( this.ball[1], this.edges[1], this.radii, 0, 2*Math.PI )
+        this.ctx.arc( this.ball[1], this.edges[1], this.radii-5, 0, 2*Math.PI )
         this.ctx.stroke() ;
         
         this.ctx.strokeStyle = (3 == this.active_edge) ? "yellow" : "black" ;
@@ -248,8 +261,8 @@ export class Crop {
         this.ctx.lineTo( this.W, this.edges[3]+1 ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.ball[3], this.edges[3], this.radius, 0, 2*Math.PI )
-        this.ctx.arc( this.ball[3], this.edges[3], this.radius-5, 0, 2*Math.PI )
+        this.ctx.arc( this.ball[3], this.edges[3], this.radii, 0, 2*Math.PI )
+        this.ctx.arc( this.ball[3], this.edges[3], this.radii-5, 0, 2*Math.PI )
         this.ctx.stroke() ;
     }       
 
@@ -268,16 +281,17 @@ export class Crop {
     }
     
     find_edge( x, y) {
-		if ( (x-this.edges[0])**2 + (y-this.ball[0])**2 <= this.radius2 ) {
+        const r2 = this.radii**1 ;
+		if ( (x-this.edges[0])**2 + (y-this.ball[0])**2 <= r2 ) {
 			return 0 ;
 		}
-		if ( (x-this.edges[2])**2 + (y-this.ball[2])**2 <= this.radius2 ) {
+		if ( (x-this.edges[2])**2 + (y-this.ball[2])**2 <= r2 ) {
 			return 2 ;
 		}
-		if ( (x-this.ball[1])**2 + (y-this.edges[1])**2 <= this.radius2 ) {
+		if ( (x-this.ball[1])**2 + (y-this.edges[1])**2 <= r2 ) {
 			return 1 ;
 		}
-		if ( (x-this.ball[3])**2 + (y-this.edges[3])**2 <= this.radius2 ) {
+		if ( (x-this.ball[3])**2 + (y-this.edges[3])**2 <= r2 ) {
 			return 3 ;
 		}
         if ( x < this.edges[0]-this.blur ) {
