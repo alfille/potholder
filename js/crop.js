@@ -136,36 +136,69 @@ export class Crop {
 		this.edges[1] = this.cropentry.new_val[1] * this.H / this.natH ;
 		this.edges[2] = this.cropentry.new_val[2] * this.W / this.natW + this.edges[0] ;
 		this.edges[3] = this.cropentry.new_val[3] * this.H / this.natH + this.edges[1] ;
-        this.testEdges() ;
+        [0,1,2,3,null].forEach( e => {
+			this.active_edge = e ;
+			this.testEdges() ;
+			});
     }
     
     testEdges() {
-        if ( this.edges[0] < 0 ) {
-            this.edges[0] = 0 ;
-        }
-        if ( this.edges[1] < 0 ) {
-            this.edges[1] = 0 ;
-        }
-        if ( this.edges[2] <= this.blur ) {
-            this.edges[2] = this.blur ;
-        }
-        if ( this.edges[3] <= this.blur ) {
-            this.edges[3] = this.blur ;
-        }
-        if ( this.edges[2] >= this.W ) {
-            this.edges[2] = this.W-1 ;
-        }
-        if ( this.edges[3] >= this.H ) {
-            this.edges[3] = this.H-1 ;
-        }
-        if ( this.edges[0] >= this.edges[2]-this.blur ) {
-            this.edges[0] = this.edges[2]-this.blur ;
-        }
-        if ( this.edges[1] >= this.edges[3]-this.blur ) {
-            this.edges[1] = this.edges[3]-this.blur ;
-        }
-        this.ball = [0,1,2,3]
-            .map( i => ( this.edges[(i+1)%4] + this.edges[(i+3)%4] ) / 2 ) ;
+		const b2 = 2*this.blur ;
+        switch ( this.active_edge ) {
+			case null:
+				break ;
+			case 0:
+				if ( this.edges[0] < 0 ) {
+					this.edges[0] = 0 ;
+				}
+				if ( this.edges[0] >= this.W-b2 ) {
+					this.edges[0] = this.W-b2 ;
+				}
+				if ( this.edges[0] >= this.edges[2]-b2 ) {
+					this.edges[0] = this.edges[2]-b2 ;
+				} 
+				break ;
+			case 1:
+				if ( this.edges[1] < 0 ) {
+					this.edges[1] = 0 ;
+				}
+				if ( this.edges[1] >= this.H-b2 ) {
+					this.edges[1] = this.H-b2 ;
+				}
+				if ( this.edges[1] >= this.edges[3]-b2 ) {
+					this.edges[1] = this.edges[3]-b2 ;
+				}
+				break ;
+			case 2:
+				if ( this.edges[2] <= b2 ) {
+					this.edges[2] = b2 ;
+				}
+				if ( this.edges[2] >= this.W ) {
+					this.edges[2] = this.W-1 ;
+				}
+				if ( this.edges[2] <= this.edges[0]+b2 ) {
+					this.edges[2] = this.edges[0]+b2 ;
+				}
+				break ;
+			case 3:
+				if ( this.edges[3] <= b2 ) {
+					this.edges[3] = b2 ;
+				}
+				if ( this.edges[3] >= this.H ) {
+					this.edges[3] = this.H-1 ;
+				}
+				if ( this.edges[3] <= this.edges[1]+b2 ) {
+					this.edges[3] = this.edges[1]+b2 ;
+				}
+				break ;
+		}
+			
+
+        this.ball[0] = ( this.edges[1] + this.edges[3] ) / 2 ;
+        this.ball[1] = ( this.edges[0] + this.edges[2] ) / 2 ;
+        this.ball[2] = this.ball[0] ;
+        this.ball[3] = this.ball[1] ;
+
         const R2 = Math.min(
             (this.ball[0]-this.edges[1])**2 + (this.edges[0]-this.ball[1])**2 ,
             (this.ball[0]-this.edges[3])**2 + (this.edges[0]-this.ball[3])**2 ,
@@ -179,6 +212,7 @@ export class Crop {
     }
     
     showEdges() {
+		const quart = Math.PI / 2 ;
         this.ctx.clearRect(0,0,this.canW,this.canH);
         this.ctx.lineWidth = 2 ;
         
@@ -203,8 +237,8 @@ export class Crop {
         this.ctx.lineTo( this.edges[0]-1, this.H ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.edges[0], this.ball[0], this.radii, 0, 2*Math.PI )
-        this.ctx.arc( this.edges[0], this.ball[0], this.radii-5, 0, 2*Math.PI )
+        this.ctx.arc( this.edges[0], this.ball[0], this.radii, 2*quart, 6*quart )
+        this.ctx.arc( this.edges[0], this.ball[0], this.radii-5, 2*quart, 6*quart )
         this.ctx.stroke() ;
         
         
@@ -223,8 +257,8 @@ export class Crop {
         this.ctx.lineTo( this.edges[2]+1, this.H ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.edges[2], this.ball[2], this.radii, 0, 2*Math.PI )
-        this.ctx.arc( this.edges[2], this.ball[2], this.radii-5, 0, 2*Math.PI )
+        this.ctx.arc( this.edges[2], this.ball[2], this.radii, 0, 4*quart )
+        this.ctx.arc( this.edges[2], this.ball[2], this.radii-5, 0, 4*quart )
         this.ctx.stroke() ;
         
         this.ctx.strokeStyle = (1 == this.active_edge) ? "yellow" : "black" ;
@@ -242,8 +276,8 @@ export class Crop {
         this.ctx.lineTo( this.W, this.edges[1]-1 ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.ball[1], this.edges[1], this.radii, 0, 2*Math.PI )
-        this.ctx.arc( this.ball[1], this.edges[1], this.radii-5, 0, 2*Math.PI )
+        this.ctx.arc( this.ball[1], this.edges[1], this.radii, 3*quart, 7*quart )
+        this.ctx.arc( this.ball[1], this.edges[1], this.radii-5, 3*quart, 7*quart )
         this.ctx.stroke() ;
         
         this.ctx.strokeStyle = (3 == this.active_edge) ? "yellow" : "black" ;
@@ -261,8 +295,8 @@ export class Crop {
         this.ctx.lineTo( this.W, this.edges[3]+1 ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.ball[3], this.edges[3], this.radii, 0, 2*Math.PI )
-        this.ctx.arc( this.ball[3], this.edges[3], this.radii-5, 0, 2*Math.PI )
+        this.ctx.arc( this.ball[3], this.edges[3], this.radii, quart, 5*quart )
+        this.ctx.arc( this.ball[3], this.edges[3], this.radii-5, quart, 5*quart )
         this.ctx.stroke() ;
     }       
 
