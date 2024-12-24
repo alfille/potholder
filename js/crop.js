@@ -308,7 +308,7 @@ class Crop {
     }
     
     find_edge( x, y) {
-        const r2 = this.radii**1 ;
+        const r2 = this.radii**2 ;
 		if ( (x-this.edges[0])**2 + (y-this.ball[0])**2 <= r2 ) {
 			return 0 ;
 		}
