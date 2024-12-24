@@ -8,12 +8,8 @@
  
 export {
     EntryList,
-    } ;
+} ;
     
-import {
-        Crop,
-} from "./crop.js" ;    
-
 class EntryList {
     constructor( struct_list, Images=null ) {
         this.double_tap = false ;
@@ -84,16 +80,16 @@ class EntryList {
         cloneClass( ".ExtraEdit", parent ) ;
     }
 
-        show_doc_inner() {
+    show_doc_inner() {
         const ul = document.createElement('ul');
 
         this.members
             .filter( m => m.struct.type != "image" )
             .forEach( item => {
-                    const li = document.createElement("li");
-                    item.show_item().forEach( e => li.appendChild(e)) ;
-                    ul.appendChild( li );
-                    });
+                const li = document.createElement("li");
+                item.show_item().forEach( e => li.appendChild(e)) ;
+                ul.appendChild( li );
+                });
 
         ul.onclick = () => {
             // fake double-tap (phones don't have ondblclick)
@@ -121,7 +117,6 @@ class EntryList {
         return Promise.all( this.members
             .filter( all_item => "query"   in all_item.struct )
             .map( query_item => objectDatabase.db.query( query_item.struct.query, {group:true,reduce:true} )
-//                              .then( x => { console.log("X",query_item._name,x); return x;})
             .then( q_result => q_result.rows
                 .filter( r=>r.key )
                 .filter( r=>r.value>0)
@@ -164,7 +159,7 @@ class EntryList {
     }    
 
     edit_doc_inner() {
-                const ul = document.createElement('ul');
+        const ul = document.createElement('ul');
         return this.choicePromise( this.struct ).then( _ => {
             this.members.forEach( item => {
                 const li = document.createElement("li");
@@ -172,69 +167,69 @@ class EntryList {
                 item.edit_item()
                     .forEach( e => li.appendChild(e)) ;
                 ul.appendChild( li );
-                        });
-                        return ul ;
+                });
+            return ul ;
         });
     }    
 }
 
 class InvisibleEntry {
-		// base class for basic (non-visible) entries
-        static unique = 0 ;
-        // class (s) for data entry items
-        constructor( struct ) {
-                this.struct = struct ;
-                this._name = struct.name ;
-                this._alias = struct?.alias ?? this._name ;
-                this.localname = `LOCAL_${InvisibleEntry.unique}`;
-                InvisibleEntry.unique += 1 ;
-        }
-        
-        changed() {
-                // value changed from initial setting
-                return this.initial_val != this.new_val ;
-        }
-        
-        default_value() {
-                return "" ;
-        }
-        
-        form2value() {
-		}
-        
-        load_from_doc( doc ) {
-                this.initial_val = (this._name in doc) ? doc[this._name] : this.default_value() ;
-                this.new_val = this.initial_val ;
-        }
-        
-        get_doc() {
-                // pair for creating doc of values
-                return [this._name, this.new_val] ;
-        }
-        
-        print_item() {
-                return this.show_item() ;
-        }
+    // base class for basic (non-visible) entries
+    static unique = 0 ;
+    // class (s) for data entry items
+    constructor( struct ) {
+        this.struct = struct ;
+        this._name = struct.name ;
+        this._alias = struct?.alias ?? this._name ;
+        this.localname = `LOCAL_${InvisibleEntry.unique}`;
+        InvisibleEntry.unique += 1 ;
+    }
+    
+    changed() {
+        // value changed from initial setting
+        return this.initial_val != this.new_val ;
+    }
+    
+    default_value() {
+        return "" ;
+    }
+    
+    form2value() {
+    }
+    
+    load_from_doc( doc ) {
+        this.initial_val = (this._name in doc) ? doc[this._name] : this.default_value() ;
+        this.new_val = this.initial_val ;
+    }
+    
+    get_doc() {
+        // pair for creating doc of values
+        return [this._name, this.new_val] ;
+    }
+    
+    print_item() {
+        return this.show_item() ;
+    }
 
     show_item() {
-		return [] ;
+        return [] ;
     }
     
     edit_item() {
-		return [] ;
+        return [] ;
     }
 }
 
 class VisibleEntry extends InvisibleEntry {
         default_value() {
-                return "" ;
+            return "" ;
         }
         
         form2value() {
-                const local = [...document.getElementsByName(this.localname)] ;
-                if ( local.length > 0 ) {
-                        this.new_val = local[0].value ;
-                }
+            const local = [...document.getElementsByName(this.localname)] ;
+            if ( local.length > 0 ) {
+                this.new_val = local[0].value ;
+            }
         }
         
         show_label() {
@@ -374,6 +369,11 @@ class DateEntry extends VisibleEntry {
         return new Date().toISOString() ;
     }
     
+    show_item_element() {
+        // default element = straight text
+        return document.createTextNode( (this.new_val == "") ? "<empty>" : this.new_val.split("T")[0] ) ;
+    }
+
     edit_flatten() {
         const inp = document.createElement("input");
         inp.type = "date";
@@ -703,17 +703,17 @@ class ArrayEntry extends VisibleEntry {
 }
 
 class ImageArrayEntry extends ArrayEntry {
-        show_image( entry ) {
-                const image = entry.members.find( m => m.struct.type == "image" ) ;
-                if ( image ) {
-                        return image.show_item_element() ;
-                } else {
-                        return document.createTextNode("No image") ;
-                }
+    show_image( entry ) {
+        const image = entry.members.find( m => m.struct.type == "image" ) ;
+        if ( image ) {
+            return image.show_item_element() ;
+        } else {
+            return document.createTextNode("No image") ;
         }
+    }
                 
-        show_item() {
-                // show as table with list for each member (which is a set of fields in itself)
+    show_item() {
+        // show as table with list for each member (which is a set of fields in itself)
         const clone = document.createElement("span"); // dummy span to hold clone
         cloneClass( ".Darray", clone ) ;
 
@@ -723,19 +723,19 @@ class ImageArrayEntry extends ArrayEntry {
 
         if ( this.new_val.length > 0 ) {
             this.new_val.forEach( entry => {
-                                const tr = tab.insertRow(-1);
-                                tr.insertCell(-1).appendChild( this.show_image( entry ) );
-                                const td=tr.insertCell(-1);
-                                td.style.width="100%";
-                                td.appendChild(entry.show_doc_inner() );
-                                });
+                const tr = tab.insertRow(-1);
+                tr.insertCell(-1).appendChild( this.show_image( entry ) );
+                const td=tr.insertCell(-1);
+                td.style.width="100%";
+                td.appendChild(entry.show_doc_inner() );
+                });
         } else {
             tab.insertRow(-1).insertCell(-1).innerHTML="<i>- no entries -</i>";
         }
         return [tab];
-        }
+    }
         
-        edit_item() {
+    edit_item() {
         // Insert a table, and pull label into caption
 
         // Heading and buttons
@@ -745,38 +745,38 @@ class ImageArrayEntry extends ArrayEntry {
         // table caption
         const tab = clone.querySelector( ".Darray_table" ) ;
         tab.querySelector("span").innerHTML=`<i>${this._alias} list</i>`;
-                switch ( this.new_val.length ) {
-                        case 0:
-                                break ;
-                        case 1:
-                                tab.querySelector(".Darray_edit").hidden=false;
-                                tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( 0 );
-                                tab.querySelector(".Darray_crop").hidden=false;
-                                tab.querySelector(".Darray_crop").onclick=()=>this.crop( 0 );
-                                break ;
-                        default:
-                                tab.querySelector(".Darray_edit").hidden=false;
-                                tab.querySelector(".Darray_edit").onclick=()=>this.select_edit();
-                                tab.querySelector(".Darray_rearrange").hidden=false;
-                                tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange();
-                                break ;
-                }
+        switch ( this.new_val.length ) {
+            case 0:
+                break ;
+            case 1:
+                tab.querySelector(".Darray_edit").hidden=false;
+                tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( 0 );
+                tab.querySelector(".Darray_crop").hidden=false;
+                tab.querySelector(".Darray_crop").onclick=()=>this.crop( 0 );
+                break ;
+            default:
+                tab.querySelector(".Darray_edit").hidden=false;
+                tab.querySelector(".Darray_edit").onclick=()=>this.select_edit();
+                tab.querySelector(".Darray_rearrange").hidden=false;
+                tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange();
+                break ;
+        }
 
         // table entries
         if ( this.new_val.length > 0 ) {
             this.new_val.forEach( (entry,i) => {
-                                const tr = tab.insertRow(-1);
-                                tr.insertCell(-1).appendChild( this.show_image( entry ) );
-                                const td=tr.insertCell(-1);
-                                td.style.width="100%";
-                                td.onclick = () => this.edit_array_entry( i );
-                                td.appendChild(entry.show_doc_inner() );
-                                });
+                const tr = tab.insertRow(-1);
+                tr.insertCell(-1).appendChild( this.show_image( entry ) );
+                const td=tr.insertCell(-1);
+                td.style.width="100%";
+                td.onclick = () => this.edit_array_entry( i );
+                td.appendChild(entry.show_doc_inner() );
+                });
         } else {
             tab.insertRow(-1).insertCell(-1).innerHTML="<i>- no entries -</i>";
         }
         return [tab];
-        }
+    }
 
     select_edit( item ) {
         // Insert a table, and pull label into caption
@@ -791,17 +791,17 @@ class ImageArrayEntry extends ArrayEntry {
 
         // table
         this.new_val.forEach( (entry,i) => {
-                        const tr = tab.insertRow(-1);
-                        tr.onclick = () => this.edit_array_entry( i );
-                        tr.insertCell(-1).appendChild( this.show_image( entry ) );
-                        
-                        const td = tr.insertCell(-1);
-                        td.appendChild(entry.show_doc_inner());
-                        });
+            const tr = tab.insertRow(-1);
+            tr.onclick = () => this.edit_array_entry( i );
+            tr.insertCell(-1).appendChild( this.show_image( entry ) );
+            
+            const td = tr.insertCell(-1);
+            td.appendChild(entry.show_doc_inner());
+            });
     }
 
     rearrange() {
-                const parent = this.fake_page() ;
+        const parent = this.fake_page() ;
 
         // Insert a table, and pull label into caption
                 
@@ -818,50 +818,58 @@ class ImageArrayEntry extends ArrayEntry {
             const tr = tab.insertRow(-1) ;
             tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
             tr.insertCell(-1).innerHTML=`<button type="button"  class="Darray_down" title="Move this entry down"><B>&#8659;</B></button>`;
-                        tr.insertCell(-1).appendChild( this.show_image( entry ) );
-                        const td=tr.insertCell(-1);
-                        td.style.width="100%";
-                        td.appendChild(entry.show_doc_inner() );
+                tr.insertCell(-1).appendChild( this.show_image( entry ) );
+                const td=tr.insertCell(-1);
+                td.style.width="100%";
+                td.appendChild(entry.show_doc_inner() );
             });
             
         const elements = this.new_val.length ;
         tab.querySelectorAll(".Darray_up"  ).forEach( (b,i)=>b.onclick=()=> this.swap( i, (i+elements-1)%elements ) ) ;
         tab.querySelectorAll(".Darray_down").forEach( (b,i)=>b.onclick=()=> this.swap( i, (i+1)%elements )  );
-        }
+    }
         
     edit_array_entry( idx ) {
-                // image version, no add, crop enabled
-                const parent = this.fake_page() ;
+        // image version, no add, crop enabled
+        const parent = this.fake_page() ;
         const local_list = this.new_val[idx] ;
 
-                // controls to be added to top
-                const control_li = document.createElement('li');
-                cloneClass( ".Darray_li", control_li ) ;
-                control_li.querySelector("span").innerHTML=`<i>Edit Image</i>`;
-                control_li.classList.add("Darray_li1");
-                [".Darray_ok",".Darray_crop",".Darray_cancel",".Darray_delete"].forEach(c=>control_li.querySelector(c).hidden=false);
-                control_li.querySelector(".Darray_ok").onclick=()=>{
-                        local_list.form2value() ;
-                        this.enclosing.edit_doc() ;
-                };
-                control_li.querySelector(".Darray_crop").onclick=()=>this.crop(idx);
-                control_li.querySelector(".Darray_cancel").onclick=()=>this.enclosing.edit_doc();
-                control_li.querySelector(".Darray_delete").onclick=()=>{
-                        if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
-                                this.new_val.splice(idx,1);
-                                this.enclosing.edit_doc();
-                        }
-                };
+        // controls to be added to top
+        const control_li = document.createElement('li');
+        cloneClass( ".Darray_li", control_li ) ;
+        control_li.querySelector("span").innerHTML=`<i>Edit Image</i>`;
+        control_li.classList.add("Darray_li1");
+        [".Darray_ok",".Darray_crop",".Darray_cancel",".Darray_delete"].forEach(c=>control_li.querySelector(c).hidden=false);
+        control_li.querySelector(".Darray_ok").onclick=()=>{
+            local_list.form2value() ;
+            this.enclosing.edit_doc() ;
+        };
+        control_li.querySelector(".Darray_crop").onclick=()=>this.crop(idx);
+        control_li.querySelector(".Darray_cancel").onclick=()=>this.enclosing.edit_doc();
+        control_li.querySelector(".Darray_delete").onclick=()=>{
+            if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
+                this.new_val.splice(idx,1);
+                this.enclosing.edit_doc();
+            }
+        };
 
         // Insert edit fields and put controls at top
         local_list.edit_doc_inner()
         .then( ul => {
-                        ul.insertBefore( control_li, ul.children[0] );
-                        parent.appendChild(ul) ;
-                }) ;
+            ul.insertBefore( control_li, ul.children[0] );
+            parent.appendChild(ul) ;
+            }) ;
     }
     
     crop(idx) {
-                objectCrop.crop(this.new_val[idx]) ;
-        }
+        const b = document.createElement("button") ;
+        b.id="replot";
+        b.onclick = () => {
+            this.enclosing.edit_doc() ;
+            b.remove() ;
+            } ;    
+        b.style.display = "none" ;
+        document.body.appendChild(b) ;
+        objectCrop.crop(this.new_val[idx] ) ;
+    }
 }

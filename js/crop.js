@@ -10,7 +10,7 @@ import {
     EntryList,
 } from "./field_mod.js" ;
     
-export class Crop {
+class Crop {
     constructor() {
         // canvas and context
         this.under = document.getElementById("under_canvas") ;
@@ -35,9 +35,6 @@ export class Crop {
         this.entrylist = entrylist ; // entry list holds image
         const imageentry = entrylist.members.find( m => m.struct.type == "image" ) ;
         this.cropentry = entrylist.members.find( m => m.struct.type == "crop" ) ;
-        console.log("entrylist",entrylist);
-        console.log("imageentry",imageentry);
-        console.log("cropentry",this.cropentry);
         if ( imageentry == null || this.cropentry == null ) {
             this.cancel() ; 
         }
@@ -57,14 +54,10 @@ export class Crop {
                 
                 if ( this.cropentry.new_val.length != 4 ) {
 					this.cropentry.new_val = [ 0, 0, this.natW, this.natH ] ;
-					console.log("new:",this.cropentry.new_val) ;
-				} else {
-					console.log("old:",this.cropentry.new_val) ;
 				}
                 this.canW = window.innerWidth ;
                 this.canH = 600 ;
                 [this.W, this.H] = rightSize( this.natW, this.natH, this.canW, this.canH ) ;
-                console.log("scale", this.W, this.H);
 
                 this.under.width = this.canW ;
                 this.canvas.width = this.canW ;
@@ -425,12 +418,15 @@ export class Crop {
     }
     
     cancel() {
+		// Hide Crop Screen and go back to full edit list
+		// Called from all Crop buttons 
         this.show(false);
+        document.getElementById("replot").click() ; // hidden button to replot
     }
 
     full() {
 		this.cropentry.new_val = [ 0, 0, this.natW, this.natH ] ;
-        this.show(false);
+        this.cancel(); // to clean up
     }
     
     ok() {
@@ -440,7 +436,7 @@ export class Crop {
 			(this.edges[2]-this.edges[0]) * this.natW / this.W ,
 			(this.edges[3]-this.edges[1]) * this.natH / this.H ,
         ];
-        this.show(false);
+        this.cancel(); // to clean up
     }
     
     show(state) {

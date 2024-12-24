@@ -49,7 +49,6 @@ class PotImages {
 				}
 				const h = canvas.width * crop[3] / crop[2] ;
 				canvas.height = h ;
-				console.log("image",crop,canvas.width,canvas.height,h);
 				canvas.getContext("2d").drawImage( img, crop[0], crop[1], crop[2], crop[3], 0, 0, canvas.width, h ) ;
 				}
             canvas.onclick=()=>{

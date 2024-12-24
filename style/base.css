@@ -145,28 +145,6 @@ ul {
   display: inline-block;
   border-radius: 5px;
 }
-.small_pic {
-  max-height: 60px;
-  cursor: pointer;
-  transition: 0.3s;
-  display: inline-block;
-  width: auto ;
-  border-radius: 5px;
-}
-.small_pic:hover {
-  opacity: 0.7;
-}
-.medium_pic {
-  max-height: 120px;
-  cursor: pointer;
-  transition: 0.3s;
-  display: inline-block;
-  width: auto ;
-  border-radius: 5px;
-}
-.medium_pic:hover {
-  opacity: 0.7;
-}
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
@@ -387,13 +365,6 @@ legend {
 .Darray_up:hover, .Darray_down:hover {
   background-color: white;
   color: blue;
-}
-.Rotate {
-  transform: rotate(180deg);
-  writing-mode: vertical-rl;
-  }
-.Greedy {
-  width: 100%;
 }
 #FirstTimeContent p {
   margin-left: 5px;
