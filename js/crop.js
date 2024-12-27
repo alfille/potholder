@@ -40,6 +40,9 @@ class Crop {
         }
         const name = imageentry.new_val ;
         const image = new Image() ; // temporary image
+        
+        // Stop Scroll
+        window.onscroll = () => window.scrollTo(0,0);
 
         // Load Image
         imageentry.Images.getURL( name )
@@ -420,6 +423,10 @@ class Crop {
     cancel() {
 		// Hide Crop Screen and go back to full edit list
 		// Called from all Crop buttons 
+        
+        // Start Scroll
+        window.onscroll = () => {};
+
         this.show(false);
         document.getElementById("replot").click() ; // hidden button to replot
     }
