@@ -305,17 +305,15 @@ class ImageEntry extends VisibleEntry {
     constructor( struct, Images ) {
         super( struct ) ;
         this.Images = Images ;
-        this.img = null ; // for printing -- to check completion
     }
     
     show_item_element() {
         // image or comment
-        return this.Images.displayClickable(this.new_val) ;
+        return this.Images.displayClickable(this.new_val,"medium_pic") ;
     }
     
     print_item() {
-        this.img = this.Images.print_display( this.new_val ) ;
-        return [this.img] ;
+        return [this.Images.print_display( this.new_val )] ;
     }
             
     edit_item() {
@@ -621,12 +619,12 @@ class ArrayEntry extends VisibleEntry {
 
         // table
         this.new_val.forEach( (entry,i) => {
-                        const tr = tab.insertRow(-1);
-                        tr.onclick = () => this.edit_array_entry( i );
-                        
-                        const td = tr.insertCell(-1);
-                        td.appendChild(entry.show_doc_inner());
-                        });
+            const tr = tab.insertRow(-1);
+            tr.onclick = () => this.edit_array_entry( i );
+            
+            const td = tr.insertCell(-1);
+            td.appendChild(entry.show_doc_inner());
+            });
     }
 
     edit_array_entry( idx ) {
@@ -634,46 +632,46 @@ class ArrayEntry extends VisibleEntry {
         const adding = idx==-1 ; // flag for adding rather than editing
         const local_list = adding ? new EntryList( this.struct.members, this.Images ) : this.new_val[idx] ;
         if ( adding ) {
-                        // fill in default values
-                        local_list.load_from_doc( {} ) ;
-                }
+            // fill in default values
+            local_list.load_from_doc( {} ) ;
+        }
 
-                // controls to be added to top
-                const control_li = document.createElement('li');
-                cloneClass( ".Darray_li", control_li ) ;
-                control_li.querySelector("span").innerHTML=`<i>${adding?"Add":"Edit"} ${this._alias} entry</i>`;
-                control_li.classList.add("Darray_li1");
-                (adding?[".Darray_ok",".Darray_cancel"]:[".Darray_ok",".Darray_cancel",".Darray_delete"]).forEach(c=>control_li.querySelector(c).hidden=false);
-                control_li.querySelector(".Darray_ok").onclick=()=>{
-                        local_list.form2value() ;
-                        if ( adding ) {
-                                this.new_val.push( local_list ) ;
-                        }
-                        this.enclosing.edit_doc() ;
-                };
-                control_li.querySelector(".Darray_cancel").onclick=()=>this.enclosing.edit_doc();
-                control_li.querySelector(".Darray_delete").onclick=()=>{
-                        if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
-                                this.new_val.splice(idx,1);
-                                this.enclosing.edit_doc();
-                        }
-                };
+        // controls to be added to top
+        const control_li = document.createElement('li');
+        cloneClass( ".Darray_li", control_li ) ;
+        control_li.querySelector("span").innerHTML=`<i>${adding?"Add":"Edit"} ${this._alias} entry</i>`;
+        control_li.classList.add("Darray_li1");
+        (adding?[".Darray_ok",".Darray_cancel"]:[".Darray_ok",".Darray_cancel",".Darray_delete"]).forEach(c=>control_li.querySelector(c).hidden=false);
+        control_li.querySelector(".Darray_ok").onclick=()=>{
+                local_list.form2value() ;
+                if ( adding ) {
+                        this.new_val.push( local_list ) ;
+                }
+                this.enclosing.edit_doc() ;
+        };
+        control_li.querySelector(".Darray_cancel").onclick=()=>this.enclosing.edit_doc();
+        control_li.querySelector(".Darray_delete").onclick=()=>{
+                if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
+                        this.new_val.splice(idx,1);
+                        this.enclosing.edit_doc();
+                }
+        };
 
         // Insert edit fields and put controls at top
         local_list.edit_doc_inner()
         .then( ul => {
-                        ul.insertBefore( control_li, ul.children[0] );
-                        parent.appendChild(ul) ;
-                }) ;
+            ul.insertBefore( control_li, ul.children[0] );
+            parent.appendChild(ul) ;
+            }) ;
     }
 
-        swap( i1, i2 ) {
-                [this.new_val[i1],this.new_val[i2]] = [this.new_val[i2],this.new_val[i1]] ; 
-                this.rearrange() ; // show the rearrange menu again
-        }
+    swap( i1, i2 ) {
+        [this.new_val[i1],this.new_val[i2]] = [this.new_val[i2],this.new_val[i1]] ; 
+        this.rearrange() ; // show the rearrange menu again
+    }
 
     rearrange() {
-                const parent = this.fake_page() ;
+        const parent = this.fake_page() ;
 
         // Insert a table, and pull label into caption
                 
@@ -711,6 +709,16 @@ class ImageArrayEntry extends ArrayEntry {
             return document.createTextNode("No image") ;
         }
     }
+    
+    member_image( entry ) {
+        const crop = entry.members.find( m=> m.struct.type == "crop" ) ;
+        return this.Images.displayClickable(
+            entry.members.find( m=> m.struct.type == "image" ).new_val ,
+            this.new_val.length > 3 ? "small_pic" : "medium_pic" ,
+            crop ? crop.new_val : null 
+            );
+    }
+        
                 
     show_item() {
         // show as table with list for each member (which is a set of fields in itself)
@@ -724,7 +732,7 @@ class ImageArrayEntry extends ArrayEntry {
         if ( this.new_val.length > 0 ) {
             this.new_val.forEach( entry => {
                 const tr = tab.insertRow(-1);
-                tr.insertCell(-1).appendChild( this.show_image( entry ) );
+                tr.insertCell(-1).appendChild( this.member_image( entry ) );                    
                 const td=tr.insertCell(-1);
                 td.style.width="100%";
                 td.appendChild(entry.show_doc_inner() );
@@ -766,7 +774,7 @@ class ImageArrayEntry extends ArrayEntry {
         if ( this.new_val.length > 0 ) {
             this.new_val.forEach( (entry,i) => {
                 const tr = tab.insertRow(-1);
-                tr.insertCell(-1).appendChild( this.show_image( entry ) );
+                tr.insertCell(-1).appendChild( this.member_image( entry ) );
                 const td=tr.insertCell(-1);
                 td.style.width="100%";
                 td.onclick = () => this.edit_array_entry( i );
@@ -793,7 +801,7 @@ class ImageArrayEntry extends ArrayEntry {
         this.new_val.forEach( (entry,i) => {
             const tr = tab.insertRow(-1);
             tr.onclick = () => this.edit_array_entry( i );
-            tr.insertCell(-1).appendChild( this.show_image( entry ) );
+            tr.insertCell(-1).appendChild( this.member_image( entry ) );
             
             const td = tr.insertCell(-1);
             td.appendChild(entry.show_doc_inner());
@@ -818,7 +826,7 @@ class ImageArrayEntry extends ArrayEntry {
             const tr = tab.insertRow(-1) ;
             tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
             tr.insertCell(-1).innerHTML=`<button type="button"  class="Darray_down" title="Move this entry down"><B>&#8659;</B></button>`;
-                tr.insertCell(-1).appendChild( this.show_image( entry ) );
+                tr.insertCell(-1).appendChild( this.member_image( entry ) );
                 const td=tr.insertCell(-1);
                 td.style.width="100%";
                 td.appendChild(entry.show_doc_inner() );
