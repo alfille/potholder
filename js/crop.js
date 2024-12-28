@@ -359,6 +359,7 @@ class Crop {
     }
     
     start_drag_t(e) {
+		e.preventDefault() ;
         if ( e.targetTouches.length > 0 ) {
             this.start_drag( e.targetTouches[0] ) ;
         } else {
@@ -386,6 +387,7 @@ class Crop {
     }
     
     drag_m(e) {
+		e.preventDefault() ;
         if ( e.buttons & 1 == 1 ) {
             this.drag(e) ;
         } else {

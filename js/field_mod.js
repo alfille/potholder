@@ -870,6 +870,8 @@ class ImageArrayEntry extends ArrayEntry {
     }
     
     crop(idx) {
+        // Create invisible replot button and passes to crop
+        // crop returns pressing (and removing) button
         const b = document.createElement("button") ;
         b.id="replot";
         b.onclick = () => {
