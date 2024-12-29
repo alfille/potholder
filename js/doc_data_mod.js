@@ -6,6 +6,10 @@
  * MIT license
  * */
  
+"use strict";
+
+/* jshint esversion: 11 */
+
 export {
     PotData,
     PotDataEditMode,
@@ -126,7 +130,7 @@ class PotDataRaw { // singleton class
 		i_list
 			.filter( i => ! a_list.includes(i) )
 			.forEach( i => {
-				delete this.doc.images[i] 
+				delete this.doc.images[i] ;
 				changed = true ;
 			}) ;
 

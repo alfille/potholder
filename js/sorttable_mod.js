@@ -6,6 +6,10 @@
  * MIT license
  * */
  
+"use strict";
+
+/* jshint esversion: 11 */
+
 export {
     PotTable,
     MultiTable,
@@ -46,8 +50,8 @@ class SortTable {
             // Add an entry (currently empty) for this column
             this.aliases[fieldname] = {} ;
         }
-        this.aliases[fieldname]["name"] = aliasname ?? fieldname ;
-        this.aliases[fieldname]["value"] = ((record)=>{
+        this.aliases[fieldname].name = aliasname ?? fieldname ;
+        this.aliases[fieldname].value = ((record)=>{
             try {
                 if ( transformfunction==null ) {
                     return record[fieldname];
@@ -265,7 +269,7 @@ class MultiTable {
             this.cat_ob[cat].table=new PotTable( cl, tb.id ) ;
 
             // put data in it
-            this.cat_ob[cat].table.fill(this.cat_ob[cat].rows)
+            this.cat_ob[cat].table.fill(this.cat_ob[cat].rows) ;
 
             // fieldset open/close toggle
             this.cat_ob[cat].visible=true ;
@@ -304,7 +308,7 @@ class MultiTable {
             } else {
                 this.cat_ob[k]={rows:[v]} ;
             }
-        })
+        }) ;
     }
     
     open_all() {

@@ -8,6 +8,10 @@
  
 /* Althought this is lavbeled as "Cookie" we've switched to localStorage */ 
  
+"use strict";
+
+/* jshint esversion: 11 */
+
 export {
     Cookie,
 } ;

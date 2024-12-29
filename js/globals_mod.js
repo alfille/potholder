@@ -6,6 +6,10 @@
  * MIT license
  * */
 
+"use strict";
+
+/* jshint esversion: 11 */
+
 // globals cookie backed
 globalThis. potId = null ;
 
@@ -21,19 +25,13 @@ globalThis. objectSearch = null;
 globalThis. objectThumb = null;
 globalThis. objectCrop = null ;
 
-globalThis. rightRatio = ( imgW, imgH, limitW, limitH ) => {
-    // return image * ratio = limits
-    const h = limitW * imgH / imgW ;
-    if ( h > limitH ) {
-        return limitH / imgH ;
-    } else {
-        return limitW / imgW ;
-    }
-} ;
-
 globalThis. rightSize = ( imgW, imgH, limitW, limitH ) => {
-    const r = rightRatio( imgW, imgH, limitW, limitH ) ;
-    return [ r * imgW, r * imgH ] ;
+    const h = limitW * imgH / imgW ;
+    if ( h <= limitH ) {
+        return [ limitW, h ] ;
+    } else {
+        return [ limitH * imgW / imgH, limitH ] ;
+    }
 } ;
 
 globalThis. cloneClass = ( fromClass, target ) => {

@@ -6,6 +6,10 @@
  * MIT license
  * */
  
+"use strict";
+
+/* jshint esversion: 11 */
+
 export class CSV { // convenience class
 	constructor() {
 		this.columns = [
@@ -47,15 +51,15 @@ export class CSV { // convenience class
 			case 1:
 				if ( com[0] in doc ) {
 					return doc[com[0]] ;
-				} else {
-					return "" ;
 				}
+				return "" ;
+
 			case 2:
 				if ( com[0] in doc ) {
 					return doc[com[0]].map( s => s[com[1]] ).join(", ") ;
-				} else {
-					return "" ;
 				}
+				return "" ;
+
 		}
 	} 
 

@@ -6,10 +6,10 @@
  * MIT license
  * */
 
-import {
-    EntryList,
-} from "./field_mod.js" ;
-    
+"use strict";
+
+/* jshint esversion: 11 */
+
 class Crop {
     constructor() {
         // canvas and context
@@ -87,7 +87,7 @@ class Crop {
                 
                 // Show
                 this.show(true);
-            }
+				};
             image.src = url ;
             })
         .catch( err => {
@@ -202,7 +202,7 @@ class Crop {
             (this.ball[2]-this.edges[3])**2 + (this.edges[2]-this.ball[3])**2 ,
             (this.ball[0]-this.ball[2])**2 + (this.edges[0]-this.edges[2])**2 ,
             (this.ball[1]-this.ball[3])**2 + (this.edges[1]-this.edges[3])**2 );
-        this.radii = Math.min( this.radius, (R2**.5)/2 ) ;
+        this.radii = Math.min( this.radius, (R2**0.5)/2 ) ;
         
         this.showEdges() ;
     }
@@ -233,8 +233,8 @@ class Crop {
         this.ctx.lineTo( this.edges[0]-1, this.H ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.edges[0], this.ball[0], this.radii, 2*quart, 6*quart )
-        this.ctx.arc( this.edges[0], this.ball[0], this.radii-5, 2*quart, 6*quart )
+        this.ctx.arc( this.edges[0], this.ball[0], this.radii, 2*quart, 6*quart ) ;
+        this.ctx.arc( this.edges[0], this.ball[0], this.radii-5, 2*quart, 6*quart ) ;
         this.ctx.stroke() ;
         
         
@@ -253,8 +253,8 @@ class Crop {
         this.ctx.lineTo( this.edges[2]+1, this.H ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.edges[2], this.ball[2], this.radii, 0, 4*quart )
-        this.ctx.arc( this.edges[2], this.ball[2], this.radii-5, 0, 4*quart )
+        this.ctx.arc( this.edges[2], this.ball[2], this.radii, 0, 4*quart ) ;
+        this.ctx.arc( this.edges[2], this.ball[2], this.radii-5, 0, 4*quart ) ;
         this.ctx.stroke() ;
         
         this.ctx.strokeStyle = (1 == this.active_edge) ? "yellow" : "black" ;
@@ -272,8 +272,8 @@ class Crop {
         this.ctx.lineTo( this.W, this.edges[1]-1 ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.ball[1], this.edges[1], this.radii, 3*quart, 7*quart )
-        this.ctx.arc( this.ball[1], this.edges[1], this.radii-5, 3*quart, 7*quart )
+        this.ctx.arc( this.ball[1], this.edges[1], this.radii, 3*quart, 7*quart ) ;
+        this.ctx.arc( this.ball[1], this.edges[1], this.radii-5, 3*quart, 7*quart ) ;
         this.ctx.stroke() ;
         
         this.ctx.strokeStyle = (3 == this.active_edge) ? "yellow" : "black" ;
@@ -291,8 +291,8 @@ class Crop {
         this.ctx.lineTo( this.W, this.edges[3]+1 ) ;
         this.ctx.stroke() ;
         this.ctx.beginPath() ;
-        this.ctx.arc( this.ball[3], this.edges[3], this.radii, quart, 5*quart )
-        this.ctx.arc( this.ball[3], this.edges[3], this.radii-5, quart, 5*quart )
+        this.ctx.arc( this.ball[3], this.edges[3], this.radii, quart, 5*quart ) ;
+        this.ctx.arc( this.ball[3], this.edges[3], this.radii-5, quart, 5*quart ) ;
         this.ctx.stroke() ;
     }       
 
@@ -388,7 +388,7 @@ class Crop {
     
     drag_m(e) {
 		e.preventDefault() ;
-        if ( e.buttons & 1 == 1 ) {
+        if ( (e.buttons & 1) == 1 ) {
             this.drag(e) ;
         } else {
             this.undrag() ;

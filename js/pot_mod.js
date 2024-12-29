@@ -6,6 +6,10 @@
  * MIT license
  * */
  
+"use strict";
+
+/* jshint esversion: 11 */
+
 import {
 	PotBox,
 	BlankBox,
@@ -189,7 +193,7 @@ class Pot { // convenience class
 					// keep comment and name
 					doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
 				}
-				})
+				}) ;
 				return objectDatabase.db.put(doc) ;
 			})
 		.then( () => objectThumb.getOne( potId ) )
@@ -207,7 +211,7 @@ class Pot { // convenience class
 		objectDatabase.db.put( doc )
 		.then( response => this.AssignPhoto( response.id ) )
 		.catch( err => {
-			objectLog(err),
+			objectLog(err);
 			objectPage.show('MainMenu');
 		}) ;
 	}
@@ -250,7 +254,7 @@ class Pot { // convenience class
 					// keep comment and name
 					doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
 				}
-				})
+				}) ;
 				return objectDatabase.db.put(doc) ;
 			})
 		.then( () => objectThumb.getOne( potId ) )

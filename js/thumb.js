@@ -6,6 +6,10 @@
  * MIT license
  * */
 
+"use strict";
+
+/* jshint esversion: 11 */
+
 class Thumb {
     constructor() {
         this.Thumbs = {} ;

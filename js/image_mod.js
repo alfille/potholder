@@ -6,6 +6,10 @@
  * MIT license
  * */
  
+"use strict";
+
+/* jshint esversion: 11 */
+
 export {
     PotImages,
 } ;
@@ -54,7 +58,7 @@ class PotImages {
 				const h = canvas.width * crop[3] / crop[2] ;
 				canvas.height = h ;
 				canvas.getContext("2d").drawImage( img, crop[0], crop[1], crop[2], crop[3], 0, 0, canvas.width, h ) ;
-				}
+				} ;
             canvas.onclick=()=>{
 				const img2 = new Image() ; // temp image
                 this.getURL( name )

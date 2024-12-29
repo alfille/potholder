@@ -26,7 +26,7 @@ export function createQueries() {
                             if ( "type" in g ) {
                                 emit( g.type ) ;
                             }
-                        })
+                        }) ;
                     }
                 }.toString(),
                 reduce: '_count',
@@ -44,7 +44,7 @@ export function createQueries() {
                             if ( "kiln" in g ) {
                                 emit( g.kiln ) ;
                             }
-                        })
+                        }) ;
                     }
                 }.toString(),
                 reduce: '_count',
@@ -62,7 +62,7 @@ export function createQueries() {
                             if ( "cone" in g ) {
                                 emit( g.cone ) ;
                             }
-                        })
+                        }) ;
                     }
                 }.toString(),
                 reduce: '_count',
@@ -80,7 +80,7 @@ export function createQueries() {
                             if ( "type" in g ) {
                                 emit( g.type ) ;
                             }
-                        })
+                        }) ;
                     }
                 }.toString(),
                 reduce: '_count',
