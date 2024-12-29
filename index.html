@@ -120,7 +120,7 @@
                     <!-- top: EditMode (for any of the PotData derivatives -->
                     <div class="potDataEdit pageOverlay">
                         <button type="button" class="divbutton savedata" onclick="objectPotData.savePieceData()" title="Save your changes to the database">Save Changes</button>
-						<button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Do NOT save changes">Cancel</button>
+						<button type="button" class="divbutton return" onclick="objectPotData.back()" title="Do NOT save changes">Cancel</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
                     <!-- top: DatabaseInfo -->
@@ -335,7 +335,7 @@
             <div class="ExtraSave">
 				<div class="MainMenuRow">
 					<button type="button" class="divbutton savedata" onclick="objectPotData.savePieceData()" title="Save your changes to the database">Save Changes</button>
-					<button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Do NOT save changes">Cancel</button>
+					<button type="button" class="divbutton return" onclick="objectPotData.back()" title="Do NOT save changes">Cancel</button>
 				</div>
             </div>
             <!-- Property Array Table Caption -->
@@ -348,7 +348,7 @@
                             <button type="button" class="Darray_edit" title="Modify (or delete) a list entry" hidden>Modify</button>
                             <button type="button" class="Darray_crop" title="Crop this image" hidden>Crop</button>
                             <button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
-                            <button type="button" class="Darray_ok savedata" title="Keep this change" hidden>Ok</button>
+                            <button type="button" class="Darray_ok" title="Keep this change" hidden>Ok</button>
 							<button type="button" class="Darray_delete delete" title="Delete this entry" hidden>Delete</button>
                             <button type="button" class="Darray_cancel return" title="Cancel any changes" hidden>Cancel</button>
                             <button type="button" class="Darray_back return" title="Return to previous screen" hidden>Back</button>
@@ -360,11 +360,11 @@
             <div class="Darray_li">
                 <div class="Darray_div">
                     <span class="Darray_span"></span>
-                    <button type="button" class="Darray_add savedata" title="Add a new entry to the list" hidden>Add</button>
+                    <button type="button" class="Darray_add" title="Add a new entry to the list" hidden>Add</button>
                     <button type="button" class="Darray_edit" title="Modify (or delete) a list entry" hidden>Edit</button>
 					<button type="button" class="Darray_crop" title="Crop this image" hidden>Crop</button>
                     <button type="button" class="Darray_rearrange" title="Change the display order" hidden>Rearrange</button>
-                    <button type="button" class="Darray_ok savedata" title="Keep this change" hidden>Ok</button>
+                    <button type="button" class="Darray_ok" title="Keep this change" hidden>Ok</button>
                     <button type="button" class="Darray_delete delete" title="Delete this entry" hidden>Delete</button>
                     <button type="button" class="Darray_cancel return" onClick="objectPotData.cancelArray()" title="Cancel any changes" hidden>Cancel</button>
                     <button type="button" class="Darray_back return" title="Return to previous screen" hidden>Back</button>

@@ -97,6 +97,7 @@ class EntryList {
                 // second tap
                 this.double_tap = false ;
                 this.edit_doc() ;
+                document.querySelectorAll(".savedata").forEach( s => s.disabled = true ) ;
             } else {
                 // first tap
                 this.double_tap = true ;
@@ -183,6 +184,13 @@ class InvisibleEntry {
         this._alias = struct?.alias ?? this._name ;
         this.localname = `LOCAL_${InvisibleEntry.unique}`;
         InvisibleEntry.unique += 1 ;
+    }
+    
+    can_save() {
+        this.form2value() ;
+        if ( this.changed() ) {
+            document.querySelectorAll(".savedata").forEach(s => s.disabled = false );
+        }
     }
     
     changed() {
@@ -284,7 +292,7 @@ class TextEntry extends VisibleEntry {
         inp.title = this.struct.hint;
         inp.name = this.localname ;
         inp.value = this.new_val ;
-        inp.oninput = () => this.form2value() ;
+        inp.oninput = () => this.can_save() ;
         return [ inp ] ;
     }
 }
@@ -296,7 +304,7 @@ class TextAreaEntry extends VisibleEntry {
         inp.title = this.struct.hint;
         inp.name = this.localname ;
         inp.value = this.new_val ;
-        inp.oninput = () => this.form2value() ;
+        inp.oninput = () => this.can_save() ;
         return [ inp ] ;
     }
 }
@@ -333,7 +341,7 @@ class ListEntry extends VisibleEntry {
         inp.setAttribute( "list", dlist.id );
         inp.name = this.localname ;
         inp.value = this.new_val;
-        inp.oninput = () => this.form2value() ;
+        inp.oninput = () => this.can_save() ;
 
         return [dlist,inp] ;
     }
@@ -352,7 +360,7 @@ class RadioEntry extends VisibleEntry {
             inp.type = "radio";
             inp.name = this.localname;
             inp.value = pick;
-            inp.oninput = () => this.form2value() ;
+            inp.oninput = () => this.can_save() ;
             if ( pick == this.new_val ) {
                 inp.checked = true;
             }
@@ -378,7 +386,7 @@ class DateEntry extends VisibleEntry {
         inp.name = this.localname ;
         inp.title = this.struct.hint;
         inp.value = this.new_val.split("T")[0] ;
-        inp.oninput = () => this.form2value() ;
+        inp.oninput = () => this.can_save() ;
         return [inp] ;
     }
 }
@@ -399,9 +407,9 @@ class BoolEntry extends VisibleEntry {
         } 
 
         form2value() {
-                this.new_val = [...document.getElementsByName(this.localname)]
-                        .filter( i => i.checked )
-                        .map(i=>i.value)[0] ?? "" ;
+            this.new_val = [...document.getElementsByName(this.localname)]
+                .filter( i => i.checked )
+                .map(i=>i.value)[0] ?? "" ;
         }
         
         edit_flatten() {
@@ -410,7 +418,7 @@ class BoolEntry extends VisibleEntry {
                         inp.type = "radio";
                         inp.name = this.localname;
                         inp.value = pick;
-                        inp.oninput = () => this.form2value() ;
+                        inp.oninput = () => this.can_save() ;
                         switch (pick) {
                                 case true:
                                         inp.checked = (this.new_val == "true") ;
@@ -452,7 +460,7 @@ class CheckboxEntry extends VisibleEntry {
                         inp.type = "checkbox";
                         inp.name = this.localname;
                         inp.value = pick;
-                        inp.oninput = () => this.form2value() ;
+                        inp.oninput = () => this.can_save() ;
                         if ( this.new_val.includes(pick) ) {
                                 inp.checked = true;
                         }
@@ -473,48 +481,55 @@ class NumberEntry extends VisibleEntry {
 }               
 
 class ArrayEntry extends VisibleEntry {
-        constructor( struct, enclosing, Images=null ) {
-                super( struct ) ;
-                this.initial_val=[] ;
-                this.enclosing = enclosing ;
-                this.Images = Images ;
-        }
+    constructor( struct, enclosing, Images=null ) {
+        super( struct ) ;
+        this.initial_val=[] ;
+        this.enclosing = enclosing ;
+        this.Images = Images ;
+    }
         
-        changed() {
-                //console.log(`Change ${this._name} <${this.initial_val.length}><${this.new_val.length}>`);
-                //console.log("Array",this.new_val.length != this.initial_val.length,this.new_val.some( m => m.changed() ));
-                return (this.new_val.length != this.initial_val.length) 
-                        || this.new_val.some( m => m.changed() ) 
-                        || this.new_val.some( (n,i) => n != this.initial_val[i] )
-                        ;
+    can_save() {
+        this.form2value() ;
+        if ( this.changed() ) {
+            document.querySelectorAll(".savedata").forEach(s => s.disabled = false );
         }
+    }
+    
+    changed() {
+        //console.log(`Change ${this._name} <${this.initial_val.length}><${this.new_val.length}>`);
+        //console.log("Array",this.new_val.length != this.initial_val.length,this.new_val.some( m => m.changed() ));
+        return (this.new_val.length != this.initial_val.length) 
+            || this.new_val.some( m => m.changed() ) 
+            || this.new_val.some( (n,i) => n != this.initial_val[i] )
+            ;
+    }
 
-        get_doc() {
-                return [ this._name, this.new_val.map( e => e.get_doc() ) ] ;
+    get_doc() {
+            return [ this._name, this.new_val.map( e => e.get_doc() ) ] ;
+    }
+
+    load_from_doc( doc ) {
+        if ( (this._name in doc) && Array.isArray(doc[this._name]) ) {
+            // make an entry for each data array element in doc, of the full members EntryList 
+            this.initial_val = doc[this._name]
+                .map( (e,i) => {
+                    const elist = new EntryList( this.struct.members, this.Images ) ;
+                    elist.load_from_doc( doc[this._name][i] ) ;
+                    return elist ;
+                    } ) ;
+        } else {
+            this.initial_val = []; 
         }
+        this.new_val = [ ...this.initial_val ] ;
+    }       
 
-        load_from_doc( doc ) {
-                if ( (this._name in doc) && Array.isArray(doc[this._name]) ) {
-                        // make an entry for each data array element in doc, of the full members EntryList 
-                        this.initial_val = doc[this._name]
-                                .map( (e,i) => {
-                                        const elist = new EntryList( this.struct.members, this.Images ) ;
-                                        elist.load_from_doc( doc[this._name][i] ) ;
-                                        return elist ;
-                                } ) ;
-                } else {
-                        this.initial_val = []; 
-                }
-                this.new_val = [ ...this.initial_val ] ;
-        }       
-
-        form2value() {
-                // get data from HTML fields into "new_val"
-        this.new_val.forEach( e => e.form2value() ) ;
-        }
-        
-        show_item() {
-                // show as table with list for each member (which is a set of fields in itself)
+    form2value() {
+            // get data from HTML fields into "new_val"
+    this.new_val.forEach( e => e.form2value() ) ;
+    }
+    
+    show_item() {
+        // show as table with list for each member (which is a set of fields in itself)
         const clone = document.createElement("span"); // dummy span to hold clone
         cloneClass( ".Darray", clone ) ;
 
@@ -524,76 +539,76 @@ class ArrayEntry extends VisibleEntry {
 
         if ( this.new_val.length > 0 ) {
             this.new_val.forEach( entry => {
-                                const td = tab.insertRow(-1).insertCell(0);
-                                td.appendChild( entry.show_doc_inner() ) ;
-                                });
+                const td = tab.insertRow(-1).insertCell(0);
+                td.appendChild( entry.show_doc_inner() ) ;
+                });
         } else {
             tab.insertRow(-1).insertCell(-1).innerHTML="<i>- no entries -</i>";
         }
         return [tab];
+    }
+
+    print_item() {
+            // show as table with list for each member (which is a set of fields in itself)
+    const clone = document.createElement("span"); // dummy span to hold clone
+    cloneClass( ".Darray", clone ) ;
+
+    const tab = clone.querySelector( ".Darray_table" ) ;
+    tab.querySelector("span").innerHTML=`<i>${this._alias} list</i>`;
+    tab.querySelectorAll("button").forEach(b=>b.style.display="none");
+
+    if ( this.new_val.length > 0 ) {
+        this.new_val.forEach( entry => {
+            const td = tab.insertRow(-1).insertCell(0);
+            td.appendChild( entry.print_doc_inner() ) ;
+            });
+    } else {
+        tab.insertRow(-1).insertCell(-1).innerHTML="<i>- no entries -</i>";
+    }
+    return [tab];
+    }
+
+    edit_item() {
+    // Insert a table, and pull label into caption
+
+    // Heading and buttons
+    const clone = document.createElement("span"); // dummy span to hold clone
+    cloneClass( ".Darray", clone ) ;
+
+    // table caption
+    const tab = clone.querySelector( ".Darray_table" ) ;
+    tab.querySelector("span").innerHTML=`<i>${this._alias} list</i>`;
+    tab.querySelector(".Darray_add").hidden=false;
+    tab.querySelector(".Darray_add").onclick=()=>this.edit_array_entry( -1 );
+        switch ( this.new_val.length ) {
+            case 0:
+                break ;
+            case 1:
+                tab.querySelector(".Darray_edit").hidden=false;
+                tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( 0 );
+                break ;
+            default:
+                tab.querySelector(".Darray_edit").hidden=false;
+                tab.querySelector(".Darray_edit").onclick=()=>this.select_edit();
+                tab.querySelector(".Darray_rearrange").hidden=false;
+                tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange();
+                break ;
         }
-
-        print_item() {
-                // show as table with list for each member (which is a set of fields in itself)
-        const clone = document.createElement("span"); // dummy span to hold clone
-        cloneClass( ".Darray", clone ) ;
-
-        const tab = clone.querySelector( ".Darray_table" ) ;
-        tab.querySelector("span").innerHTML=`<i>${this._alias} list</i>`;
-        tab.querySelectorAll("button").forEach(b=>b.style.display="none");
-
-        if ( this.new_val.length > 0 ) {
-            this.new_val.forEach( entry => {
-                                const td = tab.insertRow(-1).insertCell(0);
-                                td.appendChild( entry.print_doc_inner() ) ;
-                                });
-        } else {
-            tab.insertRow(-1).insertCell(-1).innerHTML="<i>- no entries -</i>";
-        }
-        return [tab];
-        }
-
-        edit_item() {
-        // Insert a table, and pull label into caption
-
-        // Heading and buttons
-        const clone = document.createElement("span"); // dummy span to hold clone
-        cloneClass( ".Darray", clone ) ;
-
-        // table caption
-        const tab = clone.querySelector( ".Darray_table" ) ;
-        tab.querySelector("span").innerHTML=`<i>${this._alias} list</i>`;
-        tab.querySelector(".Darray_add").hidden=false;
-        tab.querySelector(".Darray_add").onclick=()=>this.edit_array_entry( -1 );
-                switch ( this.new_val.length ) {
-                        case 0:
-                                break ;
-                        case 1:
-                                tab.querySelector(".Darray_edit").hidden=false;
-                                tab.querySelector(".Darray_edit").onclick=()=>this.edit_array_entry( 0 );
-                                break ;
-                        default:
-                                tab.querySelector(".Darray_edit").hidden=false;
-                                tab.querySelector(".Darray_edit").onclick=()=>this.select_edit();
-                                tab.querySelector(".Darray_rearrange").hidden=false;
-                                tab.querySelector(".Darray_rearrange").onclick=()=>this.rearrange();
-                                break ;
-                }
 
         // table entries
         if ( this.new_val.length > 0 ) {
             this.new_val.forEach( (entry,i) => {
-                                const tr = tab.insertRow(-1);
-                                tr.onclick = () => this.edit_array_entry( i );
-                                
-                                const td = tr.insertCell(-1);
-                                td.appendChild(entry.show_doc_inner());
-                                });
+                const tr = tab.insertRow(-1);
+                tr.onclick = () => this.edit_array_entry( i );
+                
+                const td = tr.insertCell(-1);
+                td.appendChild(entry.show_doc_inner());
+                });
         } else {
             tab.insertRow(-1).insertCell(-1).innerHTML="<i>- no entries -</i>";
         }
         return [tab];
-        }
+    }
 
     fake_page() {
         document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
@@ -643,18 +658,20 @@ class ArrayEntry extends VisibleEntry {
         control_li.classList.add("Darray_li1");
         (adding?[".Darray_ok",".Darray_cancel"]:[".Darray_ok",".Darray_cancel",".Darray_delete"]).forEach(c=>control_li.querySelector(c).hidden=false);
         control_li.querySelector(".Darray_ok").onclick=()=>{
-                local_list.form2value() ;
-                if ( adding ) {
-                        this.new_val.push( local_list ) ;
-                }
-                this.enclosing.edit_doc() ;
+            local_list.form2value() ;
+            if ( adding ) {
+                this.new_val.push( local_list ) ;
+            }
+            this.can_save();
+            this.enclosing.edit_doc() ;
         };
         control_li.querySelector(".Darray_cancel").onclick=()=>this.enclosing.edit_doc();
         control_li.querySelector(".Darray_delete").onclick=()=>{
-                if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
-                        this.new_val.splice(idx,1);
-                        this.enclosing.edit_doc();
-                }
+            if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
+                this.new_val.splice(idx,1);
+                this.can_save();
+                this.enclosing.edit_doc();
+            }
         };
 
         // Insert edit fields and put controls at top
@@ -681,7 +698,10 @@ class ArrayEntry extends VisibleEntry {
         tab.querySelector("span").innerHTML=`<i>${this._alias} rearrange order</i>`;
         [".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
 
-        tab.querySelector(".Darray_ok").onclick=()=>this.enclosing.edit_doc();
+        tab.querySelector(".Darray_ok").onclick=()=>{
+            this.can_save() ;
+            this.enclosing.edit_doc();
+            };
 
         // table
         this.new_val.forEach( (entry,i) => {
@@ -819,7 +839,10 @@ class ImageArrayEntry extends ArrayEntry {
         tab.querySelector("span").innerHTML=`<i>${this._alias} rearrange order</i>`;
         [".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
 
-        tab.querySelector(".Darray_ok").onclick=()=>this.enclosing.edit_doc();
+        tab.querySelector(".Darray_ok").onclick=()=>{
+            this.can_save();
+            this.enclosing.edit_doc();
+            };
 
         // table
         this.new_val.forEach( (entry,i) => {
@@ -849,17 +872,21 @@ class ImageArrayEntry extends ArrayEntry {
         control_li.classList.add("Darray_li1");
         [".Darray_ok",".Darray_crop",".Darray_cancel",".Darray_delete"].forEach(c=>control_li.querySelector(c).hidden=false);
         control_li.querySelector(".Darray_ok").onclick=()=>{
-            local_list.form2value() ;
+            local_list.can_save() ;
             this.enclosing.edit_doc() ;
         };
         control_li.querySelector(".Darray_crop").onclick=()=>this.crop(idx);
-        control_li.querySelector(".Darray_cancel").onclick=()=>this.enclosing.edit_doc();
+        control_li.querySelector(".Darray_cancel").onclick=()=>{
+            this.can_save();
+            this.enclosing.edit_doc();
+            };
         control_li.querySelector(".Darray_delete").onclick=()=>{
             if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
                 this.new_val.splice(idx,1);
+                this.can_save();
                 this.enclosing.edit_doc();
             }
-        };
+            };
 
         // Insert edit fields and put controls at top
         local_list.edit_doc_inner()

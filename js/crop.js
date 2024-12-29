@@ -435,6 +435,7 @@ class Crop {
 
     full() {
 		this.cropentry.new_val = [ 0, 0, this.natW, this.natH ] ;
+		document.querySelectorAll(".savedata").forEach(s=>s.disabled = false);
         this.cancel(); // to clean up
     }
     
@@ -445,6 +446,7 @@ class Crop {
 			(this.edges[2]-this.edges[0]) * this.natW / this.W ,
 			(this.edges[3]-this.edges[1]) * this.natH / this.H ,
         ];
+		document.querySelectorAll(".savedata").forEach(s=>s.disabled = false );
         this.cancel(); // to clean up
     }
     

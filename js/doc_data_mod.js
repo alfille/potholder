@@ -48,6 +48,7 @@ class PotDataRaw { // singleton class
 
     edit_doc() {
 		this.list.edit_doc();
+		document.querySelectorAll(".savedata").forEach( s => s.disabled = true ) ;
 	}
     
 	loadDocData() {
@@ -80,6 +81,18 @@ class PotDataRaw { // singleton class
     savePieceData() {
         this.saveChanged( "PotMenu" );
     }
+    
+    back() {
+		if ( this.list.changed() ) {
+			if ( confirm("WARNING: Unsaved changes.\nPress OK to discard your new data.\nPress CANCEL to NOT DISCARD yet.") ) {
+				objectPage.show("back");
+			} else {
+				document.querySelectorAll(".savedata").forEach(s=>s.disabled = false);
+			}
+		} else {
+			objectPage.show("back");
+		}
+	}	
 
 	match_image_list() {
 		let changed = false ;

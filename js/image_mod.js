@@ -27,7 +27,7 @@ class PotImages {
     }
     
     displayClickable( name, pic_size="small_pic", new_crop=null ) {
-		console.log("displayClickable",name,pic_size,new_crop);
+		//console.log("displayClickable",name,pic_size,new_crop);
         const img = new Image() ;
         const canvas = document.createElement("canvas");
         switch ( pic_size ) {
