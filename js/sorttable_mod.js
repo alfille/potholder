@@ -15,7 +15,14 @@ export {
     MultiTable,
     SearchTable,
     AssignTable,
+    OrphanTable,
 } ;
+
+import {
+    structGeneralPot,
+    structImages,
+} from "./doc_struct.js" ;
+
 
 class SortTable {
     constructor( collist, tableId, aliaslist=[] ) {
@@ -222,6 +229,49 @@ class PotTable extends ThumbTable {
             ] ) {
         super( collist, tableId, aliaslist ) ;
     }
+
+    selectId() {
+        return potId;
+    }
+
+    selectFunc(id) {
+        objectPot.select(id) ;
+    }
+
+    editpage() {
+        objectPage.show("PotMenu");
+    }
+}
+
+class OrphanTable extends PotTable {
+    constructor(
+        collist=["_id","fields" ],
+        tableId="AllPieces",
+        aliaslist=
+            [
+                ["Thumbnail","Picture", (doc)=> `${doc.artist}`],
+                ['fields','Orphans',(doc)=>this.ofields(doc)],
+                ['_id','ID',(doc)=>`${doc._id}`]
+            ] ) {
+		
+        super( collist, tableId, aliaslist ) ;
+
+		// list of good fields
+        this.gfields = [ 
+			structGeneralPot.map( s => s.name ),
+			structImages.map( s => s.name ),
+			"author",
+			].flat();
+        console.log(this.gfields);
+    }
+
+	ofields(doc) {
+		return Object.keys(doc)
+			.filter( k=>k[0] != '_' )
+			.filter( k=>!(this.gfields.includes(k)) )
+			.map( k=> `${k}: ${doc[k]}` )
+			.join("\n") ;
+	}
 
     selectId() {
         return potId;

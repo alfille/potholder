@@ -37,6 +37,7 @@ import {
     MultiTable,
     SearchTable,
     AssignTable,
+    OrphanTable,
 } from "./sorttable_mod.js" ;
 
 import {
@@ -164,6 +165,20 @@ class AllPieces extends Pagelist {
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
         objectTable = new PotTable();
+        objectPot.getAllIdDoc(false)
+        .then( (docs) => objectTable.fill(docs.rows ) )
+        .catch( (err) => objectLog.err(err) );
+    }
+}
+
+class Orphans extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static show_content(extra="") {
+        objectPot.unselect() ;
+        new StatBox() ;
+        document.getElementById("MainPhotos").style.display="block";
+        objectTable = new OrphanTable();
         objectPot.getAllIdDoc(false)
         .then( (docs) => objectTable.fill(docs.rows ) )
         .catch( (err) => objectLog.err(err) );

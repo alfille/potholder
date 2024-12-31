@@ -37,8 +37,8 @@
 						<button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: AllPieces -->
-                    <div class="AllPieces topButtons pageOverlay">
+                    <!-- top: AllPieces Orphans -->
+                    <div class="AllPieces Orphans topButtons pageOverlay">
                         <button type="button" class="divbutton NewCamera" title="UJse camera -- new piece or assign later" onClick="objectPot.pushPixButton()">New Photo &#128247;</button>            
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >New Gallery &#128444;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
@@ -211,8 +211,8 @@
 					<button type="button" class="divbutton MainBold" id="CopyURLtext" onclick="objectPage.copy_to_clip()">Copy to Clipboard</button>
                 </div>
             </div>
-            <!-- body: AllPiecess -->
-            <div class="AllPieces pageOverlay">
+            <!-- body: AllPiecess Orphans -->
+            <div class="AllPieces Orphans pageOverlay">
                 <div id="AllPiecesContent" >
                     <table id="AllPieces"></table>
                 </div>
@@ -285,6 +285,7 @@
 					<div class="PotProcButtons">
 						<button type="button" class="divbutton MainBold" onclick="objectPage.csv()" title="CSV file (no pictures)">Download Spreadsheet</button>
 						<button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
+						<button type="button" class="divbutton" onclick="objectPage.show( 'Orphans' )" title="Extra data fields">Orphan fields</button>
 					</div>
 					<div class="PotProcButtons">
 						<button type="button" class="divbutton" onClick="objectDatabase.fauxton()" hint="Open Couchdb Fauxton console">Database Console</button>
