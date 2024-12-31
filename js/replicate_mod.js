@@ -10,9 +10,6 @@
 
 /* jshint esversion: 11 */
 
-import {
-    } from "./globals_mod.js" ;
-
 class DatabaseManager { // convenience class
     // Access to remote (cloud) version of database
     constructor() {

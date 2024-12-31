@@ -10,14 +10,11 @@
 
 /* jshint esversion: 11 */
 
-import {
-    } from "./globals_mod.js" ;
-
 // used to generate data entry pages "PotData" type
 import {
-        structDatabaseInfo,
-        structGeneralPot,
-        structImages,
+    structDatabaseInfo,
+    structGeneralPot,
+    structImages,
 } from "./doc_struct.js" ;
 
 class Search { // singleton class

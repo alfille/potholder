@@ -19,9 +19,12 @@ export {
 };
     
 class Query {
-	static version = 1 ; // change to force renewal (value is arbitrary)
-	constructor(struct) {
+	static version = 2 ; // change to force renewal (value is arbitrary)
+	constructor() {
 		this.version = `${Query.version}` ;
+	}
+	
+	create(struct) {
 		const queries = this.struct_parse(struct) ; // query entries
 		// add image statistics
 		queries.push( ({
@@ -35,12 +38,11 @@ class Query {
 				},
 			},
 		}) );
-		Promise.all( queries.map( (ddoc) => {
+		return Promise.all( queries.map( (ddoc) => {
 			objectDatabase.db.get( ddoc._id )
 			.then( doc => {
 				// update if version number has changed
 				if ( this.version !== doc.version ) {
-					console.log("Put new",doc,ddoc);
 					ddoc._rev = doc._rev;
 					ddoc.version = this.version ;
 					return objectDatabase.db.put( ddoc );
@@ -54,6 +56,7 @@ class Query {
 				});
 			}))
 		.then( _ => this.prune_queries() )
+        .then( _ => objectDatabase.db.viewCleanup() )
 		.catch( (err) => objectLog.err(err) );
 	}
 	
@@ -64,7 +67,6 @@ class Query {
 		// query gives the name of the search and it is grouped by name
         return struct.map( e => {
             if ( "query" in e ) { // primary query field
-//                const f = `function(doc) { if ( "${e.name}" in doc ) { emit(doc.${e.name}) ; }}`;
                 const f = `(doc) => { if ( "${e.name}" in doc ) { emit(doc.${e.name}) ; }}`;
                 return ({
                     _id: `_design/${e.query}`,
@@ -77,7 +79,6 @@ class Query {
                 }) ;
             } else if ("members" in e) { // query field in array (or ImageArray)
                 return e.members.filter( m => "query" in m ).map( m => {
-//                    const f = `function(doc) { if ( "${e.name}" in doc ){doc.${e.name}.forEach(g=> { if ( "${m.name}" in g ) { emit(g.${m.name}); }});}};`;
                     const f = `(doc) => { if ( "${e.name}" in doc ){doc.${e.name}.forEach(g=> { if ( "${m.name}" in g ) { emit(g.${m.name}); }});}};`;
                     return ({
                         _id: `_design/${m.query}`,
@@ -96,7 +97,7 @@ class Query {
 	
 	prune_queries() {
 		// remove old entries (don't match version string)
-		objectDatabase.db.allDocs( {
+		return objectDatabase.db.allDocs( {
             startkey: "_design/",
             endkey:   "_design/\uffff",
             include_docs: true,
@@ -104,5 +105,4 @@ class Query {
         .then( docs => docs.rows.filter( r=> r.doc.version !== this.version ) )
         .then( rows => Promise.all( rows.map( r => objectDatabase.db.remove(r.doc)) ) ) ;
     }
-
 }

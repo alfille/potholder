@@ -12,14 +12,11 @@
 
 export {
     Pagelist,
-    } ;
+} ;
 
 import {
-    } from "./globals_mod.js" ;
-    
-import {
 	CSV,
-	} from "./csv_mod.js" ;
+} from "./csv_mod.js" ;
 
 class Pagelist {
     // list of subclasses = displayed "pages"

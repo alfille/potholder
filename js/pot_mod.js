@@ -13,15 +13,15 @@
 import {
 	PotBox,
 	BlankBox,
-    } from "./titlebox.js" ;
+} from "./titlebox.js" ;
 
 import {
     Id_pot,
-    } from "./id_mod.js" ;
+} from "./id_mod.js" ;
 
 import {
     PotImages,
-    } from "./image_mod.js" ;
+} from "./image_mod.js" ;
 
 // used to generate data entry pages "PotData" type
 import {

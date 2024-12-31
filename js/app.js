@@ -25,47 +25,34 @@ import {
 } from "./doc_struct.js" ;
 
 import {
-    createQueries,
+    Query,
 } from "./query_mod.js" ;
 
 import {
     PotImages,
-    } from "./image_mod.js" ;
-
-import {
-    Id_pot,
-    } from "./id_mod.js";
-
-import {
-    } from "./cookie_mod.js" ;
+} from "./image_mod.js" ;
 
 import {
     PotTable,
     MultiTable,
     SearchTable,
     AssignTable,
-    } from "./sorttable_mod.js" ;
+} from "./sorttable_mod.js" ;
 
 import {
     PotData,
     PotDataEditMode,
     PotDataRaw,
-    } from "./doc_data_mod.js" ;
+} from "./doc_data_mod.js" ;
 
 import {
     PotDataPrint,
-    } from "./print_data_mod.js" ;
+} from "./print_data_mod.js" ;
 
-import {
-    } from "./log_mod.js" ;
-    
 import {
     Pagelist
-    } from "./page_mod.js" ;
+} from "./page_mod.js" ;
     
-import {
-    } from "./replicate_mod.js" ;
-
 class Administration extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
@@ -495,10 +482,10 @@ window.onload = () => {
         // Thumbnails
         objectThumb.setup() ; // just getting canvas from doc
 
-        // Secondary indexes
-        createQueries();
-        objectDatabase.db.viewCleanup()
-        .then( () => objectThumb.getAll() )
+        // Secondary indexes (create, prune and clean up views)
+        const q = new Query();
+        q.create( structGeneralPot.concat(structImages) )
+        .then( () => objectThumb.getAll() ) // create thumbs
         .catch( err => objectLog.err(err,"Query cleanup") );
 
         // now start listening for any changes to the database

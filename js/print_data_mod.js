@@ -12,11 +12,11 @@
 
 export {
     PotDataPrint,
-    } ;
+} ;
 
 import {
-        PotImages,
-    } from "./image_mod.js" ;
+	PotImages,
+} from "./image_mod.js" ;
 
 import {
     EntryList,

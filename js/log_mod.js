@@ -10,9 +10,6 @@
 
 /* jshint esversion: 11 */
 
-import {
-    } from "./globals_mod.js" ;
-
 export class Log{
     constructor() {
         this.list = [];
@@ -34,7 +31,7 @@ export class Log{
     }
     
     clear() {
-        this.list = [] ;
+        this.list = ["Error log cleared"] ;
         this.show();
     }
     

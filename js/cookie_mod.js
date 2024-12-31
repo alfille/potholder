@@ -12,10 +12,6 @@
 
 /* jshint esversion: 11 */
 
-export {
-    Cookie,
-} ;
-
 class Cookie { //convenience class
     // 2 versions, one with values placed in global scope, the other purely local values
     
