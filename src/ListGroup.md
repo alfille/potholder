@@ -10,11 +10,11 @@ Rather than one long list, your pieces can be listed by _Groups_ like "Clay", "G
 
 You can see this grouping is by "Clay," and the name of each clay found is shown.
 
-### Separate Lists
+### Collapse Groups
 
-![](ListGroup2.png) 
+The "__-__" and "__+__" buttons can collase and expand all the groups to make it easier to get an overview.
 
-Each group is a separate table. You can select a piece to inspect or edit by clicking on it's row in the table.
+![](ListGroup3.png)
 
 ### Hiding Tables
 
@@ -22,14 +22,16 @@ Each group is a separate table. You can select a piece to inspect or edit by cli
 
 It is possible to hide or show any of the tables by clicking the "+" "-" button.
 
-### Hidden
+### Separate Lists
 
-![](ListGroup4.png)
+![](ListGroup5.png) 
 
-Here the "Brown Clay" table is hidden.
+Each group is a separate table. You can select a piece to inspect or edit by clicking on it's row in the table.
 
 ### Sortable
 
-![](ListGroup5.png)
-
 Like the [_All Pieces Table_](AllPieces.md), each table is sortable by clicking on a column heading.
+
+### Repeats
+
+Depending on the grouping, pieces can appear in more than one category.

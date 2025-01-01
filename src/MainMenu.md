@@ -1,6 +1,6 @@
 # Main Menu
 
-![](MainMenu.png)
+![](MainMenu1.png)
 
 The __Main Menu__ is the primary point for navigating to the many program features. The _Home_ button (upper left icon) always takes you here.
 
@@ -16,4 +16,6 @@ The focus of the page is:
 * [_New Piece_](PotNew.md) to create an entry for a new piece
 * [_Instructions_](https://alfille.github.io/potholder/) for overall help
 * [_Name/Password_](RemoteDatabaseInput.md) to modify your credentials to the database or generate a web link
-* _Advanced Options_ informational but not normally needed in general usage
+* [_Advanced Options_](Administration.md) informational but not normally needed in general usage
+
+In addition, you can click any of the thumbnail images to select that piece quickly.

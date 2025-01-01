@@ -16,26 +16,20 @@ When a particular piece is selected, it's picture will be the one shown.
 
 ## Feature Buttons
 
-![](Display2.png)
-
 These are specific to each page, but commonly include 
 * _Help_ page-specific help
 * [_Find_](Search.md) full text search
-* [_Photo_](Photo.md) to add a picture from your camera
-* [_Gallery_](Photo.md) to select pictures already stored on your device
+* [_New Photo_](Photo.md) to take a picture and create a new piece or add to an existing one
+* [_New Gallery_](Photo.md) to select pictures already stored on your device
 
 ## Info Bar
-
-![](Display3.png)
 
 Information about 
 * the database as a whole
 * the selected piece
 * actions to take
 
-## Work Area
-
-![](Display33.png)
+## Working Area
 
 This is the central focus of the page. It varies with each page, of course, but can be:
 * Navigation buttons  
@@ -45,7 +39,7 @@ This is the central focus of the page. It varies with each page, of course, but 
 * Lists  
 ![](Display4c.png)
 
-## Network Status
+## Status Line
 
 ![](Display4.png)
 
@@ -55,8 +49,4 @@ Note that data is saved locally. It is also sent to the server (and vise versa) 
 
 ## Thumbnail buttons / Images
 
-![](Display5.png)
-
-For pieces with a picture, the thumbnail is a fast way to click and select the piece. You can then [inspect and edit data](PotMenu.md) on that piece.
-
-When a piece is selected, images of just that piece are shown.
+For pieces with a picture, the thumbnail is a fast way to click and select the piece. You can then [inspect and edit data](PotMenu.md) that piece.
