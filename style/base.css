@@ -470,3 +470,8 @@ legend {
   top: 0px;
   left: 0px;
 }
+#struct_json {
+  color: white;
+  padding: 1em;
+  tab-size: 4;
+}

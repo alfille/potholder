@@ -59,8 +59,8 @@
                     <div class="AssignPic topButtons pageOverlay">
 						<button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: ListMenu MakeURL-->
-                    <div class="ListMenu topButtons pageOverlay MakeURL">
+                    <!-- top: ListMenu MakeURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser -->
+                    <div class="ListMenu topButtons pageOverlay MakeURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser ">
                         <button type="button" class="divbutton NewCamera" title="Use camera -- new piece or assign later" onClick="objectPot.pushPixButton()">New Photo &#128247;</button>            
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >New Gallery &#128444;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
@@ -285,7 +285,8 @@
 					<div class="PotProcButtons">
 						<button type="button" class="divbutton MainBold" onclick="objectPage.csv()" title="CSV file (no pictures)">Download Spreadsheet</button>
 						<button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
-						<button type="button" class="divbutton" onclick="objectPage.show( 'Orphans' )" title="Extra data fields">Orphan fields</button>
+						<button type="button" class="divbutton" onclick="objectPage.show( 'Orphans' )" title="Extra data fields">Orphan Fields</button>
+						<button type="button" class="divbutton" onclick="objectPage.show( 'StructMenu' )" title="Database field structure">Database Fields</button>
 					</div>
 					<div class="PotProcButtons">
 						<button type="button" class="divbutton" onClick="objectDatabase.fauxton()" hint="Open Couchdb Fauxton console">Database Console</button>
@@ -293,6 +294,30 @@
 						<button type="button" class="divbutton"  style="visibility:hidden"> </button>
 						<button type="button" class="divbutton delete MainItalic" onclick="objectDatabase.clearLocal()">Clear local data</button>
 					</div>
+                </div>
+            </div>
+            <!-- body: StructMenu -->
+            <div class="StructMenu pageOverlay">
+				<span class="ContentTitle">Field Structure</span>
+                <div id="StructMenuContent" class="MainMenuRow">
+					<div class="PotProcButtons">
+						<span class="ContentTitle">Dabatase</span>
+						<button type="button" class="divbutton MainBold" onclick="objectPage.show( 'StructGeneralPot' )" title="Piece data except image notes">General Properties</button>
+						<button type="button" class="divbutton MainBold" onclick="objectPage.show( 'StructImages' )" title="Image comments">Images</button>
+					</div>
+					<div class="PotProcButtons">
+						<span class="ContentTitle">Administrative</span>
+						<button type="button" class="divbutton" onClick="objectPage.show( 'StructRemoteUser' )" title="User credential structure">User Credentials</button>
+						<button type="button" class="divbutton" onClick="objectPage.show( 'StructDatabaseInfo')" title="Read-only database info">Database Info</button>
+					</div>
+                </div>
+            </div>
+        </div>
+            <!-- body: StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser  -->
+            <div class="StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser  pageOverlay">
+				<span class="ContentTitle" id="StructShowTitle"></span>
+                <div id="StructShowContent">
+					<pre id="struct_json"></pre>
                 </div>
             </div>
         </div>

@@ -25,7 +25,7 @@ import {
 
 // used to generate data entry pages "PotData" type
 import {
-	structImages,
+	structData,
 } from "./doc_struct.js" ;
 
 class Pot { // convenience class
@@ -222,7 +222,7 @@ class Pot { // convenience class
             return ;
         }
         objectPage.show("PotPixLoading");
-        const members = structImages.members ;
+        const members = structData.Images.members ;
 		objectPot.select( pid )
 		.then ( () => objectPot.getRecordIdPix(pid,true) )
 		.then( doc => {

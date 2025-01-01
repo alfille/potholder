@@ -12,7 +12,7 @@
 
 // used to generate data entry pages "PotData" type
 
-export const structGeneralPot = [
+const structGeneralPot = [
     {
         name:  "type",
         alias: "Form",
@@ -119,7 +119,7 @@ export const structGeneralPot = [
     },
 ];
 
-export const structImages = [
+const structImages = [
     {
         name:  "images",
         alias: "Images",
@@ -148,6 +148,11 @@ export const structImages = [
         ]
     }
 ];
+
+export const structData = {
+	Data: structGeneralPot,
+	Images: structImages,
+};
         
 export const structRemoteUser = [
     {

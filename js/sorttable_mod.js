@@ -19,8 +19,7 @@ export {
 } ;
 
 import {
-    structGeneralPot,
-    structImages,
+    structData,
 } from "./doc_struct.js" ;
 
 
@@ -258,8 +257,8 @@ class OrphanTable extends PotTable {
 
 		// list of good fields
         this.gfields = [ 
-			structGeneralPot.map( s => s.name ),
-			structImages.map( s => s.name ),
+			structData.Data.map( s => s.name ),
+			structData.Images.map( s => s.name ),
 			"author",
 			].flat();
         console.log(this.gfields);

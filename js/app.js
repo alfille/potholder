@@ -19,8 +19,7 @@ import {
 // used to generate data entry pages "PotData" type
 import {
     structDatabaseInfo,
-    structGeneralPot,
-    structImages,
+    structData,
     structRemoteUser,
 } from "./doc_struct.js" ;
 
@@ -55,6 +54,10 @@ import {
 } from "./page_mod.js" ;
     
 class Administration extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+}
+
+class StructMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
 
@@ -109,7 +112,7 @@ class PotPrint extends Pagelist {
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotDataPrint( doc, structGeneralPot.concat(structImages) ) )
+            .then( (doc) => objectPotData = new PotDataPrint( doc, structData.Data.concat(structData.Images) ) )
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -211,12 +214,49 @@ class AssignPic extends Pagelist {
     }
 }
 
+class StructShow extends Pagelist {
+    // static "struct_name" from derived classes
+    // static "struct_title" from derived classes
+
+    static show_content(extra="") {
+        objectPot.unselect() ;
+		new TextBox("Field Structure") ;
+		document.getElementById("MainPhotos").style.display="block";
+		document.getElementById("StructShowTitle").innerText=this.struct_title ?? "" ;
+		document.getElementById("struct_json").innerText = JSON.stringify( this.struct_name, null, 2 ) ;
+    }
+}
+
+class StructGeneralPot extends StructShow {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static struct_name = structData.Data ;
+    static struct_title = "Data Fields";
+}
+
+class StructImages extends StructShow {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static struct_name = structData.Images ;
+    static struct_title = "Image Fields";
+}
+
+class StructDatabaseInfo extends StructShow {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static struct_name = structDatabaseInfo ;
+    static struct_title = "Database Metadata" ;
+}
+
+class StructRemoteUser extends StructShow {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static struct_name = structRemoteUser ;
+    static struct_title = "User Credentials" ;
+}
+
 class ListGroup extends Pagelist {
     // static "field_name" from struct in derived classes
 
     static show_content(extra="") {
         objectPot.unselect() ;
-        const item = structGeneralPot.find( i => i.name == this.field_name ) ;
+        const item = structData.Data.find( i => i.name == this.field_name ) ;
         if ( item ) {
             new ListBox(`grouped by ${item?.alias ?? item.name}`) ;
             document.getElementById("MainPhotos").style.display="block";
@@ -356,10 +396,10 @@ class PotNew extends Pagelist {
         if ( objectPot.isSelected() ) {
             // existing but "new"
             objectPot.getRecordIdPix(potId,true)
-            .then( doc => objectPotData = new PotNewData( doc, structGeneralPot ) )
+            .then( doc => objectPotData = new PotNewData( doc, structData.Data ) )
             .catch( err => objectLog.err(err) ) ;
         } else {
-            objectPotData = new PotNewData( objectPot.create(), structGeneralPot ) ;
+            objectPotData = new PotNewData( objectPot.create(), structData.Data ) ;
         }
     }
 }
@@ -388,7 +428,7 @@ class PotEdit extends Pagelist {
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structGeneralPot ))
+            .then( (doc) => objectPotData = new PotData( doc, structData.Data ))
              .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -406,7 +446,7 @@ class PotPix extends Pagelist {
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structImages ))
+            .then( (doc) => objectPotData = new PotData( doc, structData.Images ))
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -426,7 +466,7 @@ class PotPixLoading extends Pagelist {
         objectPage.forget() ;
         if ( objectPot.isSelected() ) {
             objectPot.getRecordIdPix(potId,true)
-            .then( (doc) => objectPotData = new PotData( doc, structImages ))
+            .then( (doc) => objectPotData = new PotData( doc, structData.Images ))
             .catch( (err) => {
                 objectLog.err(err);
                 objectPage.show( "back" );
@@ -499,7 +539,7 @@ window.onload = () => {
 
         // Secondary indexes (create, prune and clean up views)
         const q = new Query();
-        q.create( structGeneralPot.concat(structImages) )
+        q.create( structData.Data.concat(structData.Images) )
         .then( () => objectThumb.getAll() ) // create thumbs
         .catch( err => objectLog.err(err,"Query cleanup") );
 

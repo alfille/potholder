@@ -13,8 +13,7 @@
 // used to generate data entry pages "PotData" type
 import {
     structDatabaseInfo,
-    structGeneralPot,
-    structImages,
+    structData,
 } from "./doc_struct.js" ;
 
 class Search { // singleton class
@@ -26,8 +25,8 @@ class Search { // singleton class
                 this.fields = [] ;
 
         this.structStructure= ({
-                        PotEdit:    structGeneralPot,
-                        PotPix:     structImages,
+                        PotEdit:    structData.Data,
+                        PotPix:     structData.Images,
                         });
 
         // Extract fields fields
