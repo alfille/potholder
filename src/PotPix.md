@@ -2,65 +2,56 @@
 
 You can see, rearrange, and annotate the images associated with a piece. (Or even delete one).
 
-### Current Pictures
-![](PotPix.png)
+## View Pictures
+![](PotPix1.png)
 
 The images list shows the all pictures for this piece.
 
-The Thumbnail for this piece comes from the first picture in the list.
+* The Thumbnail for this piece comes from the first picture in the list. (Circled)
+* Add more images using the __Add Photo__ or __Add Gallery__ buttons.
+* For Safety, we start in _View mode_ to avoid making unintentional changes.
+* Edit, rearrange and delete by entering _Edit mode_ by:
+  * Clicking the Edit button,
+  * or Double-clicking the data
 
-### Photo button
-![](PotPix1.png)
-
-The purple _Photo_ button will add another picture to the start of the list and take you to this page.
-
-## To Edit
+## Edit Pictures
 ![](PotPix2.png)
 
-Click _Edit_ (either one) to be able to alter the image list.
+The choices in _Edit mode_ include 
 
-### Editing
+* __Modify__ (Add comments, Crop, or even delete)
+* __Rearrange__ (Change the order, if more than one)
 
-![](PotPix3.png)
+Note that the __Save Changes__ button is inactive until a change in the data is made.
 
-The choices available change depending on the number of pictures.
+### Modify -- Select
 
-## Modify
+![PotPix3](PotPix3.png)
 
-![](PotPix4.png)
+After choosing __Modify__, if there is more than one image, we need to select the one to work on. Just click on the entry you are targetting.
 
-To change a picture's information, you need to _modify_, and then select it from a list (if more than one).
+### Modify -- choices
 
-### Select
+![PotPix4](PotPix4.png)
+
+Options for modifying are:
+
+* Change the _Notes_ or _Date_ fields (then press __Ok__)
+* [__Crop__](Crop.md) the image.
+* __Delete__ the image
+
+None of these options are permanent until __Save Changes__ on the main edit page.
+ 
+## Rearrange
 ![](PotPix5.png)
 
-Click on the row of the image you want to modify.
+You can change the order of the pictures with __Rearrange__.
+Use the up and down arrows to move a picture.
+(They will wrap around top and bottom).
 
-### Change
+The first picture will be used as the identifying Thumbnail.
 
-![](PotPix6.png)
+__Ok__ when done.
 
-Alter the comment or data field if desired, then Click _Ok_ (or _Cancel_ to not change)
-
-![](PotPix7.png)
-
-### Delete
-
-![](PotPix8.png)
-
-You can delete the picture. (You will be asked for confirmation).
-
-## Rearrange
-![](PotPix9.png)
-
-You can rearrange the order of images. The first one will be used for the Thumbnail.
-
-![](PotPix10.png)
-
-Use the arrows to move the entry up or down.
-
-## Save Your Work
-
-![](PotPix11.png)
-
-Changes will be recorded after clicking _Save Changes_ (either one).
+---
+Changes will be recorded after clicking __Save Changes__ (either one).

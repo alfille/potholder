@@ -13,6 +13,8 @@
   - [New Piece](PotNew.md)
   - [General Info](PotEdit.md)
   - [Pictures](PotPix.md)
+    - [Crop](Crop.md)
+    - [Large image](LargeImage.md)
   - [Print](PotPrint.md)
 - [Search](SearchList.md)
 - [Help](Help.md)

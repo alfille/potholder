@@ -113,10 +113,10 @@ class Page { // singleton class
         this.back();
     }
 
-    helpLink() {
+    helpLink(help=null) {
 		const helpLoc = "https://alfille.github.io/" ;
 		const helpDir = "/potholder/" ;
-		let   helpTopic = this.current() ;
+		let   helpTopic = help ?? this.current() ;
 		switch (helpTopic) {
 			case 'ListForm':
 			case 'ListSeries':

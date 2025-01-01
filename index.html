@@ -327,9 +327,10 @@
 			<canvas id="crop_canvas" width=350px height=600px></canvas>
 			<div id="crop_buttons">
 				<span class="Darray_span">Drag edges</span>
-				<button class="divbutton" onclick="objectCrop.ok()" title="Crop complete">Ok</button>
-				<button class="divbutton" onclick="objectCrop.full()" title="Restore full image">Full</button>
-				<button class="divbutton return" onclick="objectCrop.cancel()" title="No changes">Cancel</button>
+				<button type="button" class="divbutton" onclick="objectCrop.ok()" title="Crop complete">Ok</button>
+				<button type="button" class="divbutton" onclick="objectCrop.full()" title="Restore full image">Full</button>
+				<button type="button" class="divbutton" onclick="objectPage.helpLink('Crop')">Help</button>
+				<button type="button" class="divbutton return" onclick="objectCrop.cancel()" title="No changes">Cancel</button>
 			</div>
 		</div>
         <div class="print_screen">

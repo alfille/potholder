@@ -41,6 +41,6 @@ Information about the piece is split into 3 sections:
 
 ![](PieceMenu5.png)
 
-Larger thumbnails of all the pictures of this piece. Clicking one brings up a full screen image:
+Larger thumbnails of all the pictures of this piece. Clicking one brings up a [full screen image](LargeImage.md):
 
 ![](PieceMenu6.png) 
