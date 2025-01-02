@@ -61,16 +61,27 @@ class PotImages {
 				} ;
             canvas.onclick=()=>{
 				const img2 = new Image() ; // temp image
+                document.getElementById("modal_canvas").width = window.innerWidth ;
+                console.log("Width",document.getElementById("modal_canvas").width);
                 this.getURL( name )
                 .then( url2 => {
                     img2.onload = () => {
 						URL.revokeObjectURL(url2) ;
 						const canvas2 = document.getElementById("modal_canvas");
 						const [cw,ch] = rightSize( crop[2], crop[3], window.innerWidth, window.innerHeight-75 ) ;
+                        console.log("RightSize",cw,ch);
 						canvas2.height = ch ;
 						canvas2.getContext("2d").drawImage( img2, crop[0], crop[1], crop[2], crop[3], 0, 0, cw, ch ) ;
+                        screen.orientation.onchange=(e)=>{
+                            console.log(window.innerWidth);
+                            document.getElementById("modal_close").click() ;
+                            canvas.click() ;
+                            }
 						} ;
-					img2.src=url2;
+                    document.getElementById("modal_close").onclick=()=>{
+                        screen.orientation.onchange=()=>{};
+                        document.getElementById('modal_id').style.display='none';
+                        };
 					document.getElementById("modal_down").onclick=()=> {
 						this.getURL( name )
 						.then( url => {
@@ -90,6 +101,7 @@ class PotImages {
 							});
 						}) ;
 					} ;
+					img2.src=url2;
 					document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
 					document.getElementById("modal_id").style.display="block";
 					})
