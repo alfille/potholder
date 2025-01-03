@@ -37,12 +37,20 @@ class Crop {
         if ( imageentry == null || this.cropentry == null ) {
             this.cancel() ; 
         }
-        const name = imageentry.new_val ;
-        const image = new Image() ; // temporary image
+        
+        this.working_crop = (this.cropentry?.new_val)??[] ;
         
         // Stop Scroll
         window.onscroll = () => window.scrollTo(0,0);
 
+        this.crop_reset() ;
+    }
+    
+    crop_reset() {
+
+        const name = imageentry.new_val ;
+        const image = new Image() ; // temporary image
+        
         // Load Image
         imageentry.Images.getURL( name )
         .then( url => {
@@ -54,8 +62,8 @@ class Crop {
                 this.natW = image.naturalWidth;
                 this.natH = image.naturalHeight;
                 
-                if ( this.cropentry.new_val.length != 4 ) {
-					this.cropentry.new_val = [ 0, 0, this.natW, this.natH ] ;
+                if ( this.working_crop.length != 4 ) {
+					this.working_crop = [ 0, 0, this.natW, this.natH ] ;
 				}
                 this.canW = window.innerWidth ;
                 this.canH = 600 ;
@@ -143,7 +151,7 @@ class Crop {
     
     startEdges() {
 		// convert picture scale to shown scale
-		this.crop2edge( this.cropentry.new_val ) ;
+		this.crop2edge( this.working_crop ) ;
         [0,1,2,3,null].forEach( e => {
 			this.active_edge = e ;
 			this.testEdges() ;
@@ -340,12 +348,10 @@ class Crop {
             return this.find_edgeY( y ) ;
         } else if ( x > this.edges[2]+this.blur ) {
             return this.find_edgeY( y ) ;
-        } else if ( x <= this.edges[0] ) {
+        } else if ( x <= this.edges[0]+this.blur ) {
             return 0 ;
         } else if ( x >= this.edges[2]-this.blur ) {
             return 2 ;
-        } else if ( x <= this.edges[0]+this.blur ) {
-            return 0 ;
         }
         return this.find_edgeY( y ) ;
     }
@@ -355,8 +361,6 @@ class Crop {
             return null ;
         } else if ( y > this.edges[3]+this.blur ) {
             return null ;
-        } else if ( y <= this.edges[1] ) {
-            return 1 ;
         } else if ( y >= this.edges[3]-this.blur ) {
             return 3 ;
         } else if ( y <= this.edges[1]+this.blur ) {
