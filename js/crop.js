@@ -32,7 +32,6 @@ class Crop {
     }
 
     crop( entrylist ) {
-        this.entrylist = entrylist ; // entry list holds image
         const imageentry = entrylist.members.find( m => m.struct.type == "image" ) ;
         this.cropentry = entrylist.members.find( m => m.struct.type == "crop" ) ;
         if ( imageentry == null || this.cropentry == null ) {
@@ -126,12 +125,25 @@ class Crop {
         }
     }
     
+    crop2edge( croplist ) {
+		this.edges[0] = croplist[0] * this.W / this.natW ;
+		this.edges[1] = croplist[1] * this.H / this.natH ;
+		this.edges[2] = croplist[2] * this.W / this.natW + this.edges[0] ;
+		this.edges[3] = croplist[3] * this.H / this.natH + this.edges[1] ;
+	}
+    
+    edge2crop() {
+		return [
+			this.edges[0] * this.natW / this.W ,
+			this.edges[1] * this.natH / this.H ,
+			(this.edges[2]-this.edges[0]) * this.natW / this.W ,
+			(this.edges[3]-this.edges[1]) * this.natH / this.H ,
+        ];
+	}
+    
     startEdges() {
 		// convert picture scale to shown scale
-		this.edges[0] = this.cropentry.new_val[0] * this.W / this.natW ;
-		this.edges[1] = this.cropentry.new_val[1] * this.H / this.natH ;
-		this.edges[2] = this.cropentry.new_val[2] * this.W / this.natW + this.edges[0] ;
-		this.edges[3] = this.cropentry.new_val[3] * this.H / this.natH + this.edges[1] ;
+		this.crop2edge( this.cropentry.new_val ) ;
         [0,1,2,3,null].forEach( e => {
 			this.active_edge = e ;
 			this.testEdges() ;
@@ -440,12 +452,7 @@ class Crop {
     }
     
     ok() {
-        this.cropentry.new_val = [
-			this.edges[0] * this.natW / this.W ,
-			this.edges[1] * this.natH / this.H ,
-			(this.edges[2]-this.edges[0]) * this.natW / this.W ,
-			(this.edges[3]-this.edges[1]) * this.natH / this.H ,
-        ];
+        this.cropentry.new_val = this.edge2crop() ;
 		document.querySelectorAll(".savedata").forEach(s=>s.disabled = false );
         this.cancel(); // to clean up
     }
