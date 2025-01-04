@@ -150,8 +150,8 @@ const structImages = [
 ];
 
 export const structData = {
-	Data: structGeneralPot,
-	Images: structImages,
+    Data: structGeneralPot,
+    Images: structImages,
 };
         
 export const structRemoteUser = [

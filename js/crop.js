@@ -32,9 +32,9 @@ class Crop {
     }
 
     crop( entrylist ) {
-        const imageentry = entrylist.members.find( m => m.struct.type == "image" ) ;
+        this.imageentry = entrylist.members.find( m => m.struct.type == "image" ) ;
         this.cropentry = entrylist.members.find( m => m.struct.type == "crop" ) ;
-        if ( imageentry == null || this.cropentry == null ) {
+        if ( this.imageentry == null || this.cropentry == null ) {
             this.cancel() ; 
         }
         
@@ -47,12 +47,11 @@ class Crop {
     }
     
     crop_reset() {
-
-        const name = imageentry.new_val ;
+        const name = this.imageentry.new_val ;
         const image = new Image() ; // temporary image
         
         // Load Image
-        imageentry.Images.getURL( name )
+        this.imageentry.Images.getURL( name )
         .then( url => {
             image.onload = () => {
                 // clear url
@@ -63,8 +62,8 @@ class Crop {
                 this.natH = image.naturalHeight;
                 
                 if ( this.working_crop.length != 4 ) {
-					this.working_crop = [ 0, 0, this.natW, this.natH ] ;
-				}
+                    this.working_crop = [ 0, 0, this.natW, this.natH ] ;
+                }
                 this.canW = window.innerWidth ;
                 this.canH = 600 ;
                 [this.W, this.H] = rightSize( this.natW, this.natH, this.canW, this.canH ) ;
@@ -91,10 +90,18 @@ class Crop {
                 this.canvas.onmousemove  = (e) => this.drag_m(e);
                 this.canvas.onmouseup    = (e) => this.undrag();
                 this.canvas.oncontextmenu= (e) => e.preventDefault() ;
+
+                console.log("screen orientation");
+                screen.orientation.onchange=(e)=>{
+                    console.log(window.innerWidth);
+                    this.working_crop = this.edge2crop() ;
+                    screen.orientation.onchange=()=>{} ;
+                    this.crop_reset() ;
+                    }
                 
                 // Show
                 this.show(true);
-				};
+                };
             image.src = url ;
             })
         .catch( err => {
@@ -102,7 +109,7 @@ class Crop {
             this.cancel() ;
             }) ;
     }
-    
+
     cacheBounds() {
         const bounding = this.canvas.getBoundingClientRect() ;
         this.boundX = bounding.left ;
@@ -134,81 +141,81 @@ class Crop {
     }
     
     crop2edge( croplist ) {
-		this.edges[0] = croplist[0] * this.W / this.natW ;
-		this.edges[1] = croplist[1] * this.H / this.natH ;
-		this.edges[2] = croplist[2] * this.W / this.natW + this.edges[0] ;
-		this.edges[3] = croplist[3] * this.H / this.natH + this.edges[1] ;
-	}
+        this.edges[0] = croplist[0] * this.W / this.natW ;
+        this.edges[1] = croplist[1] * this.H / this.natH ;
+        this.edges[2] = croplist[2] * this.W / this.natW + this.edges[0] ;
+        this.edges[3] = croplist[3] * this.H / this.natH + this.edges[1] ;
+    }
     
     edge2crop() {
-		return [
-			this.edges[0] * this.natW / this.W ,
-			this.edges[1] * this.natH / this.H ,
-			(this.edges[2]-this.edges[0]) * this.natW / this.W ,
-			(this.edges[3]-this.edges[1]) * this.natH / this.H ,
+        return [
+            this.edges[0] * this.natW / this.W ,
+            this.edges[1] * this.natH / this.H ,
+            (this.edges[2]-this.edges[0]) * this.natW / this.W ,
+            (this.edges[3]-this.edges[1]) * this.natH / this.H ,
         ];
-	}
+    }
     
     startEdges() {
-		// convert picture scale to shown scale
-		this.crop2edge( this.working_crop ) ;
+        // convert picture scale to shown scale
+        this.crop2edge( this.working_crop ) ;
         [0,1,2,3,null].forEach( e => {
-			this.active_edge = e ;
-			this.testEdges() ;
-			});
+            this.active_edge = e ;
+            this.testEdges() ;
+            });
     }
     
     testEdges() {
-		const b2 = 2*this.blur ;
+        const b2 = 2*this.blur ;
         switch ( this.active_edge ) {
-			case null:
-				break ;
-			case 0:
-				if ( this.edges[0] < 0 ) {
-					this.edges[0] = 0 ;
-				}
-				if ( this.edges[0] >= this.W-b2 ) {
-					this.edges[0] = this.W-b2 ;
-				}
-				if ( this.edges[0] >= this.edges[2]-b2 ) {
-					this.edges[0] = this.edges[2]-b2 ;
-				} 
-				break ;
-			case 1:
-				if ( this.edges[1] < 0 ) {
-					this.edges[1] = 0 ;
-				}
-				if ( this.edges[1] >= this.H-b2 ) {
-					this.edges[1] = this.H-b2 ;
-				}
-				if ( this.edges[1] >= this.edges[3]-b2 ) {
-					this.edges[1] = this.edges[3]-b2 ;
-				}
-				break ;
-			case 2:
-				if ( this.edges[2] <= b2 ) {
-					this.edges[2] = b2 ;
-				}
-				if ( this.edges[2] >= this.W ) {
-					this.edges[2] = this.W-1 ;
-				}
-				if ( this.edges[2] <= this.edges[0]+b2 ) {
-					this.edges[2] = this.edges[0]+b2 ;
-				}
-				break ;
-			case 3:
-				if ( this.edges[3] <= b2 ) {
-					this.edges[3] = b2 ;
-				}
-				if ( this.edges[3] >= this.H ) {
-					this.edges[3] = this.H-1 ;
-				}
-				if ( this.edges[3] <= this.edges[1]+b2 ) {
-					this.edges[3] = this.edges[1]+b2 ;
-				}
-				break ;
-		}
-			
+            case null:
+                break ;
+            case 0:
+                if ( this.edges[0] < 0 ) {
+                    this.edges[0] = 0 ;
+                }
+                if ( this.edges[0] >= this.W-b2 ) {
+                    this.edges[0] = this.W-b2 ;
+                }
+                if ( this.edges[0] >= this.edges[2]-b2 ) {
+                    this.edges[0] = this.edges[2]-b2 ;
+                } 
+                break ;
+            case 1:
+                if ( this.edges[1] < 0 ) {
+                    this.edges[1] = 0 ;
+                }
+                if ( this.edges[1] >= this.H-b2 ) {
+                    this.edges[1] = this.H-b2 ;
+                }
+                if ( this.edges[1] >= this.edges[3]-b2 ) {
+                    this.edges[1] = this.edges[3]-b2 ;
+                }
+                break ;
+            case 2:
+                if ( this.edges[2] <= b2 ) {
+                    this.edges[2] = b2 ;
+                }
+                if ( this.edges[2] >= this.W ) {
+                    this.edges[2] = this.W-1 ;
+                }
+                if ( this.edges[2] <= this.edges[0]+b2 ) {
+                    this.edges[2] = this.edges[0]+b2 ;
+                }
+                break ;
+            case 3:
+                if ( this.edges[3] <= b2 ) {
+                    this.edges[3] = b2 ;
+                }
+                if ( this.edges[3] >= this.H ) {
+                    this.edges[3] = this.H-1 ;
+                }
+                if ( this.edges[3] <= this.edges[1]+b2 ) {
+                    this.edges[3] = this.edges[1]+b2 ;
+                }
+                break ;
+        }
+            
 
         this.ball[0] = ( this.edges[1] + this.edges[3] ) / 2 ;
         this.ball[1] = ( this.edges[0] + this.edges[2] ) / 2 ;
@@ -228,7 +235,7 @@ class Crop {
     }
     
     showEdges() {
-		const quart = Math.PI / 2 ;
+        const quart = Math.PI / 2 ;
         this.ctx.clearRect(0,0,this.canW,this.canH);
         this.ctx.lineWidth = 2 ;
         
@@ -332,18 +339,18 @@ class Crop {
     
     find_edge( x, y) {
         const r2 = this.radii**2 ;
-		if ( (x-this.edges[0])**2 + (y-this.ball[0])**2 <= r2 ) {
-			return 0 ;
-		}
-		if ( (x-this.edges[2])**2 + (y-this.ball[2])**2 <= r2 ) {
-			return 2 ;
-		}
-		if ( (x-this.ball[1])**2 + (y-this.edges[1])**2 <= r2 ) {
-			return 1 ;
-		}
-		if ( (x-this.ball[3])**2 + (y-this.edges[3])**2 <= r2 ) {
-			return 3 ;
-		}
+        if ( (x-this.edges[0])**2 + (y-this.ball[0])**2 <= r2 ) {
+            return 0 ;
+        }
+        if ( (x-this.edges[2])**2 + (y-this.ball[2])**2 <= r2 ) {
+            return 2 ;
+        }
+        if ( (x-this.ball[1])**2 + (y-this.edges[1])**2 <= r2 ) {
+            return 1 ;
+        }
+        if ( (x-this.ball[3])**2 + (y-this.edges[3])**2 <= r2 ) {
+            return 3 ;
+        }
         if ( x < this.edges[0]-this.blur ) {
             return this.find_edgeY( y ) ;
         } else if ( x > this.edges[2]+this.blur ) {
@@ -375,7 +382,7 @@ class Crop {
     }
     
     start_drag_t(e) {
-		e.preventDefault() ;
+        e.preventDefault() ;
         if ( e.targetTouches.length > 0 ) {
             this.start_drag( e.targetTouches[0] ) ;
         } else {
@@ -403,7 +410,7 @@ class Crop {
     }
     
     drag_m(e) {
-		e.preventDefault() ;
+        e.preventDefault() ;
         if ( (e.buttons & 1) == 1 ) {
             this.drag(e) ;
         } else {
@@ -439,8 +446,8 @@ class Crop {
     }
     
     cancel() {
-		// Hide Crop Screen and go back to full edit list
-		// Called from all Crop buttons 
+        // Hide Crop Screen and go back to full edit list
+        // Called from all Crop buttons 
         
         // Start Scroll
         window.onscroll = () => {};
@@ -450,14 +457,14 @@ class Crop {
     }
 
     full() {
-		this.cropentry.new_val = [ 0, 0, this.natW, this.natH ] ;
-		document.querySelectorAll(".savedata").forEach(s=>s.disabled = false);
+        this.cropentry.new_val = [ 0, 0, this.natW, this.natH ] ;
+        document.querySelectorAll(".savedata").forEach(s=>s.disabled = false);
         this.cancel(); // to clean up
     }
     
     ok() {
         this.cropentry.new_val = this.edge2crop() ;
-		document.querySelectorAll(".savedata").forEach(s=>s.disabled = false );
+        document.querySelectorAll(".savedata").forEach(s=>s.disabled = false );
         this.cancel(); // to clean up
     }
     
@@ -467,6 +474,7 @@ class Crop {
             this.observer.observe( this.canvas) ;
         } else {
             this.observer.unobserve( this.canvas) ;
+            screen.orientation.onchange=()=>{} ;
         }
     }
         

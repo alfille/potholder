@@ -70,8 +70,8 @@ tr:nth-child(odd):hover, li:nth-child(even):hover {
   background: lightyellow ;
 }
 .print_screen {
-	color: white;
-	}
+    color: white;
+    }
 
 .PotData li {
   background: #E6F2FF ;

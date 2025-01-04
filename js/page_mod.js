@@ -15,7 +15,7 @@ export {
 } ;
 
 import {
-	CSV,
+    CSV,
 } from "./csv_mod.js" ;
 
 class Pagelist {
@@ -73,7 +73,7 @@ class Page { // singleton class
     }
 
     back() {
-		// return to previous page (if any exist)
+        // return to previous page (if any exist)
         this.path.shift() ;
         if ( this.path.length == 0 ) {
             this.reset();
@@ -109,26 +109,26 @@ class Page { // singleton class
     }
 
     forget() {
-		// remove this page from the "back" list -- but don't actually go there
+        // remove this page from the "back" list -- but don't actually go there
         this.back();
     }
 
     helpLink(help=null) {
-		const helpLoc = "https://alfille.github.io/" ;
-		const helpDir = "/potholder/" ;
-		let   helpTopic = help ?? this.current() ;
-		switch (helpTopic) {
-			case 'ListForm':
-			case 'ListSeries':
-			case 'ListGlaze':
-			case 'ListKiln':
-			case "ListStage":
-			case 'ListClay':
-				helpTopic = 'ListGroup';
-				break ;
-			default:
-				break ;
-		}
+        const helpLoc = "https://alfille.github.io/" ;
+        const helpDir = "/potholder/" ;
+        let   helpTopic = help ?? this.current() ;
+        switch (helpTopic) {
+            case 'ListForm':
+            case 'ListSeries':
+            case 'ListGlaze':
+            case 'ListKiln':
+            case "ListStage":
+            case 'ListClay':
+                helpTopic = 'ListGroup';
+                break ;
+            default:
+                break ;
+        }
         window.open( new URL(`${helpDir}${helpTopic}.html`,helpLoc).toString(), '_blank' );
     } 
     
@@ -147,7 +147,7 @@ class Page { // singleton class
         // clear display objects
         objectPotData = null;
         objectTable = null;
-		document.querySelector(".ContentTitleHidden").style.display = "none";
+        document.querySelector(".ContentTitleHidden").style.display = "none";
 
         this.show_normal(); // basic page display setup
 
@@ -156,50 +156,50 @@ class Page { // singleton class
     }
     
     show_normal() { // switch between screen and print
-		if ( this.normal_screen ) {
-			return ;
-		}
-		this.normal_screen = true ;
-		// Clear Splash once really.
-		document.getElementById("splash_screen").style.display = "none";
-		
-		document.querySelectorAll(".work_screen").forEach( v => v.style.display="block" ) ;
-		document.querySelectorAll(".picture_screen").forEach( v => v.style.display="block" ) ;
-		document.querySelectorAll(".print_screen").forEach( v => v.style.display="none" ) ;
+        if ( this.normal_screen ) {
+            return ;
+        }
+        this.normal_screen = true ;
+        // Clear Splash once really.
+        document.getElementById("splash_screen").style.display = "none";
+        
+        document.querySelectorAll(".work_screen").forEach( v => v.style.display="block" ) ;
+        document.querySelectorAll(".picture_screen").forEach( v => v.style.display="block" ) ;
+        document.querySelectorAll(".print_screen").forEach( v => v.style.display="none" ) ;
     }    
 
     show_print() { // switch between screen and print
-		if ( !this.normal_screen ) {
-			return ;
-		}
-		this.normal_screen = false ;
-		// Clear Splash once really.
-		document.getElementById("splash_screen").style.display = "none";
-		
-		document.querySelectorAll(".work_screen").forEach( v => v.style.display="none" ) ;
-		document.querySelectorAll(".picture_screen").forEach( v => v.style.display="none" ) ;
-		document.querySelectorAll(".print_screen").forEach( v => v.style.display="block" ) ;
+        if ( !this.normal_screen ) {
+            return ;
+        }
+        this.normal_screen = false ;
+        // Clear Splash once really.
+        document.getElementById("splash_screen").style.display = "none";
+        
+        document.querySelectorAll(".work_screen").forEach( v => v.style.display="none" ) ;
+        document.querySelectorAll(".picture_screen").forEach( v => v.style.display="none" ) ;
+        document.querySelectorAll(".print_screen").forEach( v => v.style.display="block" ) ;
     }    
 
-	headerLink() {
-		if ( objectPage.current() != "MainMenu" ) {
-			objectPage.show("MainMenu") ;
-		} else {
-			if ( objectPage ) {
-				objectPage.reset();
-			}
-			window.location.href="/index.html"; // force reload
-		}
-	}
+    headerLink() {
+        if ( objectPage.current() != "MainMenu" ) {
+            objectPage.show("MainMenu") ;
+        } else {
+            if ( objectPage ) {
+                objectPage.reset();
+            }
+            window.location.href="/index.html"; // force reload
+        }
+    }
 
-	copy_to_clip() {
-		navigator.clipboard.writeText( document.getElementById("MakeURLtext").href )
-		.catch( err => objectLog.err(err) );
-	}
-	
-	csv() {
-		new CSV() ;
-	}
+    copy_to_clip() {
+        navigator.clipboard.writeText( document.getElementById("MakeURLtext").href )
+        .catch( err => objectLog.err(err) );
+    }
+    
+    csv() {
+        new CSV() ;
+    }
 }
 
 objectPage = new Page();

@@ -220,10 +220,10 @@ class StructShow extends Pagelist {
 
     static show_content(extra="") {
         objectPot.unselect() ;
-		new TextBox("Field Structure") ;
-		document.getElementById("MainPhotos").style.display="block";
-		document.getElementById("StructShowTitle").innerText=this.struct_title ?? "" ;
-		document.getElementById("struct_json").innerText = JSON.stringify( this.struct_name, null, 2 ) ;
+        new TextBox("Field Structure") ;
+        document.getElementById("MainPhotos").style.display="block";
+        document.getElementById("StructShowTitle").innerText=this.struct_title ?? "" ;
+        document.getElementById("struct_json").innerText = JSON.stringify( this.struct_name, null, 2 ) ;
     }
 }
 

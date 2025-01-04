@@ -15,7 +15,7 @@ export {
 } ;
 
 import {
-	PotImages,
+    PotImages,
 } from "./image_mod.js" ;
 
 import {

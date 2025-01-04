@@ -13,13 +13,13 @@
 class DatabaseManager { // convenience class
     // Access to remote (cloud) version of database
     constructor() {
-		// remoteCouch contents
-		this.username = null ;
-		this.password = null ;
-		this.database = null ;
-		this.address  = null ;
-		this.local    = null ;
-		
+        // remoteCouch contents
+        this.username = null ;
+        this.password = null ;
+        this.database = null ;
+        this.address  = null ;
+        this.local    = null ;
+        
         this.remoteDB = null;
         this.problem = false ; // separates real connection problem from just network offline
         this.synctext = document.getElementById("syncstatus");
@@ -28,34 +28,34 @@ class DatabaseManager { // convenience class
     }
     
     load() {
-		["username","password","database","address","local"].forEach( x => this[x]=objectCookie.local_get(x) );
-	}
+        ["username","password","database","address","local"].forEach( x => this[x]=objectCookie.local_get(x) );
+    }
     
     store() {
-		["username","password","database","address","local"].forEach( x => objectCookie.local_set(x,this[x]) );
-	}
+        ["username","password","database","address","local"].forEach( x => objectCookie.local_set(x,this[x]) );
+    }
     
     acquire_and_listen() {        
         // Get remote DB from localStorage if available
         this.load();
         const cookie = objectCookie.get("remoteCouch");
         if ( cookie !== null ) { // legacy
-			["username","password","database","address"].forEach( x => this[x] = this[x] ?? cookie[x] );
-			objectCookie.del("remoteCouch") ;
-		}
-			
+            ["username","password","database","address"].forEach( x => this[x] = this[x] ?? cookie[x] );
+            objectCookie.del("remoteCouch") ;
+        }
+            
         // Get Remote DB fron command line if available
         const params = new URL(location.href).searchParams;
         ["username","password","database","address","local"].forEach( c => {
-			const gc = params.get(c) ;
-			//console.log(c,gc);
-			if ( ( gc!==null ) && ( gc !== this[c] ) ) {
-				this[c] = gc ;
-				objectPage.reset() ;               
-			}
-		});
-		this.store();
-			 
+            const gc = params.get(c) ;
+            //console.log(c,gc);
+            if ( ( gc!==null ) && ( gc !== this[c] ) ) {
+                this[c] = gc ;
+                objectPage.reset() ;               
+            }
+        });
+        this.store();
+             
         // set up monitoring
         window.addEventListener("offline", _ => this.not_present() );
         window.addEventListener("online", _ => this.present() );
@@ -65,10 +65,10 @@ class DatabaseManager { // convenience class
     }
     
     open() { // local
-		if ( this.database && (this.database !== "") ) {
-			this.db = new PouchDB( this.database, {auto_compaction: true} ); // open local copy
-		}
-	}
+        if ( this.database && (this.database !== "") ) {
+            this.db = new PouchDB( this.database, {auto_compaction: true} ); // open local copy
+        }
+    }
 
     
     present() {
@@ -83,11 +83,11 @@ class DatabaseManager { // convenience class
     foreverSync() {
         document.getElementById( "userstatus" ).value = this.username;
 
-		if ( this.local=="true" ) { // local -- no sync
+        if ( this.local=="true" ) { // local -- no sync
             this.status("good","Local database only (no replication)");
             return ;
-		}
-			
+        }
+            
         if ( this.username && this.password && this.database && this.address  ) {
             this.remoteDB = new PouchDB( [this.address, this.database].join("/") , {
                 "skip_setup": "true",
@@ -178,16 +178,16 @@ class DatabaseManager { // convenience class
     }
     
     clearLocal() {
-		const remove = confirm("Remove the eMission data and your credentials from this device?\nThe central database will not be affected.") ;
-		if ( remove ) {
-			objectCookie.clear();
-			// clear (local) database
-			objectDatabase.db.destroy()
-			.finally( _ => location.reload() ); // force reload
-		} else {
-			objectPage.show( "MainMenu" );
-		}
-	}
+        const remove = confirm("Remove the eMission data and your credentials from this device?\nThe central database will not be affected.") ;
+        if ( remove ) {
+            objectCookie.clear();
+            // clear (local) database
+            objectDatabase.db.destroy()
+            .finally( _ => location.reload() ); // force reload
+        } else {
+            objectPage.show( "MainMenu" );
+        }
+    }
 
 }
 objectDatabase = new DatabaseManager() ;

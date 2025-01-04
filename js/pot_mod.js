@@ -11,8 +11,8 @@
 /* jshint esversion: 11 */
 
 import {
-	PotBox,
-	BlankBox,
+    PotBox,
+    BlankBox,
 } from "./titlebox.js" ;
 
 import {
@@ -25,36 +25,36 @@ import {
 
 // used to generate data entry pages "PotData" type
 import {
-	structData,
+    structData,
 } from "./doc_struct.js" ;
 
 class Pot { // convenience class
     constructor() {
         this.TL=document.getElementById("TopLeftImage");
         this.LOGO = document.getElementById("LogoPicture");
-		this.pictureSource = document.getElementById("HiddenPix");
+        this.pictureSource = document.getElementById("HiddenPix");
     }
     
     potname( doc ) {
         return `piece type << ${doc?.type} >> of series << ${doc.series} >>`;
     }
 
-	create() {
+    create() {
         // create new pot record
-		return ({
-			_id: Id_pot.makeId( this.doc ),
-			type:"",
-			series:"",
-			author: objectDatabase.username,
-			artist: objectDatabase.username,
-			start_date: (new Date()).toISOString().split("T")[0],
-			stage: "greenware",
-			kiln: "none",
+        return ({
+            _id: Id_pot.makeId( this.doc ),
+            type:"",
+            series:"",
+            author: objectDatabase.username,
+            artist: objectDatabase.username,
+            start_date: (new Date()).toISOString().split("T")[0],
+            stage: "greenware",
+            kiln: "none",
            });
-	}
+    }
    
-	del() {
-		if ( this.isSelected() ) {        
+    del() {
+        if ( this.isSelected() ) {        
             this.getRecordIdPix(potId)
             .then( (doc) => {
                 // Confirm question
@@ -107,11 +107,11 @@ class Pot { // convenience class
     }
 
     select( pid = potId ) {
-		potId = pid ;
+        potId = pid ;
         // Check pot existence
         return objectPot.getRecordIdPix(pid)
         .then( (doc) => {
-			//console.log("Select",doc);
+            //console.log("Select",doc);
             // Top left Logo
             objectThumb.displayThumb( this.TL, pid ) ;
             // highlight the list row
@@ -137,7 +137,7 @@ class Pot { // convenience class
         if ( objectPage.isThis("AllPieces") ) {
             const pt = document.getElementById("PotTable");
             if ( pt ) {
-				pt.rows.forEach( r => r.classList.remove('choice'));
+                pt.rows.forEach( r => r.classList.remove('choice'));
             }
         }
         new BlankBox();
@@ -154,68 +154,68 @@ class Pot { // convenience class
     }
 
     newPhoto() {
-		if ( ! objectPot.isSelected() ) { 
-			objectPage.show("AssignPic") ;
-			return ;
-		}
-		if (this.pictureSource.files.length==0 ) {
-			return ;
-		}
-		objectPage.show("PotPixLoading");
-		objectPot.getRecordIdPix(potId,true)
-		.then( (doc) => {
-			// make sure basic structure is there
-			if ( !("_attachments" in doc) ) {
-				doc._attachments={} ;
-			}
-			if ( !("images" in doc) ) {
-				doc.images=[] ;
-			}
-			//console.log("DOC",doc);
-			
-			// add number of pictures to picture button 
-			[...this.pictureSource.files].forEach( f => {
-				//console.log("File",f);
-				// Add to doc
-				doc._attachments[f.name]={
-					data: f,
-					content_type: f.type,
-				} ;
-				const idx = doc.images.findIndex( a => a.image==f.name ) ;
-				if ( idx == -1 ) {
-					// put newest one first
-					doc.images.unshift( {
-						image: f.name,
-						comment: "",
-						date: (f?.lastModifiedDate ?? (new Date())).toISOString(),
-						} );
-				} else {
-					// keep comment and name
-					doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
-				}
-				}) ;
-				return objectDatabase.db.put(doc) ;
-			})
-		.then( () => objectThumb.getOne( potId ) )
-		.then( () => objectPage.add( "PotMenu" ) )
-		.then( () => objectPage.show("PotPix") )
-		.catch( (err) => {
-			objectLog.err(err);
-			})
-		.finally( () => this.pictureSource.value = "" ) ;
+        if ( ! objectPot.isSelected() ) { 
+            objectPage.show("AssignPic") ;
+            return ;
+        }
+        if (this.pictureSource.files.length==0 ) {
+            return ;
+        }
+        objectPage.show("PotPixLoading");
+        objectPot.getRecordIdPix(potId,true)
+        .then( (doc) => {
+            // make sure basic structure is there
+            if ( !("_attachments" in doc) ) {
+                doc._attachments={} ;
+            }
+            if ( !("images" in doc) ) {
+                doc.images=[] ;
+            }
+            //console.log("DOC",doc);
+            
+            // add number of pictures to picture button 
+            [...this.pictureSource.files].forEach( f => {
+                //console.log("File",f);
+                // Add to doc
+                doc._attachments[f.name]={
+                    data: f,
+                    content_type: f.type,
+                } ;
+                const idx = doc.images.findIndex( a => a.image==f.name ) ;
+                if ( idx == -1 ) {
+                    // put newest one first
+                    doc.images.unshift( {
+                        image: f.name,
+                        comment: "",
+                        date: (f?.lastModifiedDate ?? (new Date())).toISOString(),
+                        } );
+                } else {
+                    // keep comment and name
+                    doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
+                }
+                }) ;
+                return objectDatabase.db.put(doc) ;
+            })
+        .then( () => objectThumb.getOne( potId ) )
+        .then( () => objectPage.add( "PotMenu" ) )
+        .then( () => objectPage.show("PotPix") )
+        .catch( (err) => {
+            objectLog.err(err);
+            })
+        .finally( () => this.pictureSource.value = "" ) ;
     }
     
     AssignToNew() {
-		const doc = this.create() ;
-		//console.log("new",doc);
-		objectDatabase.db.put( doc )
-		.then( response => this.AssignPhoto( response.id ) )
-		.catch( err => {
-			objectLog(err);
-			objectPage.show('MainMenu');
-		}) ;
-	}
-		
+        const doc = this.create() ;
+        //console.log("new",doc);
+        objectDatabase.db.put( doc )
+        .then( response => this.AssignPhoto( response.id ) )
+        .catch( err => {
+            objectLog(err);
+            objectPage.show('MainMenu');
+        }) ;
+    }
+        
     
     AssignPhoto(pid = potId) {
         if ( this.pictureSource.files.length == 0 ) {
@@ -223,56 +223,56 @@ class Pot { // convenience class
         }
         objectPage.show("PotPixLoading");
         const members = structData.Images.members ;
-		objectPot.select( pid )
-		.then ( () => objectPot.getRecordIdPix(pid,true) )
-		.then( doc => {
-			// make sure basic structure is there
-			if ( !("_attachments" in doc) ) {
-				doc._attachments={} ;
-			}
-			if ( !("images" in doc) ) {
-				doc.images=[] ;
-			}
-			
-			// add number of pictures to picture button 
-			[...this.pictureSource.files].forEach( f => {
-				//console.log("File",f);
-				// Add to doc
-				doc._attachments[f.name]={
-					data: f,
-					content_type: f.type,
-				} ;
-				const idx = doc.images.findIndex( a => a.image==f.name ) ;
-				if ( idx == -1 ) {
-					// put newest one first
-					doc.images.unshift( {
-						image: f.name,
-						comment: "",
-						date: (f?.lastModifiedDate ?? (new Date())).toISOString(),
-						} );
-				} else {
-					// keep comment and name
-					doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
-				}
-				}) ;
-				return objectDatabase.db.put(doc) ;
-			})
-		.then( () => objectThumb.getOne( potId ) )
-		.then( () => objectPage.add("PotMenu" ) )
-		.then( () => objectPage.show("PotPix") )
-		.catch( (err) => {
-			objectLog.err(err);
-			})
-		.finally( () => this.pictureSource.value = "" ) ;
+        objectPot.select( pid )
+        .then ( () => objectPot.getRecordIdPix(pid,true) )
+        .then( doc => {
+            // make sure basic structure is there
+            if ( !("_attachments" in doc) ) {
+                doc._attachments={} ;
+            }
+            if ( !("images" in doc) ) {
+                doc.images=[] ;
+            }
+            
+            // add number of pictures to picture button 
+            [...this.pictureSource.files].forEach( f => {
+                //console.log("File",f);
+                // Add to doc
+                doc._attachments[f.name]={
+                    data: f,
+                    content_type: f.type,
+                } ;
+                const idx = doc.images.findIndex( a => a.image==f.name ) ;
+                if ( idx == -1 ) {
+                    // put newest one first
+                    doc.images.unshift( {
+                        image: f.name,
+                        comment: "",
+                        date: (f?.lastModifiedDate ?? (new Date())).toISOString(),
+                        } );
+                } else {
+                    // keep comment and name
+                    doc.images[idx].date = (f?.lastModifiedDate ?? (new Date())).toISOString() ;
+                }
+                }) ;
+                return objectDatabase.db.put(doc) ;
+            })
+        .then( () => objectThumb.getOne( potId ) )
+        .then( () => objectPage.add("PotMenu" ) )
+        .then( () => objectPage.show("PotPix") )
+        .catch( (err) => {
+            objectLog.err(err);
+            })
+        .finally( () => this.pictureSource.value = "" ) ;
     }
     
-	showPictures(doc) {
-		// doc alreaady loaded
-		const pix = document.getElementById("PotPhotos");
-		const images = new PotImages(doc);
-		pix.innerHTML="";
-		images.displayAll().forEach( i => pix.appendChild(i) ) ;
-	}
+    showPictures(doc) {
+        // doc alreaady loaded
+        const pix = document.getElementById("PotPhotos");
+        const images = new PotImages(doc);
+        pix.innerHTML="";
+        images.displayAll().forEach( i => pix.appendChild(i) ) ;
+    }
 }
 
 objectPot = new Pot() ;

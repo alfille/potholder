@@ -252,25 +252,25 @@ class OrphanTable extends PotTable {
                 ['fields','Orphans',(doc)=>this.ofields(doc)],
                 ['_id','ID',(doc)=>`${doc._id}`]
             ] ) {
-		
+        
         super( collist, tableId, aliaslist ) ;
 
-		// list of good fields
+        // list of good fields
         this.gfields = [ 
-			structData.Data.map( s => s.name ),
-			structData.Images.map( s => s.name ),
-			"author",
-			].flat();
+            structData.Data.map( s => s.name ),
+            structData.Images.map( s => s.name ),
+            "author",
+            ].flat();
         console.log(this.gfields);
     }
 
-	ofields(doc) {
-		return Object.keys(doc)
-			.filter( k=>k[0] != '_' )
-			.filter( k=>!(this.gfields.includes(k)) )
-			.map( k=> `${k}: ${doc[k]}` )
-			.join("\n") ;
-	}
+    ofields(doc) {
+        return Object.keys(doc)
+            .filter( k=>k[0] != '_' )
+            .filter( k=>!(this.gfields.includes(k)) )
+            .map( k=> `${k}: ${doc[k]}` )
+            .join("\n") ;
+    }
 
     selectId() {
         return potId;
