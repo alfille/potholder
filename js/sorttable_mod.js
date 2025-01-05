@@ -261,7 +261,6 @@ class OrphanTable extends PotTable {
             structData.Images.map( s => s.name ),
             "author",
             ].flat();
-        console.log(this.gfields);
     }
 
     ofields(doc) {

@@ -65,7 +65,7 @@ class Crop {
                     this.working_crop = [ 0, 0, this.natW, this.natH ] ;
                 }
                 this.canW = window.innerWidth ;
-                this.canH = 600 ;
+                this.canH = Math.min(600,window.innerHeight) ;
                 [this.W, this.H] = rightSize( this.natW, this.natH, this.canW, this.canH ) ;
 
                 this.under.width = this.canW ;
@@ -91,12 +91,10 @@ class Crop {
                 this.canvas.onmouseup    = (e) => this.undrag();
                 this.canvas.oncontextmenu= (e) => e.preventDefault() ;
 
-                console.log("screen orientation");
                 screen.orientation.onchange=(e)=>{
-                    console.log(window.innerWidth);
                     this.working_crop = this.edge2crop() ;
                     screen.orientation.onchange=()=>{} ;
-                    this.crop_reset() ;
+                    requestAnimationFrame( () => this.crop_reset() );
                     }
                 
                 // Show
