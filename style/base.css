@@ -418,6 +418,7 @@ legend {
     display: none ;
     max-width: 600px ;
 }
+
 @media screen and (min-width: 762px) {
 .picture_screen {
     display: none;
@@ -425,6 +426,24 @@ legend {
     top: 112px;
     margin-left: 610px;
     width: auto;
+    }
+}
+
+.content_box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex:start;
+}
+
+@media screen and (max-height: 500px) {
+.MainMenuRow {
+    flex:1;
+    }
+.content_box {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
     }
 }
 

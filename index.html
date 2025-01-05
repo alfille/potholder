@@ -153,39 +153,43 @@
         </header>
         <div id="potholderbody" class="work_screen">
             <!-- body: MainMenu -->
-            <div class="MainMenu pageOverlay">   
-                <span class="ContentTitle">Main Menu</span>
-                <div id="MainMenuContent" class="MainMenuRow" >
-                    <div class="PotProcButtons">
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListMenu' )">Lists</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
-                        <button type="button" class="divbutton"  style="visibility:hidden"> </button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
-                    </div>
-                    <div class="PotProcButtons">
-                        <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
-                        <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Advanced Options</button>
+            <div class="MainMenu pageOverlay">
+                <div class="content_box">   
+                    <span class="ContentTitle">Main Menu</span>
+                    <div id="MainMenuContent" class="MainMenuRow" >
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListMenu' )">Lists</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
+                            <button type="button" class="divbutton"  style="visibility:hidden"> </button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'Help' )">Instructions</button>
+                        </div>
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
+                            <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Advanced Options</button>
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- body: ListMenu -->
             <div class="ListMenu pageOverlay">
-                <span class="ContentTitle">List Menu</span>
-                <div id="ListMenuContent" class="MainMenuRow" >
-                    <div class="PotProcButtons">
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPieces' )">All Pieces</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
+                <div class="content_box">   
+                    <span class="ContentTitle">List Menu</span>
+                    <div id="ListMenuContent" class="MainMenuRow" >
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'AllPieces' )">All Pieces</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotNew' )">New Piece</button>
+                        </div>
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListSeries' )">Series</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListForm'   )">Form</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListStage'  )">Stage</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListKiln'   )">Kiln</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListClay'   )">Clay</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListGlaze'  )">Glaze</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListConstruction'  )">Construction</button>
+                        </div>
+                        <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                     </div>
-                    <div class="PotProcButtons">
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListSeries' )">Series</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListForm'   )">Form</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListStage'  )">Stage</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListKiln'   )">Kiln</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListClay'   )">Clay</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListGlaze'  )">Glaze</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'ListConstruction'  )">Construction</button>
-                    </div>
-                    <button type="button" class="divbutton"  style="visibility:hidden"> </button>
                 </div>
             </div>
             <!-- body: FirstTime -->
@@ -203,12 +207,14 @@
             </div>
             <!-- body: MakeURL -->
             <div class="MakeURL pageOverlay">
-                <span class="ContentTitle">Web Link</span>
-                <div id="MakeURLContent" class="buttonmenu">
-                    <canvas id="qr" width=300 height=300></canvas>
-                    <hr>
-                    <a class="divbutton MainBold" id="MakeURLtext">Link</a>
-                    <button type="button" class="divbutton MainBold" id="CopyURLtext" onclick="objectPage.copy_to_clip()">Copy to Clipboard</button>
+                <div class="content_box">   
+                    <span class="ContentTitle">Web Link</span>
+                    <div id="MakeURLContent" class="buttonmenu">
+                        <canvas id="qr" width=300 height=300></canvas>
+                        <hr>
+                        <a class="divbutton MainBold" id="MakeURLtext">Link</a>
+                        <button type="button" class="divbutton MainBold" id="CopyURLtext" onclick="objectPage.copy_to_clip()">Copy to Clipboard</button>
+                    </div>
                 </div>
             </div>
             <!-- body: AllPiecess Orphans -->
@@ -252,15 +258,18 @@
             </div>
             <!-- body: PotMenu -->
             <div class="PotMenu pageOverlay">
-                <span class="ContentTitle">Piece Menu</span>
-                <div id="PotMenuContent" class="MainMenuRow" >
-                    <div class="PotProcButtons">
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotEdit' )">Information</button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotPix' )" title="Photo gallery">Images</button>
-                        <button type="button" class="divbutton"  style="visibility:hidden"> </button>
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotPrint' )" title="Print this piece's information">Print</button>
-                        <button type="button" class="divbutton"  style="visibility:hidden"> </button>
-                        <button type="button" class="divbutton delete MainItalic" onclick="objectPot.del()" title="Delete this piece from the database">Delete Piece</button>
+                <div class="content_box">   
+                    <span class="ContentTitle">Piece Menu</span>
+                    <div id="PotMenuContent" class="MainMenuRow" >
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotEdit' )">Information</button>
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotPix' )" title="Photo gallery">Images</button>
+                        </div>
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.show( 'PotPrint' )" title="Print this piece's information">Print</button>
+                            <button type="button" class="divbutton"  style="visibility:hidden"> </button>
+                            <button type="button" class="divbutton delete MainItalic" onclick="objectPot.del()" title="Delete this piece from the database">Delete Piece</button>
+                        </div>
                     </div>
                 </div>
                 <hr>
@@ -281,18 +290,21 @@
             </div>
             <!-- body: Administration -->
             <div class="Administration pageOverlay">
-                <div id="AdministrationContent" class="MainMenuRow">
-                    <div class="PotProcButtons">
-                        <button type="button" class="divbutton MainBold" onclick="objectPage.csv()" title="CSV file (no pictures)">Download Spreadsheet</button>
-                        <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'Orphans' )" title="Extra data fields">Orphan Fields</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'StructMenu' )" title="Database field structure">Database Fields</button>
-                    </div>
-                    <div class="PotProcButtons">
-                        <button type="button" class="divbutton" onClick="objectDatabase.fauxton()" hint="Open Couchdb Fauxton console">Database Console</button>
-                        <button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>
-                        <button type="button" class="divbutton"  style="visibility:hidden"> </button>
-                        <button type="button" class="divbutton delete MainItalic" onclick="objectDatabase.clearLocal()">Clear local data</button>
+                <div class="content_box">   
+                    <span class="ContentTitle">Advanced</span>
+                    <div id="AdministrationContent" class="MainMenuRow">
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.csv()" title="CSV file (no pictures)">Download Spreadsheet</button>
+                            <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
+                            <button type="button" class="divbutton" onclick="objectPage.show( 'Orphans' )" title="Extra data fields">Orphan Fields</button>
+                            <button type="button" class="divbutton" onclick="objectPage.show( 'StructMenu' )" title="Database field structure">Database Fields</button>
+                        </div>
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton" onClick="objectDatabase.fauxton()" hint="Open Couchdb Fauxton console">Database Console</button>
+                            <button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>
+                            <button type="button" class="divbutton"  style="visibility:hidden"> </button>
+                            <button type="button" class="divbutton delete MainItalic" onclick="objectDatabase.clearLocal()">Clear local data</button>
+                        </div>
                     </div>
                 </div>
             </div>
