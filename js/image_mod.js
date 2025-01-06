@@ -78,6 +78,7 @@ class PotImages {
                         } ;
                     document.getElementById("modal_close").onclick=()=>{
                         screen.orientation.onchange=()=>{};
+                        document.exitFullscreen() ;
                         document.getElementById('modal_id').style.display='none';
                         };
                     document.getElementById("modal_down").onclick=()=> {
@@ -99,9 +100,12 @@ class PotImages {
                             });
                         }) ;
                     } ;
-                    img2.src=url2;
-                    document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
-                    document.getElementById("modal_id").style.display="block";
+                    document.getElementById("modal_id").requestFullscreen()
+                    .finally( _ => {
+                        img2.src=url2;
+                        document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
+                        document.getElementById("modal_id").style.display="block";
+                        });
                     })
                 .catch( err => objectLog.err(err) ) ;
             };

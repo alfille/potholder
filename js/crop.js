@@ -43,7 +43,8 @@ class Crop {
         // Stop Scroll
         window.onscroll = () => window.scrollTo(0,0);
 
-        this.crop_reset() ;
+        document.documentElement.requestFullscreen()
+        .finally( _ => this.crop_reset() );
     }
     
     crop_reset() {
@@ -450,6 +451,7 @@ class Crop {
         // Start Scroll
         window.onscroll = () => {};
 
+        document.exitFullscreen() ;
         this.show(false);
         document.getElementById("replot").click() ; // hidden button to replot
     }
