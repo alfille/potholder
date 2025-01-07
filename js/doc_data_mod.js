@@ -68,13 +68,15 @@ class PotDataRaw { // singleton class
     }
 
     saveChanged ( state ) {
+        const deleted_images = this.list.get_deletes() ;
+
         const data_change = this.loadDocData() ; // also sets this.doc
-        const image_change = this.remove_extra_images() ; // uses this.doc
-        //console.log("Saving","data",data_change,"image",image_change); 
-        if ( data_change || image_change ) {
+        if ( data_change ) {
             // doc is changed
             objectDatabase.db.put( this.doc )
-            .then( () => objectThumb.getOne( this.doc._id ) )
+            .then( r => new Detachment( r.id, r.rev ) )
+            .then( D => D.remove( deleted_images) )
+            .then( _ => objectThumb.getOne( this.doc._id ) )
             .catch( (err) => objectLog.err(err) )
             .finally( () => objectPage.show( state ) );
         } else {
@@ -83,6 +85,7 @@ class PotDataRaw { // singleton class
     }
     
     savePieceData() {
+        //console.log( "Deleted pictures", this.list.get_deletes().join(", ") )
         this.saveChanged( "PotMenu" );
     }
     
@@ -99,7 +102,7 @@ class PotDataRaw { // singleton class
     }    
 
     match_image_list() {
-        let changed = false ;
+        // makes changes to this.doc, but doesn't store until later save (if needed)
         
         // attachments
         const a_list = [] ;
@@ -117,55 +120,18 @@ class PotDataRaw { // singleton class
         // image entry for each attachment
         a_list
             .filter( a => ! i_list.includes(a) )
-            .forEach( a=> {
-                this.doc.images.push( {
+            .forEach( a=> this.doc.images
+                .push( {
                     image: a,
                     comment: "<Restored>",
                     date: new Date().toISOString()
-                    }) ;
-                changed = true ;
-            });
+                    })
+                );
 
         // remove references to non-existent images
         i_list
             .filter( i => ! a_list.includes(i) )
-            .forEach( i => {
-                delete this.doc.images[i] ;
-                changed = true ;
-            }) ;
-
-        // store changes
-        if ( changed ) {
-            objectDatabase.db.put( this.doc ) ;
-        }
-            
-    }
-
-    remove_extra_images() {
-        let changed = false ;
-        
-        // attachments
-        const a_list = [] ;
-        // Add dummy entries for extra images
-        if ( "_attachments" in this.doc ) {
-            Object.keys(this.doc._attachments).forEach( a => a_list.push(a) );
-        }
-        
-        // image entries
-        const i_list = [] ;
-        if ( "images" in this.doc ) {
-            this.doc.images.forEach( i => i_list.push(i.image) ) ;
-        }
-        
-        // remove extras
-        a_list
-            .filter( a => ! i_list.includes(a) )
-            .forEach( a => {
-                delete this.doc._attachments[a] ;
-                changed = true ;
-            }) ;
-
-        return changed ;
+            .forEach( i => delete this.doc.images[i] ) ;
     }
 }
 
@@ -182,3 +148,23 @@ class PotDataEditMode extends PotDataRaw {
     }
 }
 
+class Detachment {
+    constructor( pid, rev ) {
+        this.pid = pid ;
+        this.rev = rev ;
+    }
+
+    remove( i_list ) {
+        if ( i_list && i_list.length>0 ) {
+            const name = i_list.pop() ;
+            return objectDatabase.db.removeAttachment( this.pid, name, this.rev )
+                .then( r => {
+                    this.rev = r.rev ;
+                    return this.remove( i_list ) ;
+                    })
+                .catch( err => console.log("remove error") );
+        } else {
+            return Promise.resolve(true) ;
+        }
+    }
+}

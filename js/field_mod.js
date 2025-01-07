@@ -49,6 +49,12 @@ class EntryList {
             }) ;
     }
         
+    get_deletes() {
+        // unique list
+        const s = new Set( this.members.map( e => e.get_deletes() ).flat() );
+        return [...s] ;
+    }
+
     load_from_doc( doc ) {
         // put doc data in objects
         this.members.forEach( e => e.load_from_doc( doc ) ) ;
@@ -57,6 +63,13 @@ class EntryList {
     form2value() {
         // get data from HTMO fields into "new_val"
         this.members.forEach( e => e.form2value() ) ;
+    }
+    
+    save_enable() {
+        this.form2value() ;
+        if ( this.changed() ) {
+            document.querySelectorAll(".savedata").forEach(s => s.disabled = false );
+        }
     }
     
     changed() {
@@ -188,9 +201,10 @@ class InvisibleEntry {
         this._alias = struct?.alias ?? this._name ;
         this.localname = `LOCAL_${InvisibleEntry.unique}`;
         InvisibleEntry.unique += 1 ;
+        this.deleted_images = [] ;
     }
     
-    can_save() {
+    save_enable() {
         this.form2value() ;
         if ( this.changed() ) {
             document.querySelectorAll(".savedata").forEach(s => s.disabled = false );
@@ -229,6 +243,10 @@ class InvisibleEntry {
     
     edit_item() {
         return [] ;
+    }
+
+    get_deletes() {
+        return this.deleted_images ;
     }
 }
 
@@ -296,7 +314,7 @@ class TextEntry extends VisibleEntry {
         inp.title = this.struct.hint;
         inp.name = this.localname ;
         inp.value = this.new_val ;
-        inp.oninput = () => this.can_save() ;
+        inp.oninput = () => this.save_enable() ;
         return [ inp ] ;
     }
 }
@@ -308,7 +326,7 @@ class TextAreaEntry extends VisibleEntry {
         inp.title = this.struct.hint;
         inp.name = this.localname ;
         inp.value = this.new_val ;
-        inp.oninput = () => this.can_save() ;
+        inp.oninput = () => this.save_enable() ;
         return [ inp ] ;
     }
 }
@@ -345,7 +363,7 @@ class ListEntry extends VisibleEntry {
         inp.setAttribute( "list", dlist.id );
         inp.name = this.localname ;
         inp.value = this.new_val;
-        inp.oninput = () => this.can_save() ;
+        inp.oninput = () => this.save_enable() ;
 
         return [dlist,inp] ;
     }
@@ -364,7 +382,7 @@ class RadioEntry extends VisibleEntry {
             inp.type = "radio";
             inp.name = this.localname;
             inp.value = pick;
-            inp.oninput = () => this.can_save() ;
+            inp.oninput = () => this.save_enable() ;
             if ( pick == this.new_val ) {
                 inp.checked = true;
             }
@@ -390,7 +408,7 @@ class DateEntry extends VisibleEntry {
         inp.name = this.localname ;
         inp.title = this.struct.hint;
         inp.value = this.new_val.split("T")[0] ;
-        inp.oninput = () => this.can_save() ;
+        inp.oninput = () => this.save_enable() ;
         return [inp] ;
     }
 }
@@ -422,7 +440,7 @@ class BoolEntry extends VisibleEntry {
                         inp.type = "radio";
                         inp.name = this.localname;
                         inp.value = pick;
-                        inp.oninput = () => this.can_save() ;
+                        inp.oninput = () => this.save_enable() ;
                         switch (pick) {
                                 case true:
                                         inp.checked = (this.new_val == "true") ;
@@ -464,7 +482,7 @@ class CheckboxEntry extends VisibleEntry {
                         inp.type = "checkbox";
                         inp.name = this.localname;
                         inp.value = pick;
-                        inp.oninput = () => this.can_save() ;
+                        inp.oninput = () => this.save_enable() ;
                         if ( this.new_val.includes(pick) ) {
                                 inp.checked = true;
                         }
@@ -492,11 +510,15 @@ class ArrayEntry extends VisibleEntry {
         this.Images = Images ;
     }
         
-    can_save() {
+    save_enable() {
         this.form2value() ;
         if ( this.changed() ) {
             document.querySelectorAll(".savedata").forEach(s => s.disabled = false );
         }
+    }
+
+    get_deletes() {
+        return this.new_val.map( e => e.get_deletes() ).concat(this.deleted_images).flat();
     }
     
     changed() {
@@ -528,8 +550,8 @@ class ArrayEntry extends VisibleEntry {
     }       
 
     form2value() {
-            // get data from HTML fields into "new_val"
-    this.new_val.forEach( e => e.form2value() ) ;
+        // get data from HTML fields into "new_val"
+        this.new_val.forEach( e => e.form2value() ) ;
     }
     
     show_item() {
@@ -666,14 +688,14 @@ class ArrayEntry extends VisibleEntry {
             if ( adding ) {
                 this.new_val.push( local_list ) ;
             }
-            this.can_save();
+            this.save_enable();
             this.enclosing.edit_doc() ;
         };
         control_li.querySelector(".Darray_cancel").onclick=()=>this.enclosing.edit_doc();
         control_li.querySelector(".Darray_delete").onclick=()=>{
             if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
                 this.new_val.splice(idx,1);
-                this.can_save();
+                this.save_enable();
                 this.enclosing.edit_doc();
             }
         };
@@ -703,7 +725,7 @@ class ArrayEntry extends VisibleEntry {
         [".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
 
         tab.querySelector(".Darray_ok").onclick=()=>{
-            this.can_save() ;
+            this.save_enable() ;
             this.enclosing.edit_doc();
             };
 
@@ -725,8 +747,12 @@ class ArrayEntry extends VisibleEntry {
 }
 
 class ImageArrayEntry extends ArrayEntry {
+    find_entry(entry,type) {
+        return entry.members.find( m => m.struct.type == type ) ;
+    }
+    
     show_image( entry ) {
-        const image = entry.members.find( m => m.struct.type == "image" ) ;
+        const image = this.find_entry( entry, "image" ) ;
         if ( image ) {
             return image.show_item_element() ;
         } else {
@@ -735,9 +761,9 @@ class ImageArrayEntry extends ArrayEntry {
     }
     
     member_image( entry ) {
-        const crop = entry.members.find( m=> m.struct.type == "crop" ) ;
+        const crop = this.find_entry( entry, "crop" ) ;
         return this.Images.displayClickable(
-            entry.members.find( m=> m.struct.type == "image" ).new_val ,
+            this.find_entry( entry, "image" ).new_val ,
             this.new_val.length > 3 ? "small_pic" : "medium_pic" ,
             crop ? crop.new_val : null 
             );
@@ -844,7 +870,7 @@ class ImageArrayEntry extends ArrayEntry {
         [".Darray_ok"].forEach(c=>tab.querySelector(c).hidden=false);
 
         tab.querySelector(".Darray_ok").onclick=()=>{
-            this.can_save();
+            this.save_enable();
             this.enclosing.edit_doc();
             };
 
@@ -876,19 +902,20 @@ class ImageArrayEntry extends ArrayEntry {
         control_li.classList.add("Darray_li1");
         [".Darray_ok",".Darray_crop",".Darray_cancel",".Darray_delete"].forEach(c=>control_li.querySelector(c).hidden=false);
         control_li.querySelector(".Darray_ok").onclick=()=>{
-            local_list.can_save() ;
+            local_list.save_enable() ;
             this.enclosing.edit_doc() ;
         };
         control_li.querySelector(".Darray_crop").onclick=()=>this.crop(idx);
         control_li.querySelector(".Darray_cancel").onclick=()=>{
-            this.can_save();
+            this.save_enable();
             this.enclosing.edit_doc();
             };
         control_li.querySelector(".Darray_delete").onclick=()=>{
             if (confirm(`WARNING -- about to delete this ${this._alias} entry\nPress CANCEL to back out`)==true) {
-                this.new_val.splice(idx,1);
-                this.can_save();
-                this.enclosing.edit_doc();
+                this.deleted_images.push( this.find_entry( this.new_val[idx], "image" ).new_val ) ; // add image name to list
+                this.new_val.splice(idx,1); // remove image entrylist
+                this.save_enable(); // flag as change
+                this.enclosing.edit_doc(); // go back to (updated) image list
             }
             };
 

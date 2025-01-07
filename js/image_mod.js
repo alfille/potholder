@@ -16,15 +16,14 @@ export {
 
 class PotImages {    
     constructor( doc ) {
-        // Clear existing Images in memory
+        // uses images array in doc
+        //  image: name
+        //  crop: dimensions
         this.images = doc?.images ?? [] ;
         this.pid = doc._id ;
+        // doc does not need to have attachments included.
     }
 
-    exists(name) {
-        return (name in this.images) ;
-    }
-    
     getURL( name ) {
         return objectDatabase.db.getAttachment( this.pid, name )
         .then( data => URL.createObjectURL(data) ) ;
