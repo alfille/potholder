@@ -90,10 +90,6 @@ class Pot { // convenience class
             //console.log("Select",doc);
             // Top left Logo
             objectThumb.displayThumb( this.TL, pid ) ;
-            // highlight the list row
-            if ( objectPage.isThis('AllPieces') ) {
-                objectTable.highlight();
-            }
             new PotBox(doc);
             return doc ;
             })
