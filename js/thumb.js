@@ -16,7 +16,7 @@ class Thumb {
     }
 
     setup() {
-		// after onload
+        // after onload
         this.canvas = document.getElementById("thumbnail"); // defines the thumbnail size
         this.pick = document.getElementById("MainPhotos");
         this.ctx = this.canvas.getContext( "2d" ) ;
@@ -47,10 +47,10 @@ class Thumb {
                 URL.revokeObjectURL(url) ;
                 let crop = doc.images[0]?.crop ;
                 if ( !crop || crop.length!=4 ) {
-					crop = [0,0,t_img.naturalWidth,t_img.naturalHeight] ;
-				}
-				// sw/sh in canvas units
-				const [iw,ih] = rightSize( this.canvas.width, this.canvas.height, crop[2], crop[3]  ) ;
+                    crop = [0,0,t_img.naturalWidth,t_img.naturalHeight] ;
+                }
+                // sw/sh in canvas units
+                const [iw,ih] = rightSize( this.canvas.width, this.canvas.height, crop[2], crop[3]  ) ;
                 // center and crop to maintain 1:1 aspect ratio
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.drawImage( t_img, crop[0] + (crop[2]-iw)/2, crop[1] + (crop[3]-ih)/2, iw, ih, 0, 0, this.canvas.width, this.canvas.height ) ;
@@ -78,7 +78,7 @@ class Thumb {
     }
 
     getOne( pid = potId ) {
-        return objectPot.getRecordId( pid )
+        return objectDatabase.db.get( pid )
         .then( doc => this._load(doc) )
         .catch( err => objectLog.err(err) );
     }

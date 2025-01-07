@@ -111,7 +111,7 @@ class PotPrint extends Pagelist {
 
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.getRecordId(potId,true)
+            objectDatabase.db.get( potId )
             .then( (doc) => objectPotData = new PotDataPrint( doc, structData.Data.concat(structData.Images) ) )
             .catch( (err) => {
                 objectLog.err(err);
@@ -395,7 +395,7 @@ class PotNew extends Pagelist {
         new TextBox("New Piece");
         if ( objectPot.isSelected() ) {
             // existing but "new"
-            objectPot.getRecordId(potId,true)
+            objectDatabase.db.get( potId )
             .then( doc => objectPotData = new PotNewData( doc, structData.Data ) )
             .catch( err => objectLog.err(err) ) ;
         } else {
@@ -427,7 +427,7 @@ class PotEdit extends Pagelist {
 
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.getRecordId(potId,true)
+            objectDatabase.db.get( potId )
             .then( (doc) => objectPotData = new PotData( doc, structData.Data ))
              .catch( (err) => {
                 objectLog.err(err);
@@ -445,7 +445,7 @@ class PotPix extends Pagelist {
 
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.getRecordId(potId)
+            objectDatabase.db.get( potId )
             .then( (doc) => objectPotData = new PotData( doc, structData.Images ))
             .catch( (err) => {
                 objectLog.err(err);
@@ -465,7 +465,7 @@ class PotPixLoading extends Pagelist {
         document.querySelector(".ContentTitleHidden").style.display = "block";
         objectPage.forget() ;
         if ( objectPot.isSelected() ) {
-            objectPot.getRecordId(potId,true)
+            objectDatabase.db.get( potId )
             .then( (doc) => objectPotData = new PotData( doc, structData.Images ))
             .catch( (err) => {
                 objectLog.err(err);
@@ -482,7 +482,7 @@ class PotMenu extends Pagelist {
 
     static show_content(extra="") {
         if ( objectPot.isSelected() ) {
-            objectPot.getRecordId(potId,true)
+            objectDatabase.db.get( potId )
             .then( (doc) => {
                 objectPot.select(potId) // update thumb
                 .then( () => objectPot.showPictures(doc) ) ; // pictures on bottom

@@ -51,7 +51,7 @@ class Pot { // convenience class
    
     del() {
         if ( this.isSelected() ) {        
-            this.getRecordId(potId)
+            objectDatabase.db.get( potId )
             .then( (doc) => {
                 // Confirm question
                 if (confirm(`WARNING -- about to delete this piece\n piece type << ${doc?.type} >> of series << ${doc.series} >>\nPress CANCEL to back out`)==true) {
@@ -72,10 +72,6 @@ class Pot { // convenience class
         }
     }
 
-    getRecordId(id=potId ) {
-        return objectDatabase.db.get( id, { attachments:false} );
-    }
-
     getAllIdDoc() {
         const doc = {
             startkey: Id_pot.allStart(),
@@ -89,7 +85,7 @@ class Pot { // convenience class
     select( pid = potId ) {
         potId = pid ;
         // Check pot existence
-        return objectPot.getRecordId(pid)
+        return objectDatabase.db.get( pid )
         .then( (doc) => {
             //console.log("Select",doc);
             // Top left Logo
@@ -138,17 +134,17 @@ class Pot { // convenience class
             return Promise.resolve(true) ;
         }
         const f = i_list.pop() ;
-        return objectPot.getRecordId( pid )
+        return objectDatabase.db.get( pid )
         .then( doc => {
             if ( !("images" in doc ) ) {
                 doc.images = [] ;
             }
             if ( doc.images.find( e => e.image == f.name ) ) {
                 // exists, just update attachment
-                return objectDatabase.db.removeAttachment( pid, f.name, doc._rev )
-                    .then( r => objectDatabase.db.putAttachment( r.id, f.name, r.rev, f, f.type ) )
+                return objectDatabase.db.putAttachment( pid, f.name, doc._rev, f, f.type )
                     .catch( err => console.log(err)) ;
             } else {
+                // doesn't exist, add images entry as well (to front)
                 doc.images.unshift( {
                     image: f.name,
                     comment: "",
@@ -158,7 +154,7 @@ class Pot { // convenience class
                     .then( r => objectDatabase.db.putAttachment( r.id, f.name, r.rev, f, f.type ) ) ;
             }
             })
-        .then( _ => this.save_pic( pid, i_list ) ) ;
+        .then( _ => this.save_pic( pid, i_list ) ) ; // recursive
     }
                   
 
