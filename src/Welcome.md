@@ -1,7 +1,7 @@
 # PotHolder
 ## *Convenient mobile database for Ceramic Artists*
 
-![](potholder.png)
+![](MainMenu.png)
 
 ## Summary
 
