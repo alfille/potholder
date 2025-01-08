@@ -22,6 +22,8 @@
 - [Advanced Options](Administration.md)
   - [Error Log](ErrorLog.md)
   - [Database Information](DatabaseInfo.md)
+  - [Orphan Fields](Orphans.md)
+  - [Schema Menus](StructMenu.md)
 - [Server](Server.md)
   - [Components](Components.md)
   - [Easy Pi](Pi.md)
