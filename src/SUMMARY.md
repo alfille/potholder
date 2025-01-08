@@ -12,6 +12,7 @@
 - [Piece Menu](PotMenu.md)
   - [New Piece](PotNew.md)
   - [General Info](PotEdit.md)
+    - [Variable Length List](PotEditList.md)
   - [Pictures](PotPix.md)
     - [Crop](Crop.md)
     - [Large image](LargeImage.md)

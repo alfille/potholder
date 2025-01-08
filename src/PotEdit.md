@@ -23,43 +23,19 @@ After a change is made, you must __Save Changes__ or __Cancel__ to keep or disca
 
 ![PotEdit3](PotEdit3.png)
 
-* List -- Either a list of prior entries, or you can enter something new.
+* Dropdown -- Either a list of prior entries, or you can enter something new
 * Date -- Click the calender for a visual display
-* Text -- comments can be free text of any length (All searchable, of course)
+* Free Text -- comments can be of any length (All searchable, of course)
 * Radio -- mutually exclusive choices
 * Checkbox -- Choose one or more
 * List -- Variable length list of repeated fields
 
-## List Add
+## List
 
-![PotEdit4](PotEdit4.png)
+The [List type](PotEditList.md) has more options to _Add_, _Modify_, _Delete_ and _Rearrange_ the entries.
 
-Adding to a list shows the fields in this list entry. __Pk__ to continue.
+## Save
 
-## List Add or Modify
+![PotEdit10](PotEdit10.png)
 
-![PotEdit5](PotEdit5.png)
-
-With at least one intry in the list, more options appear.
-
-## List Choose
-
-![PotEdit6](PotEdit6.png)
-
-With 2 or more, another option __Rearrange__ appears as well. If we want to edit one ot the entries, we will get a chace to choose which one:
-
-![PotEdit7](PotEdit7.png)
-
-Click on your entry choice to proceed.
-
-## List Modify
-
-![PotEdit8](PotEdit8.png)
-
-Edit the entry, or even __Delete__ it entirely
-
-## List Rearrange
-
-![PotEdit9](PotEdit9.png)
-
-You can also change the order the list entries appear in with the arrows.
+Click __Save Changes__ to save your work.
