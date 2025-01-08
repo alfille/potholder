@@ -116,19 +116,7 @@ class Page { // singleton class
     helpLink(help=null) {
         const helpLoc = "https://alfille.github.io/" ;
         const helpDir = "/potholder/" ;
-        let   helpTopic = help ?? this.current() ;
-        switch (helpTopic) {
-            case 'ListForm':
-            case 'ListSeries':
-            case 'ListGlaze':
-            case 'ListKiln':
-            case "ListStage":
-            case 'ListClay':
-                helpTopic = 'ListGroup';
-                break ;
-            default:
-                break ;
-        }
+        const helpTopic = help ?? this.current() ;
         window.open( new URL(`${helpDir}${helpTopic}.html`,helpLoc).toString(), '_blank' );
     } 
     
