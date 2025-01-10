@@ -16,6 +16,7 @@
     </head>
     <body>
         <header class="work_screen">
+            <nav>
             <div id="headerbox">
                 <div class="headerboxlink mainOnly" onclick="objectPage.headerLink()"><img id="TopLeftImage" class="potholderLogo" src="images/wheel.png" alt="Home button"></div>
                 <div id="buttonheader">
@@ -148,10 +149,14 @@
                     </div>
                 </div>
             </div>
+            </nav>
+            <aside>
             <div id="titlebox">
             </div>
+            </aside>
         </header>
         <div id="potholderbody" class="work_screen">
+        <main>
             <!-- body: MainMenu -->
             <div class="MainMenu pageOverlay">
                 <div class="content_box">   
@@ -324,7 +329,6 @@
                     </div>
                 </div>
             </div>
-        </div>
             <!-- body: StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser  -->
             <div class="StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser  pageOverlay">
                 <span class="ContentTitle" id="StructShowTitle"></span>
@@ -333,6 +337,8 @@
                 </div>
             </div>
         </div>
+    </main>
+    </div>
         <!-- picture cropping page -->
         <div id="crop_page">
             <canvas id="under_canvas" width=350px height=600px></canvas>
