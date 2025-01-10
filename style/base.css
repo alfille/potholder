@@ -395,7 +395,7 @@ legend {
 }
 .MainPhoto {
   border: 1px solid white;
-  margin: 5px;
+  margin:  0px 5px 0px 0px;
 }
 .PotProcButtons {
   display: flex;
