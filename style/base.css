@@ -125,7 +125,7 @@ ul {
 }
 
 .NewCamera {
-  color: #e71111;
+  color: black;
   background: #3cebcd;
 }
 .Camera {
@@ -283,7 +283,7 @@ body {
   background: green;
 }
 .delete {
-  background: red !important;
+  background: #b00505 !important;
   float: right;
 }
 #searchbar {
@@ -385,7 +385,7 @@ legend {
 }
 .MainItalic {
   font-style: italic;
-  color: #d0d0d0;
+  color: white;
 }
 #PotPhotos, #MainPhotos {
   display: flex;
