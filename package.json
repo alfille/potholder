@@ -1,0 +1,27 @@
+{
+  "name": "potholder",
+  "version": "1.0.0",
+  "description": "Easy visual database for Ceramic Artists",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alfille/potholder.git"
+  },
+  "keywords": [
+    "pottery",
+    "ceramics",
+    "database",
+    "pouchdb",
+    "potter",
+    "clay"
+  ],
+  "author": "Paul H Alfille",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alfille/potholder/issues"
+  },
+  "homepage": "https://github.com/alfille/potholder#readme"
+}
