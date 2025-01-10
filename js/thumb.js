@@ -56,7 +56,7 @@ class Thumb {
                 this.ctx.drawImage( t_img, crop[0] + (crop[2]-iw)/2, crop[1] + (crop[3]-ih)/2, iw, ih, 0, 0, this.canvas.width, this.canvas.height ) ;
                 this.canvas.toBlob( (blob) => {
                     this.Thumbs[pid] = blob;
-                    let img = this.pick.querySelector(`[data-id="${pid}"]`);
+                    let img = this.pick.querySelector(`img[alt="${pid}"]`);
                     if ( img ) {
                         this.displayThumb( img, pid ) ;
                     } else {
@@ -68,7 +68,7 @@ class Thumb {
                             .then( () => objectPage.show("PotMenu") ) ;
                         } ;
                         this.pick.appendChild( img ) ;
-                        img.setAttribute("data-id",pid) ;
+                        img.alt = pid ;
                     }
                     }) ;
                 };
@@ -109,7 +109,7 @@ class Thumb {
                         .then( () => objectPage.show("PotMenu") ) ;
                     } ;
                     this.pick.appendChild( img ) ;
-                    img.setAttribute("data-id",pid) ;
+                    img.alt = pid ;
                     }) ;
                 };
             t_img.src = url ;
@@ -139,9 +139,9 @@ class Thumb {
     }
 
     remove( pid ) {
-        const img = this.pick.querySelector(`[data-id="${pid}"]`);
+        const img = this.pick.querySelector(`img[alt="${pid}"]`);
         if ( img ) {
-            delete this.Thumbs[img.getAttribute('data-id')];
+            delete this.Thumbs[img.alt];
             this.pick.removeChild( img ) ;
         }
     }
