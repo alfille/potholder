@@ -11,7 +11,7 @@ const cacheList = [
     "/index.html",
     "/sw.js",
     "/images/NoPicture.png",
-    "/images/potholder.png",
+    "/images/potholder.jpg",
     "/images/wheel.png",
     "/js/app.js",
     "/js/cookie_mod.js",
