@@ -541,7 +541,8 @@ window.onload = () => {
         const q = new Query();
         q.create( structData.Data.concat(structData.Images) )
         .then( () => objectThumb.getAll() ) // create thumbs
-        .catch( err => objectLog.err(err,"Query cleanup") );
+        .catch( err => objectLog.err(err,"Query cleanup") )
+        ;
 
         // now start listening for any changes to the database
         objectDatabase.db.changes({ 
@@ -564,9 +565,6 @@ window.onload = () => {
 
         // start sync with remote database
         objectDatabase.foreverSync();
-        
-        // modal picture
-        document.getElementById("modal_canvas").width = window.innerWidth ;
 
         objectPage.show("MainMenu") ;
         

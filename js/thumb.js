@@ -60,7 +60,7 @@ class Thumb {
                     if ( img ) {
                         this.displayThumb( img, pid ) ;
                     } else {
-                        img = new Image();
+                        img = new Image(100,100);
                         this.displayThumb( img, pid ) ;
                         img.classList.add("MainPhoto");
                         img.onclick = () => {
@@ -101,7 +101,7 @@ class Thumb {
                 this.ctx.drawImage( t_img, crop[0] + (crop[2]-iw)/2, crop[1] + (crop[3]-ih)/2, iw, ih, 0, 0, this.canvas.width, this.canvas.height ) ;
                 this.canvas.toBlob( (blob) => {
                     this.Thumbs[pid] = blob;
-                    const img = new Image();
+                    const img = new Image(100,100);
                     this.displayThumb( img, pid ) ;
                     img.classList.add("MainPhoto");
                     img.onclick = () => {
@@ -110,7 +110,7 @@ class Thumb {
                     } ;
                     this.pick.appendChild( img ) ;
                     img.alt = pid ;
-                    }) ;
+                    }, "image/jpeg") ;
                 };
             t_img.src = url ;
         })
@@ -127,9 +127,23 @@ class Thumb {
         this.pick.innerHTML="";
         objectPot.getAllIdDoc()
         .then( docs => {
-            docs.rows.forEach( r => this._firstload( r.doc ) ) ;
+            if ( 'requestIdleCallback' in window ) {
+                if ( docs.rows.length > 0 ) {
+                    window.requestIdleCallback( () => this.getAllList(docs.rows),{timeout:100});
+                }
+            } else {
+                docs.rows.forEach( r => this._firstload( r.doc ) ) ;
+            }
             })
         .catch( err => objectLog.err(err) ) ;
+    }
+
+    getAllList( rows ) {
+        const r = rows.pop() ;
+        this._load( r.doc ) ;
+        if ( rows.length > 0 ) {
+            window.requestIdleCallback( () => this.getAllList( rows ), {timeout:100} ) ;
+        }
     }
 
     displayThumb( target, pid = potId ) {
