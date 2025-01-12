@@ -229,5 +229,12 @@ export const structSettings = [
         alias: "Console",
         hint: "Output errors to developer console (for debugging)",
         type: "bool",
-    }
+    },
+    {
+        name: "img_format",
+        alias: "Thumbnail format",
+        hint: "Image encoding of thumbnail images",
+        type: "radio",
+        choices: ["png","jpeg","webp"],
+    },
 ] ;

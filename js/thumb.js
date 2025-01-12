@@ -70,7 +70,7 @@ class Thumb {
                         this.pick.appendChild( img ) ;
                         img.alt = pid ;
                     }
-                    }) ;
+                    },`image/${objectSettings?.img_format??"png"}`) ;
                 };
             t_img.src = url ;
         })
@@ -110,7 +110,7 @@ class Thumb {
                     } ;
                     this.pick.appendChild( img ) ;
                     img.alt = pid ;
-                    }, "image/jpeg") ;
+                    }, `image/${objectSettings?.img_format??"png"}`) ;
                 };
             t_img.src = url ;
         })

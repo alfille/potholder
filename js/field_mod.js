@@ -15,7 +15,8 @@ export {
 } ;
     
 class EntryList {
-    constructor( struct_list, Images=null ) {
+    constructor( struct_list, Images=null, readonly=false ) {
+        this.readonly = readonly ;
         this.double_tap = false ;
         this.members = struct_list.map( struct => {
             switch (struct.type) {
@@ -87,14 +88,11 @@ class EntryList {
     }
         
     show_doc() {
-        document.querySelectorAll(".edit_data").forEach( (e) => {
-            e.disabled = false;
-        });
         const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
         parent.appendChild(this.show_doc_inner()) ;
-        cloneClass( ".ExtraEdit", parent ) ;
+        cloneClass( this.readonly ? ".ExtraNoEdit" : ".ExtraEdit",  parent ) ;
     }
 
     show_doc_inner() {
@@ -163,11 +161,12 @@ class EntryList {
     }
 
     edit_doc() {
+        if ( this.readonly ) {
+            return ;
+        }
+        
         document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
         document.querySelector(".potDataEdit").style.display="block";
-        document.querySelectorAll(".edit_data").forEach( (e) => {
-            e.disabled = true;
-        });
         const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         
@@ -456,40 +455,49 @@ class BoolEntry extends VisibleEntry {
 }
 
 class CheckboxEntry extends VisibleEntry {
-        default_value() {
-                return [] ;
-        }
+    default_value() {
+            return [] ;
+    }
 
-        show_item_element() {
-                // list as text
-                return document.createTextNode( (this.new_val.length == 0) ?  "<empty>" : this.new_val.join(", ") ) ;
+    load_from_doc( doc ) {
+        this.initial_val = (this._name in doc) ? doc[this._name] : this.default_value() ;
+        if ( ! Array.isArray( this.initial_val ) ) {
+            this.initial_val = [ this.initial_val ] ;
         }
-        
-        form2value() {
-                this.new_val = [...document.getElementsByName(this.localname)]
-                        .filter( i => i.checked )
-                        .map( i => i.value );
-        }
+        this.new_val = this.initial_val ;
+    }
+    
+    show_item_element() {
+            // list as text
+            console.log("val",this.new_val);
+            return document.createTextNode( (this.new_val.length == 0) ?  "<empty>" : this.new_val.join(", ") ) ;
+    }
+    
+    form2value() {
+        this.new_val = [...document.getElementsByName(this.localname)]
+                .filter( i => i.checked )
+                .map( i => i.value );
+    }
 
-        changed() {
-                //console.log("Change check", type._name);
-                return (this.initial_val.length != this.new_val.length) || this.initial_val.some( (v,i) => v != this.new_val[i] ) ;
-        }
-         
-        edit_flatten() {
-                return this.picks.map( pick => {
-                        const inp = document.createElement("input");
-                        inp.type = "checkbox";
-                        inp.name = this.localname;
-                        inp.value = pick;
-                        inp.oninput = () => this.save_enable() ;
-                        if ( this.new_val.includes(pick) ) {
-                                inp.checked = true;
-                        }
-                        inp.title = this.struct.hint;
-                        return [inp,document.createTextNode(pick)];
-                        }); 
-        }
+    changed() {
+        //console.log("Change check", type._name);
+        return (this.initial_val.length != this.new_val.length) || this.initial_val.some( (v,i) => v != this.new_val[i] ) ;
+    }
+     
+    edit_flatten() {
+        return this.picks.map( pick => {
+            const inp = document.createElement("input");
+            inp.type = "checkbox";
+            inp.name = this.localname;
+            inp.value = pick;
+            inp.oninput = () => this.save_enable() ;
+            if ( this.new_val.includes(pick) ) {
+                inp.checked = true;
+            }
+            inp.title = this.struct.hint;
+            return [inp,document.createTextNode(pick)];
+            }); 
+    }
 }               
                                 
 class NumberEntry extends VisibleEntry {
@@ -637,9 +645,6 @@ class ArrayEntry extends VisibleEntry {
     fake_page() {
         document.querySelectorAll(".topButtons").forEach( v=>v.style.display="none" ); 
         document.querySelector(".potDataEdit").style.display="none";
-        document.querySelectorAll(".edit_data").forEach( (e) => {
-            e.disabled = false;
-        });
         const parent = document.getElementById("PotDataContent");
         parent.innerHTML = "";
         return parent ;

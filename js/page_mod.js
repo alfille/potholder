@@ -25,7 +25,7 @@ class Pagelist {
     // prototype to add to pages
     static AddPage() { Pagelist.pages[this.name]=this; }
     
-    static show_page(extra="") {
+    static show_page() {
         // reset buttons from edit mode
         document.querySelector(".potDataEdit").style.display="none"; 
         document.querySelectorAll(".topButtons")
@@ -41,10 +41,10 @@ class Pagelist {
         // hide Crop
         document.getElementById("crop_page").style.display="none" ;
         
-        this.show_content(extra);
+        this.show_content();
     }
     
-    static show_content(extra="") {
+    static show_content() {
         // default version, derived classes may overrule
         // Simple menu page
     }
@@ -142,7 +142,7 @@ class Page { // singleton class
         this.show_normal(); // basic page display setup
 
         // send to page-specific code
-        (Pagelist.subclass(objectPage.current())).show_page(extra);
+        (Pagelist.subclass(objectPage.current())).show_page();
     }
     
     show_normal() { // switch between screen and print

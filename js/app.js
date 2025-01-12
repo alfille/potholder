@@ -44,6 +44,7 @@ import {
     PotData,
     PotDataEditMode,
     PotDataRaw,
+    PotDataReadonly,
 } from "./doc_data_mod.js" ;
 
 import {
@@ -56,37 +57,55 @@ import {
     
 class Advanced extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
 }
 
 class Administration extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
 }
 
 class Developer extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
 }
 
 class StructMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
 }
 
 class DatabaseInfo extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         new StatBox() ;
+        document.getElementById("MainPhotos").style.display="block";
         objectDatabase.db.info()
         .then( doc => {
-            objectPotData = new DatabaseInfoData( doc, structDatabaseInfo );
+            objectPotData = new PotDataReadonly( doc, structDatabaseInfo );
             })
         .catch( err => objectLog.err(err) );
     }
+
 }
 
 class RemoteDatabaseInput extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         new TextBox("Your Credentials") ;
         const doc = {} ;
         ["username","password","database","address","local"].forEach( x => doc[x] = objectDatabase[x] ) ;
@@ -98,7 +117,7 @@ class RemoteDatabaseInput extends Pagelist {
 class Settings extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         new TextBox("Display Settings") ;
         const doc = Object.assign( {}, objectSettings ) ;
         objectPotData = new SettingsData( doc, structSettings );
@@ -108,7 +127,7 @@ class Settings extends Pagelist {
 class MakeURL extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         new StatBox() ;
         let url = new URL( "/index.html", window.location.href ) ;
         if ( url.hostname == 'localhost' ) {
@@ -128,7 +147,7 @@ class MakeURL extends Pagelist {
 class PotPrint extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         if ( objectPot.isSelected() ) {
             objectDatabase.db.get( potId )
             .then( (doc) => objectPotData = new PotDataPrint( doc, structData.Data.concat(structData.Images) ) )
@@ -140,10 +159,6 @@ class PotPrint extends Pagelist {
             objectPage.show( "back" );
         }
     }
-}
-
-class DatabaseInfoData extends PotData {
-    savePieceData() {}
 }
 
 class DatabaseData extends PotDataRaw {
@@ -182,7 +197,7 @@ class SettingsData extends PotData {
 class Help extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         window.open( new URL(`https://alfille.github.io/potholder`,location.href).toString(), '_blank' );
         objectPage.show("back");
     }
@@ -191,7 +206,7 @@ class Help extends Pagelist {
 class AllPieces extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect() ;
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -205,7 +220,7 @@ class AllPieces extends Pagelist {
 class Orphans extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect() ;
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -219,7 +234,7 @@ class Orphans extends Pagelist {
 class AssignPic extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPage.forget(); // don't return here
         // Title adjusted to source and number
         if ( objectPot.pictureSource.files.length == 0 ) {
@@ -246,7 +261,7 @@ class StructShow extends Pagelist {
     // static "struct_name" from derived classes
     // static "struct_title" from derived classes
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect() ;
         new TextBox("Field Structure") ;
         document.getElementById("MainPhotos").style.display="block";
@@ -259,30 +274,56 @@ class StructGeneralPot extends StructShow {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     static struct_name = structData.Data ;
     static struct_title = "Data Fields";
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
 }
 
 class StructImages extends StructShow {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     static struct_name = structData.Images ;
     static struct_title = "Image Fields";
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
 }
 
 class StructDatabaseInfo extends StructShow {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     static struct_name = structDatabaseInfo ;
     static struct_title = "Database Metadata" ;
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
 }
 
 class StructRemoteUser extends StructShow {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
     static struct_name = structRemoteUser ;
     static struct_title = "User Credentials" ;
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
+}
+
+class StructSettings extends StructShow {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    static struct_name = structSettings ;
+    static struct_title = "Display Settings" ;
+
+    static show_content() {
+        document.getElementById("MainPhotos").style.display="block";
+    }
 }
 
 class ListGroup extends Pagelist {
     // static "field_name" from struct in derived classes
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect() ;
         const item = structData.Data.find( i => i.name == this.field_name ) ;
         if ( item ) {
@@ -363,7 +404,7 @@ class ListClay extends ListGroup {
 class ErrorLog extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect() ;
         new TextBox("Error Log");
         objectLog.show() ;
@@ -374,7 +415,7 @@ class ErrorLog extends Pagelist {
 class FirstTime extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect() ;
         new TextBox("Welcome") ;
         if ( objectDatabase.db !== null ) {
@@ -386,7 +427,7 @@ class FirstTime extends Pagelist {
 class InvalidPiece extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPage.forget() ; // don't return here
         objectPot.unselect();
         new StatBox() ;
@@ -397,7 +438,7 @@ class InvalidPiece extends Pagelist {
 class MainMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect();
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -407,7 +448,7 @@ class MainMenu extends Pagelist {
 class ListMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect();
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -418,7 +459,7 @@ class PotNew extends Pagelist {
     // record doesn't exist -- make one
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPage.forget();
         new TextBox("New Piece");
         if ( objectPot.isSelected() ) {
@@ -453,7 +494,7 @@ class PotNewData extends PotDataEditMode {
 class PotEdit extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         if ( objectPot.isSelected() ) {
             objectDatabase.db.get( potId )
             .then( (doc) => objectPotData = new PotData( doc, structData.Data ))
@@ -471,7 +512,7 @@ class PotEdit extends Pagelist {
 class PotPix extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         if ( objectPot.isSelected() ) {
             objectDatabase.db.get( potId )
             .then( (doc) => objectPotData = new PotData( doc, structData.Images ))
@@ -489,7 +530,7 @@ class PotPix extends Pagelist {
 class PotPixLoading extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         document.querySelector(".ContentTitleHidden").style.display = "block";
         objectPage.forget() ;
         if ( objectPot.isSelected() ) {
@@ -508,7 +549,7 @@ class PotPixLoading extends Pagelist {
 class PotMenu extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         if ( objectPot.isSelected() ) {
             objectDatabase.db.get( potId )
             .then( (doc) => {
@@ -529,7 +570,7 @@ class PotMenu extends Pagelist {
 class SearchList extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
-    static show_content(extra="") {
+    static show_content() {
         objectPot.unselect() ;
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -554,7 +595,7 @@ window.onload = () => {
     // Settings
     objectSettings = Object.assign( {
         console:"true",
-        image:"webp"
+        img_format:"webp"
         }, objectCookie.get("settings") ) ;
     
     // set Credentials from Storage / URL

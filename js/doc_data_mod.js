@@ -14,6 +14,7 @@ export {
     PotData,
     PotDataEditMode,
     PotDataRaw,
+    PotDataReadonly,
 } ;
 
 import {
@@ -26,18 +27,18 @@ import {
     
 // data entry page type
 class PotDataRaw { // singleton class
-    constructor(click,doc,struct) {
+    constructor(click,doc,struct,readonly=false) {
         //console.log("Click",click,"DOC",doc, "Structure", struct);
         // args is a list of "docs" to update"
         this.Images = new PotImages(doc);
-        
+
         this.doc = doc;
         
         // Add dummy entries for extra images
         this.match_image_list() ;
 
         // Create (recursively) objects to mirror the structure
-        this.list = new EntryList( struct, this.Images ) ;
+        this.list = new EntryList( struct, this.Images, readonly ) ;
         
         // Load the objects with doc data 
         this.list.load_from_doc( doc ) ;
@@ -48,6 +49,7 @@ class PotDataRaw { // singleton class
         } else {
             this.list.show_doc() ;
         }
+        console.log("SDFSDSF");
     }
 
     edit_doc() {
@@ -145,6 +147,12 @@ class PotDataEditMode extends PotDataRaw {
         super(true,doc,struct); // clicked = true
     }
 }
+
+class PotDataReadonly extends PotDataRaw {
+    constructor(doc,struct) {
+        super(false,doc,struct,true); // clicked = false, readonly=true
+    }
+}    
 
 class Detachment {
     constructor( pid, rev ) {

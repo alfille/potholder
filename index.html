@@ -69,8 +69,8 @@
                     <div class="AssignPic topButtons pageOverlay">
                         <button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: ListMenu MakeURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser -->
-                    <div class="ListMenu topButtons pageOverlay MakeURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser ">
+                    <!-- top: ListMenu MakeURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser StructSettings -->
+                    <div class="ListMenu topButtons pageOverlay MakeURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser StructSettings">
                         <button type="button" class="divbutton NewCamera" title="Use camera -- new piece or assign later" onClick="objectPot.pushPixButton()">New Photo &#128247;</button>            
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >New Gallery &#128444;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
@@ -348,13 +348,14 @@
                     </div>
                     <div class="PotProcButtons">
                         <span class="ContentTitle">Administrative</span>
+                        <button type="button" class="divbutton" onClick="objectPage.show( 'StructSettings' )" title="Display settings">Display Settings</button>
                         <button type="button" class="divbutton" onClick="objectPage.show( 'StructRemoteUser' )" title="User credential structure">User Credentials</button>
                         <button type="button" class="divbutton" onClick="objectPage.show( 'StructDatabaseInfo')" title="Read-only database info">Database Info</button>
                     </div>
                 </div>
             </div>
-            <!-- body: StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser  -->
-            <div class="StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser  pageOverlay">
+            <!-- body: StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser  StructSettings -->
+            <div class="StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser  StructSettings pageOverlay">
                 <span class="ContentTitle" id="StructShowTitle"></span>
                 <div id="StructShowContent">
                     <pre id="struct_json"></pre>
@@ -397,6 +398,13 @@
             <div class="ExtraEdit">
                 <div class="MainMenuRow">
                     <button type="button" class="divbutton edit_data" onclick="objectPotData.edit_doc()" title="Start editing these entries">Edit</button>
+                    <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Back</button>
+                </div>
+            </div>
+            <!-- Extra No Edit buttons -->
+            <div class="ExtraNoEdit">
+                <div class="MainMenuRow">
+                    <button type="button" class="divbutton edit_data" onclick="objectPotData.edit_doc()" disabled>Edit</button>
                     <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Back</button>
                 </div>
             </div>
