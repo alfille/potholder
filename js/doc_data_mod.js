@@ -27,7 +27,7 @@ import {
 // data entry page type
 class PotDataRaw { // singleton class
     constructor(click,doc,struct) {
-        //console.log("DOC",doc);
+        //console.log("Click",click,"DOC",doc, "Structure", struct);
         // args is a list of "docs" to update"
         this.Images = new PotImages(doc);
         
@@ -59,9 +59,7 @@ class PotDataRaw { // singleton class
         this.list.form2value() ; // make sure data is loaded
         if ( this.list.changed() ) {
             const doc = this.list.get_doc() ;
-            //console.log("Gathered DOC",doc);
             Object.assign( this.doc, doc ) ;
-            //console.log("Final DOC",this.doc);
             return true ;
         }
         return false ;
@@ -162,7 +160,7 @@ class Detachment {
                     this.rev = r.rev ;
                     return this.remove( i_list ) ;
                     })
-                .catch( err => console.log("remove error") );
+                .catch( err => objectLog(err,"Database") );
         } else {
             return Promise.resolve(true) ;
         }

@@ -48,7 +48,6 @@ class DatabaseManager { // convenience class
         const params = new URL(location.href).searchParams;
         ["username","password","database","address","local"].forEach( c => {
             const gc = params.get(c) ;
-            //console.log(c,gc);
             if ( ( gc!==null ) && ( gc !== this[c] ) ) {
                 this[c] = gc ;
                 objectPage.reset() ;               

@@ -21,6 +21,7 @@ import {
     structDatabaseInfo,
     structData,
     structRemoteUser,
+    structSettings,
 } from "./doc_struct.js" ;
 
 import {
@@ -53,7 +54,15 @@ import {
     Pagelist
 } from "./page_mod.js" ;
     
+class Advanced extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+}
+
 class Administration extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+}
+
+class Developer extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 }
 
@@ -83,6 +92,16 @@ class RemoteDatabaseInput extends Pagelist {
         ["username","password","database","address","local"].forEach( x => doc[x] = objectDatabase[x] ) ;
         doc.raw = "fixed";
         objectPotData = new DatabaseData( doc, structRemoteUser );
+    }
+}
+
+class Settings extends Pagelist {
+    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+
+    static show_content(extra="") {
+        new TextBox("Display Settings") ;
+        const doc = Object.assign( {}, objectSettings ) ;
+        objectPotData = new SettingsData( doc, structSettings );
     }
 }
 
@@ -148,6 +167,15 @@ class DatabaseData extends PotDataRaw {
         }
         objectPage.reset();
         location.reload(); // force reload
+    }
+}
+
+class SettingsData extends PotData {
+    savePieceData() {
+        this.loadDocData() ;
+        Object.assign ( objectSettings, this.doc ) ;
+        objectCookie.set( "settings", objectSettings ) ;
+        objectPage.show("back");
     }
 }
 
@@ -522,6 +550,12 @@ window.onload = () => {
         .register('/sw.js')
         .catch( err => objectLog.err(err,"Service worker registration") );
     }
+
+    // Settings
+    objectSettings = Object.assign( {
+        console:"true",
+        image:"webp"
+        }, objectCookie.get("settings") ) ;
     
     // set Credentials from Storage / URL
     objectDatabase.acquire_and_listen() ; // look for database

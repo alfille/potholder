@@ -223,3 +223,11 @@ export const structDatabaseInfo = [
     },
 ];
 
+export const structSettings = [
+    {
+        name: "console",
+        alias: "Console",
+        hint: "Output errors to developer console (for debugging)",
+        type: "bool",
+    }
+] ;

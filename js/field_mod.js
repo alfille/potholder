@@ -17,8 +17,6 @@ export {
 class EntryList {
     constructor( struct_list, Images=null ) {
         this.double_tap = false ;
-        //console.log("StructList",Array.isArray(struct_list),struct_list ) ;
-        //console.log("StructList Images",Images ) ;
         this.members = struct_list.map( struct => {
             switch (struct.type) {
                 case "text":
@@ -45,6 +43,8 @@ class EntryList {
                     return new NumberEntry( struct ) ;
                 case "crop":
                     return new CropEntry( struct );
+                default:
+                    return new InvisibleEntry( struct );
             }
             }) ;
     }
@@ -522,8 +522,6 @@ class ArrayEntry extends VisibleEntry {
     }
     
     changed() {
-        //console.log(`Change ${this._name} <${this.initial_val.length}><${this.new_val.length}>`);
-        //console.log("Array",this.new_val.length != this.initial_val.length,this.new_val.some( m => m.changed() ));
         return (this.new_val.length != this.initial_val.length) 
             || this.new_val.some( m => m.changed() ) 
             || this.new_val.some( (n,i) => n != this.initial_val[i] )

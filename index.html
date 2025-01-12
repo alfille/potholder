@@ -27,6 +27,14 @@
                         <button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
                         <button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
+                    <!-- top: Advanced Administration Developer -->
+                    <div class= "Advanced Administration Developer topButtons pageOverlay">
+                        <button type="button" class="divbutton NewCamera" title="Use camera -- new piece or assign later" onClick="objectPot.pushPixButton()">New Photo &#128247;</button>            
+                        <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >New Gallery &#128444;</button>            
+                        <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )" title="Return to previous page">Return</button>
+                        <button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
+                        <button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
+                    </div>
                     <!-- top: FirstTime -->
                     <div class="FirstTime topButtons pageOverlay">
                         <button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
@@ -41,7 +49,7 @@
                     </div>
                     <!-- top: AllPieces Orphans -->
                     <div class="AllPieces Orphans topButtons pageOverlay">
-                        <button type="button" class="divbutton NewCamera" title="UJse camera -- new piece or assign later" onClick="objectPot.pushPixButton()">New Photo &#128247;</button>            
+                        <button type="button" class="divbutton NewCamera" title="Use camera -- new piece or assign later" onClick="objectPot.pushPixButton()">New Photo &#128247;</button>            
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >New Gallery &#128444;</button>            
                         <button type="button" class="divbutton return" onclick="objectPage.show( 'back' )">Return</button>
                         <button type="button" class="divbutton" onclick="objectPage.show( 'PotNew' )" title="Create a new piece">Add Piece</button>
@@ -90,8 +98,8 @@
                         <button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
                         <button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: PotEdit PotPix -->
-                    <div class="PotData PotEdit topButtons PotPix pageOverlay">
+                    <!-- top: PotEdit PotPix Settings -->
+                    <div class="PotData PotEdit topButtons PotPix Settings pageOverlay">
                         <button type="button" class="divbutton Camera" title="Use camera -- add to this piece" onClick="objectPot.pushPixButton()">Add Photo &#128247;</button>            
                         <button type="button" class="divbutton Camera" title="Get image -- add to this piece" onClick="objectPot.pushGalleryButton()" >Add Gallery &#128444;</button>            
                         <button type="button" class="divbutton edit_data" onclick="objectPotData.edit_doc()" title="Start editing these entries">Edit</button>
@@ -132,14 +140,6 @@
                         <button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
                         <button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: Administration -->
-                    <div class= "Administration topButtons pageOverlay">
-                        <button type="button" class="divbutton NewCamera" title="Use camera -- new piece or assign later" onClick="objectPot.pushPixButton()">New Photo &#128247;</button>            
-                        <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="objectPot.pushGalleryButton()" >New Gallery &#128444;</button>            
-                        <button type="button" class="divbutton return" onclick="objectPage.show( 'MainMenu' )" title="Show main menu">Return</button>
-                        <button type="button" class="divbutton Search" onclick="objectPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
-                        <button type="button" class="divbutton" onclick="objectPage.helpLink()">Help</button>
-                    </div>
                     <!-- top: RemoteDatabaseInput -->
                     <div class="RemoteDatabaseInput topButtons pageOverlay">
                         <button type="button" class="divbutton edit_data" onclick="objectPotData.edit_doc()" title="Start editing these entries">Edit</button>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="PotProcButtons">
                             <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'RemoteDatabaseInput' )">Name/Password</button>
-                            <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Administration' )">Advanced Options</button>
+                            <button type="button" class="divbutton delete MainItalic" onclick="objectPage.show( 'Advanced' )">Advanced Options</button>
                         </div>
                     </div>
                 </div>
@@ -256,8 +256,8 @@
                     <table id="SearchList"></table>
                 </div>
             </div>
-            <!-- body: PotNew PotEdit PotPix DatabaseInfo RemoteDatabaseInput -->
-            <div class="PotData PotNew PotEdit PotPix PotPixLoading DatabaseInfo RemoteDatabaseInput pageOverlay">
+            <!-- body: PotNew PotEdit PotPix DatabaseInfo RemoteDatabaseInput Settings -->
+            <div class="PotData PotNew PotEdit PotPix PotPixLoading DatabaseInfo RemoteDatabaseInput Settings pageOverlay">
                 <span class="ContentTitle ContentTitleHidden">Loading...</span>
                 <div id="PotDataContent" ></div>
             </div>
@@ -293,22 +293,46 @@
             <div class="ErrorLog pageOverlay">
                 <div id="ErrorLogContent"></div>
             </div>
+            <!-- body: Advanced -->
+            <div class="Advanced pageOverlay">
+                <div class="content_box">   
+                    <span class="ContentTitle">Advanced Options</span>
+                    <div id="AdministrationContent" class="MainMenuRow">
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton" onclick="objectPage.show( 'Administration')" title="Administration and Settings">Administration and Settings</button>
+                            <button type="button" class="divbutton" onclick="objectPage.show( 'Developer')" title="Internal structure">Developer</button>
+                        </div>
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton MainBold" onclick="objectPage.csv()" title="CSV file (no pictures)">Download Spreadsheet</button>
+                            <button type="button" class="divbutton delete MainItalic" onclick="objectDatabase.clearLocal()">Clear local data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- body: Administration -->
             <div class="Administration pageOverlay">
                 <div class="content_box">   
-                    <span class="ContentTitle">Advanced</span>
+                    <span class="ContentTitle">Administration</span>
                     <div id="AdministrationContent" class="MainMenuRow">
                         <div class="PotProcButtons">
-                            <button type="button" class="divbutton MainBold" onclick="objectPage.csv()" title="CSV file (no pictures)">Download Spreadsheet</button>
+                            <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'Settings' )" title="Preferences for display">Settings</button>
                             <button type="button" class="divbutton MainItalic" onclick="objectPage.show( 'ErrorLog' )">Error Log</button>
-                            <button type="button" class="divbutton" onclick="objectPage.show( 'Orphans' )" title="Extra data fields">Orphan Fields</button>
-                            <button type="button" class="divbutton" onclick="objectPage.show( 'StructMenu' )" title="Database field structure">Database Fields</button>
                         </div>
                         <div class="PotProcButtons">
                             <button type="button" class="divbutton" onClick="objectDatabase.fauxton()" hint="Open Couchdb Fauxton console">Database Console</button>
                             <button type="button" class="divbutton" onclick="objectPage.show( 'DatabaseInfo' )">Database Information</button>
-                            <button type="button" class="divbutton"  style="visibility:hidden"> </button>
-                            <button type="button" class="divbutton delete MainItalic" onclick="objectDatabase.clearLocal()">Clear local data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- body: Developer -->
+            <div class="Developer pageOverlay">
+                <div class="content_box">   
+                    <span class="ContentTitle">Advanced</span>
+                    <div id="AdministrationContent" class="MainMenuRow">
+                        <div class="PotProcButtons">
+                            <button type="button" class="divbutton" onclick="objectPage.show( 'Orphans' )" title="Extra data fields">Orphan Fields</button>
+                            <button type="button" class="divbutton" onclick="objectPage.show( 'StructMenu' )" title="Database field structure">Database Fields</button>
                         </div>
                     </div>
                 </div>

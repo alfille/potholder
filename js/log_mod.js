@@ -20,10 +20,12 @@ export class Log{
         const ttl = title ?? objectPage.current() ;
         const msg = err.message ?? err ;
         this.list.push(`${ttl}: ${msg}`);
-        console.group() ;
-        console.log( ttl, msg ) ;
-        console.trace();
-        console.groupEnd();
+        if ( objectSettings?.console == "true" ) {
+            console.group() ;
+            console.log( ttl, msg ) ;
+            console.trace();
+            console.groupEnd();
+        }
         if ( objectPage.current() == "ErrorLog" ) {
             // update
             this.show();

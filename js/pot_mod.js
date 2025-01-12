@@ -87,7 +87,6 @@ class Pot { // convenience class
         // Check pot existence
         return objectDatabase.db.get( pid )
         .then( (doc) => {
-            //console.log("Select",doc);
             // Top left Logo
             objectThumb.displayThumb( this.TL, pid ) ;
             new PotBox(doc);
@@ -138,7 +137,7 @@ class Pot { // convenience class
             if ( doc.images.find( e => e.image == f.name ) ) {
                 // exists, just update attachment
                 return objectDatabase.db.putAttachment( pid, f.name, doc._rev, f, f.type )
-                    .catch( err => console.log(err)) ;
+                    .catch( err => objectLog(err)) ;
             } else {
                 // doesn't exist, add images entry as well (to front)
                 doc.images.unshift( {

@@ -24,6 +24,7 @@ globalThis. objectCookie = null ;
 globalThis. objectSearch = null;
 globalThis. objectThumb = null;
 globalThis. objectCrop = null ;
+globalThis. objectSettings = {} ;
 
 globalThis. rightSize = ( imgW, imgH, limitW, limitH ) => {
     const h = limitW * imgH / imgW ;
