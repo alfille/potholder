@@ -26,11 +26,11 @@ import {
 
 import {
     Query,
-} from "./query_mod.js" ;
+} from "./query.js" ;
 
 import {
     PotImages,
-} from "./image_mod.js" ;
+} from "./image.js" ;
 
 import {
     PotTable,
@@ -38,22 +38,22 @@ import {
     SearchTable,
     AssignTable,
     OrphanTable,
-} from "./sorttable_mod.js" ;
+} from "./sorttable.js" ;
 
 import {
     PotData,
     PotDataEditMode,
     PotDataRaw,
     PotDataReadonly,
-} from "./doc_data_mod.js" ;
+} from "./doc_data.js" ;
 
 import {
     PotDataPrint,
-} from "./print_data_mod.js" ;
+} from "./print_data.js" ;
 
 import {
     Pagelist
-} from "./page_mod.js" ;
+} from "./page.js" ;
     
 class Advanced extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
