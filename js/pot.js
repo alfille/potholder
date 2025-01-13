@@ -17,11 +17,11 @@ import {
 
 import {
     Id_pot,
-} from "./id_mod.js" ;
+} from "./id.js" ;
 
 import {
     PotImages,
-} from "./image_mod.js" ;
+} from "./image.js" ;
 
 // used to generate data entry pages "PotData" type
 import {

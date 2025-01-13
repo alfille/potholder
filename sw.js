@@ -24,7 +24,7 @@ const cacheList = [
     "/js/id.js",
     "/js/image.js",
     "/js/log.js",
-    "/js/page_mod.js",
+    "/js/page.js",
     "/js/pot.js",
     "/js/print_data.js",
     "/js/query.js",

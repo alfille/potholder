@@ -650,7 +650,7 @@ class ArrayEntry extends VisibleEntry {
         return parent ;
     }               
     
-    select_edit( item ) {
+    select_edit() {
         // Insert a table, and pull label into caption
         const parent = this.fake_page() ;
             
@@ -733,7 +733,7 @@ class ArrayEntry extends VisibleEntry {
             };
 
         // table
-        this.new_val.forEach( (entry,i) => {
+        this.new_val.forEach( (entry) => {
             const tr = tab.insertRow(-1) ;
             tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
             tr.insertCell(-1).innerHTML=`<button type="button"  class="Darray_down" title="Move this entry down"><B>&#8659;</B></button>`;
@@ -839,7 +839,7 @@ class ImageArrayEntry extends ArrayEntry {
         return [tab];
     }
 
-    select_edit( item ) {
+    select_edit() {
         // Insert a table, and pull label into caption
         const parent = this.fake_page() ;
             
@@ -878,7 +878,7 @@ class ImageArrayEntry extends ArrayEntry {
             };
 
         // table
-        this.new_val.forEach( (entry,i) => {
+        this.new_val.forEach( (entry) => {
             const tr = tab.insertRow(-1) ;
             tr.insertCell(-1).innerHTML=`<button type="button" class="Darray_up" title="Move this entry up"><B>&#8657;</B></button>`;
             tr.insertCell(-1).innerHTML=`<button type="button"  class="Darray_down" title="Move this entry down"><B>&#8659;</B></button>`;

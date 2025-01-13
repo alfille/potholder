@@ -84,15 +84,15 @@ class Crop {
                 this.cacheBounds() ;
                 
                 // handlers
-                this.canvas.ontouchstart = (e) => this.start_drag_t(e);
-                this.canvas.ontouchmove  = (e) => this.drag_t(e);
-                this.canvas.ontouchend   = (e) => this.undrag();
+                this.canvas.ontouchstart = (e) => this.start_drag_touch(e);
+                this.canvas.ontouchmove  = (e) => this.drag_touch(e);
+                this.canvas.ontouchend   = ()  => this.undrag();
                 this.canvas.onmousedown  = (e) => this.start_drag(e);
-                this.canvas.onmousemove  = (e) => this.drag_m(e);
-                this.canvas.onmouseup    = (e) => this.undrag();
+                this.canvas.onmousemove  = (e) => this.drag_mouse(e);
+                this.canvas.onmouseup    = ()  => this.undrag();
                 this.canvas.oncontextmenu= (e) => e.preventDefault() ;
 
-                screen.orientation.onchange=(e)=>{
+                screen.orientation.onchange=()=>{
                     this.working_crop = this.edge2crop() ;
                     screen.orientation.onchange=()=>{} ;
                     requestAnimationFrame( () => this.crop_reset() );
@@ -380,7 +380,7 @@ class Crop {
         this.showEdges() ;
     }
     
-    start_drag_t(e) {
+    start_drag_touch(e) {
         e.preventDefault() ;
         if ( e.targetTouches.length > 0 ) {
             this.start_drag( e.targetTouches[0] ) ;
@@ -400,7 +400,7 @@ class Crop {
         this.showEdges() ;
     }
     
-    drag_t(e) {
+    drag_touch(e) {
         if ( e.targetTouches.length > 0 ) {
             this.drag( e.targetTouches[0] ) ;
         } else {
@@ -408,7 +408,7 @@ class Crop {
         }
     }
     
-    drag_m(e) {
+    drag_mouse(e) {
         e.preventDefault() ;
         if ( (e.buttons & 1) == 1 ) {
             this.drag(e) ;

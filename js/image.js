@@ -69,7 +69,7 @@ class PotImages {
                         const [cw,ch] = rightSize( crop[2], crop[3], window.innerWidth, window.innerHeight-75 ) ;
                         canvas2.height = ch ;
                         canvas2.getContext("2d").drawImage( img2, crop[0], crop[1], crop[2], crop[3], 0, 0, cw, ch ) ;
-                        screen.orientation.onchange=(e)=>{
+                        screen.orientation.onchange=()=>{
                             screen.orientation.onchange=()=>{};
                             document.getElementById('modal_id').style.display='none';
                             requestAnimationFrame( ()=>canvas.click() ) ;
@@ -142,8 +142,4 @@ class PotImages {
     displayAll() {
         return this.images.map( k=> this.displayClickable(k.image,"medium_pic") ) ;
     }    
-}
-
-function isAndroid() {
-    return navigator.userAgent.toLowerCase().indexOf("android") > -1;
 }
