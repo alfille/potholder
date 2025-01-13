@@ -120,7 +120,7 @@ class Page { // singleton class
         window.open( new URL(`${helpDir}${helpTopic}.html`,helpLoc).toString(), '_blank' );
     } 
     
-    show( page, extra="" ) { // main routine for displaying different "pages" by hiding different elements
+    show( page ) { // main routine for displaying different "pages" by hiding different elements
         if ( objectSettings?.console == "true" ) {
             console.log("SHOW",page,"STATE",this.path);
         }
