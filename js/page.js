@@ -16,7 +16,7 @@ export {
 
 import {
     CSV,
-} from "./csv_mod.js" ;
+} from "./csv.js" ;
 
 class Pagelist {
     // list of subclasses = displayed "pages"
