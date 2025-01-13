@@ -9,8 +9,8 @@
   "dir": "ltr",
   "display": "browser",
   "display_override": [
-    "browser",
     "fullscreen",
+    "browser",
     "minimal-ui",
     "window-controls-overlay"
   ],
