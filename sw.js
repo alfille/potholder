@@ -21,7 +21,6 @@ const cacheList = [
     "/js/entry_field.js",
     "/js/globals.js",
     "/js/image.js",
-    "/js/log.js",
     "/js/page.js",
     "/js/pot.js",
     "/js/query.js",
