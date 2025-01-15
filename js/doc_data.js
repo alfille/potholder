@@ -5,8 +5,6 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
 
@@ -49,7 +47,6 @@ class PotDataRaw { // singleton class
         } else {
             this.list.show_doc() ;
         }
-        console.log("SDFSDSF");
     }
 
     edit_doc() {
@@ -73,14 +70,14 @@ class PotDataRaw { // singleton class
         const data_change = this.loadDocData() ; // also sets this.doc
         if ( data_change ) {
             // doc is changed
-            objectDatabase.db.put( this.doc )
+            globalDatabase.db.put( this.doc )
             .then( r => new Detachment( r.id, r.rev ) )
             .then( D => D.remove( deleted_images) )
-            .then( _ => objectThumb.getOne( this.doc._id ) )
-            .catch( (err) => objectLog.err(err) )
-            .finally( () => objectPage.show( state ) );
+            .then( _ => globalThumbs.getOne( this.doc._id ) )
+            .catch( (err) => globalLog.err(err) )
+            .finally( () => globalPage.show( state ) );
         } else {
-            objectPage.show( state ) ;
+            globalPage.show( state ) ;
         }
     }
     
@@ -92,12 +89,12 @@ class PotDataRaw { // singleton class
     back() {
         if ( this.list.changed() ) {
             if ( confirm("WARNING: Unsaved changes.\nPress OK to discard your new data.\nPress CANCEL to NOT DISCARD yet.") ) {
-                objectPage.show("back");
+                globalPage.show("back");
             } else {
                 document.querySelectorAll(".savedata").forEach(s=>s.disabled = false);
             }
         } else {
-            objectPage.show("back");
+            globalPage.show("back");
         }
     }    
 
@@ -163,12 +160,12 @@ class Detachment {
     remove( i_list ) {
         if ( i_list && i_list.length>0 ) {
             const name = i_list.pop() ;
-            return objectDatabase.db.removeAttachment( this.pid, name, this.rev )
+            return globalDatabase.db.removeAttachment( this.pid, name, this.rev )
                 .then( r => {
                     this.rev = r.rev ;
                     return this.remove( i_list ) ;
                     })
-                .catch( err => objectLog(err,"Database") );
+                .catch( err => globalLog(err,"Database") );
         } else {
             return Promise.resolve(true) ;
         }

@@ -6,8 +6,6 @@
  * MIT license
  * */
 
-"use strict";
-
 /* jshint esversion: 11 */
 
 class DatabaseManager { // convenience class
@@ -28,20 +26,20 @@ class DatabaseManager { // convenience class
     }
     
     load() {
-        ["username","password","database","address","local"].forEach( x => this[x]=objectCookie.local_get(x) );
+        ["username","password","database","address","local"].forEach( x => this[x]=globalStorage.local_get(x) );
     }
     
     store() {
-        ["username","password","database","address","local"].forEach( x => objectCookie.local_set(x,this[x]) );
+        ["username","password","database","address","local"].forEach( x => globalStorage.local_set(x,this[x]) );
     }
     
     acquire_and_listen() {        
         // Get remote DB from localStorage if available
         this.load();
-        const cookie = objectCookie.get("remoteCouch");
+        const cookie = globalStorage.get("remoteCouch");
         if ( cookie !== null ) { // legacy
             ["username","password","database","address"].forEach( x => this[x] = this[x] ?? cookie[x] );
-            objectCookie.del("remoteCouch") ;
+            globalStorage.del("remoteCouch") ;
         }
             
         // Get Remote DB fron command line if available
@@ -50,7 +48,7 @@ class DatabaseManager { // convenience class
             const gc = params.get(c) ;
             if ( ( gc!==null ) && ( gc !== this[c] ) ) {
                 this[c] = gc ;
-                objectPage.reset() ;               
+                globalPage.reset() ;               
             }
         });
         this.store();
@@ -96,7 +94,7 @@ class DatabaseManager { // convenience class
                     },
                 });
         } else {
-            objectLog.err("Bad DB specification");
+            globalLog.err("Bad DB specification");
             this.remoteDB = null;
         }
         if ( this.remoteDB ) {
@@ -111,7 +109,7 @@ class DatabaseManager { // convenience class
     
     syncer() {
         this.status("good","Starting database intermittent sync");
-        objectDatabase.db.sync( this.remoteDB ,
+        globalDatabase.db.sync( this.remoteDB ,
             {
                 live: true,
                 retry: true,
@@ -130,19 +128,19 @@ class DatabaseManager { // convenience class
             case "disconnect":
                 document.body.style.background="#7071d3"; // Orange
                 if ( this.lastState !== state ) {
-                    objectLog.err(msg,"Network status");
+                    globalLog.err(msg,"Network status");
                 }
                 break ;
             case "problem":
                 document.body.style.background="#d72e18"; // grey
-                objectLog.err(msg,"Network status");
+                globalLog.err(msg,"Network status");
                 this.problem = true ;
                 break ;
             case "good":
             default:
                 document.body.style.background="#172bae"; // heppy blue
                 if ( this.lastState !== state ) {
-                    objectLog.err(msg,"Network status");
+                    globalLog.err(msg,"Network status");
                 }
                 this.problem = false ;
                 break ;
@@ -173,20 +171,20 @@ class DatabaseManager { // convenience class
 
     // Fauxton link
     fauxton() {
-        window.open( `${objectDatabase.address}/_utils`, '_blank' );
+        window.open( `${globalDatabase.address}/_utils`, '_blank' );
     }
     
     clearLocal() {
         const remove = confirm("Remove the eMission data and your credentials from this device?\nThe central database will not be affected.") ;
         if ( remove ) {
-            objectCookie.clear();
+            globalStorage.clear();
             // clear (local) database
-            objectDatabase.db.destroy()
+            globalDatabase.db.destroy()
             .finally( _ => location.reload() ); // force reload
         } else {
-            objectPage.show( "MainMenu" );
+            globalPage.show( "MainMenu" );
         }
     }
 
 }
-objectDatabase = new DatabaseManager() ;
+globalDatabase = new DatabaseManager() ;

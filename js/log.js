@@ -5,8 +5,6 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
 
@@ -17,16 +15,16 @@ export class Log{
     
     err( err, title=null ) {
         // generic console.log of error
-        const ttl = title ?? objectPage.current() ;
+        const ttl = title ?? globalPage.current() ;
         const msg = err.message ?? err ;
         this.list.push(`${ttl}: ${msg}`);
-        if ( objectSettings?.console == "true" ) {
+        if ( globalSettings?.console == "true" ) {
             console.group() ;
             console.log( ttl, msg ) ;
             console.trace();
             console.groupEnd();
         }
-        if ( objectPage.current() == "ErrorLog" ) {
+        if ( globalPage.current() == "ErrorLog" ) {
             // update
             this.show();
         }
@@ -51,4 +49,4 @@ export class Log{
         });
     }
 }
-objectLog = new Log() ;
+globalLog = new Log() ;

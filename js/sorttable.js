@@ -6,8 +6,6 @@
  * MIT license
  * */
  
-"use strict";
-
 /* jshint esversion: 11 */
 
 export {
@@ -65,7 +63,7 @@ class SortTable {
                     return transformfunction(record) ;
                 }
             } catch(e) {
-                objectLog.err(e) ;
+                globalLog.err(e) ;
                 return "";
             }
             }) ;
@@ -200,7 +198,7 @@ class ThumbTable extends SortTable {
             .forEach( (e) => row.addEventListener( e, () => this.selectandedit( record._id ) ) ) ;
             // thumb
             const img = new Image(100,100);
-            objectThumb.displayThumb( img, record._id ) ;
+            globalThumbs.displayThumb( img, record._id ) ;
             row.insertCell(-1).appendChild(img);
             // cells
             this.collist
@@ -234,11 +232,11 @@ class PotTable extends ThumbTable {
     }
 
     selectFunc(id) {
-        objectPot.select(id) ;
+        globalPot.select(id) ;
     }
 
     editpage() {
-        objectPage.show("PotMenu");
+        globalPage.show("PotMenu");
     }
 }
 
@@ -276,11 +274,11 @@ class OrphanTable extends PotTable {
     }
 
     selectFunc(id) {
-        objectPot.select(id) ;
+        globalPot.select(id) ;
     }
 
     editpage() {
-        objectPage.show("PotMenu");
+        globalPage.show("PotMenu");
     }
 }
 
@@ -340,7 +338,7 @@ class MultiTable {
     // apply the function on all records to get categorized records
     apply_cat( cat_func ) {
         const a2a = [] ;
-        return objectPot.getAllIdDoc()
+        return globalPot.getAllIdDoc()
         .then( docs => docs.rows
                         .forEach( r => (cat_func( r.doc )??['unknown'])
                             .forEach( c => a2a.push( [c,r] ))
@@ -395,11 +393,11 @@ class AssignTable extends ThumbTable {
     }
 
     selectFunc(id) {
-        objectPot.select(id) ;
+        globalPot.select(id) ;
     }
 
     editpage() {
-        objectPot.AssignPhoto();
+        globalPot.AssignPhoto();
     }
 }
 
@@ -425,7 +423,7 @@ class SearchTable extends ThumbTable {
             .forEach( (e) => row.addEventListener( e, () => this.selectandedit( record._id, record.Link ) ) ) ;
             // thumb
             const img = new Image(100,100);
-            objectThumb.displayThumb( img, record._id ) ;
+            globalThumbs.displayThumb( img, record._id ) ;
             row.insertCell(-1).appendChild(img);
             // cells
             this.collist
@@ -439,17 +437,17 @@ class SearchTable extends ThumbTable {
     }
 
     selectId() {
-        return objectSearch.select_id;
+        return globalSearch.select_id;
     }
 
     selectFunc(id) {
-        objectSearch.select_id = id ;
-        objectTable.highlight();
+        globalSearch.select_id = id ;
+        globalTable.highlight();
     }
     
     // for search -- go to a result of search
     selectandedit( id, page ) {
-        objectPot.select(id)
-        .then( () => objectPage.show( page ) ) ;
+        globalPot.select(id)
+        .then( () => globalPage.show( page ) ) ;
     }
 }

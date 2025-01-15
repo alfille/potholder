@@ -5,8 +5,6 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
 
@@ -19,7 +17,7 @@ export class CSV { // convenience class
     }
     
     download( csv ) {
-        const filename = `${objectDatabase.database}_${objectDatabase.username}.csv` ;
+        const filename = `${globalDatabase.database}_${globalDatabase.username}.csv` ;
         const htype = "text/csv" ;
         //htype the file type i.e. text/csv
         const blub = new Blob([csv], {type: htype});
@@ -70,11 +68,11 @@ export class CSV { // convenience class
     }
     
     make_table() {
-        objectPot.getAllIdDoc()
+        globalPot.getAllIdDoc()
         .then( docs => docs.rows.map( r => this.make_row( this.columns.map( c => this.get_text( c, r.doc ) ) ) ) )
         .then( data => data.join("\n") )
         .then( data => [this.make_headings(), data].join("\n") )
         .then( csv => this.download( csv ) )
-        .catch( err => objectLog.err(err) ) ;
+        .catch( err => globalLog.err(err) ) ;
     }
 }

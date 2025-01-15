@@ -6,8 +6,6 @@
  * MIT license
  * */
 
-"use strict";
-
 /* jshint esversion: 11 */
 
 export {
@@ -35,7 +33,7 @@ class BlankBox extends TitleBox {
 class PotBox extends TitleBox {
     constructor( doc ) {
         super();
-        this.show(`<button type="button" onClick='objectPage.show("PotMenu")'>${[doc?.type,"from",doc?.series,"by",doc?.artist,doc?.start_date].join(" ")}</button>` ) ;
+        this.show(`<button type="button" onClick='globalPage.show("PotMenu")'>${[doc?.type,"from",doc?.series,"by",doc?.artist,doc?.start_date].join(" ")}</button>` ) ;
     }
 }
 
@@ -49,15 +47,15 @@ class TextBox extends TitleBox {
 class ListBox extends TitleBox {
     constructor( text ) {
         super();
-        this.show( `<B><button type="button" class="allGroup" onclick="objectTable.close_all()">&#10134;</button>&nbsp;&nbsp;<button type="button" class="allGroup" onclick="objectTable.open_all()">&#10133;</button>&nbsp;&nbsp;${text}</B>` ) ;
+        this.show( `<B><button type="button" class="allGroup" onclick="globalTable.close_all()">&#10134;</button>&nbsp;&nbsp;<button type="button" class="allGroup" onclick="globalTable.open_all()">&#10133;</button>&nbsp;&nbsp;${text}</B>` ) ;
     }
 }
 
 class StatBox extends TitleBox {
     constructor() {
         super();
-        objectDatabase.db.query("qPictures", { reduce:true, group: false })
+        globalDatabase.db.query("qPictures", { reduce:true, group: false })
         .then( stat => this.show( `Pieces: ${stat.rows[0].value.count}, Pictures: ${stat.rows[0].value.sum}` ) )
-        .catch( err => objectLog.err(err) );
+        .catch( err => globalLog.err(err) );
     }
 }

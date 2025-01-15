@@ -6,8 +6,6 @@
  * MIT license
  * */
 
-"use strict";
-
 /* jshint esversion: 11 */
 
 class Thumb {
@@ -39,7 +37,7 @@ class Thumb {
             return ;
         }
 
-        objectDatabase.db.getAttachment(pid, doc.images[0].image )
+        globalDatabase.db.getAttachment(pid, doc.images[0].image )
         .then(data => {
             const url = URL.createObjectURL(data) ;
             const t_img = new Image();
@@ -64,17 +62,17 @@ class Thumb {
                         this.displayThumb( img, pid ) ;
                         img.classList.add("MainPhoto");
                         img.onclick = () => {
-                            objectPot.select( pid )
-                            .then( () => objectPage.show("PotMenu") ) ;
+                            globalPot.select( pid )
+                            .then( () => globalPage.show("PotMenu") ) ;
                         } ;
                         this.pick.appendChild( img ) ;
                         img.alt = pid ;
                     }
-                    },`image/${objectSettings?.img_format??"png"}`) ;
+                    },`image/${globalSettings?.img_format??"png"}`) ;
                 };
             t_img.src = url ;
         })
-        .catch( err => objectLog.err(err) );
+        .catch( err => globalLog.err(err) );
     }
 
     _firstload( doc ) {
@@ -84,7 +82,7 @@ class Thumb {
             return ;
         }
 
-        objectDatabase.db.getAttachment(pid, doc.images[0].image )
+        globalDatabase.db.getAttachment(pid, doc.images[0].image )
         .then(data => {
             const url = URL.createObjectURL(data) ;
             const t_img = new Image();
@@ -105,27 +103,27 @@ class Thumb {
                     this.displayThumb( img, pid ) ;
                     img.classList.add("MainPhoto");
                     img.onclick = () => {
-                        objectPot.select( pid )
-                        .then( () => objectPage.show("PotMenu") ) ;
+                        globalPot.select( pid )
+                        .then( () => globalPage.show("PotMenu") ) ;
                     } ;
                     this.pick.appendChild( img ) ;
                     img.alt = pid ;
-                    }, `image/${objectSettings?.img_format??"png"}`) ;
+                    }, `image/${globalSettings?.img_format??"png"}`) ;
                 };
             t_img.src = url ;
         })
-        .catch( err => objectLog.err(err) );
+        .catch( err => globalLog.err(err) );
     }
 
     getOne( pid = potId ) {
-        return objectDatabase.db.get( pid )
+        return globalDatabase.db.get( pid )
         .then( doc => this._load(doc) )
-        .catch( err => objectLog.err(err) );
+        .catch( err => globalLog.err(err) );
     }
 
     getAll() {
         this.pick.innerHTML="";
-        objectPot.getAllIdDoc()
+        globalPot.getAllIdDoc()
         .then( docs => {
             if ( 'requestIdleCallback' in window ) {
                 if ( docs.rows.length > 0 ) {
@@ -135,7 +133,7 @@ class Thumb {
                 docs.rows.forEach( r => this._firstload( r.doc ) ) ;
             }
             })
-        .catch( err => objectLog.err(err) ) ;
+        .catch( err => globalLog.err(err) ) ;
     }
 
     getAllList( rows ) {
@@ -161,4 +159,4 @@ class Thumb {
     }
 }
 
-objectThumb = new Thumb() ;
+globalThumbs = new Thumb() ;

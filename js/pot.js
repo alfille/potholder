@@ -5,8 +5,6 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
 
@@ -41,8 +39,8 @@ class Pot { // convenience class
             _id: Id_pot.makeId( this.doc ),
             type:"",
             series:"",
-            author: objectDatabase.username,
-            artist: objectDatabase.username,
+            author: globalDatabase.username,
+            artist: globalDatabase.username,
             start_date: (new Date()).toISOString().split("T")[0],
             stage: "greenware",
             kiln: "none",
@@ -51,22 +49,22 @@ class Pot { // convenience class
    
     del() {
         if ( this.isSelected() ) {        
-            objectDatabase.db.get( potId )
+            globalDatabase.db.get( potId )
             .then( (doc) => {
                 // Confirm question
                 if (confirm(`WARNING -- about to delete this piece\n piece type << ${doc?.type} >> of series << ${doc.series} >>\nPress CANCEL to back out`)==true) {
-                    return objectDatabase.db.remove(doc) ;
+                    return globalDatabase.db.remove(doc) ;
                 } else {
                     throw "Cancel";
                 }           
             })
-            .then( _ => objectThumb.remove( potId ) )
+            .then( _ => globalThumbs.remove( potId ) )
             .then( _ => this.unselect() )
-            .then( _ => objectPage.show( "back" ) )
+            .then( _ => globalPage.show( "back" ) )
             .catch( (err) => {
                 if (err != "Cancel" ) {
-                    objectLog.err(err);
-                    objectPage.show( "back" ) ;
+                    globalLog.err(err);
+                    globalPage.show( "back" ) ;
                 }
             });
         }
@@ -79,21 +77,21 @@ class Pot { // convenience class
             include_docs: true,
             attachments: false,
         };
-        return objectDatabase.db.allDocs(doc);
+        return globalDatabase.db.allDocs(doc);
     }
         
     select( pid = potId ) {
         potId = pid ;
         // Check pot existence
-        return objectDatabase.db.get( pid )
+        return globalDatabase.db.get( pid )
         .then( (doc) => {
             // Top left Logo
-            objectThumb.displayThumb( this.TL, pid ) ;
+            globalThumbs.displayThumb( this.TL, pid ) ;
             new PotBox(doc);
             return doc ;
             })
         .catch( (err) => {
-            objectLog.err(err,"pot select");
+            globalLog.err(err,"pot select");
             this.unselect();
             });
     }
@@ -105,7 +103,7 @@ class Pot { // convenience class
     unselect() {
         potId = null;
         this.TL.src = this.LOGO.src;
-        if ( objectPage.isThis("AllPieces") ) {
+        if ( globalPage.isThis("AllPieces") ) {
             const pt = document.getElementById("PotTable");
             if ( pt ) {
                 pt.rows.forEach( r => r.classList.remove('choice'));
@@ -129,15 +127,15 @@ class Pot { // convenience class
             return Promise.resolve(true) ;
         }
         const f = i_list.pop() ;
-        return objectDatabase.db.get( pid )
+        return globalDatabase.db.get( pid )
         .then( doc => {
             if ( !("images" in doc ) ) {
                 doc.images = [] ;
             }
             if ( doc.images.find( e => e.image == f.name ) ) {
                 // exists, just update attachment
-                return objectDatabase.db.putAttachment( pid, f.name, doc._rev, f, f.type )
-                    .catch( err => objectLog(err)) ;
+                return globalDatabase.db.putAttachment( pid, f.name, doc._rev, f, f.type )
+                    .catch( err => globalLog(err)) ;
             } else {
                 // doesn't exist, add images entry as well (to front)
                 doc.images.unshift( {
@@ -145,8 +143,8 @@ class Pot { // convenience class
                     comment: "",
                     date: (f?.lastModifiedDate ?? (new Date())).toISOString(),
                     } );
-                return objectDatabase.db.put( doc )
-                    .then( r => objectDatabase.db.putAttachment( r.id, f.name, r.rev, f, f.type ) ) ;
+                return globalDatabase.db.put( doc )
+                    .then( r => globalDatabase.db.putAttachment( r.id, f.name, r.rev, f, f.type ) ) ;
             }
             })
         .then( _ => this.save_pic( pid, i_list ) ) ; // recursive
@@ -154,22 +152,22 @@ class Pot { // convenience class
                   
 
     newPhoto() {
-        if ( ! objectPot.isSelected() ) { 
-            objectPage.show("AssignPic") ;
+        if ( ! globalPot.isSelected() ) { 
+            globalPage.show("AssignPic") ;
             return ;
         }
         const i_list = [...this.pictureSource.files] ;
         if (i_list.length==0 ) {
             return ;
         }
-        objectPage.show("PotPixLoading");
+        globalPage.show("PotPixLoading");
 
         this.save_pic( potId, i_list )
-        .then( () => objectThumb.getOne( potId ) )
-        .then( () => objectPage.add( "PotMenu" ) )
-        .then( () => objectPage.show("PotPix") )
+        .then( () => globalThumbs.getOne( potId ) )
+        .then( () => globalPage.add( "PotMenu" ) )
+        .then( () => globalPage.show("PotPix") )
         .catch( (err) => {
-            objectLog.err(err);
+            globalLog.err(err);
             })
         .finally( () => this.pictureSource.value = "" ) ;
     }
@@ -177,11 +175,11 @@ class Pot { // convenience class
     AssignToNew() {
         const doc = this.create() ;
         //console.log("new",doc);
-        objectDatabase.db.put( doc )
+        globalDatabase.db.put( doc )
         .then( response => this.AssignPhoto( response.id ) )
         .catch( err => {
-            objectLog(err);
-            objectPage.show('MainMenu');
+            globalLog(err);
+            globalPage.show('MainMenu');
         }) ;
     }
             
@@ -190,14 +188,14 @@ class Pot { // convenience class
         if (i_list.length==0 ) {
             return ;
         }
-        objectPage.show("PotPixLoading");
-        objectPot.select( pid )
+        globalPage.show("PotPixLoading");
+        globalPot.select( pid )
         .then( _ => this.save_pic( pid, i_list ) )
-        .then( _ => objectThumb.getOne( potId ) )
-        .then( _ => objectPage.add("PotMenu" ) )
-        .then( _ => objectPage.show("PotPix") )
+        .then( _ => globalThumbs.getOne( potId ) )
+        .then( _ => globalPage.add("PotMenu" ) )
+        .then( _ => globalPage.show("PotPix") )
         .catch( (err) => {
-            objectLog.err(err);
+            globalLog.err(err);
             })
         .finally( () => this.pictureSource.value = "" ) ;
     }
@@ -211,5 +209,5 @@ class Pot { // convenience class
     }
 }
 
-objectPot = new Pot() ;
+globalPot = new Pot() ;
 

@@ -6,8 +6,6 @@
  * MIT license
  * */
 
-"use strict";
-
 /* jshint esversion: 11 */
 
 // Create pouchdb indexes.
@@ -39,25 +37,25 @@ class Query {
             },
         }) );
         return Promise.all( queries.map( (ddoc) => {
-            objectDatabase.db.get( ddoc._id )
+            globalDatabase.db.get( ddoc._id )
             .then( doc => {
                 // update if version number has changed
                 if ( this.version !== doc.version ) {
                     ddoc._rev = doc._rev;
                     ddoc.version = this.version ;
-                    return objectDatabase.db.put( ddoc );
+                    return globalDatabase.db.put( ddoc );
                 } else {
                     return Promise.resolve(true);
                 }
                 })
             .catch( () => {
                 // assume because this is first time and cannot "get"
-                return objectDatabase.db.put( ddoc );
+                return globalDatabase.db.put( ddoc );
                 });
             }))
         .then( _ => this.prune_queries() )
-        .then( _ => objectDatabase.db.viewCleanup() )
-        .catch( (err) => objectLog.err(err) );
+        .then( _ => globalDatabase.db.viewCleanup() )
+        .catch( (err) => globalLog.err(err) );
     }
     
     struct_parse(struct) {
@@ -97,12 +95,12 @@ class Query {
     
     prune_queries() {
         // remove old entries (don't match version string)
-        return objectDatabase.db.allDocs( {
+        return globalDatabase.db.allDocs( {
             startkey: "_design/",
             endkey:   "_design/\uffff",
             include_docs: true,
         } )
         .then( docs => docs.rows.filter( r=> r.doc.version !== this.version ) )
-        .then( rows => Promise.all( rows.map( r => objectDatabase.db.remove(r.doc)) ) ) ;
+        .then( rows => Promise.all( rows.map( r => globalDatabase.db.remove(r.doc)) ) ) ;
     }
 }

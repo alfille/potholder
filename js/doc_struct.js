@@ -6,8 +6,6 @@
  * MIT license
  * */
 
-"use strict";
-
 /* jshint esversion: 11 */
 
 // used to generate data entry pages "PotData" type
@@ -237,4 +235,11 @@ export const structSettings = [
         type: "radio",
         choices: ["png","jpeg","webp"],
     },
+    {
+		name: "fullscreen",
+		alias: "Display full screen",
+		hint: "Hide browser meniu choices",
+		type: "radio",
+		choices: ["never","big_picture","always"],
+	}
 ] ;

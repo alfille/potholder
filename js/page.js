@@ -5,20 +5,14 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
-
-export {
-    Pagelist,
-} ;
 
 import {
     CSV,
 } from "./csv.js" ;
 
-class Pagelist {
+export class Pagelist {
     // list of subclasses = displayed "pages"
     // Note that these classes are never "instantiated -- only used statically
     static pages = {} ; // [pagetitle]->class -- pagetitle is used by HTML to toggle display of "pages"
@@ -55,8 +49,8 @@ class Pagelist {
             return cls ;
         } else {
             // bad entry -- fix by going back
-            objectPage.back() ;
-            return objectPage.current() ;
+            globalPage.back() ;
+            return globalPage.current() ;
         }
     } 
 }
@@ -121,11 +115,11 @@ class Page { // singleton class
     } 
     
     show( page ) { // main routine for displaying different "pages" by hiding different elements
-        if ( objectSettings?.console == "true" ) {
+        if ( globalSettings?.console == "true" ) {
             console.log("SHOW",page,"STATE",this.path);
         }
         // test that database is selected
-        if ( objectDatabase.db == null || objectDatabase.database == null ) {
+        if ( globalDatabase.db == null || globalDatabase.database == null ) {
             // can't bypass this! test if database exists
             if ( page != "FirstTime" && page != "RemoteDatabaseInput" ) {
                 this.show("RemoteDatabaseInput");
@@ -135,14 +129,14 @@ class Page { // singleton class
         this.add(page) ; // place in reversal list
 
         // clear display objects
-        objectPotData = null;
-        objectTable = null;
+        globalPotData = null;
+        globalTable = null;
         document.querySelector(".ContentTitleHidden").style.display = "none";
 
         this.show_normal(); // basic page display setup
 
         // send to page-specific code
-        (Pagelist.subclass(objectPage.current())).show_page();
+        (Pagelist.subclass(globalPage.current())).show_page();
     }
     
     show_normal() { // switch between screen and print
@@ -172,11 +166,11 @@ class Page { // singleton class
     }    
 
     headerLink() {
-        if ( objectPage.current() != "MainMenu" ) {
-            objectPage.show("MainMenu") ;
+        if ( globalPage.current() != "MainMenu" ) {
+            globalPage.show("MainMenu") ;
         } else {
-            if ( objectPage ) {
-                objectPage.reset();
+            if ( globalPage ) {
+                globalPage.reset();
             }
             window.location.href="/index.html"; // force reload
         }
@@ -184,7 +178,7 @@ class Page { // singleton class
 
     copy_to_clip() {
         navigator.clipboard.writeText( document.getElementById("MakeURLtext").href )
-        .catch( err => objectLog.err(err) );
+        .catch( err => globalLog.err(err) );
     }
     
     csv() {
@@ -192,5 +186,4 @@ class Page { // singleton class
     }
 }
 
-objectPage = new Page();
-
+globalPage = new Page();

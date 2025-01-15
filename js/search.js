@@ -6,8 +6,6 @@
  * MIT license
  * */
 
-"use strict";
-
 /* jshint esversion: 11 */
 
 // used to generate data entry pages "PotData" type
@@ -53,7 +51,7 @@ class Search { // singleton class
         if ( needle.length == 0 ) {
             return this.resetTable();
         }
-        objectDatabase.db.search(
+        globalDatabase.db.search(
                         { 
                                 query: needle,
                                 fields: this.fields,
@@ -74,13 +72,13 @@ class Search { // singleton class
         .then( res => res.map( r=>({doc:r}))) // encode as list of doc objects
         .then( res=>this.setTable(res)) // fill the table
         .catch(err=> {
-            objectLog.err(err);
+            globalLog.err(err);
             this.resetTable();
             });
     }
 
     setTable(docs=[]) {
-        objectTable.fill(docs);
+        globalTable.fill(docs);
     }
 
         structParse( struct ) {
@@ -107,5 +105,5 @@ class Search { // singleton class
 }
 
 // Set up text search
-objectSearch = new Search();
+globalSearch = new Search();
 

@@ -6,8 +6,6 @@
  * MIT license
  * */
 
-"use strict";
-
 /* jshint esversion: 11 */
 
 class Crop {
@@ -43,7 +41,9 @@ class Crop {
         // Stop Scroll
         window.onscroll = () => window.scrollTo(0,0);
 
-        document.documentElement.requestFullscreen()
+		((globalSettings.fullscreen=="big_picture") ?
+			document.documentElement.requestFullscreen()
+			: Promise.resolve() )
         .finally( _ => this.crop_reset() );
     }
     
@@ -104,7 +104,7 @@ class Crop {
             image.src = url ;
             })
         .catch( err => {
-            objectLog.err(err) ;
+            globalLog.err(err) ;
             this.cancel() ;
             }) ;
     }
@@ -451,7 +451,11 @@ class Crop {
         // Start Scroll
         window.onscroll = () => {};
 
-        document.exitFullscreen() ;
+		if (globalSettings.fullscreen=="big_picture") {
+			if ( document.fullscreenElement ) {
+				document.exitFullscreen() ;
+			}
+		}
         this.show(false);
         document.getElementById("replot").click() ; // hidden button to replot
     }
@@ -480,4 +484,4 @@ class Crop {
         
 }
 
-objectCrop = new Crop() ;
+globalCropper = new Crop() ;

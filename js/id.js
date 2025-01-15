@@ -5,8 +5,6 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
 
@@ -60,7 +58,7 @@ class Id_pot {
         return [
             this.version,
             this.type,
-            objectDatabase.username,
+            globalDatabase.username,
             new Date().toISOString(),
             Math.floor( Math.random() * 1000 ),
             ].join(";");

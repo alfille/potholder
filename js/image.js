@@ -5,8 +5,6 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
 
@@ -25,7 +23,7 @@ class PotImages {
     }
 
     getURL( name ) {
-        return objectDatabase.db.getAttachment( this.pid, name )
+        return globalDatabase.db.getAttachment( this.pid, name )
         .then( data => URL.createObjectURL(data) ) ;
     }
     
@@ -77,7 +75,11 @@ class PotImages {
                         } ;
                     document.getElementById("modal_close").onclick=()=>{
                         screen.orientation.onchange=()=>{};
-                        document.exitFullscreen() ;
+						if (globalSettings.fullscreen=="big_picture") {
+							if ( document.fullscreenElement ) {
+								document.exitFullscreen() ;
+							}
+						}
                         document.getElementById('modal_id').style.display='none';
                         };
                     document.getElementById("modal_down").onclick=()=> {
@@ -99,19 +101,21 @@ class PotImages {
                             });
                         }) ;
                     } ;
-                    document.getElementById("modal_id").requestFullscreen()
+					((globalSettings.fullscreen=="big_picture") ?
+						document.documentElement.requestFullscreen()
+						: Promise.resolve() )
                     .finally( _ => {
                         img2.src=url2;
                         document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
                         document.getElementById("modal_id").style.display="block";
                         });
                     })
-                .catch( err => objectLog.err(err) ) ;
+                .catch( err => globalLog.err(err) ) ;
             };
 
             img.src=url ;
             })
-        .catch( err => objectLog.err(err)) ;
+        .catch( err => globalLog.err(err)) ;
         return canvas ;
     }
 
@@ -135,7 +139,7 @@ class PotImages {
             img.src=url ;
             canvas.classList.add("print_pic");
             })
-        .catch( err => objectLog.err(err)) ;
+        .catch( err => globalLog.err(err)) ;
         return canvas ;
     }
 

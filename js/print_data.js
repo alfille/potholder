@@ -5,8 +5,6 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
 
@@ -36,7 +34,7 @@ class PotDataPrint { // singleton class
         this.list.load_from_doc( this.doc ) ;
 
         this.list.print_doc() ;
-        objectPage.show_print();
+        globalPage.show_print();
         setTimeout( this.print, 1000 ) ;
     }
 

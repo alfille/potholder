@@ -5,8 +5,6 @@
  * by Paul H Alfille 2024
  * MIT license
  * */
- 
-"use strict";
 
 /* jshint esversion: 11 */
 
@@ -116,7 +114,7 @@ class EntryList {
             } else {
                 // first tap
                 this.double_tap = true ;
-                setTimeout( ()=>objectPotData.double_tap = false, 500 ) ;
+                setTimeout( ()=>globalPotData.double_tap = false, 500 ) ;
             }
         } ;
         return ul ;
@@ -132,7 +130,7 @@ class EntryList {
         // can work even if no queries    
         return Promise.all( this.members
             .filter( all_item => "query"   in all_item.struct )
-            .map( query_item => objectDatabase.db.query( query_item.struct.query, {group:true,reduce:true} )
+            .map( query_item => globalDatabase.db.query( query_item.struct.query, {group:true,reduce:true} )
             .then( q_result => q_result.rows
                 .filter( r=>r.key )
                 .filter( r=>r.value>0)
@@ -941,6 +939,6 @@ class ImageArrayEntry extends ArrayEntry {
             } ;    
         b.style.display = "none" ;
         document.body.appendChild(b) ;
-        objectCrop.crop(this.new_val[idx] ) ;
+        globalCropper.crop(this.new_val[idx] ) ;
     }
 }

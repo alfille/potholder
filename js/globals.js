@@ -6,25 +6,23 @@
  * MIT license
  * */
 
-"use strict";
-
 /* jshint esversion: 11 */
 
 // globals cookie backed
 globalThis. potId = null ;
 
 // singleton class instances
-globalThis. objectPage = null ;
-globalThis. objectPotData = null ;
-globalThis. objectTable = null ;
-globalThis. objectDatabase = null ;
-globalThis. objectLog = null ;
-globalThis. objectPot = null ;
-globalThis. objectCookie = null ;
-globalThis. objectSearch = null;
-globalThis. objectThumb = null;
-globalThis. objectCrop = null ;
-globalThis. objectSettings = {} ;
+globalThis. globalPage = null ;
+globalThis. globalPotData = null ;
+globalThis. globalTable = null ;
+globalThis. globalDatabase = null ;
+globalThis. globalLog = null ;
+globalThis. globalPot = null ;
+globalThis. globalStorage = null ;
+globalThis. globalSearch = null;
+globalThis. globalThumbs = null;
+globalThis. globalCropper = null ;
+globalThis. globalSettings = {} ;
 
 globalThis. rightSize = ( imgW, imgH, limitW, limitH ) => {
     const h = limitW * imgH / imgW ;

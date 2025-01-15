@@ -2,7 +2,6 @@
   "name": "potholder",
   "version": "1.0.0",
   "description": "Easy visual database for Ceramic Artists",
-  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,7 +25,10 @@
   "homepage": "https://github.com/alfille/potholder#readme",
   "devDependencies": {
     "@eslint/js": "^9.18.0",
+    "@parcel/packager-raw-url": "^2.13.3",
+    "@parcel/transformer-webmanifest": "^2.13.3",
     "eslint": "^9.18.0",
-    "globals": "^15.14.0"
+    "globals": "^15.14.0",
+    "parcel": "^2.13.3"
   }
 }

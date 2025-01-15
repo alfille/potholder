@@ -6,9 +6,7 @@
  * MIT license
  * */
  
-/* Althought this is lavbeled as "Cookie" we've switched to localStorage */ 
- 
-"use strict";
+/* Althought this is labeled as "Cookie" we've switched to localStorage */ 
 
 /* jshint esversion: 11 */
 
@@ -83,4 +81,4 @@ class Cookie { //convenience class
         localStorage.clear();
     }
 }
-objectCookie = new Cookie() ;
+globalStorage = new Cookie() ;
