@@ -11,7 +11,7 @@
 import {
     PotBox,
     BlankBox,
-} from "./titlebox.js" ;
+} from "./app.js" ;
 
 import {
     PotImages,

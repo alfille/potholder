@@ -28,7 +28,6 @@ const cacheList = [
     "/js/search.js",
     "/js/sorttable.js",
     "/js/thumb.js",
-    "/js/titlebox.js",
     "/js/pouchdb-9.0.0.min.js",
     "/js/pouchdb.quick-search.min.js",
     "/js/qrious.min.js",

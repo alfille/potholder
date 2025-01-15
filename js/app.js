@@ -8,11 +8,10 @@
 
 /* jshint esversion: 11 */
 
-import {
-    StatBox,
-    TextBox,
-    ListBox,
-} from "./titlebox.js" ;
+export {
+    BlankBox,
+    PotBox,
+} ;
     
 // used to generate data entry pages "PotData" type
 import {
@@ -40,9 +39,10 @@ import {
 
 import {
     PotData,
-    PotDataEditMode,
-    PotDataRaw,
     PotDataReadonly,
+    SettingsData,
+    DatabaseData,
+    PotNewData,
     PotDataPrint,
 } from "./doc_data.js" ;
 
@@ -153,47 +153,6 @@ class PotPrint extends Pagelist {
         } else {
             globalPage.show( "back" );
         }
-    }
-}
-
-class DatabaseData extends PotDataRaw {
-    // starts with "EDIT" clicked
-    constructor(doc,struct) {
-        if ( globalDatabase.database=="" ) {
-            // First time
-            super(true,doc,struct); // clicked = true
-        } else {
-            super(false,doc,struct); // clicked = false
-        }
-    }
-
-    savePieceData() {
-        if ( this.loadDocData() ) {
-            if ( this.doc.raw=="fixed" ) {
-                this.doc.address=globalDatabase.SecureURLparse(this.doc.address); // fix up URL
-            }
-            ["username","password","database","address","local"].forEach( x => globalDatabase[x] = this.doc[x] ) ;
-            globalDatabase.store() ;
-        }
-        globalPage.reset();
-        location.reload(); // force reload
-    }
-}
-
-class SettingsData extends PotData {
-    savePieceData() {
-        this.loadDocData() ;
-        Object.assign ( globalSettings, this.doc ) ;
-        globalStorage.set( "settings", globalSettings ) ;
-		if (globalSettings.fullscreen=="always") {
-			document.documentElement.requestFullscreen()
-			.finally( _ => globalPage.show("back") ) ;
-		} else {
-			if ( document.fullscreenElement ) {
-				document.exitFullscreen() ;
-			}
-			globalPage.show("back")
-		}
     }
 }
 
@@ -476,24 +435,6 @@ class PotNew extends Pagelist {
     }
 }
 
-class PotNewData extends PotDataEditMode {
-    constructor( ...args) {
-        super(...args);
-    }
-    
-    savePieceData() {
-        this.loadDocData();
-        globalDatabase.db.put( this.doc )
-        .then( (response) => {
-            globalPot.select(response.id)
-            .then( () => globalPage.show( "PotMenu" ) );
-            })
-        .then( () => globalThumbs.getOne( this.doc._id ) )
-        .catch( (err) => globalLog.err(err) )
-        ;
-    }
-}
-
 class PotEdit extends Pagelist {
     static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
 
@@ -660,3 +601,46 @@ window.onload = () => {
     }
 };
 
+class TitleBox {
+    show(html) {
+        //console.log("TITLEBOX",html);
+        document.getElementById( "titlebox" ).innerHTML = html ;
+    }
+}
+
+class BlankBox extends TitleBox {
+    constructor() {
+        super();
+        this.show("") ;
+    }
+}
+
+class PotBox extends TitleBox {
+    constructor( doc ) {
+        super();
+        this.show(`<button type="button" onClick='globalPage.show("PotMenu")'>${[doc?.type,"from",doc?.series,"by",doc?.artist,doc?.start_date].join(" ")}</button>` ) ;
+    }
+}
+
+class TextBox extends TitleBox {
+    constructor( text ) {
+        super();
+        this.show( `<B>${text}</B>` ) ;
+    }
+}
+
+class ListBox extends TitleBox {
+    constructor( text ) {
+        super();
+        this.show( `<B><button type="button" class="allGroup" onclick="globalTable.close_all()">&#10134;</button>&nbsp;&nbsp;<button type="button" class="allGroup" onclick="globalTable.open_all()">&#10133;</button>&nbsp;&nbsp;${text}</B>` ) ;
+    }
+}
+
+class StatBox extends TitleBox {
+    constructor() {
+        super();
+        globalDatabase.db.query("qPictures", { reduce:true, group: false })
+        .then( stat => this.show( `Pieces: ${stat.rows[0].value.count}, Pictures: ${stat.rows[0].value.sum}` ) )
+        .catch( err => globalLog.err(err) );
+    }
+}

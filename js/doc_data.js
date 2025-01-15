@@ -10,10 +10,11 @@
 
 export {
     PotData,
-    PotDataEditMode,
-    PotDataRaw,
     PotDataReadonly,
     PotDataPrint,
+    PotNewData,
+    SettingsData,
+    DatabaseData,
 } ;
 
 import {
@@ -151,6 +152,65 @@ class PotDataReadonly extends PotDataRaw {
         super(false,doc,struct,true); // clicked = false, readonly=true
     }
 }    
+
+class PotNewData extends PotDataEditMode {
+    constructor( ...args) {
+        super(...args);
+    }
+    
+    savePieceData() {
+        this.loadDocData();
+        globalDatabase.db.put( this.doc )
+        .then( (response) => {
+            globalPot.select(response.id)
+            .then( () => globalPage.show( "PotMenu" ) );
+            })
+        .then( () => globalThumbs.getOne( this.doc._id ) )
+        .catch( (err) => globalLog.err(err) )
+        ;
+    }
+}
+
+class DatabaseData extends PotDataRaw {
+    // starts with "EDIT" clicked
+    constructor(doc,struct) {
+        if ( globalDatabase.database=="" ) {
+            // First time
+            super(true,doc,struct); // clicked = true
+        } else {
+            super(false,doc,struct); // clicked = false
+        }
+    }
+
+    savePieceData() {
+        if ( this.loadDocData() ) {
+            if ( this.doc.raw=="fixed" ) {
+                this.doc.address=globalDatabase.SecureURLparse(this.doc.address); // fix up URL
+            }
+            ["username","password","database","address","local"].forEach( x => globalDatabase[x] = this.doc[x] ) ;
+            globalDatabase.store() ;
+        }
+        globalPage.reset();
+        location.reload(); // force reload
+    }
+}
+
+class SettingsData extends PotData {
+    savePieceData() {
+        this.loadDocData() ;
+        Object.assign ( globalSettings, this.doc ) ;
+        globalStorage.set( "settings", globalSettings ) ;
+		if (globalSettings.fullscreen=="always") {
+			document.documentElement.requestFullscreen()
+			.finally( _ => globalPage.show("back") ) ;
+		} else {
+			if ( document.fullscreenElement ) {
+				document.exitFullscreen() ;
+			}
+			globalPage.show("back")
+		}
+    }
+}
 
 class Detachment {
     constructor( pid, rev ) {
