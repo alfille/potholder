@@ -43,11 +43,8 @@ import {
     PotDataEditMode,
     PotDataRaw,
     PotDataReadonly,
-} from "./doc_data.js" ;
-
-import {
     PotDataPrint,
-} from "./print_data.js" ;
+} from "./doc_data.js" ;
 
 import {
     Pagelist
