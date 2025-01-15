@@ -8,10 +8,6 @@
 
 /* jshint esversion: 11 */
 
-import {
-    CSV,
-} from "./csv.js" ;
-
 export class Pagelist {
     // list of subclasses = displayed "pages"
     // Note that these classes are never "instantiated -- only used statically
@@ -181,9 +177,6 @@ class Page { // singleton class
         .catch( err => globalLog.err(err) );
     }
     
-    csv() {
-        new CSV() ;
-    }
 }
 
 globalPage = new Page();
