@@ -467,7 +467,6 @@ class CheckboxEntry extends VisibleEntry {
     
     show_item_element() {
             // list as text
-            console.log("val",this.new_val);
             return document.createTextNode( (this.new_val.length == 0) ?  "<empty>" : this.new_val.join(", ") ) ;
     }
     

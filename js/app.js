@@ -42,46 +42,55 @@ import {
     PotDataPrint,
 } from "./doc_data.js" ;
 
-import {
-    Pagelist
-} from "./page.js" ;
+class Pagelist {
+    // list of subclasses = displayed "pages"
+	static pages = {} ;
+    
+	constructor() {
+		Pagelist.pages[this.constructor.name] = this ;
+	}
 
-class Advanced extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+    show_page(name) {
+        // reset buttons from edit mode
+        document.querySelector(".potDataEdit").style.display="none"; 
+        document.querySelectorAll(".topButtons")
+            .forEach( tb => tb.style.display = "block" );
 
-    static show_content() {
+        // hide all but current page
+        document.querySelectorAll(".pageOverlay")
+            .forEach( po => po.style.display = po.classList.contains(name) ? "block" : "none" );
+
+        // hide Thumbnails
+        document.getElementById("MainPhotos").style.display="none";
+        
+        // hide Crop
+        document.getElementById("crop_page").style.display="none" ;
+        
+        this.show_content();
+    }
+    
+    show_content() {
+        // default version, derived classes may overrule
+        // Simple menu page
+    }
+}
+
+class PagelistThumblist extends Pagelist {
+    show_content() {
         document.getElementById("MainPhotos").style.display="block";
     }
 }
 
-class Administration extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+new class Advanced extends PagelistThumblist {}
 
-    static show_content() {
-        document.getElementById("MainPhotos").style.display="block";
-    }
-}
+new class Administration extends PagelistThumblist {}
 
-class Developer extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
+new class Developer extends PagelistThumblist {}
 
-    static show_content() {
-        document.getElementById("MainPhotos").style.display="block";
-    }
-}
+new class StructMenu extends PagelistThumblist {}
 
-class StructMenu extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
-        document.getElementById("MainPhotos").style.display="block";
-    }
-}
-
-class DatabaseInfo extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class DatabaseInfo extends Pagelist {
+    show_content() {
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
         globalDatabase.db.info()
@@ -93,10 +102,8 @@ class DatabaseInfo extends Pagelist {
 
 }
 
-class RemoteDatabaseInput extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class RemoteDatabaseInput extends Pagelist {
+    show_content() {
         new TextBox("Your Credentials") ;
         const doc = {} ;
         ["username","password","database","address","local"].forEach( x => doc[x] = globalDatabase[x] ) ;
@@ -105,20 +112,16 @@ class RemoteDatabaseInput extends Pagelist {
     }
 }
 
-class Settings extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class Settings extends Pagelist {
+	show_content() {
         new TextBox("Display Settings") ;
         const doc = Object.assign( {}, globalSettings ) ;
         globalPotData = new SettingsData( doc, structSettings );
     }
 }
 
-class MakeURL extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class MakeURL extends Pagelist {
+    show_content() {
         new StatBox() ;
         let url = new URL( "/index.html", window.location.href ) ;
         if ( url.hostname == "localhost" ) {
@@ -135,10 +138,8 @@ class MakeURL extends Pagelist {
     }
 }
 
-class PotPrint extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class PotPrint extends Pagelist {
+    show_content() {
         if ( globalPot.isSelected() ) {
             globalDatabase.db.get( potId )
             .then( (doc) => globalPotData = new PotDataPrint( doc, structData.Data.concat(structData.Images) ) )
@@ -152,19 +153,15 @@ class PotPrint extends Pagelist {
     }
 }
 
-class Help extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class Help extends Pagelist {
+    show_content() {
         window.open( new URL(`https://alfille.github.io/potholder`,location.href).toString(), '_blank' );
         globalPage.show("back");
     }
 }
 
-class AllPieces extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class AllPieces extends Pagelist {
+    show_content() {
         globalPot.unselect() ;
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -175,10 +172,8 @@ class AllPieces extends Pagelist {
     }
 }
 
-class Orphans extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class Orphans extends Pagelist {
+    show_content() {
         globalPot.unselect() ;
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -189,10 +184,8 @@ class Orphans extends Pagelist {
     }
 }
 
-class AssignPic extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class AssignPic extends Pagelist {
+    show_content() {
         globalPage.forget(); // don't return here
         // Title adjusted to source and number
         if ( globalPot.pictureSource.files.length == 0 ) {
@@ -216,10 +209,10 @@ class AssignPic extends Pagelist {
 }
 
 class StructShow extends Pagelist {
-    // static "struct_name" from derived classes
-    // static "struct_title" from derived classes
+    // "struct_name" from derived classes
+    // "struct_title" from derived classes
 
-    static show_content() {
+    show_content() {
         globalPot.unselect() ;
         new TextBox("Field Structure") ;
         document.getElementById("MainPhotos").style.display="block";
@@ -228,60 +221,49 @@ class StructShow extends Pagelist {
     }
 }
 
-class StructGeneralPot extends StructShow {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static struct_name = structData.Data ;
-    static struct_title = "Data Fields";
+new class StructGeneralPot extends StructShow {
+	constructor() {
+		super() ;
+		this.struct_name = structData.Data ;
+		this.struct_title = "Data Fields";
+	}
+}
 
-    static show_content() {
-        document.getElementById("MainPhotos").style.display="block";
+new class StructImages extends StructShow {
+	constructor() {
+		super() ;
+		this.struct_name = structData.Images ;
+		this.struct_title = "Image Fields";
     }
 }
 
-class StructImages extends StructShow {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static struct_name = structData.Images ;
-    static struct_title = "Image Fields";
-
-    static show_content() {
-        document.getElementById("MainPhotos").style.display="block";
+new class StructDatabaseInfo extends StructShow {
+	constructor() {
+		super() ;
+		this.struct_name = structDatabaseInfo ;
+		this.struct_title = "Database Metadata" ;
     }
 }
 
-class StructDatabaseInfo extends StructShow {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static struct_name = structDatabaseInfo ;
-    static struct_title = "Database Metadata" ;
-
-    static show_content() {
-        document.getElementById("MainPhotos").style.display="block";
+new class StructRemoteUser extends StructShow {
+	constructor() {
+		super() ;
+		this.struct_name = structRemoteUser ;
+		this.struct_title = "User Credentials" ;
     }
 }
 
-class StructRemoteUser extends StructShow {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static struct_name = structRemoteUser ;
-    static struct_title = "User Credentials" ;
-
-    static show_content() {
-        document.getElementById("MainPhotos").style.display="block";
-    }
-}
-
-class StructSettings extends StructShow {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static struct_name = structSettings ;
-    static struct_title = "Display Settings" ;
-
-    static show_content() {
-        document.getElementById("MainPhotos").style.display="block";
+new class StructSettings extends StructShow {
+	constructor() {
+		super() ;
+		this.struct_name = structSettings ;
+		this.struct_title = "Display Settings" ;
     }
 }
 
 class ListGroup extends Pagelist {
-    // static "field_name" from struct in derived classes
-
-    static show_content() {
+    // "field_name" from struct in derived classes
+    show_content() {
         globalPot.unselect() ;
         const item = structData.Data.find( i => i.name == this.field_name ) ;
         if ( item ) {
@@ -324,45 +306,57 @@ class ListGroup extends Pagelist {
     }
 }
 
-class ListSeries extends ListGroup {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static field_name = "series" ;
+new class ListSeries extends ListGroup {
+	constructor() {
+		super() ;
+		this.field_name = "series" ;
+	}
 }
 
-class ListForm extends ListGroup {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static field_name = "type" ;
+new class ListForm extends ListGroup {
+	constructor() {
+		super() ;
+		this.field_name = "type" ;
+	}
 }
 
-class ListConstruction extends ListGroup {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static field_name = "construction" ;
+new class ListConstruction extends ListGroup {
+	constructor() {
+		super() ;
+		this.field_name = "construction" ;
+	}
 }
 
-class ListStage extends ListGroup {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static field_name = "stage" ;
+new class ListStage extends ListGroup {
+	constructor() {
+		super() ;
+		this.field_name = "stage" ;
+	}
 }
 
-class ListKiln extends ListGroup {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static field_name = "kiln" ;
+new class ListKiln extends ListGroup {
+	constructor() {
+		super() ;
+		this.field_name = "kiln" ;
+	}
 }
 
-class ListGlaze extends ListGroup {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static field_name = "glaze" ;
+new class ListGlaze extends ListGroup {
+	constructor() {
+		super() ;
+		this.field_name = "glaze" ;
+	}
 }
 
-class ListClay extends ListGroup {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-    static field_name = "clay" ;
+new class ListClay extends ListGroup {
+	constructor() {
+		super() ;
+		this.field_name = "clay" ;
+	}
 }
 
-class ErrorLog extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class ErrorLog extends Pagelist {
+    show_content() {
         globalPot.unselect() ;
         new TextBox("Error Log");
         globalLog.show() ;
@@ -370,10 +364,8 @@ class ErrorLog extends Pagelist {
     }
 }
 
-class FirstTime extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class FirstTime extends Pagelist {
+    show_content() {
         globalPot.unselect() ;
         new TextBox("Welcome") ;
         if ( globalDatabase.db !== null ) {
@@ -382,10 +374,8 @@ class FirstTime extends Pagelist {
     }
 }
 
-class InvalidPiece extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class InvalidPiece extends Pagelist {
+    show_content() {
         globalPage.forget() ; // don't return here
         globalPot.unselect();
         new StatBox() ;
@@ -393,31 +383,25 @@ class InvalidPiece extends Pagelist {
     }
 }
 
-class MainMenu extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class MainMenu extends Pagelist {
+    show_content() {
         globalPot.unselect();
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
 }
 
-class ListMenu extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class ListMenu extends Pagelist {
+    show_content() {
         globalPot.unselect();
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
 }
 
-class PotNew extends Pagelist {
+new class PotNew extends Pagelist {
     // record doesn't exist -- make one
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+    show_content() {
         globalPage.forget();
         new TextBox("New Piece");
         if ( globalPot.isSelected() ) {
@@ -431,10 +415,8 @@ class PotNew extends Pagelist {
     }
 }
 
-class PotEdit extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class PotEdit extends Pagelist {
+    show_content() {
         if ( globalPot.isSelected() ) {
             globalDatabase.db.get( potId )
             .then( (doc) => globalPotData = new PotData( doc, structData.Data ))
@@ -449,10 +431,8 @@ class PotEdit extends Pagelist {
     }
 }
 
-class PotPix extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class PotPix extends Pagelist {
+    show_content() {
         if ( globalPot.isSelected() ) {
             globalDatabase.db.get( potId )
             .then( (doc) => globalPotData = new PotData( doc, structData.Images ))
@@ -467,10 +447,8 @@ class PotPix extends Pagelist {
     }
 }
 
-class PotPixLoading extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class PotPixLoading extends Pagelist {
+    show_content() {
         document.querySelector(".ContentTitleHidden").style.display = "block";
         globalPage.forget() ;
         if ( globalPot.isSelected() ) {
@@ -486,10 +464,8 @@ class PotPixLoading extends Pagelist {
     }
 }
 
-class PotMenu extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class PotMenu extends Pagelist {
+    show_content() {
         if ( globalPot.isSelected() ) {
             globalDatabase.db.get( potId )
             .then( (doc) => {
@@ -507,10 +483,8 @@ class PotMenu extends Pagelist {
     }
 }
 
-class SearchList extends Pagelist {
-    static dummy_var=this.AddPage(); // add the Pagelist.pages -- class initiatialization block
-
-    static show_content() {
+new class SearchList extends Pagelist {
+    show_content() {
         globalPot.unselect() ;
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
@@ -518,6 +492,141 @@ class SearchList extends Pagelist {
         globalSearch.setTable();
     }
 }
+
+class Page { // singleton class
+    constructor() {
+        this.normal_screen = false ; // splash/screen/print for show_screen
+        this.path = [];
+    }
+    
+    reset() {
+        // resets to just MainMenu
+        this.path = [ "MainMenu" ] ;
+    }
+
+    back() {
+        // return to previous page (if any exist)
+        this.path.shift() ;
+        if ( this.path.length == 0 ) {
+            this.reset();
+        }
+    }
+
+    current() {
+        if ( this.path.length == 0 ) {
+            this.reset();
+        }
+        return this.path[0];
+    }
+
+    add( page = null ) {
+        if ( page == "back" ) {
+            this.back();
+        } else if ( page == null ) {
+            return ;
+        } else {
+            const iop = this.path.indexOf( page ) ;
+            if ( iop < 0 ) {
+                // add to from of page list
+                this.path.unshift( page ) ;
+            } else {
+                // trim page list back to prior occurence of this page (no loops, finite size)
+                this.path = this.path.slice( iop ) ;
+            }
+        }
+    }
+
+    isThis( page ) {
+        return this.current()==page ;
+    }
+
+    forget() {
+        // remove this page from the "back" list -- but don't actually go there
+        this.back();
+    }
+
+    helpLink(help=null) {
+        const helpLoc = "https://alfille.github.io/" ;
+        const helpDir = "/potholder/" ;
+        const helpTopic = help ?? this.current() ;
+        window.open( new URL(`${helpDir}${helpTopic}.html`,helpLoc).toString(), '_blank' );
+    } 
+    
+    show( page ) { // main routine for displaying different "pages" by hiding different elements
+        if ( globalSettings?.console == "true" ) {
+            console.log("SHOW",page,"STATE",this.path);
+        }
+        // test that database is selected
+        if ( globalDatabase.db == null || globalDatabase.database == null ) {
+            // can't bypass this! test if database exists
+            if ( page != "FirstTime" && page != "RemoteDatabaseInput" ) {
+                this.show("RemoteDatabaseInput");
+            }
+        }
+
+        this.add(page) ; // place in reversal list
+
+        // clear display objects
+        globalPotData = null;
+        globalTable = null;
+        document.querySelector(".ContentTitleHidden").style.display = "none";
+
+        this.show_normal(); // basic page display setup
+
+        // send to page-specific code
+        const target_name = this.current() ;
+        if ( target_name in Pagelist.pages ) {
+			Pagelist.pages[target_name].show_page(target_name) ;
+		} else {
+			this.back() ;
+		}
+    }
+    
+    show_normal() { // switch between screen and print
+        if ( this.normal_screen ) {
+            return ;
+        }
+        this.normal_screen = true ;
+        // Clear Splash once really.
+        document.getElementById("splash_screen").style.display = "none";
+        
+        document.querySelectorAll(".work_screen").forEach( v => v.style.display="block" ) ;
+        document.querySelectorAll(".picture_screen").forEach( v => v.style.display="block" ) ;
+        document.querySelectorAll(".print_screen").forEach( v => v.style.display="none" ) ;
+    }    
+
+    show_print() { // switch between screen and print
+        if ( !this.normal_screen ) {
+            return ;
+        }
+        this.normal_screen = false ;
+        // Clear Splash once really.
+        document.getElementById("splash_screen").style.display = "none";
+        
+        document.querySelectorAll(".work_screen").forEach( v => v.style.display="none" ) ;
+        document.querySelectorAll(".picture_screen").forEach( v => v.style.display="none" ) ;
+        document.querySelectorAll(".print_screen").forEach( v => v.style.display="block" ) ;
+    }    
+
+    headerLink() {
+        if ( globalPage.current() != "MainMenu" ) {
+            globalPage.show("MainMenu") ;
+        } else {
+            if ( globalPage ) {
+                globalPage.reset();
+            }
+            window.location.href="/index.html"; // force reload
+        }
+    }
+
+    copy_to_clip() {
+        navigator.clipboard.writeText( document.getElementById("MakeURLtext").href )
+        .catch( err => globalLog.err(err) );
+    }
+    
+}
+
+globalPage = new Page();
 
 // Application starting point
 window.onload = () => {
