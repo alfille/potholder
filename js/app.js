@@ -81,13 +81,13 @@ class PagelistThumblist extends Pagelist {
     }
 }
 
-new class Advanced extends PagelistThumblist {}
+new class Advanced extends PagelistThumblist {}() ;
 
-new class Administration extends PagelistThumblist {}
+new class Administration extends PagelistThumblist {}() ;
 
-new class Developer extends PagelistThumblist {}
+new class Developer extends PagelistThumblist {}() ;
 
-new class StructMenu extends PagelistThumblist {}
+new class StructMenu extends PagelistThumblist {}() ;
 
 new class DatabaseInfo extends Pagelist {
     show_content() {
@@ -100,7 +100,7 @@ new class DatabaseInfo extends Pagelist {
         .catch( err => globalLog.err(err) );
     }
 
-}
+}() ;
 
 new class RemoteDatabaseInput extends Pagelist {
     show_content() {
@@ -110,7 +110,7 @@ new class RemoteDatabaseInput extends Pagelist {
         doc.raw = "fixed";
         globalPotData = new DatabaseData( doc, structRemoteUser );
     }
-}
+}() ;
 
 new class Settings extends Pagelist {
 	show_content() {
@@ -118,7 +118,7 @@ new class Settings extends Pagelist {
         const doc = Object.assign( {}, globalSettings ) ;
         globalPotData = new SettingsData( doc, structSettings );
     }
-}
+}() ;
 
 new class MakeURL extends Pagelist {
     show_content() {
@@ -136,7 +136,7 @@ new class MakeURL extends Pagelist {
         });
         document.getElementById("MakeURLtext").href = url.toString() ;
     }
-}
+}() ;
 
 new class PotPrint extends Pagelist {
     show_content() {
@@ -151,14 +151,14 @@ new class PotPrint extends Pagelist {
             globalPage.show( "back" );
         }
     }
-}
+}() ;
 
 new class Help extends Pagelist {
     show_content() {
         window.open( new URL(`https://alfille.github.io/potholder`,location.href).toString(), '_blank' );
         globalPage.show("back");
     }
-}
+}() ;
 
 new class AllPieces extends Pagelist {
     show_content() {
@@ -170,7 +170,7 @@ new class AllPieces extends Pagelist {
         .then( (docs) => globalTable.fill(docs.rows ) )
         .catch( (err) => globalLog.err(err) );
     }
-}
+}() ;
 
 new class Orphans extends Pagelist {
     show_content() {
@@ -182,7 +182,7 @@ new class Orphans extends Pagelist {
         .then( (docs) => globalTable.fill(docs.rows ) )
         .catch( (err) => globalLog.err(err) );
     }
-}
+}() ;
 
 new class AssignPic extends Pagelist {
     show_content() {
@@ -206,11 +206,16 @@ new class AssignPic extends Pagelist {
         .then( (docs) => globalTable.fill(docs.rows ) )
         .catch( (err) => globalLog.err(err) );
     }
-}
+}() ;
 
 class StructShow extends Pagelist {
     // "struct_name" from derived classes
     // "struct_title" from derived classes
+    constructor( structname, structtitle ) {
+		super() ;
+		this.struct_name = structname ;
+		this.struct_title = structtitle ;
+	}
 
     show_content() {
         globalPot.unselect() ;
@@ -221,47 +226,18 @@ class StructShow extends Pagelist {
     }
 }
 
-new class StructGeneralPot extends StructShow {
-	constructor() {
-		super() ;
-		this.struct_name = structData.Data ;
-		this.struct_title = "Data Fields";
-	}
-}
-
-new class StructImages extends StructShow {
-	constructor() {
-		super() ;
-		this.struct_name = structData.Images ;
-		this.struct_title = "Image Fields";
-    }
-}
-
-new class StructDatabaseInfo extends StructShow {
-	constructor() {
-		super() ;
-		this.struct_name = structDatabaseInfo ;
-		this.struct_title = "Database Metadata" ;
-    }
-}
-
-new class StructRemoteUser extends StructShow {
-	constructor() {
-		super() ;
-		this.struct_name = structRemoteUser ;
-		this.struct_title = "User Credentials" ;
-    }
-}
-
-new class StructSettings extends StructShow {
-	constructor() {
-		super() ;
-		this.struct_name = structSettings ;
-		this.struct_title = "Display Settings" ;
-    }
-}
+new class StructGeneralPot extends StructShow {}( structData.Data, "Data Fields") ;
+new class StructImages extends StructShow {}( structData.Images, "Image Fields") ;
+new class StructDatabaseInfo extends StructShow {}( structDatabaseInfo, "Database Metadata") ;
+new class StructRemoteUser extends StructShow {}( structRemoteUser, "User Credentials") ;
+new class StructSettings extends StructShow {}( structSettings, "Display Settings") ;
 
 class ListGroup extends Pagelist {
+	constructor( fieldname ) {
+		super() ;
+		this.field_name = fieldname ;
+	}
+	
     // "field_name" from struct in derived classes
     show_content() {
         globalPot.unselect() ;
@@ -306,54 +282,13 @@ class ListGroup extends Pagelist {
     }
 }
 
-new class ListSeries extends ListGroup {
-	constructor() {
-		super() ;
-		this.field_name = "series" ;
-	}
-}
-
-new class ListForm extends ListGroup {
-	constructor() {
-		super() ;
-		this.field_name = "type" ;
-	}
-}
-
-new class ListConstruction extends ListGroup {
-	constructor() {
-		super() ;
-		this.field_name = "construction" ;
-	}
-}
-
-new class ListStage extends ListGroup {
-	constructor() {
-		super() ;
-		this.field_name = "stage" ;
-	}
-}
-
-new class ListKiln extends ListGroup {
-	constructor() {
-		super() ;
-		this.field_name = "kiln" ;
-	}
-}
-
-new class ListGlaze extends ListGroup {
-	constructor() {
-		super() ;
-		this.field_name = "glaze" ;
-	}
-}
-
-new class ListClay extends ListGroup {
-	constructor() {
-		super() ;
-		this.field_name = "clay" ;
-	}
-}
+new class ListSeries extends ListGroup {}("series") ;
+new class ListForm extends ListGroup {}("type") ;
+new class ListConstruction extends ListGroup {}("construction") ;
+new class ListStage extends ListGroup {}("stage") ;
+new class ListKiln extends ListGroup {}("kiln") ;
+new class ListGlaze extends ListGroup {}("glaze") ;
+new class ListClay extends ListGroup {}("clay") ;
 
 new class ErrorLog extends Pagelist {
     show_content() {
@@ -362,8 +297,7 @@ new class ErrorLog extends Pagelist {
         globalLog.show() ;
         document.getElementById("MainPhotos").style.display="block";
     }
-}
-
+}() ;
 new class FirstTime extends Pagelist {
     show_content() {
         globalPot.unselect() ;
@@ -372,7 +306,7 @@ new class FirstTime extends Pagelist {
             globalPage.show("MainMenu");
         }
     }
-}
+}() ;
 
 new class InvalidPiece extends Pagelist {
     show_content() {
@@ -381,7 +315,7 @@ new class InvalidPiece extends Pagelist {
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
-}
+}() ;
 
 new class MainMenu extends Pagelist {
     show_content() {
@@ -389,7 +323,7 @@ new class MainMenu extends Pagelist {
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
-}
+}() ;
 
 new class ListMenu extends Pagelist {
     show_content() {
@@ -397,7 +331,7 @@ new class ListMenu extends Pagelist {
         new StatBox() ;
         document.getElementById("MainPhotos").style.display="block";
     }
-}
+}() ;
 
 new class PotNew extends Pagelist {
     // record doesn't exist -- make one
@@ -413,7 +347,7 @@ new class PotNew extends Pagelist {
             globalPotData = new PotNewData( globalPot.create(), structData.Data ) ;
         }
     }
-}
+}() ;
 
 new class PotEdit extends Pagelist {
     show_content() {
@@ -429,7 +363,7 @@ new class PotEdit extends Pagelist {
             globalPage.show( "back" );
         }
     }
-}
+}() ;
 
 new class PotPix extends Pagelist {
     show_content() {
@@ -445,7 +379,7 @@ new class PotPix extends Pagelist {
             globalPage.show( "back" );
         }
     }
-}
+}() ;
 
 new class PotPixLoading extends Pagelist {
     show_content() {
@@ -462,7 +396,7 @@ new class PotPixLoading extends Pagelist {
             globalPage.show( "back" );
         }
     }
-}
+}() ;
 
 new class PotMenu extends Pagelist {
     show_content() {
@@ -481,7 +415,7 @@ new class PotMenu extends Pagelist {
             globalPage.show( "back" );
         }
     }
-}
+}() ;
 
 new class SearchList extends Pagelist {
     show_content() {
@@ -491,7 +425,7 @@ new class SearchList extends Pagelist {
         globalTable = new SearchTable() ;
         globalSearch.setTable();
     }
-}
+}() ;
 
 class Page { // singleton class
     constructor() {

@@ -71,7 +71,7 @@ class PotImages {
                             screen.orientation.onchange=()=>{};
                             document.getElementById('modal_id').style.display='none';
                             requestAnimationFrame( ()=>canvas.click() ) ;
-                            }
+                            } ;
                         } ;
                     document.getElementById("modal_close").onclick=()=>{
                         screen.orientation.onchange=()=>{};

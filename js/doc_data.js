@@ -207,7 +207,7 @@ class SettingsData extends PotData {
 			if ( document.fullscreenElement ) {
 				document.exitFullscreen() ;
 			}
-			globalPage.show("back")
+			globalPage.show("back") ;
 		}
     }
 }

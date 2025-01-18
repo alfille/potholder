@@ -58,7 +58,7 @@ class DatabaseManager { // convenience class
         window.addEventListener("online", _ => this.present() );
 
         // initial status
-        navigator.onLine ? this.present() : this.not_present() ;
+        const _ = navigator.onLine ? this.present() : this.not_present() ;
     }
     
     open() { // local

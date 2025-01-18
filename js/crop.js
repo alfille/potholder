@@ -96,7 +96,7 @@ class Crop {
                     this.working_crop = this.edge2crop() ;
                     screen.orientation.onchange=()=>{} ;
                     requestAnimationFrame( () => this.crop_reset() );
-                    }
+                    } ;
                 
                 // Show
                 this.show(true);
