@@ -23,6 +23,8 @@ bin-release/
 ### MdBook ###
 book
 
+### Parcel
+.parcel-cache
 
 # End of https://www.toptal.com/developers/gitignore/api/mdbook
 
