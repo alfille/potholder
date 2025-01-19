@@ -16,7 +16,6 @@ const cacheList = [
     "/js/app.js",
     "/js/doc_data.js",
     "/js/doc_struct.js",
-    "/js/entry_field.js",
     "/js/globals.js",
     "/js/image.js",
     "/js/pot.js",
