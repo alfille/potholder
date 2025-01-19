@@ -19,7 +19,6 @@ const cacheList = [
     "/js/globals.js",
     "/js/image.js",
     "/js/pot.js",
-    "/js/replicate.js",
     "/js/sorttable.js",
     "/js/pouchdb-9.0.0.min.js",
     "/js/pouchdb.quick-search.min.js",
