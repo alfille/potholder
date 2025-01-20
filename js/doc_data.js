@@ -19,7 +19,7 @@ export {
 
 import {
     PotImages,
-} from "./image.js" ;
+} from "./pot.js" ;
     
 // data entry page type
 class PotDataRaw { // singleton class
