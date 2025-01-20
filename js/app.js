@@ -11,14 +11,6 @@
 export {
     PotImages,
 } ;
-    
-// used to generate data entry pages "PotData" type
-import {
-    structDatabaseInfo,
-    structData,
-    structRemoteUser,
-    structSettings,
-} from "./doc_struct.js" ;
 
 import {
     PotData,
