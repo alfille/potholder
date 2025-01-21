@@ -548,13 +548,10 @@ window.onload = () => {
     window.addEventListener('popstate', ()=>window.history.replaceState({}, '') );
 
     // Service worker (to manage cache for off-line function)
-    if ( 'serviceWorker' in navigator ) {
-		new URL('/sw.js', import.meta.url) ;
-		/*
+    if ( navigator && ('serviceWorker' in navigator) ) {
         navigator.serviceWorker
         .register('/sw.js')
         .catch( err => globalLog.err(err,"Service worker registration") );
-        * */
     }
 
     // Settings

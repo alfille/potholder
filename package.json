@@ -1,10 +1,45 @@
 {
-  "name": "potholder",
+  "name": "Potholder Ceramic Artist Database",
+  "short_name": "potholder",
   "version": "1.0.0",
   "description": "Easy visual database for Ceramic Artists",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "icons": [
+  { 
+	  "src": "images/pot16x16.png",
+	  "sizes": "16x16",
+	  "type": "image/png"
   },
+  { 
+	  "src": "images/pot32x32.png",
+	  "sizes": "32x32",
+	  "type": "image/png"
+  },
+  { 
+	  "src": "images/pot48x48.png",
+	  "sizes": "48x48",
+	  "type": "image/png"
+  },
+  { 
+	  "src": "images/pot64x64.png",
+	  "sizes": "64x64",
+	  "type": "image/png"
+  },
+  { 
+	  "src": "images/pot128x128.png",
+	  "sizes": "128x128",
+	  "type": "image/png"
+  },
+  { 
+	  "src": "images/pot192x192.png",
+	  "sizes": "192x192",
+	  "type": "image/png"
+  },
+  { 
+	  "src": "images/pot400.png",
+	  "sizes": "400x400",
+	  "type": "image/png"
+  }
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alfille/potholder.git"
@@ -22,12 +57,7 @@
   "bugs": {
     "url": "https://github.com/alfille/potholder/issues"
   },
-  "homepage": "https://github.com/alfille/potholder#readme",
-  "devDependencies": {
-    "@eslint/js": "^9.18.0",
-    "@parcel/packager-raw-url": "^2.13.3",
-    "@parcel/transformer-webmanifest": "^2.13.3",
-    "eslint": "^9.18.0",
-    "globals": "^15.14.0"
-  }
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "homepage": "https://github.com/alfille/potholder#readme"
 }
