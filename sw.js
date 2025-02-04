@@ -15,7 +15,6 @@ const cacheList = [
     "/images/wheel.png",
     "/js/app.js",
     "/js/doc_data.js",
-    "/js/globals.js",
     "/js/pouchdb-9.0.0.min.js",
     "/js/pouchdb.quick-search.min.js",
     "/js/qrious.min.js",

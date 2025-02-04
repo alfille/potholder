@@ -196,15 +196,15 @@ class SettingsData extends PotData {
         this.loadDocData() ;
         Object.assign ( globalSettings, this.doc ) ;
         globalStorage.set( "settings", globalSettings ) ;
-		if (globalSettings.fullscreen=="always") {
-			document.documentElement.requestFullscreen()
-			.finally( _ => globalPage.show("back") ) ;
-		} else {
-			if ( document.fullscreenElement ) {
-				document.exitFullscreen() ;
-			}
-			globalPage.show("back") ;
-		}
+        if (globalSettings.fullscreen=="always") {
+            document.documentElement.requestFullscreen()
+            .finally( _ => globalPage.show("back") ) ;
+        } else {
+            if ( document.fullscreenElement ) {
+                document.exitFullscreen() ;
+            }
+            globalPage.show("back") ;
+        }
     }
 }
 
@@ -320,9 +320,9 @@ class EntryList {
     get_doc() {
         const doc = {} ;
         this.members.forEach( m => {
-                const e = m.get_doc() ;
-                doc[e[0]] = e[1] ;
-                });
+            const e = m.get_doc() ;
+            doc[e[0]] = e[1] ;
+            });
         return doc ;
     }
         
@@ -658,39 +658,39 @@ class CropEntry extends InvisibleEntry {
 }
 
 class BoolEntry extends VisibleEntry {
-        default_value() {
-                return "false" ;
-        }
-        
-        show_item_element() {
-                return document.createTextNode( (this.new_val=="true") ? "yes" : "no" ) ;
-        } 
+    default_value() {
+        return "false" ;
+    }
+    
+    show_item_element() {
+        return document.createTextNode( (this.new_val=="true") ? "yes" : "no" ) ;
+    } 
 
-        form2value() {
-            this.new_val = [...document.getElementsByName(this.localname)]
-                .filter( i => i.checked )
-                .map(i=>i.value)[0] ?? "" ;
-        }
-        
-        edit_flatten() {
-                return [true,false].map( pick => {
-                        const inp = document.createElement("input");
-                        inp.type = "radio";
-                        inp.name = this.localname;
-                        inp.value = pick;
-                        inp.oninput = () => this.save_enable() ;
-                        switch (pick) {
-                                case true:
-                                        inp.checked = (this.new_val == "true") ;
-                                        break ;
-                                default:
-                                        inp.checked = (this.new_val !== "true") ;
-                                        break ;
-                        }
-                        inp.title = this.struct.hint;
-                        return [ inp,document.createTextNode(pick?"yes":"no")];
-                        }) ;
-        }
+    form2value() {
+    this.new_val = [...document.getElementsByName(this.localname)]
+        .filter( i => i.checked )
+        .map(i=>i.value)[0] ?? "" ;
+    }
+    
+    edit_flatten() {
+        return [true,false].map( pick => {
+            const inp = document.createElement("input");
+            inp.type = "radio";
+            inp.name = this.localname;
+            inp.value = pick;
+            inp.oninput = () => this.save_enable() ;
+            switch (pick) {
+                case true:
+                    inp.checked = (this.new_val == "true") ;
+                    break ;
+                default:
+                    inp.checked = (this.new_val !== "true") ;
+                    break ;
+            }
+            inp.title = this.struct.hint;
+            return [ inp,document.createTextNode(pick?"yes":"no")];
+            }) ;
+    }
 }
 
 class CheckboxEntry extends VisibleEntry {
@@ -707,14 +707,14 @@ class CheckboxEntry extends VisibleEntry {
     }
     
     show_item_element() {
-            // list as text
-            return document.createTextNode( (this.new_val.length == 0) ?  "<empty>" : this.new_val.join(", ") ) ;
+        // list as text
+        return document.createTextNode( (this.new_val.length == 0) ?  "<empty>" : this.new_val.join(", ") ) ;
     }
     
     form2value() {
         this.new_val = [...document.getElementsByName(this.localname)]
-                .filter( i => i.checked )
-                .map( i => i.value );
+            .filter( i => i.checked )
+            .map( i => i.value );
     }
 
     changed() {
@@ -739,13 +739,13 @@ class CheckboxEntry extends VisibleEntry {
 }               
                                 
 class NumberEntry extends VisibleEntry {
-        default_value() {
-                return null ;
-        }
+    default_value() {
+        return null ;
+    }
 
-        show_item_element() {
-                return document.createTextNode( this.new_val.toString() ?? "<empty>" ) ;
-        }
+    show_item_element() {
+        return document.createTextNode( this.new_val.toString() ?? "<empty>" ) ;
+    }
 }               
 
 class ArrayEntry extends VisibleEntry {
@@ -775,7 +775,7 @@ class ArrayEntry extends VisibleEntry {
     }
 
     get_doc() {
-            return [ this._name, this.new_val.map( e => e.get_doc() ) ] ;
+        return [ this._name, this.new_val.map( e => e.get_doc() ) ] ;
     }
 
     load_from_doc( doc ) {
@@ -1216,9 +1216,9 @@ class Crop {
         // Stop Scroll
         window.onscroll = () => window.scrollTo(0,0);
 
-		((globalSettings.fullscreen=="big_picture") ?
-			document.documentElement.requestFullscreen()
-			: Promise.resolve() )
+        ((globalSettings.fullscreen=="big_picture") ?
+            document.documentElement.requestFullscreen()
+            : Promise.resolve() )
         .finally( _ => this.crop_reset() );
     }
     
@@ -1626,11 +1626,11 @@ class Crop {
         // Start Scroll
         window.onscroll = () => {};
 
-		if (globalSettings.fullscreen=="big_picture") {
-			if ( document.fullscreenElement ) {
-				document.exitFullscreen() ;
-			}
-		}
+        if (globalSettings.fullscreen=="big_picture") {
+            if ( document.fullscreenElement ) {
+                document.exitFullscreen() ;
+            }
+        }
         this.show(false);
         document.getElementById("replot").click() ; // hidden button to replot
     }

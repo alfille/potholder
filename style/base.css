@@ -394,6 +394,8 @@ legend {
   align-items: flex-start;
 }
 .MainPhoto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100px;
   border: 1px solid white;
   margin:  0px 5px 0px 0px;
 }
