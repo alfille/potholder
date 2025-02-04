@@ -23,11 +23,11 @@ import {
 
 class Pagelist {
     // list of subclasses = displayed "pages"
-	static pages = {} ;
+    static pages = {} ;
     
-	constructor() {
-		Pagelist.pages[this.constructor.name] = this ;
-	}
+    constructor() {
+        Pagelist.pages[this.constructor.name] = this ;
+    }
 
     show_page(name) {
         // reset buttons from edit mode
@@ -92,7 +92,7 @@ new class RemoteDatabaseInput extends Pagelist {
 }() ;
 
 new class Settings extends Pagelist {
-	show_content() {
+    show_content() {
         new TextBox("Display Settings") ;
         const doc = Object.assign( {}, globalSettings ) ;
         globalPotData = new SettingsData( doc, structSettings );
@@ -191,10 +191,10 @@ class StructShow extends Pagelist {
     // "struct_name" from derived classes
     // "struct_title" from derived classes
     constructor( structname, structtitle ) {
-		super() ;
-		this.struct_name = structname ;
-		this.struct_title = structtitle ;
-	}
+        super() ;
+        this.struct_name = structname ;
+        this.struct_title = structtitle ;
+    }
 
     show_content() {
         globalPot.unselect() ;
@@ -212,11 +212,11 @@ new class StructRemoteUser extends StructShow {}( structRemoteUser, "User Creden
 new class StructSettings extends StructShow {}( structSettings, "Display Settings") ;
 
 class ListGroup extends Pagelist {
-	constructor( fieldname ) {
-		super() ;
-		this.field_name = fieldname ;
-	}
-	
+    constructor( fieldname ) {
+        super() ;
+        this.field_name = fieldname ;
+    }
+    
     // "field_name" from struct in derived classes
     show_content() {
         globalPot.unselect() ;
@@ -381,10 +381,7 @@ new class PotMenu extends Pagelist {
     show_content() {
         if ( globalPot.isSelected() ) {
             globalDatabase.db.get( potId )
-            .then( (doc) => {
-                globalPot.select(potId) // update thumb
-                .then( () => globalPot.showPictures(doc) ) ; // pictures on bottom
-            })
+            .then( (doc) => globalPot.showPictures(doc) ) // pictures on bottom
             .catch( (err) => {
                 globalLog.err(err);
                 globalPage.show( "back" );
@@ -410,8 +407,10 @@ class Page { // singleton class
     constructor() {
         this.normal_screen = false ; // splash/screen/print for show_screen
         this.path = [];
+        this.TL = document.getElementById("TopLeftImage") ;
+        this.TLlast = null ;
     }
-    
+
     reset() {
         // resets to just MainMenu
         this.path = [ "MainMenu" ] ;
@@ -489,13 +488,27 @@ class Page { // singleton class
         // send to page-specific code
         const target_name = this.current() ;
         if ( target_name in Pagelist.pages ) {
-			Pagelist.pages[target_name].show_page(target_name) ;
-		} else {
-			this.back() ;
-		}
+            Pagelist.pages[target_name].show_page(target_name) ;
+        } else {
+            this.back() ;
+        }
     }
     
     show_normal() { // switch between screen and print
+        switch ( globalPage.current() ) {
+            case "PotEdit":
+            case "PotPix":
+                this.TLlast = potId ;
+                globalThumbs.displayThumb( this.TL, potId ) ;
+                break ;
+            default:
+                if ( this.TLlast != null ) {
+                    this.TLlast = null ;
+                    this.TL.src = document.getElementById("LogoPicture").src;
+                }
+                break ;
+        }
+
         if ( this.normal_screen ) {
             return ;
         }
@@ -522,13 +535,14 @@ class Page { // singleton class
     }    
 
     headerLink() {
-        if ( globalPage.current() != "MainMenu" ) {
-            globalPage.show("MainMenu") ;
-        } else {
-            if ( globalPage ) {
-                globalPage.reset();
-            }
-            window.location.href="/index.html"; // force reload
+        switch ( globalPage.current() ) {
+            case "PotEdit":
+            case "PotPix":
+                globalPage.show( "PotMenu" ) ;
+                break ;
+            default:
+                globalPage.show("MainMenu") ;
+                break ;
         }
     }
 
@@ -604,11 +618,11 @@ window.onload = () => {
         // start sync with remote database
         globalDatabase.foreverSync();
 
-		// Show screen
-		((globalSettings.fullscreen=="always") ?
-			document.documentElement.requestFullscreen()
-			: Promise.resolve())
-		.finally( _ => globalPage.show("MainMenu") ) ;
+        // Show screen
+        ((globalSettings.fullscreen=="always") ?
+            document.documentElement.requestFullscreen()
+            : Promise.resolve())
+        .finally( _ => globalPage.show("MainMenu") ) ;
         
     } else {
         globalPage.reset();
@@ -751,8 +765,6 @@ class Query {
 
 class Pot { // convenience class
     constructor() {
-        this.TL=document.getElementById("TopLeftImage");
-        this.LOGO = document.getElementById("LogoPicture");
         this.pictureSource = document.getElementById("HiddenPix");
     }
     
@@ -806,17 +818,7 @@ class Pot { // convenience class
     select( pid = potId ) {
         potId = pid ;
         // Check pot existence
-        return globalDatabase.db.get( pid )
-        .then( (doc) => {
-            // Top left Logo
-            globalThumbs.displayThumb( this.TL, pid ) ;
-            new PotBox(doc);
-            return doc ;
-            })
-        .catch( (err) => {
-            globalLog.err(err,"pot select");
-            this.unselect();
-            });
+        new TextBox("Piece Selected");
     }
 
     isSelected() {
@@ -825,7 +827,6 @@ class Pot { // convenience class
 
     unselect() {
         potId = null;
-        this.TL.src = this.LOGO.src;
         if ( globalPage.isThis("AllPieces") ) {
             const pt = document.getElementById("PotTable");
             if ( pt ) {
@@ -912,8 +913,8 @@ class Pot { // convenience class
             return ;
         }
         globalPage.show("PotPixLoading");
-        globalPot.select( pid )
-        .then( _ => this.save_pic( pid, i_list ) )
+        globalPot.select( pid ) ;
+        this.save_pic( pid, i_list )
         .then( _ => globalThumbs.getOne( potId ) )
         .then( _ => globalPage.add("PotMenu" ) )
         .then( _ => globalPage.show("PotPix") )
@@ -1058,11 +1059,11 @@ class PotImages {
                         } ;
                     document.getElementById("modal_close").onclick=()=>{
                         screen.orientation.onchange=()=>{};
-						if (globalSettings.fullscreen=="big_picture") {
-							if ( document.fullscreenElement ) {
-								document.exitFullscreen() ;
-							}
-						}
+                        if (globalSettings.fullscreen=="big_picture") {
+                            if ( document.fullscreenElement ) {
+                                document.exitFullscreen() ;
+                            }
+                        }
                         document.getElementById('modal_id').style.display='none';
                         };
                     document.getElementById("modal_down").onclick=()=> {
@@ -1084,9 +1085,9 @@ class PotImages {
                             });
                         }) ;
                     } ;
-					((globalSettings.fullscreen=="big_picture") ?
-						document.documentElement.requestFullscreen()
-						: Promise.resolve() )
+                    ((globalSettings.fullscreen=="big_picture") ?
+                        document.documentElement.requestFullscreen()
+                        : Promise.resolve() )
                     .finally( _ => {
                         img2.src=url2;
                         document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
@@ -1185,8 +1186,8 @@ class Thumb {
                         this.displayThumb( img, pid ) ;
                         img.classList.add("MainPhoto");
                         img.onclick = () => {
-                            globalPot.select( pid )
-                            .then( () => globalPage.show("PotMenu") ) ;
+                            globalPot.select( pid ) ;
+                            globalPage.show("PotMenu") ;
                         } ;
                         this.pick.appendChild( img ) ;
                         img.alt = pid ;
@@ -1226,8 +1227,8 @@ class Thumb {
                     this.displayThumb( img, pid ) ;
                     img.classList.add("MainPhoto");
                     img.onclick = () => {
-                        globalPot.select( pid )
-                        .then( () => globalPage.show("PotMenu") ) ;
+                        globalPot.select( pid ) ;
+                        globalPage.show("PotMenu") ;
                     } ;
                     this.pick.appendChild( img ) ;
                     img.alt = pid ;
@@ -1707,8 +1708,8 @@ class SearchTable extends ThumbTable {
     
     // for search -- go to a result of search
     selectandedit( id, page ) {
-        globalPot.select(id)
-        .then( () => globalPage.show( page ) ) ;
+        globalPot.select(id) ;
+        globalPage.show( page ) ;
     }
 }
 

@@ -158,8 +158,8 @@ class PotNewData extends PotDataEditMode {
         this.loadDocData();
         globalDatabase.db.put( this.doc )
         .then( (response) => {
-            globalPot.select(response.id)
-            .then( () => globalPage.show( "PotMenu" ) );
+            globalPot.select(response.id) ;
+            globalPage.show( "PotMenu" ) ;
             })
         .then( () => globalThumbs.getOne( this.doc._id ) )
         .catch( (err) => globalLog.err(err) )
