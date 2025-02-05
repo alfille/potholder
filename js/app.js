@@ -287,7 +287,7 @@ globalThis. cloneClass = ( fromClass, target ) => {
         .forEach( cc => target.appendChild(cc.cloneNode(true) ) );
 } ;
 
-export class CSV { // convenience class
+class CSV { // convenience class
     constructor() {
         this.columns = [
             "type", "series", "location", "start_date", "artist", "firing", "weight_start","weight_end", "construction", "clay.type", "glaze.type", "kilns.kiln"
@@ -740,9 +740,29 @@ new class Settings extends Pagelist {
 new class MakeURL extends Pagelist {
     show_content() {
         new StatBox() ;
+        document.getElementById("URLtitle").innerText = "Web Link" ;
         let url = new URL( "/index.html", window.location.href ) ;
         if ( url.hostname == "localhost" ) {
             url = new URL( "/index.html", globalDatabase.address ) ;
+            url.port = '';
+        }
+        ["username","password","database","address","local"].forEach( x => url.searchParams.append( x, globalDatabase[x] ) );
+        new QRious( {
+            value: url.toString(),
+            element: document.getElementById("qr"),
+            size: 300,
+        });
+        document.getElementById("MakeURLtext").href = url.toString() ;
+    }
+}() ;
+
+new class MakeViewerURL extends Pagelist {
+    show_content() {
+        new StatBox() ;
+        document.getElementById("URLtitle").innerText = "Viewer Link" ;
+        let url = new URL( "/viewer/index.html", window.location.href ) ;
+        if ( url.hostname == "localhost" ) {
+            url = new URL( "/viewer/index.html", globalDatabase.address ) ;
             url.port = '';
         }
         ["username","password","database","address","local"].forEach( x => url.searchParams.append( x, globalDatabase[x] ) );
@@ -1728,18 +1748,6 @@ class Id_pot {
             obj.date,
             obj.rand
             ].join(";");
-    }
-    
-    static makeIdKey( pid, key=null ) {
-        const obj = this.splitId( pid ) ;
-        if ( key==null ) {
-            obj.date = new Date().toISOString();
-            obj.rand = Math.floor( Math.random() * 1000 ) ;
-        } else {
-            obj.date = key;
-        }
-        obj.type = this.type;
-        return this.joinId( obj );
     }
     
     static makeId( doc ) {

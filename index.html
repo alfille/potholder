@@ -70,8 +70,8 @@
                     <div class="AssignPic topButtons pageOverlay">
                         <button type="button" class="divbutton" onclick="globalPage.helpLink()">Help</button>
                     </div>
-                    <!-- top: ListMenu MakeURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser StructSettings -->
-                    <div class="ListMenu topButtons pageOverlay MakeURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser StructSettings">
+                    <!-- top: ListMenu MakeURL MakeViewerURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser StructSettings -->
+                    <div class="ListMenu topButtons pageOverlay MakeURL MakeViewerURL StructMenu StructGeneralPot StructImages StructDatabaseInfo StructRemoteUser StructSettings">
                         <button type="button" class="divbutton NewCamera" title="Use camera -- new piece or assign later" onClick="globalPot.pushPixButton()">New Photo &#128247;</button>            
                         <button type="button" class="divbutton NewCamera" title="Get image -- new piece or assign later" onClick="globalPot.pushGalleryButton()" >New Gallery &#128444;</button>            
                         <button type="button" class="divbutton return" onclick="globalPage.show( 'back' )">Return</button>
@@ -146,6 +146,7 @@
                         <button type="button" class="divbutton edit_data" onclick="globalPotData.edit_doc()" title="Start editing these entries">Edit</button>
                         <button type="button" class="divbutton return" onclick="globalPage.show( 'back' )">Cancel</button>
                         <button type="button" class="divbutton" onclick="globalPage.show( 'MakeURL' )">Web Link</button>
+                        <button type="button" class="divbutton" onclick="globalPage.show( 'MakeViewerURL' )">Viewer Link</button>
                         <button type="button" class="divbutton" onclick="globalPage.helpLink()">Help</button>
                     </div>
                 </div>
@@ -211,10 +212,10 @@
                     <button type="button" class="divbutton MainBold" onclick="globalPage.show( 'RemoteDatabaseInput' )">Setup</button>
                 </div>
             </div>
-            <!-- body: MakeURL -->
-            <div class="MakeURL pageOverlay">
+            <!-- body: MakeURL MakeViewerURL  -->
+            <div class="MakeURL MakeViewerURL pageOverlay">
                 <div class="content_box">   
-                    <span class="ContentTitle">Web Link</span>
+                    <span id="URLtitle" class="ContentTitle">Web Link</span>
                     <div id="MakeURLContent" class="buttonmenu">
                         <canvas id="qr" width=300 height=300></canvas>
                         <hr>
