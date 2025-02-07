@@ -322,7 +322,7 @@ legend {
   align-items: center;
   flex-direction: column ;
   width: 100%;
-  padding: 1em;
+  padding: 1em 0em 1em 0em;
 }
 .PotDataContent {
     width: 100%;
@@ -422,6 +422,7 @@ legend {
 }
 .work_screen {
     display: none ;
+    width: 100%;
     max-width: 550px ;
 }
 .picture_screen {
@@ -442,7 +443,8 @@ legend {
 .content_box {
     display: flex;
     flex-direction: column;
-    justify-content: flex:start;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 @media screen and (max-height: 500px) {
