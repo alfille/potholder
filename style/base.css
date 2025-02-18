@@ -2,6 +2,34 @@ html, body {
   margin: 0;
   padding: 0;
 }
+#master_grid {
+	display: grid ;
+	grid-template-columns: min(100%, 550px) auto;
+	grid-template-areas: "top side" "potholderbody side" "Foot side" "bottom bottom";
+}
+#top {
+	grid-area: top;
+}
+#Side {
+	grid-area: side;
+}
+#potholderbody {
+	grid-area: potholderbody;
+}
+#Foot {
+	grid-area: Foot;
+	display: flex;
+	color: white;
+	flex-flow: row nowrap;
+	justify-content: space-around;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: center;
+	font-size: 12px;
+}
+#Bottom {
+	grid-area: bottom;
+}
 #headerbox {
   display: flex;
   position: relative;
@@ -387,17 +415,17 @@ legend {
   font-style: italic;
   color: white;
 }
-#PotPhotos, #MainPhotos {
+#Side, #Bottom {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;  
   align-items: flex-start;
 }
-.MainPhoto {
+.ThumbPhoto {
   content-visibility: auto;
   contain-intrinsic-size: auto 100px;
   border: 1px solid white;
-  margin:  0px 5px 0px 0px;
+  margin:  0px 0px 5px 0px;
 }
 #TopLeftImage {
   width: 100px;
@@ -422,24 +450,9 @@ legend {
 }
 .work_screen {
     display: none ;
-    width: 100%;
-    max-width: 550px ;
-}
-.picture_screen {
-    display: none ;
-    width: 100% ;
 }
 
 @media screen and (min-width: 712px) {
-.picture_screen {
-    display: none;
-    position: absolute;
-    top: 0px;
-    margin-left: 560px;
-    width: auto;
-    }
-}
-
 .content_box {
     display: flex;
     flex-direction: column;
@@ -459,23 +472,6 @@ legend {
     }
 }
 
-#footer {
-  color: darkblue;
-  position: absolute;
-  right: 0;
-  left: 0;
-  height: 10px;
-  text-align: center;
-  font-size: 12px;
-}
-#footerflex {
-  display: flex;
-  color: white;
-  flex-flow: row nowrap;
-  justify-content: space-around;
-  overflow: hidden;
-  white-space: nowrap;
-}
 #syncstatus, #userstatus {
   background: lightblue;
   border: 4px;

@@ -678,7 +678,7 @@ class Pagelist {
             .forEach( po => po.style.display = po.classList.contains(name) ? "block" : "none" );
 
         // hide Thumbnails
-        document.getElementById("MainPhotos").style.display="none";
+        globalThumbs.hide() ;
         
         // hide Crop
         document.getElementById("crop_page").style.display="none" ;
@@ -694,7 +694,7 @@ class Pagelist {
 
 class PagelistThumblist extends Pagelist {
     show_content() {
-        document.getElementById("MainPhotos").style.display="block";
+        globalThumbs.show() ;
     }
 }
 
@@ -709,12 +709,12 @@ new class StructMenu extends PagelistThumblist {}() ;
 new class DatabaseInfo extends Pagelist {
     show_content() {
         new StatBox() ;
-        document.getElementById("MainPhotos").style.display="block";
         globalDatabase.db.info()
         .then( doc => {
             globalPotData = new PotDataReadonly( doc, structDatabaseInfo );
             })
         .catch( err => globalLog.err(err) );
+        globalThumbs.show() ;
     }
 
 }() ;
@@ -801,11 +801,11 @@ new class AllPieces extends Pagelist {
     show_content() {
         globalPot.unselect() ;
         new StatBox() ;
-        document.getElementById("MainPhotos").style.display="block";
         globalTable = new PotTable();
         globalPot.getAllIdDoc()
         .then( (docs) => globalTable.fill(docs.rows ) )
         .catch( (err) => globalLog.err(err) );
+        globalThumbs.show() ;
     }
 }() ;
 
@@ -813,11 +813,11 @@ new class Orphans extends Pagelist {
     show_content() {
         globalPot.unselect() ;
         new StatBox() ;
-        document.getElementById("MainPhotos").style.display="block";
         globalTable = new OrphanTable();
         globalPot.getAllIdDoc()
         .then( (docs) => globalTable.fill(docs.rows ) )
         .catch( (err) => globalLog.err(err) );
+        globalThumbs.show() ;
     }
 }() ;
 
@@ -857,9 +857,9 @@ class StructShow extends Pagelist {
     show_content() {
         globalPot.unselect() ;
         new TextBox("Field Structure") ;
-        document.getElementById("MainPhotos").style.display="block";
         document.getElementById("StructShowTitle").innerText=this.struct_title ?? "" ;
         document.getElementById("struct_json").innerText = JSON.stringify( this.struct_name, null, 2 ) ;
+        globalThumbs.show() ;
     }
 }
 
@@ -881,7 +881,6 @@ class ListGroup extends Pagelist {
         const item = structData.Data.find( i => i.name == this.field_name ) ;
         if ( item ) {
             new ListBox(`grouped by ${item?.alias ?? item.name}`) ;
-            document.getElementById("MainPhotos").style.display="block";
             switch (item.type) {
                 case "radio":
                 case "list":
@@ -913,6 +912,7 @@ class ListGroup extends Pagelist {
                         });
                     break ;
             }
+            globalThumbs.show() ;
         } else {
             globalPage.show("ListMenu");
         }
@@ -932,7 +932,7 @@ new class ErrorLog extends Pagelist {
         globalPot.unselect() ;
         new TextBox("Error Log");
         globalLog.show() ;
-        document.getElementById("MainPhotos").style.display="block";
+        globalThumbs.show() ;
     }
 }() ;
 new class FirstTime extends Pagelist {
@@ -950,7 +950,7 @@ new class InvalidPiece extends Pagelist {
         globalPage.forget() ; // don't return here
         globalPot.unselect();
         new StatBox() ;
-        document.getElementById("MainPhotos").style.display="block";
+        globalThumbs.show() ;
     }
 }() ;
 
@@ -958,7 +958,7 @@ new class MainMenu extends Pagelist {
     show_content() {
         globalPot.unselect();
         new StatBox() ;
-        document.getElementById("MainPhotos").style.display="block";
+        globalThumbs.show() ;
     }
 }() ;
 
@@ -966,7 +966,7 @@ new class ListMenu extends Pagelist {
     show_content() {
         globalPot.unselect();
         new StatBox() ;
-        document.getElementById("MainPhotos").style.display="block";
+        globalThumbs.show() ;
     }
 }() ;
 
@@ -1055,9 +1055,9 @@ new class SearchList extends Pagelist {
     show_content() {
         globalPot.unselect() ;
         new StatBox() ;
-        document.getElementById("MainPhotos").style.display="block";
         globalTable = new SearchTable() ;
         globalSearch.setTable();
+        globalThumbs.show() ;
     }
 }() ;
 
@@ -1174,8 +1174,7 @@ class Page { // singleton class
         // Clear Splash once really.
         document.getElementById("splash_screen").style.display = "none";
         
-        document.querySelectorAll(".work_screen").forEach( v => v.style.display="block" ) ;
-        document.querySelectorAll(".picture_screen").forEach( v => v.style.display="block" ) ;
+        document.querySelectorAll(".work_screen").forEach( v => v.style.display="grid" ) ;
         document.querySelectorAll(".print_screen").forEach( v => v.style.display="none" ) ;
     }    
 
@@ -1188,7 +1187,6 @@ class Page { // singleton class
         document.getElementById("splash_screen").style.display = "none";
         
         document.querySelectorAll(".work_screen").forEach( v => v.style.display="none" ) ;
-        document.querySelectorAll(".picture_screen").forEach( v => v.style.display="none" ) ;
         document.querySelectorAll(".print_screen").forEach( v => v.style.display="block" ) ;
     }    
 
@@ -1251,7 +1249,7 @@ window.onload = () => {
         const q = new Query();
         q.create( structData.Data.concat(structData.Images) )
         .then( () => globalThumbs.getAll() ) // create thumbs
-        .catch( err => globalLog.err(err,"Query cleanup") )
+//        .catch( err => globalLog.err(err,"Query cleanup") )
         ;
 
         // now start listening for any changes to the database
@@ -1713,7 +1711,7 @@ class Pot { // convenience class
     
     showPictures(doc) {
         // doc alreaady loaded
-        const pix = document.getElementById("PotPhotos");
+        const pix = document.getElementById("Bottom");
         const images = new PotImages(doc);
         pix.innerHTML="";
         images.displayAll().forEach( i => pix.appendChild(i) ) ;
@@ -1774,12 +1772,14 @@ globalPot = new Pot() ;
 class Thumb {
     constructor() {
         this.Thumbs = {} ;
+        this.showing = false ;
+        this.side = document.getElementById("Side");
+        this.bottom = document.getElementById("Bottom");
     }
 
     setup() {
         // after onload
         this.canvas = document.getElementById("thumbnail"); // defines the thumbnail size
-        this.pick = document.getElementById("MainPhotos");
         this.ctx = this.canvas.getContext( "2d" ) ;
         this.NoPicture = this._no_picture() ;
     }
@@ -1792,54 +1792,7 @@ class Thumb {
             }) ;
     }
     
-    _load( doc ) {
-        // attachments need not be included in doc -- will pull in separately
-        const pid = doc._id ;
-        if ( (doc?.images??[]).length<1) {
-            this.remove(pid) ;
-            return ;
-        }
-
-        globalDatabase.db.getAttachment(pid, doc.images[0].image )
-        .then(data => {
-            const url = URL.createObjectURL(data) ;
-            const t_img = new Image();
-            t_img.onload = () => {
-                URL.revokeObjectURL(url) ;
-                let crop = doc.images[0]?.crop ;
-                if ( !crop || crop.length!=4 ) {
-                    crop = [0,0,t_img.naturalWidth,t_img.naturalHeight] ;
-                }
-                // sw/sh in canvas units
-                const [iw,ih] = rightSize( this.canvas.width, this.canvas.height, crop[2], crop[3]  ) ;
-                // center and crop to maintain 1:1 aspect ratio
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.drawImage( t_img, crop[0] + (crop[2]-iw)/2, crop[1] + (crop[3]-ih)/2, iw, ih, 0, 0, this.canvas.width, this.canvas.height ) ;
-                this.canvas.toBlob( (blob) => {
-                    this.Thumbs[pid] = blob;
-                    let img = this.pick.querySelector(`img[alt="${pid}"]`);
-                    if ( img ) {
-                        this.displayThumb( img, pid ) ;
-                    } else {
-                        img = new Image(100,100);
-                        this.displayThumb( img, pid ) ;
-                        img.classList.add("MainPhoto");
-                        img.onclick = () => {
-                            globalPot.select( pid ) ;
-                            globalPage.show("PotMenu") ;
-                        } ;
-                        this.pick.appendChild( img ) ;
-                        img.alt = pid ;
-                    }
-                    },`image/${globalSettings?.img_format??"png"}`) ;
-                };
-            t_img.src = url ;
-        })
-        .catch( err => globalLog.err(err) );
-    }
-
-    _firstload( doc ) {
-        // no need to check for existing
+    _create( doc ) {
         const pid = doc._id ;
         if ( (doc?.images??[]).length<1) {
             return ;
@@ -1860,19 +1813,9 @@ class Thumb {
                 // center and crop to maintain 1:1 aspect ratio
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.drawImage( t_img, crop[0] + (crop[2]-iw)/2, crop[1] + (crop[3]-ih)/2, iw, ih, 0, 0, this.canvas.width, this.canvas.height ) ;
-                this.canvas.toBlob( (blob) => {
-                    this.Thumbs[pid] = blob;
-                    const img = new Image(100,100);
-                    this.displayThumb( img, pid ) ;
-                    img.classList.add("MainPhoto");
-                    img.onclick = () => {
-                        globalPot.select( pid ) ;
-                        globalPage.show("PotMenu") ;
-                    } ;
-                    this.pick.appendChild( img ) ;
-                    img.alt = pid ;
-                    }, `image/${globalSettings?.img_format??"png"}`) ;
-                };
+                this.canvas.toBlob( (blob) => this.Thumbs[pid] = blob );
+                console.log("blobbed",pid);
+				};
             t_img.src = url ;
         })
         .catch( err => globalLog.err(err) );
@@ -1880,12 +1823,12 @@ class Thumb {
 
     getOne( pid = potId ) {
         return globalDatabase.db.get( pid )
-        .then( doc => this._load(doc) )
+        .then( doc => this._create(doc) )
+        .thhen( _ => this.replot() )
         .catch( err => globalLog.err(err) );
     }
 
     getAll() {
-        this.pick.innerHTML="";
         globalPot.getAllIdDoc()
         .then( docs => {
             if ( 'requestIdleCallback' in window ) {
@@ -1893,7 +1836,8 @@ class Thumb {
                     window.requestIdleCallback( () => this.getAllList(docs.rows),{timeout:100});
                 }
             } else {
-                docs.rows.forEach( r => this._firstload( r.doc ) ) ;
+                docs.rows.forEach( r => this._create( r.doc ) ) ;
+                this.replot() ;
             }
             })
         .catch( err => globalLog.err(err) ) ;
@@ -1901,25 +1845,62 @@ class Thumb {
 
     getAllList( rows ) {
         const r = rows.pop() ;
-        this._load( r.doc ) ;
+        this._create( r.doc ) ;
         if ( rows.length > 0 ) {
             window.requestIdleCallback( () => this.getAllList( rows ), {timeout:100} ) ;
-        }
+        } else {
+			this.replot() ;
+		}
     }
 
-    displayThumb( target, pid = potId ) {
+    displayThumb( pid = potId ) {
+		console.log("Thumb",pid);
+		const img = new Image(100,100);
         const url = URL.createObjectURL( (pid in this.Thumbs ) ? this.Thumbs[pid] : this.NoPicture ) ;
-        target.onload = () => URL.revokeObjectURL( url ) ;
-        target.src = url ;
+		img.classList.add("ThumbPhoto");
+		img.onclick = () => {
+			globalPot.select( pid ) ;
+			globalPage.show("PotMenu") ;
+		} ;
+        img.onload = () => URL.revokeObjectURL( url ) ;
+        img.src = url ;
+        return img ;
     }
 
     remove( pid ) {
-        const img = this.pick.querySelector(`img[alt="${pid}"]`);
-        if ( img ) {
-            delete this.Thumbs[img.alt];
-            this.pick.removeChild( img ) ;
-        }
+		if ( pid in this.Thumbs ) {
+            delete this.Thumbs[pid];
+            this.replot() ;
+		}
     }
+    
+    hide() {
+		this.side.innerHTML="";
+		this.bottom.innerHTML="";
+		this.showing = false ;
+	}
+    
+    show() {
+		const cols = Math.floor(this.side.clientWidth / 107) ;
+		const rows = Math.floor(this.side.clientHeight / 107) ;
+		const side = cols * rows ;
+		this.hide() ;
+		console.log("All thumbs",this.Thumbs);
+		Object.keys(this.Thumbs).forEach( (p,i) => {
+			if ( i < side ) {
+				this.side.appendChild(this.displayThumb(p)) ;
+			} else {
+				this.bottom.appendChild(this.displayThumb(p)) ;
+			}
+			});
+		this.showing = true ;
+	}
+	
+	replot() {
+		if ( this.showing ) {
+			this.show() ;
+		}
+	}
 }
 
 globalThumbs = new Thumb() ;
@@ -2098,9 +2079,7 @@ class ThumbTable extends SortTable {
             /* Select and edit -- need to make sure selection is complete*/
             row.onclick = () => this.selectandedit( record._id ) ;
             // thumb
-            const img = new Image(100,100);
-            globalThumbs.displayThumb( img, record._id ) ;
-            row.insertCell(-1).appendChild(img);
+            row.insertCell(-1).appendChild( globalThumbs.displayThumb( record._id));
             // cells
             this.collist
             .slice(1)
@@ -2322,9 +2301,7 @@ class SearchTable extends ThumbTable {
             /* Select and edit -- need to make sure selection is complete*/
             row.onclick = () => this.selectandedit( record._id, record.Link ) ;
             // thumb
-            const img = new Image(100,100);
-            globalThumbs.displayThumb( img, record._id ) ;
-            row.insertCell(-1).appendChild(img);
+            row.insertCell(-1).appendChild( globalThumbs.displayThumb(record._id));
             // cells
             this.collist
             .slice(1)
