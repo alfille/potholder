@@ -173,6 +173,28 @@ ul {
   display: inline-block;
   border-radius: 5px;
 }
+#crop_page {
+  display: none; /* Hidden by default */
+/*  position: fixed; /* Stay in place */
+/*  z-index: 1; /* Sit on top */
+/*  left: 0px;
+/*  top: 0px;
+/*  width: 100%; /* Full width */
+/*  height: 100%; /* Full height */
+  background-color: rgb(23,43,174);
+}
+#under_canvas, #crop_canvas {
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: 0px;
+}
+#crop_buttons {
+  color: white;
+  position: absolute;
+  top: 605px;
+  left: 20px;
+}
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
@@ -470,6 +492,12 @@ legend {
     flex-direction: row;
     justify-content: space-around;
     }
+#crop_buttons {
+  color: white;
+  position: absolute;
+  top: calc(100%-50px);
+  left: 20px;
+}
 }
 
 #syncstatus, #userstatus {
@@ -484,18 +512,6 @@ legend {
 .splashImg {
   height:400px;
   width:auto;
-}
-#crop_buttons {
-  color: white;
-  position: absolute;
-  top: 605px;
-  left: 20px;
-}
-#under_canvas, #crop_canvas {
-  position: absolute;
-  display: block;
-  top: 0px;
-  left: 0px;
 }
 #struct_json {
   color: white;

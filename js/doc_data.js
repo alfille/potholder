@@ -1200,8 +1200,6 @@ class Crop {
         
         // edges [left,top,right,bottom]
         this.active_edge = null ;
-        
-        this.observer = new ResizeObserver( _ => this.cacheBounds() ) ;
     }
 
     crop( entrylist ) {
@@ -1650,9 +1648,9 @@ class Crop {
     show(state) {
         document.getElementById("crop_page").style.display=state ? "block" : "none" ;
         if ( state ) {
-            this.observer.observe( this.canvas) ;
+            globalResize.observe( this.canvas) ;
         } else {
-            this.observer.unobserve( this.canvas) ;
+            globalResize.unobserve( this.canvas) ;
             screen.orientation.onchange=()=>{} ;
         }
     }

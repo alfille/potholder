@@ -1274,6 +1274,18 @@ window.onload = () => {
         // start sync with remote database
         globalDatabase.foreverSync();
 
+		globalThis.globalResize = new ResizeObserver( entries => entries.forEach( e=> {
+			switch (e.target.id) {
+				case "Side":
+					console.log("Side");
+					window.requestAnimationFrame( () => globalThumbs.replot_needed() ) ;
+					break ;
+				case "crop_canvas":
+					globalCropper.cacheBounds() ;
+					break ;
+			} ;
+		}) ) ; 
+
         // Show screen
         ((globalSettings.fullscreen=="always") ?
             document.documentElement.requestFullscreen()
@@ -1774,6 +1786,7 @@ class Thumb {
         this.Thumbs = {} ;
         this.showing = false ;
         this.side = document.getElementById("Side");
+        this.nside = 0 ;
         this.bottom = document.getElementById("Bottom");
     }
 
@@ -1814,7 +1827,6 @@ class Thumb {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.drawImage( t_img, crop[0] + (crop[2]-iw)/2, crop[1] + (crop[3]-ih)/2, iw, ih, 0, 0, this.canvas.width, this.canvas.height ) ;
                 this.canvas.toBlob( (blob) => this.Thumbs[pid] = blob );
-                console.log("blobbed",pid);
 				};
             t_img.src = url ;
         })
@@ -1824,7 +1836,7 @@ class Thumb {
     getOne( pid = potId ) {
         return globalDatabase.db.get( pid )
         .then( doc => this._create(doc) )
-        .thhen( _ => this.replot() )
+        .then( _ => this.replot() )
         .catch( err => globalLog.err(err) );
     }
 
@@ -1854,7 +1866,6 @@ class Thumb {
     }
 
     displayThumb( pid = potId ) {
-		console.log("Thumb",pid);
 		const img = new Image(100,100);
         const url = URL.createObjectURL( (pid in this.Thumbs ) ? this.Thumbs[pid] : this.NoPicture ) ;
 		img.classList.add("ThumbPhoto");
@@ -1875,6 +1886,7 @@ class Thumb {
     }
     
     hide() {
+		globalResize.unobserve( this.side ) ;
 		this.side.innerHTML="";
 		this.bottom.innerHTML="";
 		this.showing = false ;
@@ -1883,22 +1895,32 @@ class Thumb {
     show() {
 		const cols = Math.floor(this.side.clientWidth / 107) ;
 		const rows = Math.floor(this.side.clientHeight / 107) ;
-		const side = cols * rows ;
+		this.nside = cols * rows ;
 		this.hide() ;
-		console.log("All thumbs",this.Thumbs);
 		Object.keys(this.Thumbs).forEach( (p,i) => {
-			if ( i < side ) {
+			if ( i < this.nside ) {
 				this.side.appendChild(this.displayThumb(p)) ;
 			} else {
 				this.bottom.appendChild(this.displayThumb(p)) ;
 			}
 			});
 		this.showing = true ;
+		globalResize.observe( this.side ) ;
 	}
 	
 	replot() {
 		if ( this.showing ) {
 			this.show() ;
+		}
+	}
+
+	replot_needed() {
+		if ( this.showing ) {
+			const cols = Math.floor(this.side.clientWidth / 107) ;
+			const rows = Math.floor(this.side.clientHeight / 107) ;
+			if ( cols*rows != this.nside ) {
+				this.show() ;
+			}
 		}
 	}
 }
