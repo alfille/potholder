@@ -440,14 +440,14 @@ legend {
 #Side, #Bottom {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;  
+  justify-content: flex-start;  
   align-items: flex-start;
 }
 .ThumbPhoto {
   content-visibility: auto;
   contain-intrinsic-size: auto 100px;
   border: 1px solid white;
-  margin:  0px 0px 5px 0px;
+  margin:  0px 0px 5px 5px;
 }
 #TopLeftImage {
   width: 100px;

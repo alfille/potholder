@@ -1788,6 +1788,7 @@ class Thumb {
         this.side = document.getElementById("Side");
         this.nside = 0 ;
         this.bottom = document.getElementById("Bottom");
+        this.head = document.getElementById("headerbox");
     }
 
     setup() {
@@ -1897,6 +1898,7 @@ class Thumb {
 		const rows = Math.floor(this.side.clientHeight / 107) ;
 		this.nside = cols * rows ;
 		this.hide() ;
+		this.bottom.style.padding = `0px 0px 0px ${this.head.clientWidth % 107}px`;
 		Object.keys(this.Thumbs).forEach( (p,i) => {
 			if ( i < this.nside ) {
 				this.side.appendChild(this.displayThumb(p)) ;
