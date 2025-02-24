@@ -1274,17 +1274,17 @@ window.onload = () => {
         // start sync with remote database
         globalDatabase.foreverSync();
 
-		globalThis.globalResize = new ResizeObserver( entries => entries.forEach( e=> {
-			switch (e.target.id) {
-				case "Side":
-					console.log("Side");
-					window.requestAnimationFrame( () => globalThumbs.replot_needed() ) ;
-					break ;
-				case "crop_canvas":
-					globalCropper.cacheBounds() ;
-					break ;
-			} ;
-		}) ) ; 
+        globalThis.globalResize = new ResizeObserver( entries => entries.forEach( e=> {
+            switch (e.target.id) {
+                case "Side":
+                    console.log("Side");
+                    window.requestAnimationFrame( () => globalThumbs.replot_needed() ) ;
+                    break ;
+                case "crop_canvas":
+                    globalCropper.cacheBounds() ;
+                    break ;
+            } ;
+        }) ) ; 
 
         // Show screen
         ((globalSettings.fullscreen=="always") ?
@@ -1828,7 +1828,7 @@ class Thumb {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.drawImage( t_img, crop[0] + (crop[2]-iw)/2, crop[1] + (crop[3]-ih)/2, iw, ih, 0, 0, this.canvas.width, this.canvas.height ) ;
                 this.canvas.toBlob( (blob) => this.Thumbs[pid] = blob );
-				};
+                };
             t_img.src = url ;
         })
         .catch( err => globalLog.err(err) );
@@ -1862,69 +1862,70 @@ class Thumb {
         if ( rows.length > 0 ) {
             window.requestIdleCallback( () => this.getAllList( rows ), {timeout:100} ) ;
         } else {
-			this.replot() ;
-		}
+            this.replot() ;
+        }
     }
 
     displayThumb( pid = potId ) {
-		const img = new Image(100,100);
+        const img = new Image(100,100);
         const url = URL.createObjectURL( (pid in this.Thumbs ) ? this.Thumbs[pid] : this.NoPicture ) ;
-		img.classList.add("ThumbPhoto");
-		img.onclick = () => {
-			globalPot.select( pid ) ;
-			globalPage.show("PotMenu") ;
-		} ;
+        img.classList.add("ThumbPhoto");
+        img.onclick = () => {
+            globalPot.select( pid ) ;
+            globalPage.show("PotMenu") ;
+        } ;
         img.onload = () => URL.revokeObjectURL( url ) ;
         img.src = url ;
         return img ;
     }
 
     remove( pid ) {
-		if ( pid in this.Thumbs ) {
+        if ( pid in this.Thumbs ) {
             delete this.Thumbs[pid];
             this.replot() ;
-		}
+        }
     }
     
     hide() {
-		globalResize.unobserve( this.side ) ;
-		this.side.innerHTML="";
-		this.bottom.innerHTML="";
-		this.showing = false ;
-	}
+        globalResize.unobserve( this.side ) ;
+        this.side.innerHTML="";
+        this.bottom.innerHTML="";
+        this.showing = false ;
+    }
     
     show() {
-		const cols = Math.floor(this.side.clientWidth / 107) ;
-		const rows = Math.floor(this.side.clientHeight / 107) ;
-		this.nside = cols * rows ;
-		this.hide() ;
-		this.bottom.style.padding = `0px 0px 0px ${this.head.clientWidth % 107}px`;
-		Object.keys(this.Thumbs).forEach( (p,i) => {
-			if ( i < this.nside ) {
-				this.side.appendChild(this.displayThumb(p)) ;
-			} else {
-				this.bottom.appendChild(this.displayThumb(p)) ;
-			}
-			});
-		this.showing = true ;
-		globalResize.observe( this.side ) ;
-	}
-	
-	replot() {
-		if ( this.showing ) {
-			this.show() ;
-		}
-	}
+        this.nside = Math.floor(this.side.clientWidth / 107) * Math.floor(this.side.clientHeight / 107) ;
+        this.hide() ;
+        if ( this.nside > 0 ) {
+            this.bottom.style.padding = `0px 0px 0px ${2+this.head.clientWidth % 107}px`;
+            this.side.style.padding = `${this.side.clientHeight % 107}px 0px 0px 0px`;
+        } else {
+            this.bottom.style.padding = "0px" ;
+        }
+        Object.keys(this.Thumbs).forEach( (p,i) => {
+            if ( i < this.nside ) {
+                this.side.appendChild(this.displayThumb(p)) ;
+            } else {
+                this.bottom.appendChild(this.displayThumb(p)) ;
+            }
+            });
+        this.showing = true ;
+        globalResize.observe( this.side ) ;
+    }
+    
+    replot() {
+        if ( this.showing ) {
+            this.show() ;
+        }
+    }
 
-	replot_needed() {
-		if ( this.showing ) {
-			const cols = Math.floor(this.side.clientWidth / 107) ;
-			const rows = Math.floor(this.side.clientHeight / 107) ;
-			if ( cols*rows != this.nside ) {
-				this.show() ;
-			}
-		}
-	}
+    replot_needed() {
+        if ( this.showing ) {
+            if ( Math.floor(this.side.clientWidth / 107) * Math.floor(this.side.clientHeight / 107) != this.nside ) {
+                this.show() ;
+            }
+        }
+    }
 }
 
 globalThumbs = new Thumb() ;

@@ -3,32 +3,32 @@ html, body {
   padding: 0;
 }
 #master_grid {
-	display: grid ;
-	grid-template-columns: min(100%, 550px) auto;
-	grid-template-areas: "top side" "potholderbody side" "Foot side" "bottom bottom";
+    display: grid ;
+    grid-template-columns: min(100%, 550px) auto;
+    grid-template-areas: "top side" "potholderbody side" "Foot side" "bottom bottom";
 }
 #top {
-	grid-area: top;
+    grid-area: top;
 }
 #Side {
-	grid-area: side;
+    grid-area: side;
 }
 #potholderbody {
-	grid-area: potholderbody;
+    grid-area: potholderbody;
 }
 #Foot {
-	grid-area: Foot;
-	display: flex;
-	color: white;
-	flex-flow: row nowrap;
-	justify-content: space-around;
-	overflow: hidden;
-	white-space: nowrap;
-	text-align: center;
-	font-size: 12px;
+    grid-area: Foot;
+    display: flex;
+    color: white;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 12px;
 }
 #Bottom {
-	grid-area: bottom;
+    grid-area: bottom;
 }
 #headerbox {
   display: flex;
