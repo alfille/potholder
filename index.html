@@ -100,8 +100,8 @@
                             <button type="button" class="divbutton Search" onclick="globalPage.show( 'SearchList' )" title="Full text search">Find &#x1F50E;&#xFE0E;</button>
                             <button type="button" class="divbutton" onclick="globalPage.helpLink()">Help</button>
                         </div>
-                        <!-- top: PotEdit PotPix Settings -->
-                        <div class="PotData PotEdit topButtons PotPix Settings pageOverlay">
+                        <!-- top: PotEdit PotPix PotPixEdit Settings -->
+                        <div class="PotData PotEdit topButtons PotPix PotPixEdit Settings pageOverlay">
                             <button type="button" class="divbutton Camera" title="Use camera -- add to this piece" onClick="globalPot.pushPixButton()">Add Photo &#128247;</button>            
                             <button type="button" class="divbutton Camera" title="Get image -- add to this piece" onClick="globalPot.pushGalleryButton()" >Add Gallery &#128444;</button>            
                             <button type="button" class="divbutton edit_data" onclick="globalPotData.edit_doc()" title="Start editing these entries">Edit</button>
@@ -260,8 +260,8 @@
                             <table id="SearchList"></table>
                         </div>
                     </div>
-                    <!-- body: PotNew PotEdit PotPix DatabaseInfo RemoteDatabaseInput Settings -->
-                    <div class="PotData PotNew PotEdit PotPix PotPixLoading DatabaseInfo RemoteDatabaseInput Settings pageOverlay">
+                    <!-- body: PotNew PotEdit PotPix PotPixEdit DatabaseInfo RemoteDatabaseInput Settings -->
+                    <div class="PotData PotNew PotEdit PotPix PotPixEdit PotPixLoading DatabaseInfo RemoteDatabaseInput Settings pageOverlay">
                         <span class="ContentTitle ContentTitleHidden">Loading...</span>
                         <div id="PotDataContent" ></div>
                     </div>
@@ -479,7 +479,8 @@
         </div>
          <!-- The Modal https://www.w3schools.com/css/tryit.asp?filename=trycss_image_modal_js -->
         <div id="modal_id" class="modal">
-          <button id="modal_down" class="modal_button" title="Download picture">&#10515;</button>
+          <button id="modal_down"  class="modal_button" title="Download picture">&#10515;</button>
+          <button id="modal_edit"  class="modal_button" title="Edit picture">&#128398;</button>
           <button id="modal_close" class="modal_button" title="Back">&times;</button>
           <canvas class="modal_content" width=350, height=500 id="modal_canvas"></canvas>
           <div id="modal_caption"></div>

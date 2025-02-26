@@ -258,6 +258,11 @@ ul {
   top: 5px;
   left: 35px;
 }
+#modal_edit {
+  position: absolute;
+  top: 5px;
+  left: 85px;
+}
 
 .modal_button:hover,
 .modal_button:focus {

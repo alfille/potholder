@@ -15,6 +15,7 @@ export {
 import {
     PotData,
     PotDataReadonly,
+    PotDataEditMode,
     SettingsData,
     DatabaseData,
     PotNewData,
@@ -667,7 +668,8 @@ class Pagelist {
         Pagelist.pages[this.constructor.name] = this ;
     }
 
-    show_page(name) {
+    show_page(name, detail=null) {
+        console.log("showpage",name,detail);
         // reset buttons from edit mode
         document.querySelector(".potDataEdit").style.display="none"; 
         document.querySelectorAll(".topButtons")
@@ -683,7 +685,7 @@ class Pagelist {
         // hide Crop
         document.getElementById("crop_page").style.display="none" ;
         
-        this.show_content();
+        this.show_content(detail);
     }
     
     show_content() {
@@ -1018,6 +1020,23 @@ new class PotPix extends Pagelist {
     }
 }() ;
 
+new class PotPixEdit extends Pagelist {
+    show_content(name) {
+        console.log("PotPixEdit",name);
+        if ( globalPot.isSelected() ) {
+            globalDatabase.db.get( potId )
+            .then( (doc) => globalPotData = new PotDataEditMode( doc, structData.Images, name ))
+            .catch( (err) => {
+                globalLog.err(err);
+                globalPage.show( "back" );
+                });
+
+        } else {
+            globalPage.show( "back" );
+        }
+    }
+}() ;
+
 new class PotPixLoading extends Pagelist {
     show_content() {
         document.querySelector(".ContentTitleHidden").style.display = "block";
@@ -1122,7 +1141,8 @@ class Page { // singleton class
         window.open( new URL(`${helpDir}${helpTopic}.html`,helpLoc).toString(), '_blank' );
     } 
     
-    show( page ) { // main routine for displaying different "pages" by hiding different elements
+    show( page, detail=null ) { // main routine for displaying different "pages" by hiding different elements
+        // detail is for extra data to pass on
         if ( globalSettings?.console == "true" ) {
             console.log("SHOW",page,"STATE",this.path);
         }
@@ -1146,7 +1166,7 @@ class Page { // singleton class
         // send to page-specific code
         const target_name = this.current() ;
         if ( target_name in Pagelist.pages ) {
-            Pagelist.pages[target_name].show_page(target_name) ;
+            Pagelist.pages[target_name].show_page(target_name, detail) ;
         } else {
             this.back() ;
         }
@@ -1156,6 +1176,7 @@ class Page { // singleton class
         switch ( globalPage.current() ) {
             case "PotEdit":
             case "PotPix":
+            case "PotPixEdit":
                 this.TLlast = potId ;
                 globalThumbs.displayThumb( this.TL, potId ) ;
                 break ;
@@ -1194,6 +1215,7 @@ class Page { // singleton class
         switch ( globalPage.current() ) {
             case "PotEdit":
             case "PotPix":
+            case "PotPixEdit":
                 globalPage.show( "PotMenu" ) ;
                 break ;
             default:
@@ -1512,7 +1534,17 @@ class PotImages {
                                 document.body.removeChild(link) ;
                             });
                         }) ;
-                    } ;
+                        } ;
+                    document.getElementById("modal_edit").onclick=()=> {
+                        screen.orientation.onchange=()=>{};
+                        if (globalSettings.fullscreen=="big_picture") {
+                            if ( document.fullscreenElement ) {
+                                document.exitFullscreen() ;
+                            }
+                        }
+                        document.getElementById('modal_id').style.display='none';
+                        globalPage.show( "PotPixEdit", name ) ;
+                        };
                     ((globalSettings.fullscreen=="big_picture") ?
                         document.documentElement.requestFullscreen()
                         : Promise.resolve() )

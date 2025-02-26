@@ -11,6 +11,7 @@
 export {
     PotData,
     PotDataReadonly,
+    PotDataEditMode,
     PotDataPrint,
     PotNewData,
     SettingsData,
@@ -23,7 +24,7 @@ import {
     
 // data entry page type
 class PotDataRaw { // singleton class
-    constructor(click,doc,struct,readonly=false) {
+    constructor(click,doc,struct,readonly=false, img_name=null) {
         //console.log("Click",click,"DOC",doc, "Structure", struct);
         // args is a list of "docs" to update"
         this.Images = new PotImages(doc);
@@ -34,7 +35,8 @@ class PotDataRaw { // singleton class
         this.match_image_list() ;
 
         // Create (recursively) objects to mirror the structure
-        this.list = new EntryList( struct, this.Images, readonly ) ;
+        this.list = new EntryList( struct, this.Images, readonly, img_name ) ;
+        console.log("List",this.list,img_name,this.list.img_name);
         
         // Load the objects with doc data 
         this.list.load_from_doc( doc ) ;
@@ -138,8 +140,8 @@ class PotData extends PotDataRaw {
 
 class PotDataEditMode extends PotDataRaw {
     // starts with "EDIT" clicked
-    constructor(doc,struct) {
-        super(true,doc,struct); // clicked = true
+    constructor(doc,struct, img_name=null) {
+        super(true,doc,struct, false, img_name); // clicked = true
     }
 }
 
@@ -254,7 +256,7 @@ class PotDataPrint { // singleton class
 }
 
 class EntryList {
-    constructor( struct_list, Images=null, readonly=false ) {
+    constructor( struct_list, Images=null, readonly=false, img_name=null ) {
         this.readonly = readonly ;
         this.double_tap = false ;
         this.members = struct_list.map( struct => {
@@ -278,7 +280,7 @@ class EntryList {
                 case "array":
                     return new ArrayEntry( struct, this, Images ) ;
                 case "image_array":
-                    return new ImageArrayEntry( struct, this, Images ) ;
+                    return new ImageArrayEntry( struct, this, Images, img_name ) ;
                 case "number":
                     return new NumberEntry( struct ) ;
                 case "crop":
@@ -749,11 +751,12 @@ class NumberEntry extends VisibleEntry {
 }               
 
 class ArrayEntry extends VisibleEntry {
-    constructor( struct, enclosing, Images=null ) {
+    constructor( struct, enclosing, Images=null, img_name=null ) {
         super( struct ) ;
         this.initial_val=[] ;
         this.enclosing = enclosing ;
         this.Images = Images ;
+        this.img_name=img_name ;
     }
         
     save_enable() {
@@ -1036,7 +1039,17 @@ class ImageArrayEntry extends ArrayEntry {
         
     edit_item() {
         // Insert a table, and pull label into caption
-
+        console.log("edit",this.img_name);
+        if ( this.img_name ) {
+            const idx = this.new_val.findIndex( e => this.find_entry( e, "image" ).new_val == this.img_name ) ;
+            console.log( "Image Array", this.img_name, idx ) ;
+            this.img_name = null ;
+            if ( idx >= 0 ) {
+                this.edit_array_entry( idx ) ;
+                return [] ;
+            }
+        }
+        
         // Heading and buttons
         const clone = document.createElement("span"); // dummy span to hold clone
         cloneClass( ".Darray", clone ) ;
