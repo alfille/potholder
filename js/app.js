@@ -618,14 +618,14 @@ class Cookie { //convenience class
         }
 
         // legacy cookie
-        const name = `${cname}=`;
+        const cook_name = `${cname}=`;
         let ret = null ;
-        decodeURIComponent(document.cookie).split('; ').filter( val => val.indexOf(name) === 0 ).forEach( val => {
+        decodeURIComponent(document.cookie).split('; ').filter( val => val.indexOf(cook_name) === 0 ).forEach( val => {
             try {
-                ret = JSON.parse( val.substring(name.length) );
+                ret = JSON.parse( val.substring(cook_name.length) );
                 }
             catch(err) {
-                ret =  val.substring(name.length);
+                ret =  val.substring(cook_name.length);
                 }
         });
         this.set(cname,ret) ; // put in local storage
@@ -1021,11 +1021,10 @@ new class PotPix extends Pagelist {
 }() ;
 
 new class PotPixEdit extends Pagelist {
-    show_content(name) {
-        console.log("PotPixEdit",name);
+    show_content(img_name) {
         if ( globalPot.isSelected() ) {
             globalDatabase.db.get( potId )
-            .then( (doc) => globalPotData = new PotDataEditMode( doc, structData.Images, name ))
+            .then( (doc) => globalPotData = new PotDataEditMode( doc, structData.Images, img_name ))
             .catch( (err) => {
                 globalLog.err(err);
                 globalPage.show( "back" );
@@ -1058,7 +1057,7 @@ new class PotMenu extends Pagelist {
     show_content() {
         if ( globalPot.isSelected() ) {
             globalDatabase.db.get( potId )
-            .then( (doc) => globalPot.showPictures(doc) ) // pictures on bottom
+            .then( (doc) => globalPot.showPictures(doc) ) // pictures at bottom
             .catch( (err) => {
                 globalLog.err(err);
                 globalPage.show( "back" );
@@ -1299,7 +1298,6 @@ window.onload = () => {
         globalThis.globalResize = new ResizeObserver( entries => entries.forEach( e=> {
             switch (e.target.id) {
                 case "Side":
-                    console.log("Side");
                     window.requestAnimationFrame( () => globalThumbs.replot_needed() ) ;
                     break ;
                 case "crop_canvas":
@@ -1456,12 +1454,12 @@ class PotImages {
         // doc does not need to have attachments included.
     }
 
-    getURL( name ) {
-        return globalDatabase.db.getAttachment( this.pid, name )
+    getURL( img_name ) {
+        return globalDatabase.db.getAttachment( this.pid, img_name )
         .then( data => URL.createObjectURL(data) ) ;
     }
     
-    displayClickable( name, pic_size="small_pic", new_crop=null ) {
+    displayClickable( img_name, pic_size="small_pic", new_crop=null ) {
         //console.log("displayClickable",name,pic_size,new_crop);
         const img = new Image() ;
         const canvas = document.createElement("canvas");
@@ -1475,13 +1473,13 @@ class PotImages {
         }
         canvas.classList.add("click_pic") ;
         let crop = [] ;
-        this.getURL( name )
+        this.getURL( img_name )
         .then( url => {
             img.onload = () => {
                 URL.revokeObjectURL(url) ;
                 crop = new_crop ;
                 if ( !crop || crop.length!=4 ) {
-                    crop = this.images.find( i => i.image==name)?.crop ?? null ;
+                    crop = this.images.find( i => i.image==img_name)?.crop ?? null ;
                 }
                 if ( !crop || crop.length!=4 ) {
                     crop = [0,0,img.naturalWidth,img.naturalHeight] ;
@@ -1493,7 +1491,7 @@ class PotImages {
             canvas.onclick=()=>{
                 const img2 = new Image() ; // temp image
                 document.getElementById("modal_canvas").width = window.innerWidth ;
-                this.getURL( name )
+                this.getURL( img_name )
                 .then( url2 => {
                     img2.onload = () => {
                         URL.revokeObjectURL(url2) ;
@@ -1517,10 +1515,10 @@ class PotImages {
                         document.getElementById('modal_id').style.display='none';
                         };
                     document.getElementById("modal_down").onclick=()=> {
-                        this.getURL( name )
+                        this.getURL( img_name )
                         .then( url => {
                             const link = document.createElement("a");
-                            link.download = name;
+                            link.download = img_name;
                             link.href = url;
                             link.style.display = "none";
 
@@ -1543,14 +1541,14 @@ class PotImages {
                             }
                         }
                         document.getElementById('modal_id').style.display='none';
-                        globalPage.show( "PotPixEdit", name ) ;
+                        globalPage.show( "PotPixEdit", img_name ) ;
                         };
                     ((globalSettings.fullscreen=="big_picture") ?
                         document.documentElement.requestFullscreen()
                         : Promise.resolve() )
                     .finally( _ => {
                         img2.src=url2;
-                        document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==name).comment;
+                        document.getElementById("modal_caption").innerText=this.images.find(e=>e.image==img_name).comment;
                         document.getElementById("modal_id").style.display="block";
                         });
                     })
@@ -1563,16 +1561,16 @@ class PotImages {
         return canvas ;
     }
 
-    print_display( name ) {
+    print_display( img_name ) {
         // full sized but cropped
         const img = new Image() ;
         const canvas = document.createElement("canvas");
         let crop = [] ;
-        this.getURL( name )
+        this.getURL( img_name )
         .then( url => {
             img.onload = () => {
                 URL.revokeObjectURL(url) ;
-                crop = this.images.find( i => i.image==name)?.crop ?? null ;
+                crop = this.images.find( i => i.image==img_name)?.crop ?? null ;
                 if ( !crop || crop.length!=4 ) {
                     crop = [0,0,img.naturalWidth,img.naturalHeight] ;
                 }
@@ -1658,9 +1656,6 @@ class Pot { // convenience class
         potId = null;
         if ( globalPage.isThis("AllPieces") ) {
             const pt = document.getElementById("PotTable");
-            if ( pt ) {
-                pt.rows.forEach( r => r.classList.remove('choice'));
-            }
         }
         new BlankBox();
     }
@@ -1755,10 +1750,11 @@ class Pot { // convenience class
     
     showPictures(doc) {
         // doc alreaady loaded
-        const pix = document.getElementById("Bottom");
+        const bottom = document.getElementById("Bottom");
         const images = new PotImages(doc);
-        pix.innerHTML="";
-        images.displayAll().forEach( i => pix.appendChild(i) ) ;
+        bottom.innerHTML="";
+        bottom.onclick=null;
+        images.displayAll().forEach( i => bottom.appendChild(i) ) ;
     }
 }
 
@@ -1818,9 +1814,17 @@ class Thumb {
         this.Thumbs = {} ;
         this.showing = false ;
         this.side = document.getElementById("Side");
+        this.side.onclick = (e) => this.click(e) ;
         this.nside = 0 ;
         this.bottom = document.getElementById("Bottom");
         this.head = document.getElementById("headerbox");
+    }
+
+    click(e) {
+        if ( e.target.nodeName == "IMG" ) {
+            globalPot.select( e.target.title ) ;
+            globalPage.show("PotMenu") ;
+        }
     }
 
     setup() {
@@ -1902,12 +1906,9 @@ class Thumb {
         const img = new Image(100,100);
         const url = URL.createObjectURL( (pid in this.Thumbs ) ? this.Thumbs[pid] : this.NoPicture ) ;
         img.classList.add("ThumbPhoto");
-        img.onclick = () => {
-            globalPot.select( pid ) ;
-            globalPage.show("PotMenu") ;
-        } ;
         img.onload = () => URL.revokeObjectURL( url ) ;
         img.src = url ;
+        img.title = pid ;
         return img ;
     }
 
@@ -1926,14 +1927,15 @@ class Thumb {
     }
     
     show() {
-        this.nside = Math.floor(this.side.clientWidth / 107) * Math.floor(this.side.clientHeight / 107) ;
+        this.nside = Math.floor(this.side.clientWidth / 106) * Math.floor(this.side.clientHeight / 106) ;
         this.hide() ;
         if ( this.nside > 0 ) {
-            this.bottom.style.padding = `0px 0px 0px ${2+this.head.clientWidth % 107}px`;
-            this.side.style.padding = `${this.side.clientHeight % 107}px 0px 0px 0px`;
+            this.bottom.style.padding = `0px 0px 0px ${3+this.head.clientWidth % 106}px`;
+            this.side.style.padding = `${this.side.clientHeight % 106}px 0px 0px 0px`;
         } else {
             this.bottom.style.padding = "0px" ;
         }
+        this.bottom.onclick = (e) => this.click(e) ;
         Object.keys(this.Thumbs).forEach( (p,i) => {
             if ( i < this.nside ) {
                 this.side.appendChild(this.displayThumb(p)) ;
@@ -1953,7 +1955,7 @@ class Thumb {
 
     replot_needed() {
         if ( this.showing ) {
-            if ( Math.floor(this.side.clientWidth / 107) * Math.floor(this.side.clientHeight / 107) != this.nside ) {
+            if ( Math.floor(this.side.clientWidth / 106) * Math.floor(this.side.clientHeight / 106) != this.nside ) {
                 this.show() ;
             }
         }
@@ -1987,7 +1989,7 @@ class SortTable {
 
         this.dir = 1;
         this.lastth = -1;
-        this.tbl.onclick = this.allClick.bind(this);
+        this.tbl.onclick = (e) => this.allClick(e);
     }
 
     aliasAdd( fieldname, aliasname=null, transformfunction=null ) {
@@ -2018,25 +2020,21 @@ class SortTable {
         doclist.forEach( (doc) => {
             const row = tbody.insertRow(-1);
             const record = doc.doc;
-            row.setAttribute("data-id",record._id);
+            row.title=record._id;
             /* Select and edit -- need to make sure selection is complete*/
-            row.onclick = () => this.selectandedit( record._id ) ;
             this.collist.forEach( (colname,i) => {
                 const c = row.insertCell(i);
                 c.innerHTML=(this.aliases[colname].value)(record) ;
             });
         });
-        this.highlight();
     }
     
-    selectandedit( id ) {
-        this.selectFunc( id );
-        this.editpage() ;
-    }
-  
     allClick(e) {
         if (e.target.tagName == 'TH') {
             return this.sortClick(e);
+        } else if (e.target.closest("tr")) {
+            globalPot.select( e.target.closest("tr").title) ;
+            globalPage.show("PotMenu");
         }
     }
 
@@ -2102,20 +2100,6 @@ class SortTable {
         rowsArray.sort(compare);
 
         tbody.append(...rowsArray);
-        this.highlight();
-    }
-
-    highlight() {
-        const Rs = Array.from(this.tbl.rows);
-        Rs.forEach( r => r.classList.remove('choice'));
-        const id = this.selectId();
-        if ( id ) {
-            const sr = Rs.filter( r => r.getAttribute('data-id')==id );
-            if ( sr.length > 0 ) {
-                sr.forEach( r => r.classList.add('choice'));
-                sr[0].scrollIntoView();
-            }
-        }
     }
 }
 
@@ -2132,9 +2116,9 @@ class ThumbTable extends SortTable {
         doclist.forEach( (doc) => {
             const row = tbody.insertRow(-1);
             const record = doc.doc;
-            row.setAttribute("data-id",record._id);
+            row.title=record._id;
             /* Select and edit -- need to make sure selection is complete*/
-            row.onclick = () => this.selectandedit( record._id ) ;
+
             // thumb
             row.insertCell(-1).appendChild( globalThumbs.displayThumb( record._id));
             // cells
@@ -2145,7 +2129,6 @@ class ThumbTable extends SortTable {
                 c.innerHTML=(this.aliases[colname].value)(record) ;
             });
         });
-        this.highlight();
     }
     
 }
@@ -2162,18 +2145,6 @@ class PotTable extends ThumbTable {
                 ['type','Form',null]
             ] ) {
         super( collist, tableId, aliaslist ) ;
-    }
-
-    selectId() {
-        return potId;
-    }
-
-    selectFunc(id) {
-        globalPot.select(id) ;
-    }
-
-    editpage() {
-        globalPage.show("PotMenu");
     }
 }
 
@@ -2204,18 +2175,6 @@ class OrphanTable extends PotTable {
             .filter( k=>!(this.gfields.includes(k)) )
             .map( k=> `${k}: ${doc[k]}` )
             .join("\n") ;
-    }
-
-    selectId() {
-        return potId;
-    }
-
-    selectFunc(id) {
-        globalPot.select(id) ;
-    }
-
-    editpage() {
-        globalPage.show("PotMenu");
     }
 }
 
@@ -2324,18 +2283,6 @@ class AssignTable extends ThumbTable {
             ] ) {
         super( collist, tableId, aliaslist ) ;
     }
-
-    selectId() {
-        return potId;
-    }
-
-    selectFunc(id) {
-        globalPot.select(id) ;
-    }
-
-    editpage() {
-        globalPot.AssignPhoto();
-    }
 }
 
 
@@ -2354,9 +2301,8 @@ class SearchTable extends ThumbTable {
         doclist.forEach( (doc) => {
             const row = tbody.insertRow(-1);
             const record = doc.doc;
-            row.setAttribute("data-id",record._id);
+            row.title=`${record._id} # ${record.Link}`;
             /* Select and edit -- need to make sure selection is complete*/
-            row.onclick = () => this.selectandedit( record._id, record.Link ) ;
             // thumb
             row.insertCell(-1).appendChild( globalThumbs.displayThumb(record._id));
             // cells
@@ -2367,22 +2313,17 @@ class SearchTable extends ThumbTable {
                 c.innerHTML=(this.aliases[colname].value)(record) ;
             });
         });
-        this.highlight();
     }
 
-    selectId() {
-        return globalSearch.select_id;
-    }
-
-    selectFunc(id) {
-        globalSearch.select_id = id ;
-        globalTable.highlight();
-    }
-    
-    // for search -- go to a result of search
-    selectandedit( id, page ) {
-        globalPot.select(id) ;
-        globalPage.show( page ) ;
+    allClick(e) {
+        if (e.target.tagName == 'TH') {
+            return this.sortClick(e);
+        } else if (e.target.closest("tr")) {
+            const [id,page] = e.target.closest("tr").title.split(" # ") ;
+            globalPot.select( id ) ;
+            globalPage.add( "PotMenu" );
+            globalPage.show( page );
+        }
     }
 }
 

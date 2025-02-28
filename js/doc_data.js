@@ -1234,11 +1234,11 @@ class Crop {
     }
     
     crop_reset() {
-        const name = this.imageentry.new_val ;
+        const img_name = this.imageentry.new_val ;
         const image = new Image() ; // temporary image
         
         // Load Image
-        this.imageentry.Images.getURL( name )
+        this.imageentry.Images.getURL( img_name )
         .then( url => {
             image.onload = () => {
                 // clear url

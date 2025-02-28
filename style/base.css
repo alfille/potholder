@@ -91,9 +91,6 @@ tr:nth-child(odd), li:nth-child(odd) {
   padding: 4px 0 0 0;
   background: #E6F2FF ;
 }
-tr.choice, li.choice, div.choice {
-  background: gold !important;
-}
 tr:nth-child(odd):hover, li:nth-child(even):hover {
   background: lightyellow ;
 }
@@ -446,13 +443,14 @@ legend {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;  
+  align-content: flex-end;
   align-items: flex-start;
 }
 .ThumbPhoto {
   content-visibility: auto;
   contain-intrinsic-size: auto 100px;
   border: 1px solid white;
-  margin:  0px 0px 5px 5px;
+  margin:  2px;
 }
 #TopLeftImage {
   width: 100px;
