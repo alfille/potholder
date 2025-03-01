@@ -579,7 +579,7 @@ class ImageEntry extends VisibleEntry {
     
     show_item_element() {
         // image or comment
-        return this.Images.displayClickable(this.new_val,"medium_pic") ;
+        return this.Images.displayClickable(this.new_val,"medium_pic", null, false) ;
     }
     
     print_item() {
@@ -587,7 +587,7 @@ class ImageEntry extends VisibleEntry {
     }
             
     edit_item() {
-        return [this.Images.displayClickable(this.new_val,"medium_pic") ] ;
+        return [this.Images.displayClickable(this.new_val,"medium_pic", null, false) ] ;
     }
 }
                 
@@ -1009,7 +1009,8 @@ class ImageArrayEntry extends ArrayEntry {
         return this.Images.displayClickable(
             this.find_entry( entry, "image" ).new_val ,
             this.new_val.length > 3 ? "small_pic" : "medium_pic" ,
-            crop ? crop.new_val : null 
+            crop ? crop.new_val : null,
+            false 
             );
     }
         

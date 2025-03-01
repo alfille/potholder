@@ -1459,8 +1459,7 @@ class PotImages {
         .then( data => URL.createObjectURL(data) ) ;
     }
     
-    displayClickable( img_name, pic_size="small_pic", new_crop=null ) {
-        //console.log("displayClickable",name,pic_size,new_crop);
+    displayClickable( img_name, pic_size="small_pic", new_crop=null, editable=true ) {
         const img = new Image() ;
         const canvas = document.createElement("canvas");
         switch ( pic_size ) {
@@ -1533,16 +1532,22 @@ class PotImages {
                             });
                         }) ;
                         } ;
-                    document.getElementById("modal_edit").onclick=()=> {
-                        screen.orientation.onchange=()=>{};
-                        if (globalSettings.fullscreen=="big_picture") {
-                            if ( document.fullscreenElement ) {
-                                document.exitFullscreen() ;
+                    const edit = document.getElementById("modal_edit") ;
+                    if (editable) {
+                        edit.style.visibility = "visible";
+                        edit.onclick=()=> {
+                            screen.orientation.onchange=()=>{};
+                            if (globalSettings.fullscreen=="big_picture") {
+                                if ( document.fullscreenElement ) {
+                                    document.exitFullscreen() ;
+                                }
                             }
-                        }
-                        document.getElementById('modal_id').style.display='none';
-                        globalPage.show( "PotPixEdit", img_name ) ;
-                        };
+                            document.getElementById('modal_id').style.display='none';
+                            globalPage.show( "PotPixEdit", img_name ) ;
+                            };
+                    } else {
+                        edit.style.visibility = "hidden";
+                    }
                     ((globalSettings.fullscreen=="big_picture") ?
                         document.documentElement.requestFullscreen()
                         : Promise.resolve() )
