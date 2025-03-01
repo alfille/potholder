@@ -1934,11 +1934,17 @@ class Thumb {
     show() {
         this.nside = Math.floor(this.side.clientWidth / 106) * Math.floor(this.side.clientHeight / 106) ;
         this.hide() ;
-        if ( this.nside > 0 ) {
+        if (this.nside==0) {
+            this.side.style.padding = "0px" ;
+            this.bottom.style.padding = "0px" ;
+        } else if ( this.nside >= Object.keys(this.Thumbs).length ) {
+            this.side.style.padding = "0px" ;
+            this.bottom.style.padding = "0px" ;
+            this.side.style.alignContent="flex-start";
+        } else {
             this.bottom.style.padding = `0px 0px 0px ${3+this.head.clientWidth % 106}px`;
             this.side.style.padding = `${this.side.clientHeight % 106}px 0px 0px 0px`;
-        } else {
-            this.bottom.style.padding = "0px" ;
+            this.side.style.alignContent="flex-end";
         }
         this.bottom.onclick = (e) => this.click(e) ;
         Object.keys(this.Thumbs).forEach( (p,i) => {
