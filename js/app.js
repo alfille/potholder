@@ -2229,6 +2229,7 @@ class MultiTable {
             const plus = fs.querySelector(".triggerbutton") ;
             this.cat_ob[cat].button = plus;
             plus.onclick = () => {
+                globalThumbs.hide();
                 if ( this.cat_ob[cat].visible ) {
                     plus.innerHTML= "&#10133;" ;
                     tb.style.display = "none" ;
@@ -2238,6 +2239,7 @@ class MultiTable {
                     tb.style.display = "" ;
                     this.cat_ob[cat].visible = true ;
                 }
+                globalThumbs.show();
             } ;                
         })) ;
     }

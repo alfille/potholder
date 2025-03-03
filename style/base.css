@@ -5,7 +5,10 @@ html, body {
 #master_grid {
     display: grid ;
     grid-template-columns: min(100%, 550px) auto;
-    grid-template-areas: "top side" "potholderbody side" "Foot side" "bottom bottom";
+    grid-template-areas: "top           side  " 
+                         "potholderbody side  " 
+                         "Foot          side  " 
+                         "bottom        bottom";
 }
 #top {
     grid-area: top;
@@ -15,6 +18,13 @@ html, body {
 }
 #potholderbody {
     grid-area: potholderbody;
+    background: #949ddf;
+    margin: 0 0 0 0;
+    border: 1px solid #ccc;
+    position: relative;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+	align-items: flex-start;
 }
 #Foot {
     grid-area: Foot;
@@ -30,29 +40,37 @@ html, body {
 #Bottom {
     grid-area: bottom;
 }
+#Side, #Bottom {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;  
+	align-content: flex-end;
+	align-items: flex-start;
+}
+
 #headerbox {
-  display: flex;
-  position: relative;
-  justify-content: space-between;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: inherit;
+	display: flex;
+	position: relative;
+	justify-content: space-between;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: inherit;
 }
 .headerboxlink img {
-  color: blue ;
-  border-style: groove;
-  border-width: 4px;
-  border-color: lightblue;
-  margin: 2px 0 2px 2px;
+	color: blue ;
+	border-style: groove;
+	border-width: 4px;
+	border-color: lightblue;
+	margin: 2px 0 2px 2px;
 }
 #titlebox {
-  width: calc( 100% - 4px);
-  background: #D5CCFF;
-  color: black ;
-  height: 1em;
-  text-align: center;
-  padding: 3px 3px 8px 3px;
+	width: calc( 100% - 4px);
+	background: #D5CCFF;
+	color: black ;
+	height: 1em;
+	text-align: center;
+	padding: 3px 3px 8px 3px;
 }
 .allGroup {
   background-color: #edf6af;
@@ -96,7 +114,7 @@ tr:nth-child(odd):hover, li:nth-child(even):hover {
 }
 .print_screen {
     color: white;
-    }
+}
 
 .PotData li {
   background: #E6F2FF ;
@@ -304,17 +322,9 @@ body {
   font-smoothing: antialiased;
 }
 
-#potholderbody {
-  background: #949ddf;
-  margin: 0 0 0 0;
-  border: 1px solid #ccc;
-  position: relative;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-}
 .pageOverlay {
   display: none ;
-  width: 100%
+  width: 100% ;
 }
 
 .imageBar {
@@ -438,13 +448,6 @@ legend {
 .MainItalic {
   font-style: italic;
   color: white;
-}
-#Side, #Bottom {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;  
-  align-content: flex-end;
-  align-items: flex-start;
 }
 .ThumbPhoto {
   content-visibility: auto;
