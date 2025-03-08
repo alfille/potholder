@@ -1260,6 +1260,17 @@ window.onload = () => {
         window.location.href = "/index.html" ;
     }
 
+	globalThis.globalResize = new ResizeObserver( entries => entries.forEach( e=> {
+		switch (e.target.id) {
+			case "Side":
+				window.requestAnimationFrame( () => globalThumbs.replot_needed() ) ;
+				break ;
+			case "crop_canvas":
+				globalCropper.cacheBounds() ;
+				break ;
+		} ;
+	}) ) ; 
+
     // Start pouchdb database
     globalDatabase.open() ;       
     if ( globalDatabase.db ) {
@@ -1294,17 +1305,6 @@ window.onload = () => {
 
         // start sync with remote database
         globalDatabase.foreverSync();
-
-        globalThis.globalResize = new ResizeObserver( entries => entries.forEach( e=> {
-            switch (e.target.id) {
-                case "Side":
-                    window.requestAnimationFrame( () => globalThumbs.replot_needed() ) ;
-                    break ;
-                case "crop_canvas":
-                    globalCropper.cacheBounds() ;
-                    break ;
-            } ;
-        }) ) ; 
 
         // Show screen
         ((globalSettings.fullscreen=="always") ?
