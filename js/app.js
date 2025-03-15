@@ -360,6 +360,8 @@ class CSV { // convenience class
 globalThis.csv = () => new CSV() ;
 
 class Log{
+	// Logs errors and shows error page
+	// unfortunately hides offending line
     constructor() {
         this.list = [];
     }
@@ -1281,7 +1283,7 @@ window.onload = () => {
         const q = new Query();
         q.create( structData.Data.concat(structData.Images) )
         .then( () => globalThumbs.getAll() ) // create thumbs
-//        .catch( err => globalLog.err(err,"Query cleanup") )
+        .catch( err => globalLog.err(err,"Query cleanup") )
         ;
 
         // now start listening for any changes to the database
