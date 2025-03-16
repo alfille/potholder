@@ -1944,7 +1944,7 @@ class Thumb {
             this.bottom.style.padding = "0px" ;
             this.side.style.alignContent="flex-start";
         } else {
-            this.bottom.style.padding = `0px 0px 0px ${3+this.head.clientWidth % 106}px`;
+            this.bottom.style.padding = `0px 0px 0px ${1+this.head.clientWidth % 106}px`;
             this.side.style.padding = `${this.side.clientHeight % 106}px 0px 0px 0px`;
             this.side.style.alignContent="flex-end";
         }
