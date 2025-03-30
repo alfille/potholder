@@ -2,7 +2,7 @@
  * Ceramic production database application
  * See https://github.com/alfille/potholder
  * or https://alfille.online
- * by Paul H Alfille 2024
+ * by Paul H Alfille 2024-5
  * MIT license
  * */
 
