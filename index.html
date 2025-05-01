@@ -255,7 +255,7 @@
                     <div class="SearchList pageOverlay">
                         <span class="ContentTitle">Search for...</span>
                         <div id="searchbar">
-                            <input type="search" id="searchtext" autofocus value="" onsearch="globalSearch.toTable()">
+                            <input type="search" id="searchtext" onsearch="globalSearch.toTable()" value="" autofocus >
                             <button type="button" id="searchclick" onclick="globalSearch.toTable()">Search</button>
                         </div>
                         <div id="SearchListContent" >
@@ -290,7 +290,7 @@
                         <div id="InvalidPotContent" >
                             <H2>Not a valid piece ID</H2>
                             <p>Possble causes include your data not yet synced, or changes since this piece was selected</p>
-                            <center><button type="button" class="divbutton" onclick="globalPage.show('AllPieces')">Ok</button></center>
+                            <button type="button" class="divbutton" onclick="globalPage.show('AllPieces')">Ok</button>
                         </div>
                     </div>
                     <!-- body: ErrorLog -->
@@ -324,7 +324,7 @@
                                     <button type="button" class="divbutton MainItalic" onclick="globalPage.show( 'ErrorLog' )">Error Log</button>
                                 </div>
                                 <div class="PotProcButtons">
-                                    <button type="button" class="divbutton" onClick="globalDatabase.fauxton()" hint="Open Couchdb Fauxton console">Database Console</button>
+                                    <button type="button" class="divbutton" onclick="globalDatabase.fauxton()" title="Open Couchdb Fauxton console">Database Console</button>
                                     <button type="button" class="divbutton" onclick="globalPage.show( 'DatabaseInfo' )">Database Information</button>
                                 </div>
                             </div>
@@ -377,8 +377,8 @@
         </div>
         <!-- picture cropping page -->
         <div id="crop_page">
-            <canvas id="under_canvas" width=350px height=600px></canvas>
-            <canvas id="crop_canvas" width=350px height=600px></canvas>
+            <canvas id="under_canvas" width=350 height=600></canvas>
+            <canvas id="crop_canvas" width=350 height=600></canvas>
             <div id="crop_buttons">
                 <span class="Darray_span">Drag edges</span>
                 <button type="button" class="divbutton" onclick="globalCropper.ok()" title="Crop complete">Ok</button>
@@ -401,7 +401,7 @@
         <div id="templates" class="pageOverlay">
             <input type="file" id="HiddenPix" accept="image/*" class="imageBar" onchange="globalPot.newPhoto()" capture="environment">
             <input type="file" id="HiddenGallery" accept="image/*" class="imageBar" onchange="globalPot.newPhoto()" multiple>
-            <img id="NoPicture" src="images/NoPicture.png" loading="lazy"/>
+            <img id="NoPicture" src="images/NoPicture.png" alt="No thumbnail" loading="lazy">
             <img id="LogoPicture" src="images/wheel.png" loading="lazy" />
             <canvas id="thumbnail" width=100 height=100>
             </canvas>
@@ -470,21 +470,21 @@
         <!-- Splash screen -->
         <div id="splash_screen">
             <a href="?reset=true">Reset everything (local data and credentials)</a><hr>
-            <b><center>
+            <b>
             <h1>PotHolder</h1>
             <img src="images/pot400.jpg" class="splashImg" alt="PotHolder &mdash; Ceramic Project Tracker" loading="lazy">
             <hr>
                 If the application does not appear, contact:.<br>
                 <a href="mailto:palfille@partners.org?subject=Potholder error">PotHolder team</a>
             <hr>
-            </center></b>
+            </b>
         </div>
          <!-- The Modal https://www.w3schools.com/css/tryit.asp?filename=trycss_image_modal_js -->
         <div id="modal_id" class="modal">
           <button id="modal_down"  class="modal_button" title="Download picture">&#10515;</button>
           <button id="modal_edit"  class="modal_button" title="Edit picture">&#128398;</button>
           <button id="modal_close" class="modal_button" title="Back">&times;</button>
-          <canvas class="modal_content" width=350, height=500 id="modal_canvas"></canvas>
+          <canvas class="modal_content" width=350 height=500 id="modal_canvas"></canvas>
           <div id="modal_caption"></div>
         </div>
        

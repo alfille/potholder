@@ -285,7 +285,7 @@ ul {
   text-decoration: none;
   cursor: pointer;
 }
-#InvalidPotContent button {
+#InvalidPotContent button, #splash_screen {
   text-align: center;
 }
 .multiCat, .fill_show_data {
