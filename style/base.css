@@ -285,7 +285,9 @@ ul {
   text-decoration: none;
   cursor: pointer;
 }
-
+#InvalidPotContent button {
+  text-align: center;
+}
 .multiCat, .fill_show_data {
   font-weight: bold;
   color: black;
