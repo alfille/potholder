@@ -197,7 +197,7 @@ class DatabaseData extends PotDataRaw {
 class DatabaseDataSimple extends DatabaseData {
     savePieceData() {
         if ( this.loadDocData() ) {
-            ["username","password","database","address","local"].forEach( x => globalDatabase[x] = this.doc[x] ) ;
+            ["username","password","database","address"].forEach( x => globalDatabase[x] = this.doc[x] ) ;
             globalDatabase.store() ;
         }
         globalPage.reset();
