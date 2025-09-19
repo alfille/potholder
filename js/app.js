@@ -18,6 +18,7 @@ import {
     PotDataEditMode,
     SettingsData,
     DatabaseData,
+    DatabaseDataSimple,
     PotNewData,
     PotDataPrint,
 } from "./doc_data.js" ;
@@ -197,6 +198,30 @@ globalThis.structRemoteUser = [
     {
         name:  "database",
         hint:  'Name of ceramic database (e.g. "potholder"',
+        type:  "text",
+    },
+];
+
+globalThis.structRemoteUserSimple = [
+    {
+        name:  "username",
+        hint:  "Your user name for access",
+        type:  "text",
+    },
+    {
+        name:  "password",
+        hint:  "Your password for access",
+        type:  "text",
+    },    
+    {
+        name:  "address",
+        alias: "Remote database server address",
+        hint:  "Filled in automatically",
+        type:  "text",
+    },
+    {
+        name:  "database",
+        hint:  'Filled in automatically',
         type:  "text",
     },
 ];
@@ -721,6 +746,17 @@ new class DatabaseInfo extends Pagelist {
         globalThumbs.show() ;
     }
 
+}() ;
+
+new class RemoteDatabaseInputSimple extends Pagelist {
+    show_content() {
+        new TextBox("Your Credentials") ;
+        const doc = {} ;
+        ["username","password","database","address"].forEach( x => doc[x] = globalDatabase[x] ) ;
+        doc.address = `${window.location.protocol}//${window.location.host}/couchdb` ;
+        doc.database = window.location.hostname.split(".")[0] ;
+        globalPotData = new DatabaseDataSimple( doc, structRemoteUserSimple );
+    }
 }() ;
 
 new class RemoteDatabaseInput extends Pagelist {

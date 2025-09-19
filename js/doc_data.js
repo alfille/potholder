@@ -16,6 +16,7 @@ export {
     PotNewData,
     SettingsData,
     DatabaseData,
+    DatabaseDataSimple,
 } ;
 
 import {
@@ -185,6 +186,17 @@ class DatabaseData extends PotDataRaw {
             if ( this.doc.raw=="fixed" ) {
                 this.doc.address=globalDatabase.SecureURLparse(this.doc.address); // fix up URL
             }
+            ["username","password","database","address","local"].forEach( x => globalDatabase[x] = this.doc[x] ) ;
+            globalDatabase.store() ;
+        }
+        globalPage.reset();
+        location.reload(); // force reload
+    }
+}
+
+class DatabaseDataSimple extends DatabaseData {
+    savePieceData() {
+        if ( this.loadDocData() ) {
             ["username","password","database","address","local"].forEach( x => globalDatabase[x] = this.doc[x] ) ;
             globalDatabase.store() ;
         }
