@@ -16,7 +16,6 @@ export {
     PotNewData,
     SettingsData,
     DatabaseData,
-    DatabaseDataSimple,
 } ;
 
 import {
@@ -183,20 +182,6 @@ class DatabaseData extends PotDataRaw {
 
     savePieceData() {
         if ( this.loadDocData() ) {
-            if ( this.doc.raw=="fixed" ) {
-                this.doc.address=globalDatabase.SecureURLparse(this.doc.address); // fix up URL
-            }
-            ["username","password","database","address","local"].forEach( x => globalDatabase[x] = this.doc[x] ) ;
-            globalDatabase.store() ;
-        }
-        globalPage.reset();
-        location.reload(); // force reload
-    }
-}
-
-class DatabaseDataSimple extends DatabaseData {
-    savePieceData() {
-        if ( this.loadDocData() ) {
             ["username","password","database","address","local"].forEach( x => globalDatabase[x] = this.doc[x] ) ;
             globalDatabase.store() ;
         }
@@ -315,7 +300,7 @@ class EntryList {
     }
         
     form2value() {
-        // get data from HTMO fields into "new_val"
+        // get data from HTML fields into "new_val"
         this.members.forEach( e => e.form2value() ) ;
     }
     
@@ -476,7 +461,12 @@ class InvisibleEntry {
     }
     
     load_from_doc( doc ) {
+		console.log("Load",this._name,doc);
         this.initial_val = (this._name in doc) ? doc[this._name] : this.default_value() ;
+        const d = `default_${this._name}`
+        if ( d in doc ) {
+			this.default_given = doc[d] ;
+		}
         this.new_val = this.initial_val ;
     }
     
@@ -550,7 +540,19 @@ class VisibleEntry extends InvisibleEntry {
     
     edit_item() {
         // wraps the label and calls for HTML elements
-        return [this.edit_label()].concat( this.edit_flatten().flat() ) ;
+        let def = [] ;
+        if ( "default" in this.struct ) {
+			if ( this.default_given ) {
+				def = document.createElement( "button" );
+				def.title = `Use automatic value: ${this.default_given}` ;
+				def.appendChild( document.createTextNode("Use default") );
+				def.onclick=()=>{
+					this.field.value=this.default_given; 
+					this.save_enable() ;
+					};
+			}
+		}
+        return [this.edit_label()].concat( this.edit_flatten().flat(),def ) ;
     }
 
     edit_flatten() {
@@ -561,25 +563,26 @@ class VisibleEntry extends InvisibleEntry {
 
 class TextEntry extends VisibleEntry {
     edit_flatten() {
+		console.log("TextEntry",this);
         // get value and make type-specific input field with filled in value
-        const inp = document.createElement( "input" );
-        inp.title = this.struct.hint;
-        inp.name = this.localname ;
-        inp.value = this.new_val ;
-        inp.oninput = () => this.save_enable() ;
-        return [ inp ] ;
+        this.field = document.createElement( "input" );
+        this.field.title = this.struct.hint;
+        this.field.name = this.localname ;
+        this.field.value = this.new_val ;
+        this.field.oninput = () => this.save_enable() ;
+        return [ this.field ] ;
     }
 }
                 
 class TextAreaEntry extends VisibleEntry {
     edit_flatten() {
         // get value and make type-specific input field with filled in value
-        const inp = document.createElement( "textarea" );
-        inp.title = this.struct.hint;
-        inp.name = this.localname ;
-        inp.value = this.new_val ;
-        inp.oninput = () => this.save_enable() ;
-        return [ inp ] ;
+        this.field = document.createElement( "textarea" );
+        this.field.title = this.struct.hint;
+        this.field.name = this.localname ;
+        this.field.value = this.new_val ;
+        this.field.oninput = () => this.save_enable() ;
+        return [ this.field ] ;
     }
 }
                 
@@ -611,13 +614,13 @@ class ListEntry extends VisibleEntry {
             dlist.appendChild( new Option(pick) )
             ); 
 
-        const inp = document.createElement("input");
-        inp.setAttribute( "list", dlist.id );
-        inp.name = this.localname ;
-        inp.value = this.new_val;
-        inp.oninput = () => this.save_enable() ;
+        this.field = document.createElement("input");
+        this.field.setAttribute( "list", dlist.id );
+        this.field.name = this.localname ;
+        this.field.value = this.new_val;
+        this.field.oninput = () => this.save_enable() ;
 
-        return [dlist,inp] ;
+        return [dlist,this.field] ;
     }
 }
 
@@ -655,13 +658,13 @@ class DateEntry extends VisibleEntry {
     }
 
     edit_flatten() {
-        const inp = document.createElement("input");
-        inp.type = "date";
-        inp.name = this.localname ;
-        inp.title = this.struct.hint;
-        inp.value = this.new_val.split("T")[0] ;
-        inp.oninput = () => this.save_enable() ;
-        return [inp] ;
+        this.field = document.createElement("input");
+        this.field.type = "date";
+        this.field.name = this.localname ;
+        this.field.title = this.struct.hint;
+        this.field.value = this.new_val.split("T")[0] ;
+        this.field.oninput = () => this.save_enable() ;
+        return [this.field] ;
     }
 }
 
