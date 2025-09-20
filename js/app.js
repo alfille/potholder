@@ -1349,7 +1349,7 @@ class StatBox extends TitleBox {
         super();
         globalDatabase.db.query("qPictures", { reduce:true, group: false })
         .then( stat => this.show( `Pieces: ${stat.rows[0].value.count}, Pictures: ${stat.rows[0].value.sum}` ) )
-        .catch( err => globalLog.err(err) );
+        .catch( _ => this.show( 'No Pieces, yet' ) );
     }
 }
 
